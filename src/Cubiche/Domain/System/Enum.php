@@ -16,9 +16,9 @@ use MyCLabs\Enum\Enum as BaseEnum;
 abstract class Enum extends BaseEnum implements NativeValueObjectInterface
 {
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      *
-     * @see \Jadddp\Domain\Core\NativeValueObjectInterface::fromNative()
+     * @return \Cubiche\Domain\System\Enum
      */
     public static function fromNative($value)
     {
@@ -38,7 +38,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Jadddp\Domain\Core\NativeValueObjectInterface::toNative()
+     * @see \Cubiche\Domain\Core\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {
@@ -48,7 +48,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Jadddp\Domain\Core\ValueObjectInterface::equals()
+     * @see \Cubiche\Domain\Core\ValueObjectInterface::equals()
      */
     public function equals($other)
     {

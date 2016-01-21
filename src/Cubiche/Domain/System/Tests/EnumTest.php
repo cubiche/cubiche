@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * This file is part of the cubiche/cubiche project.
+ */
+namespace Jadddp\Tests\Domain\System;
+
+use Cubiche\Domain\Core\Tests\NativeValueObjectTestCase;
+use Cubiche\Domain\System\Tests\TestEnum;
+
+/**
+ * Enum Test.
+ *
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ */
+class EnumTest extends NativeValueObjectTestCase
+{
+    /**
+     * @param string $name
+     * @param array  $data
+     * @param string $dataName
+     */
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
+        parent::__construct(TestEnum::class, $name, $data, $dataName);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Core\Tests\NativeValueObjectTestCase::firstNativeValue()
+     */
+    protected function firstNativeValue()
+    {
+        return TestEnum::FOO;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Core\Tests\NativeValueObjectTestCase::secondNativeValue()
+     */
+    protected function secondNativeValue()
+    {
+        return TestEnum::BAR;
+    }
+
+    /**
+     * @test
+     */
+    public function is()
+    {
+        $value = $this->firstValue();
+        $this->assertTrue($value->is($this->firstNativeValue()));
+        $this->assertFalse($value->is($this->secondNativeValue()));
+    }
+}
