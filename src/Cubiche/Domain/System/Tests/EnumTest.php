@@ -3,10 +3,9 @@
 /**
  * This file is part of the cubiche/cubiche project.
  */
-namespace Jadddp\Tests\Domain\System;
+namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\Core\Tests\NativeValueObjectTestCase;
-use Cubiche\Domain\System\Tests\TestEnum;
 
 /**
  * Enum Test.
