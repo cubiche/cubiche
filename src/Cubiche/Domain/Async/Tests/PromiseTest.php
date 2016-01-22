@@ -7,6 +7,7 @@ namespace Cubiche\Domain\Async\Tests;
 
 use Cubiche\Domain\Async\Promise;
 use Cubiche\Domain\System\Delegate;
+use Cubiche\Domain\Async\PromiseInterface;
 
 /**
  * PromiseTest.
