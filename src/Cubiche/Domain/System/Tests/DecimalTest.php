@@ -112,4 +112,27 @@ class DecimalTest extends RealTestCase
         $result = $this->number()->multDecimal($this->secondValue(), 2);
         $this->assertEquals(\bcmul($this->firstNativeValue(), $this->secondNativeValue(), 2), $result->toNative());
     }
+
+    /**
+     * @test
+     */
+    public function div()
+    {
+        parent::div();
+
+        $result = $this->number()->divDecimal($this->secondValue());
+        $this->assertInstanceOf(Decimal::class, $result);
+        $this->assertEquals(
+            \bcdiv($this->firstNativeValue(), $this->secondNativeValue(), Decimal::defaultScale()),
+            $result->toNative()
+        );
+        $this->assertTrue($this->number()->divInteger($this->integerValue())->equals(
+            $this->number()->divDecimal($this->integerValue()->toDecimal())
+        ));
+        $this->assertTrue($this->number()->divReal($this->realValue())->equals(
+            $this->number()->divDecimal($this->realValue()->toDecimal())
+        ));
+        $result = $this->number()->divDecimal($this->secondValue(), 2);
+        $this->assertEquals(\bcdiv($this->firstNativeValue(), $this->secondNativeValue(), 2), $result->toNative());
+    }
 }

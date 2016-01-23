@@ -6,6 +6,7 @@
 namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Integer;
+use Cubiche\Domain\System\Real;
 
 /**
  * Integer Test.
@@ -125,6 +126,27 @@ class IntegerTest extends NumberTestCase
         ));
         $this->assertTrue($this->number()->multDecimal($this->decimalValue(), 2)->equals(
             $this->number()->toDecimal()->multDecimal($this->decimalValue(), 2)
+        ));
+    }
+
+    /**
+     * @test
+     */
+    public function div()
+    {
+        parent::div();
+
+        $result = $this->number()->divInteger($this->secondValue());
+        $this->assertInstanceOf(Real::class, $result);
+        $this->assertEquals($this->firstNativeValue() / $this->secondNativeValue(), $result->toNative());
+        $this->assertTrue($this->number()->divReal($this->realValue())->equals(
+            $this->number()->toReal()->divReal($this->realValue())
+        ));
+        $this->assertTrue($this->number()->divDecimal($this->decimalValue())->equals(
+            $this->number()->toDecimal()->divDecimal($this->decimalValue())
+        ));
+        $this->assertTrue($this->number()->divDecimal($this->decimalValue(), 2)->equals(
+            $this->number()->toDecimal()->divDecimal($this->decimalValue(), 2)
         ));
     }
 }

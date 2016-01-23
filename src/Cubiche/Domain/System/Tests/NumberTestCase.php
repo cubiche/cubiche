@@ -90,6 +90,14 @@ abstract class NumberTestCase extends NativeValueObjectTestCase
     /**
      * @test
      */
+    public function toString()
+    {
+        $this->assertEquals(\strval($this->firstNativeValue()), $this->number()->__toString());
+    }
+
+    /**
+     * @test
+     */
     public function toInteger()
     {
         $this->toIntegerTest(
@@ -339,5 +347,22 @@ abstract class NumberTestCase extends NativeValueObjectTestCase
         $result2 = $this->number()->divDecimal($this->decimalValue());
 
         $this->assertTrue($result1->equals($result2));
+    }
+
+    /**
+     * @test
+     */
+    public function divByZero()
+    {
+        $this->setExpectedException(\DomainException::class, 'Division by zero is not allowed.');
+        $this->number()->div($this->zero());
+    }
+
+    /**
+     * @test
+     */
+    public function divSpecialCases()
+    {
+        $this->assertTrue($this->zero()->div($this->number())->isZero());
     }
 }

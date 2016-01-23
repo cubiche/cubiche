@@ -86,4 +86,25 @@ class RealTest extends RealTestCase
             $this->number()->toDecimal()->multDecimal($this->decimalValue(), 2)
         ));
     }
+
+    /**
+     * @test
+     */
+    public function div()
+    {
+        parent::div();
+
+        $result = $this->number()->divReal($this->secondValue());
+        $this->assertInstanceOf(Real::class, $result);
+        $this->assertEquals($this->firstNativeValue() / $this->secondNativeValue(), $result->toNative());
+        $this->assertTrue($this->number()->divInteger($this->integerValue())->equals(
+            $this->number()->divReal($this->integerValue()->toReal())
+        ));
+        $this->assertTrue($this->number()->divDecimal($this->decimalValue())->equals(
+            $this->number()->toDecimal()->divDecimal($this->decimalValue())
+        ));
+        $this->assertTrue($this->number()->divDecimal($this->decimalValue(), 2)->equals(
+            $this->number()->toDecimal()->divDecimal($this->decimalValue(), 2)
+        ));
+    }
 }

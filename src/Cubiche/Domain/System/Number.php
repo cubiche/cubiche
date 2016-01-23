@@ -232,7 +232,7 @@ abstract class Number implements NativeValueObjectInterface
             throw new \DomainException('Division by zero is not allowed.');
         }
 
-        if ($this->isZero() || $x->isInfinite()) {
+        if (($this->isZero() || $x->isInfinite()) && !$this->isInfinite()) {
             return static::fromNative(0);
         }
 

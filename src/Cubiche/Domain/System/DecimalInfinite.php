@@ -219,6 +219,15 @@ class DecimalInfinite extends Decimal
         return $this->mult($x);
     }
 
+    protected function divSpecialCases(Number $x)
+    {
+        if ($x->isInfinite()) {
+            throw new \DomainException('The div operation is not defined between "INF" and "INF"');
+        }
+
+        return parent::divSpecialCases($x);
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -227,10 +236,6 @@ class DecimalInfinite extends Decimal
     public function div(Number $x)
     {
         $this->divSpecialCases($x);
-
-        if ($x->isInfinite()) {
-            throw new \DomainException('The div operation is not defined between "INF" and "INF"');
-        }
 
         if ($this->isPositive() === $x->isPositive()) {
             return self::infPositive();

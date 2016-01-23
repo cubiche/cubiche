@@ -252,7 +252,7 @@ class Integer extends Number
             return $value;
         }
 
-        return new static($this->toNative() / $x->toNative());
+        return Real::fromNative($this->toNative() / $x->toNative());
     }
 
     /**

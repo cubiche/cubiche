@@ -138,4 +138,23 @@ abstract class RealTestCase extends NumberTestCase
         $this->setExpectedException(\Exception::class);
         $positiveInfinite->mult($this->zero());
     }
+
+    /**
+     * @test
+     */
+    public function divInfinite()
+    {
+        $positiveInfinite = $this->positiveInfinite();
+        $negativeInfinite = $this->negativeInfinite();
+        $this->assertTrue($this->number()->div($positiveInfinite)->isZero());
+        $this->assertTrue($this->number()->div($negativeInfinite)->isZero());
+
+        $this->assertTrue($positiveInfinite->div($this->number())->equals($positiveInfinite));
+        $this->assertTrue($negativeInfinite->div($this->number())->equals($negativeInfinite));
+        $this->assertTrue($positiveInfinite->div($this->negativeValue())->equals($negativeInfinite));
+        $this->assertTrue($negativeInfinite->div($this->negativeValue())->equals($positiveInfinite));
+
+        $this->setExpectedException(\Exception::class);
+        $positiveInfinite->div($positiveInfinite);
+    }
 }
