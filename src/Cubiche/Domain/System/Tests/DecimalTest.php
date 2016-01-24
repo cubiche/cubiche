@@ -6,6 +6,7 @@
 namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Decimal;
+use Cubiche\Domain\System\DecimalInfinite;
 
 /**
  * Decimal Test.
@@ -65,6 +66,15 @@ class DecimalTest extends RealTestCase
     /**
      * @test
      */
+    public function infiniteFromNative()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        DecimalInfinite::fromNative($this->firstNativeValue());
+    }
+
+    /**
+     * @test
+     */
     public function setDefaultScalePositive()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
@@ -115,6 +125,24 @@ class DecimalTest extends RealTestCase
     /**
      * @test
      */
+    public function addInfinite()
+    {
+        $this->assertTrue(
+            $this->positiveInfinite()->addInteger($this->integerValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->addReal($this->realValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->addDecimal($this->decimalValue())->equals($this->positiveInfinite())
+        );
+
+        parent::addInfinite();
+    }
+
+    /**
+     * @test
+     */
     public function sub()
     {
         parent::sub();
@@ -133,6 +161,24 @@ class DecimalTest extends RealTestCase
         ));
         $result = $this->number()->subDecimal($this->secondValue(), 2);
         $this->assertEquals(\bcsub($this->firstNativeValue(), $this->secondNativeValue(), 2), $result->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function subInfinite()
+    {
+        $this->assertTrue(
+            $this->positiveInfinite()->subInteger($this->integerValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->subReal($this->realValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->subDecimal($this->decimalValue())->equals($this->positiveInfinite())
+        );
+
+        parent::subInfinite();
     }
 
     /**
@@ -161,6 +207,24 @@ class DecimalTest extends RealTestCase
     /**
      * @test
      */
+    public function multInfinite()
+    {
+        $this->assertTrue(
+            $this->positiveInfinite()->multInteger($this->integerValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->multReal($this->realValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->multDecimal($this->decimalValue())->equals($this->positiveInfinite())
+        );
+
+        parent::multInfinite();
+    }
+
+    /**
+     * @test
+     */
     public function div()
     {
         parent::div();
@@ -179,6 +243,24 @@ class DecimalTest extends RealTestCase
         ));
         $result = $this->number()->divDecimal($this->secondValue(), 2);
         $this->assertEquals(\bcdiv($this->firstNativeValue(), $this->secondNativeValue(), 2), $result->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function divInfinite()
+    {
+        $this->assertTrue(
+            $this->positiveInfinite()->divInteger($this->integerValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->divReal($this->realValue())->equals($this->positiveInfinite())
+        );
+        $this->assertTrue(
+            $this->positiveInfinite()->divDecimal($this->decimalValue())->equals($this->positiveInfinite())
+        );
+
+        parent::divInfinite();
     }
 
     /**

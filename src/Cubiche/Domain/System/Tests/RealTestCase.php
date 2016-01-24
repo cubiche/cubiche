@@ -36,7 +36,7 @@ abstract class RealTestCase extends NumberTestCase
     }
 
     /**
-     * @return Cubiche\Domain\System\Real|Cubiche\Domain\System\Decimal
+     * @return Cubiche\Domain\System\Real
      */
     protected function positiveInfinite()
     {
@@ -44,7 +44,7 @@ abstract class RealTestCase extends NumberTestCase
     }
 
     /**
-     * @return Cubiche\Domain\System\Real|Cubiche\Domain\System\Decimal
+     * @return Cubiche\Domain\System\Real
      */
     protected function negativeInfinite()
     {
