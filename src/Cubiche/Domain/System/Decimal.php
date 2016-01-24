@@ -55,20 +55,6 @@ class Decimal extends Real
     }
 
     /**
-     * @param string $value
-     */
-    protected function __construct($value)
-    {
-        parent::__construct($value);
-        if ($this->isInfinite()) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "float".',
-                $value
-            ));
-        }
-    }
-
-    /**
      * @param int $scale
      *
      * @return int

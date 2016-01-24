@@ -48,6 +48,15 @@ class IntegerTest extends NumberTestCase
     /**
      * @test
      */
+    public function constructor()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        Integer::fromNative(10.2);
+    }
+
+    /**
+     * @test
+     */
     public function add()
     {
         parent::add();
@@ -158,5 +167,49 @@ class IntegerTest extends NumberTestCase
         $result = $this->number()->sqrt();
         $this->assertInstanceOf(Real::class, $result);
         $this->assertEquals(\sqrt($this->firstNativeValue()), $result->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function inc()
+    {
+        $this->assertEquals($this->firstNativeValue() + 1, $this->integerValue()->inc()->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function dec()
+    {
+        $this->assertEquals($this->firstNativeValue() - 1, $this->integerValue()->dec()->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function mod()
+    {
+        $result = $this->secondValue()->mod($this->integerValue());
+        $this->assertInstanceOf(Integer::class, $result);
+        $this->assertEquals($this->secondNativeValue() % $this->firstNativeValue(), $result->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function isEven()
+    {
+        $this->assertTrue(Integer::fromNative(6)->isEven());
+        $this->assertFalse(Integer::fromNative(3)->isEven());
+    }
+
+    /**
+     * @test
+     */
+    public function isOdd()
+    {
+        $this->assertFalse(Integer::fromNative(6)->isOdd());
+        $this->assertTrue(Integer::fromNative(3)->isOdd());
     }
 }

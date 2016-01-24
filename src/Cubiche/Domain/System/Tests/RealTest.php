@@ -137,5 +137,8 @@ class RealTest extends RealTestCase
         $result = $this->number()->sqrt();
         $this->assertInstanceOf(Real::class, $result);
         $this->assertEquals(\sqrt($this->firstNativeValue()), $result->toNative());
+
+        $result = $this->number()->sqrt(2);
+        $this->assertEquals(\bcsqrt($this->firstNativeValue(), 2), $result->toNative());
     }
 }

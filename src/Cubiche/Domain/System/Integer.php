@@ -29,8 +29,8 @@ class Integer extends Number
      */
     protected function __construct($value)
     {
-        $value = \filter_var($value, FILTER_VALIDATE_INT);
-        if ($value === false) {
+        $filteredValue = \filter_var($value, FILTER_VALIDATE_INT);
+        if ($filteredValue === false) {
             throw new \InvalidArgumentException(sprintf(
                 'Argument "%s" is invalid. Allowed types for argument are "int".',
                 $value

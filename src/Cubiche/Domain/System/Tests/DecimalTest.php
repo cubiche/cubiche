@@ -47,6 +47,51 @@ class DecimalTest extends RealTestCase
     /**
      * @test
      */
+    public function setDefaultScale()
+    {
+        Decimal::setDefaultScale(8);
+        $this->assertEquals(8, Decimal::defaultScale());
+    }
+
+    /**
+     * @test
+     */
+    public function setDefaultScaleInt()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        Decimal::setDefaultScale(8.1);
+    }
+
+    /**
+     * @test
+     */
+    public function setDefaultScalePositive()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        Decimal::setDefaultScale(-2);
+    }
+
+    /**
+     * @test
+     */
+    public function scaleInt()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->decimalValue()->addDecimal($this->decimalValue(), 8.1);
+    }
+
+    /**
+     * @test
+     */
+    public function scalePositive()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->decimalValue()->addDecimal($this->decimalValue(), -2);
+    }
+
+    /**
+     * @test
+     */
     public function add()
     {
         parent::add();
