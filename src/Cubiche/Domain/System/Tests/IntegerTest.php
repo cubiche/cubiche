@@ -16,16 +16,6 @@ use Cubiche\Domain\System\Real;
 class IntegerTest extends NumberTestCase
 {
     /**
-     * @var int
-     */
-    protected $first;
-
-    /**
-     * @var int
-     */
-    protected $second;
-
-    /**
      * @param string $name
      * @param array  $data
      * @param string $dataName
@@ -33,17 +23,6 @@ class IntegerTest extends NumberTestCase
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct(Integer::class, $name, $data, $dataName);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see PHPUnit_Framework_TestCase::setUp()
-     */
-    protected function setUp()
-    {
-        $this->first = $this->firstValue();
-        $this->second = $this->secondValue();
     }
 
     /**
@@ -147,6 +126,27 @@ class IntegerTest extends NumberTestCase
         ));
         $this->assertTrue($this->number()->divDecimal($this->decimalValue(), 2)->equals(
             $this->number()->toDecimal()->divDecimal($this->decimalValue(), 2)
+        ));
+    }
+
+    /**
+     * @test
+     */
+    public function pow()
+    {
+        parent::pow();
+
+        $result = $this->number()->powInteger($this->secondValue());
+        $this->assertInstanceOf(Integer::class, $result);
+        $this->assertEquals(\pow($this->firstNativeValue(), $this->secondNativeValue()), $result->toNative());
+        $this->assertTrue($this->number()->powReal($this->realValue())->equals(
+            $this->number()->toReal()->powReal($this->realValue())
+        ));
+        $this->assertTrue($this->number()->powDecimal($this->decimalValue())->equals(
+            $this->number()->toDecimal()->powDecimal($this->decimalValue())
+        ));
+        $this->assertTrue($this->number()->powDecimal($this->decimalValue(), 2)->equals(
+            $this->number()->toDecimal()->powDecimal($this->decimalValue(), 2)
         ));
     }
 }

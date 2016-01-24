@@ -135,4 +135,23 @@ class DecimalTest extends RealTestCase
         $result = $this->number()->divDecimal($this->secondValue(), 2);
         $this->assertEquals(\bcdiv($this->firstNativeValue(), $this->secondNativeValue(), 2), $result->toNative());
     }
+
+    /**
+     * @test
+     */
+    public function pow()
+    {
+        parent::pow();
+
+        $result = $this->number()->powDecimal($this->secondValue());
+        $this->assertInstanceOf(Decimal::class, $result);
+        $this->assertEquals(\pow($this->firstNativeValue(), $this->secondNativeValue()), $result->toNative());
+        $this->assertEquals(
+            $this->number()->powInteger($this->integerValue())->toNative(),
+            \bcpow($this->firstNativeValue(), $this->integerValue()->toNative(), Decimal::defaultScale())
+        );
+        $this->assertTrue($this->number()->powReal($this->realValue())->equals(
+            $this->number()->powDecimal($this->realValue()->toDecimal())
+        ));
+    }
 }

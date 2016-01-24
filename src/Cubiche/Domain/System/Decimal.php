@@ -276,27 +276,7 @@ class Decimal extends Real
      */
     public function powInteger(Integer $x)
     {
-        return $this->powDecimal($x->toDecimal());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::powReal()
-     */
-    public function powReal(Real $x)
-    {
-        return $this->powDecimal($x->toDecimal());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::powDecimal()
-     */
-    public function powDecimal(Decimal $x, $scale = null)
-    {
-        return new self(\bcpow($this->toNative(), $x->toNative(), $this->scale($scale)));
+        return new self(\bcpow($this->toNative(), $x->toNative(), $this->scale(null)));
     }
 
     /**

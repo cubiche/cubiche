@@ -365,4 +365,25 @@ abstract class NumberTestCase extends NativeValueObjectTestCase
     {
         $this->assertTrue($this->zero()->div($this->number())->isZero());
     }
+
+    /**
+     * @test
+     */
+    public function pow()
+    {
+        $result1 = $this->number()->pow($this->integerValue());
+        $result2 = $this->number()->powInteger($this->integerValue());
+
+        $this->assertTrue($result1->equals($result2));
+
+        $result1 = $this->number()->pow($this->realValue());
+        $result2 = $this->number()->powReal($this->realValue());
+
+        $this->assertTrue($result1->equals($result2));
+
+        $result1 = $this->number()->pow($this->decimalValue());
+        $result2 = $this->number()->powDecimal($this->decimalValue());
+
+        $this->assertTrue($result1->equals($result2));
+    }
 }

@@ -31,7 +31,7 @@ class Real extends Number
     {
         $validatedValue = \filter_var($value, FILTER_VALIDATE_FLOAT);
         if ($validatedValue !== false) {
-            $this->value = $validatedValue;
+            $this->value = $value;
         } elseif (\is_infinite($value)) {
             $this->value = $value;
         } else {
@@ -318,7 +318,7 @@ class Real extends Number
      */
     public function powDecimal(Decimal $x, $scale = null)
     {
-        return $this->toDecimal()->powDecimal($x, $scale);
+        return $this->powReal($x->toReal())->toDecimal();
     }
 
     /**

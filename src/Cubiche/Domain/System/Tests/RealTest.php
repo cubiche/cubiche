@@ -107,4 +107,25 @@ class RealTest extends RealTestCase
             $this->number()->toDecimal()->divDecimal($this->decimalValue(), 2)
         ));
     }
+
+    /**
+     * @test
+     */
+    public function pow()
+    {
+        parent::pow();
+
+        $result = $this->number()->powReal($this->secondValue());
+        $this->assertInstanceOf(Real::class, $result);
+        $this->assertEquals(\pow($this->firstNativeValue(), $this->secondNativeValue()), $result->toNative());
+        $this->assertTrue($this->number()->powInteger($this->integerValue())->equals(
+            $this->number()->powReal($this->integerValue()->toReal())
+        ));
+        $this->assertTrue($this->number()->powDecimal($this->decimalValue())->equals(
+            $this->number()->toDecimal()->powDecimal($this->decimalValue())
+        ));
+        $this->assertTrue($this->number()->powDecimal($this->decimalValue(), 2)->equals(
+            $this->number()->toDecimal()->powDecimal($this->decimalValue(), 2)
+        ));
+    }
 }

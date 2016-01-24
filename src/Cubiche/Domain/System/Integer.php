@@ -47,7 +47,7 @@ class Integer extends Number
      */
     public function toInteger(RoundingMode $roundingMode = null)
     {
-        return new static($this->value);
+        return new self($this->value);
     }
 
     /**

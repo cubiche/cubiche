@@ -52,7 +52,7 @@ abstract class Number implements NativeValueObjectInterface
     /**
      * @param RoundingMode $roundingMode
      *
-     * @return \Cubiche\Domain\Async\Integer
+     * @return \Cubiche\Domain\System\Integer
      */
     abstract public function toInteger(RoundingMode $roundingMode = null);
 
