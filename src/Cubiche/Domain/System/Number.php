@@ -316,6 +316,6 @@ abstract class Number implements NativeValueObjectInterface
     {
         $value = $this->sub($x);
 
-        return $value->isZero() ? 0 : $value->isPositive() ? 1 : -1;
+        return $value->isZero() ? 0 : ($value->isPositive() ? 1 : -1);
     }
 }

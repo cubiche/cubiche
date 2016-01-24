@@ -157,4 +157,23 @@ abstract class RealTestCase extends NumberTestCase
         $this->setExpectedException(\Exception::class);
         $positiveInfinite->div($positiveInfinite);
     }
+
+    /**
+     * @test
+     */
+    public function compareTo()
+    {
+        parent::compareTo();
+
+        $this->assertEquals(-1, $this->number()->compareTo($this->positiveInfinite()));
+        $this->assertEquals(1, $this->number()->compareTo($this->negativeInfinite()));
+        $this->assertEquals(-1, $this->negativeInfinite()->compareTo($this->number()));
+        $this->assertEquals(1, $this->positiveInfinite()->compareTo($this->number()));
+
+        $this->assertEquals(1, $this->positiveInfinite()->compareTo($this->negativeInfinite()));
+        $this->assertEquals(-1, $this->negativeInfinite()->compareTo($this->positiveInfinite()));
+
+        $this->setExpectedException(\Exception::class);
+        $this->positiveInfinite()->compareTo($this->positiveInfinite());
+    }
 }

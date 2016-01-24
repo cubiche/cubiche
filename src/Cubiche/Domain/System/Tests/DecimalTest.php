@@ -31,7 +31,7 @@ class DecimalTest extends RealTestCase
      */
     protected function firstNativeValue()
     {
-        return 6.179;
+        return '4.179';
     }
 
     /**
@@ -41,7 +41,7 @@ class DecimalTest extends RealTestCase
      */
     protected function secondNativeValue()
     {
-        return 4.57;
+        return '7.57';
     }
 
     /**
@@ -153,5 +153,18 @@ class DecimalTest extends RealTestCase
         $this->assertTrue($this->number()->powReal($this->realValue())->equals(
             $this->number()->powDecimal($this->realValue()->toDecimal())
         ));
+    }
+
+    /**
+     * @test
+     */
+    public function sqrt()
+    {
+        $result = $this->number()->sqrt();
+        $this->assertInstanceOf(Decimal::class, $result);
+        $this->assertEquals(\bcsqrt($this->firstNativeValue(), Decimal::defaultScale()), $result->toNative());
+
+        $result = $this->number()->sqrt(2);
+        $this->assertEquals(\bcsqrt($this->firstNativeValue(), 2), $result->toNative());
     }
 }

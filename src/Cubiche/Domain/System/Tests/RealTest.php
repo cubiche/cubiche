@@ -128,4 +128,14 @@ class RealTest extends RealTestCase
             $this->number()->toDecimal()->powDecimal($this->decimalValue(), 2)
         ));
     }
+
+    /**
+     * @test
+     */
+    public function sqrt()
+    {
+        $result = $this->number()->sqrt();
+        $this->assertInstanceOf(Real::class, $result);
+        $this->assertEquals(\sqrt($this->firstNativeValue()), $result->toNative());
+    }
 }

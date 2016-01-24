@@ -386,4 +386,14 @@ abstract class NumberTestCase extends NativeValueObjectTestCase
 
         $this->assertTrue($result1->equals($result2));
     }
+
+    /**
+     * @test
+     */
+    public function compareTo()
+    {
+        $this->assertEquals(0, $this->number()->compareTo($this->number()));
+        $this->assertEquals(-1, $this->number()->compareTo($this->secondValue()));
+        $this->assertEquals(1, $this->number()->compareTo($this->negativeValue()));
+    }
 }
