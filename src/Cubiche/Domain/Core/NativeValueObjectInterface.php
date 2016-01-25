@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Jadddp/core project.
+ * This file is part of the cubiche/cubiche project.
  */
 namespace Cubiche\Domain\Core;
 

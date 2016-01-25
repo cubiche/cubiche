@@ -6,14 +6,10 @@
 namespace Cubiche\Domain\Core;
 
 /**
- * Value Object Interface.
+ * Id Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ValueObjectInterface extends DomainObjectInterface
+interface IdInterface extends NativeValueObjectInterface
 {
-    /**
-     * @return string
-     */
-    public function __toString();
 }

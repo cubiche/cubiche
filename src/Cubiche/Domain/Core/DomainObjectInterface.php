@@ -12,4 +12,10 @@ namespace Cubiche\Domain\Core;
  */
 interface DomainObjectInterface
 {
+    /**
+     * @param DomainObjectInterface $other
+     *
+     * @return bool
+     */
+    public function equals($other);
 }

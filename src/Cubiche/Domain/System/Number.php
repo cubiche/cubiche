@@ -5,14 +5,14 @@
  */
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Core\NativeValueObjectInterface;
+use Cubiche\Domain\Core\NativeValueObject;
 
 /**
  * Abstract Number Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Number implements NativeValueObjectInterface
+abstract class Number extends NativeValueObject
 {
     /**
      * @var float|int|string
@@ -27,26 +27,6 @@ abstract class Number implements NativeValueObjectInterface
     public function toNative()
     {
         return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Core\ValueObjectInterface::equals()
-     */
-    public function equals($other)
-    {
-        return \get_class($this) === \get_class($other) && $this->toNative() == $other->toNative();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Core\ValueObjectInterface::__toString()
-     */
-    public function __toString()
-    {
-        return \strval($this->toNative());
     }
 
     /**
