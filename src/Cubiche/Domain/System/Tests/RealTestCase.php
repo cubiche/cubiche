@@ -7,6 +7,7 @@ namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Real;
 use Cubiche\Domain\System\Number;
+use Cubiche\Domain\System\Integer;
 
 /**
  * Real Test Case.
@@ -156,6 +157,29 @@ abstract class RealTestCase extends NumberTestCase
 
         $this->setExpectedException(\Exception::class);
         $positiveInfinite->div($positiveInfinite);
+    }
+
+    /**
+     * @test
+     */
+    public function powInfinite()
+    {
+        $positiveInfinite = $this->positiveInfinite();
+        $negativeInfinite = $this->negativeInfinite();
+
+        $this->assertTrue($this->number()->pow($positiveInfinite)->equals($positiveInfinite));
+        $this->assertTrue($this->number()->pow($negativeInfinite)->isZero());
+        $this->assertTrue($positiveInfinite->pow($this->number())->equals($positiveInfinite));
+        $this->assertTrue($positiveInfinite->pow($this->negativeValue())->isZero());
+        $this->assertTrue($negativeInfinite->pow($this->negativeValue())->isZero());
+        $this->assertTrue(
+            $negativeInfinite->pow($this->integerValue()->mult(Integer::fromNative(2)))->equals($positiveInfinite)
+        );
+        $this->assertTrue(
+            $negativeInfinite->pow(
+                $this->integerValue()->mult(Integer::fromNative(2))->inc()
+            )->equals($negativeInfinite)
+        );
     }
 
     /**

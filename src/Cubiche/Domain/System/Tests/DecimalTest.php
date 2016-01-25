@@ -7,6 +7,7 @@ namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Decimal;
 use Cubiche\Domain\System\DecimalInfinite;
+use Cubiche\Domain\Exception\NotImplementedException;
 
 /**
  * Decimal Test.
@@ -280,6 +281,24 @@ class DecimalTest extends RealTestCase
         $this->assertTrue($this->number()->powReal($this->realValue())->equals(
             $this->number()->powDecimal($this->realValue()->toDecimal())
         ));
+    }
+
+    /**
+     * @test
+     */
+    public function powInfiniteToZero()
+    {
+        $this->setExpectedException(NotImplementedException::class);
+        $this->positiveInfinite()->pow($this->zero());
+    }
+
+    /**
+     * @test
+     */
+    public function powInfiniteToInfinite()
+    {
+        $this->setExpectedException(\DomainException::class);
+        $this->negativeInfinite()->pow($this->positiveInfinite());
     }
 
     /**

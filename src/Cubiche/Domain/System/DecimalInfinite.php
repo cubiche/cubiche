@@ -293,8 +293,6 @@ class DecimalInfinite extends Decimal
             }
         } elseif ($x->isNegative()) {
             return Decimal::fromNative(0);
-        } elseif ($x->isZero()) {
-            throw new \DomainException('The pow operation is not defined between "INF" and zero');
         }
 
         return;
