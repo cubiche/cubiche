@@ -170,6 +170,8 @@ abstract class RealTestCase extends NumberTestCase
         $this->assertTrue($this->number()->pow($positiveInfinite)->equals($positiveInfinite));
         $this->assertTrue($this->number()->pow($negativeInfinite)->isZero());
         $this->assertTrue($positiveInfinite->pow($this->number())->equals($positiveInfinite));
+        $this->assertTrue($positiveInfinite->pow($this->integerValue())->equals($positiveInfinite));
+        $this->assertTrue($positiveInfinite->pow($this->realValue())->equals($positiveInfinite));
         $this->assertTrue($positiveInfinite->pow($this->negativeValue())->isZero());
         $this->assertTrue($negativeInfinite->pow($this->negativeValue())->isZero());
         $this->assertTrue(
