@@ -354,6 +354,6 @@ class DecimalInfinite extends Decimal
      */
     public function sqrt($scale = null)
     {
-        return new self(\bcsqrt($this->toNative(), $this->scale($scale)));
+        throw new NotImplementedException(self::class, 'sqrt');
     }
 }
