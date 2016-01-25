@@ -304,7 +304,7 @@ class DecimalTest extends RealTestCase
     /**
      * @test
      */
-    public function powInfiniteTo()
+    public function powInfiniteToReal()
     {
         $this->setExpectedException(NotImplementedException::class);
         $this->negativeInfinite()->powReal($this->realValue());
@@ -321,5 +321,14 @@ class DecimalTest extends RealTestCase
 
         $result = $this->number()->sqrt(2);
         $this->assertEquals(\bcsqrt($this->firstNativeValue(), 2), $result->toNative());
+    }
+
+    /**
+     * @test
+     */
+    public function sqrtInfinite()
+    {
+        $this->setExpectedException(NotImplementedException::class);
+        $this->positiveInfinite()->sqrt();
     }
 }
