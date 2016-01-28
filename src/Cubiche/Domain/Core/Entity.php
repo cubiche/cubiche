@@ -38,7 +38,7 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\DomainObjectInterface::equals()
+     * @see \Cubiche\Domain\Core\EquatableInterface::equals()
      */
     public function equals($other)
     {

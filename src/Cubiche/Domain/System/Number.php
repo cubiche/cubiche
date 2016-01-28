@@ -6,13 +6,14 @@
 namespace Cubiche\Domain\System;
 
 use Cubiche\Domain\Core\NativeValueObject;
+use Cubiche\Domain\Core\ComparableInterface;
 
 /**
  * Abstract Number Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Number extends NativeValueObject
+abstract class Number extends NativeValueObject implements ComparableInterface
 {
     /**
      * @var float|int|string
@@ -288,13 +289,21 @@ abstract class Number extends NativeValueObject
     abstract public function sqrt($scale = null);
 
     /**
-     * @param \Cubiche\Domain\System\Number $x
+     * {@inheritdoc}
      *
-     * @return int
+     * @see \Cubiche\Domain\Core\ComparableInterface::compareTo()
      */
-    public function compareTo(Number $x)
+    public function compareTo($other)
     {
-        $value = $this->sub($x);
+        if (!$other instanceof self) {
+            throw new \InvalidArgumentException(sprintf(
+                'Argument "%s" is invalid. Allowed types for argument are "%s".',
+                $other,
+                self::class
+            ));
+        }
+
+        $value = $this->sub($other);
 
         return $value->isZero() ? 0 : ($value->isPositive() ? 1 : -1);
     }

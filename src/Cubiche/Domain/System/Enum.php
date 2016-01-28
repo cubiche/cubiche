@@ -48,7 +48,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\ValueObjectInterface::equals()
+     * @see \Cubiche\Domain\Core\EquatableInterface::equals()
      */
     public function equals($other)
     {

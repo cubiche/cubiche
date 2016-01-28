@@ -20,7 +20,7 @@ class Delegate
     /**
      * @param Closure $closure
      *
-     * @return Delegate
+     * @return static
      */
     public static function fromClosure(\Closure $closure)
     {
@@ -31,7 +31,7 @@ class Delegate
      * @param object $object
      * @param string $method
      *
-     * @return Delegate
+     * @return static
      */
     public static function fromMethod($object, $method)
     {
@@ -41,7 +41,7 @@ class Delegate
     /**
      * @param string $function
      *
-     * @return Delegate
+     * @return static
      */
     public static function fromFunction($function)
     {
@@ -69,6 +69,16 @@ class Delegate
      */
     public function __invoke()
     {
-        return \call_user_func_array($this->closure, \func_get_args());
+        return $this->invokeWith(\func_get_args());
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return mixed
+     */
+    public function invokeWith(array $args)
+    {
+        return \call_user_func_array($this->closure, $args);
     }
 }
