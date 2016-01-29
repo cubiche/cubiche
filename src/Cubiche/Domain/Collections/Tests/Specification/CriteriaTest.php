@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Specification;
 
-use Cubiche\Domain\Core\Tests\TestCase;
+use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\Collections\Specification\Criteria;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Selector\Key;

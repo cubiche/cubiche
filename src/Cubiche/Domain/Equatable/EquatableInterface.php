@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,13 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core\Tests;
+namespace Cubiche\Domain\Equatable;
 
 /**
- * Test Case Class.
+ * Equatable Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+interface EquatableInterface
 {
+    /**
+     * @param mixed $other
+     *
+     * @return bool
+     */
+    public function equals($other);
 }

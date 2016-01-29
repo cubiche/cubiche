@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Number;
@@ -15,7 +16,7 @@ use Cubiche\Domain\System\Integer;
 use Cubiche\Domain\System\RoundingMode;
 use Cubiche\Domain\System\Real;
 use Cubiche\Domain\System\Decimal;
-use Cubiche\Domain\Core\Tests\NativeValueObjectTestCase;
+use Cubiche\Domain\Model\Tests\NativeValueObjectTestCase;
 
 /**
  * Number Test Case.

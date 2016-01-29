@@ -14,7 +14,7 @@ use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Tests\Specification\SpecificationTestCase;
-use Cubiche\Domain\Core\ComparableInterface;
+use Cubiche\Domain\Comparable\ComparableInterface;
 
 /**
  * Greater Than Test Class.

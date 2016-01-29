@@ -8,7 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model;
 
 /**
  * Abstract Entity Class.
@@ -33,7 +34,7 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\EntityInterface::id()
+     * @see \Cubiche\Domain\Model\EntityInterface::id()
      */
     public function id()
     {
@@ -43,7 +44,7 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\EquatableInterface::equals()
+     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
      */
     public function equals($other)
     {

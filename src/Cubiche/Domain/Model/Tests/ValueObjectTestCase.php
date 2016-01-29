@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core\Tests;
 
-use Cubiche\Domain\Core\ValueObjectInterface;
+namespace Cubiche\Domain\Model\Tests;
+
+use Cubiche\Domain\Model\ValueObjectInterface;
 
 /**
  * Value Object Test Case Class.

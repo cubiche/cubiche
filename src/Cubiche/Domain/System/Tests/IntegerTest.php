@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\System\Integer;
@@ -33,7 +34,7 @@ class IntegerTest extends NumberTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\Tests\NativeValueObjectTestCase::firstNativeValue()
+     * @see \Cubiche\Domain\Model\Tests\NativeValueObjectTestCase::firstNativeValue()
      */
     protected function firstNativeValue()
     {
@@ -43,7 +44,7 @@ class IntegerTest extends NumberTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\Tests\NativeValueObjectTestCase::secondNativeValue()
+     * @see \Cubiche\Domain\Model\Tests\NativeValueObjectTestCase::secondNativeValue()
      */
     protected function secondNativeValue()
     {

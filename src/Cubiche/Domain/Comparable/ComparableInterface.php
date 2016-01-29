@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,17 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+namespace Cubiche\Domain\Comparable;
 
 /**
- * Entity Interface.
+ * Comparable Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface EntityInterface extends DomainObjectInterface
+interface ComparableInterface
 {
     /**
-     * @return IdInterface
+     * @param mixed $other
+     *
+     * @return int
      */
-    public function id();
+    public function compareTo($other);
 }

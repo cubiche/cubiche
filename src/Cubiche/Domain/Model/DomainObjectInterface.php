@@ -8,17 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model;
+
+use Cubiche\Domain\Equatable\EquatableInterface;
 
 /**
- * Value Object Interface.
+ * Domain Object Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ValueObjectInterface extends DomainObjectInterface
+interface DomainObjectInterface extends EquatableInterface
 {
-    /**
-     * @return string
-     */
-    public function __toString();
 }

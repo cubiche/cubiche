@@ -8,24 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model;
 
 /**
- * Native Value Object Interface.
+ * Value Object Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface NativeValueObjectInterface extends ValueObjectInterface
+interface ValueObjectInterface extends DomainObjectInterface
 {
     /**
-     * @param mixed $value
-     *
-     * @return static
+     * @return string
      */
-    public static function fromNative($value);
-
-    /**
-     * @return mixed
-     */
-    public function toNative();
+    public function __toString();
 }

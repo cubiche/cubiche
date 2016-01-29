@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests;
 
-use Cubiche\Domain\Core\Tests\TestCase;
+use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\System\Delegate;
 
 /**

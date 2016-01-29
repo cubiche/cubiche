@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,19 +8,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model;
 
 /**
- * Comparable Interface.
+ * Native Value Object Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ComparableInterface
+interface NativeValueObjectInterface extends ValueObjectInterface
 {
     /**
-     * @param mixed $other
+     * @param mixed $value
      *
-     * @return int
+     * @return static
      */
-    public function compareTo($other);
+    public static function fromNative($value);
+
+    /**
+     * @return mixed
+     */
+    public function toNative();
 }

@@ -8,7 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model;
 
 /**
  * Abstract Native Value Object Class.
@@ -20,7 +21,7 @@ abstract class NativeValueObject implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\EquatableInterface::equals()
+     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
      */
     public function equals($other)
     {
@@ -30,7 +31,7 @@ abstract class NativeValueObject implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\ValueObjectInterface::__toString()
+     * @see \Cubiche\Domain\Model\ValueObjectInterface::__toString()
      */
     public function __toString()
     {

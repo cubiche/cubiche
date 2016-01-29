@@ -8,13 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core;
+
+namespace Cubiche\Domain\Model\Tests;
 
 /**
- * Domain Object Interface.
+ * Test Case Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DomainObjectInterface extends EquatableInterface
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
 }

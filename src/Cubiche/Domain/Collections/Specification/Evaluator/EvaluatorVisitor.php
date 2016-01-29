@@ -23,7 +23,7 @@ use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
-use Cubiche\Domain\Core\ComparableInterface;
+use Cubiche\Domain\Comparable\ComparableInterface;
 
 /**
  * Evaluator Visitor Class.

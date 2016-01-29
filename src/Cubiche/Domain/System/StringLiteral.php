@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Core\NativeValueObject;
+use Cubiche\Domain\Model\NativeValueObject;
 
 /**
  * String Literal Class.

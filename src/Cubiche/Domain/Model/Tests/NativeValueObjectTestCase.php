@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Core\Tests;
 
-use Cubiche\Domain\Core\NativeValueObjectInterface;
+namespace Cubiche\Domain\Model\Tests;
+
+use Cubiche\Domain\Model\NativeValueObjectInterface;
 
 /**
  * Native Value Object Test Case Class.

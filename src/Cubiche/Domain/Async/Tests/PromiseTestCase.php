@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Async\Tests;
 
-use Cubiche\Domain\Core\Tests\TestCase;
+use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\Async\PromiseInterface;
 use Cubiche\Domain\System\Delegate;
 

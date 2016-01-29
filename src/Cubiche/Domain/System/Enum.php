@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Core\NativeValueObjectInterface;
+use Cubiche\Domain\Model\NativeValueObjectInterface;
 use MyCLabs\Enum\Enum as BaseEnum;
 
 /**
@@ -43,7 +44,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\NativeValueObjectInterface::toNative()
+     * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {
@@ -53,7 +54,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\EquatableInterface::equals()
+     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
      */
     public function equals($other)
     {

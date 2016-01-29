@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Core\NativeValueObject;
-use Cubiche\Domain\Core\ComparableInterface;
+use Cubiche\Domain\Comparable\ComparableInterface;
+use Cubiche\Domain\Model\NativeValueObject;
 
 /**
  * Abstract Number Class.
@@ -28,7 +29,7 @@ abstract class Number extends NativeValueObject implements ComparableInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\NativeValueObjectInterface::toNative()
+     * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {
@@ -296,7 +297,7 @@ abstract class Number extends NativeValueObject implements ComparableInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Core\ComparableInterface::compareTo()
+     * @see \Cubiche\Domain\Model\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {
