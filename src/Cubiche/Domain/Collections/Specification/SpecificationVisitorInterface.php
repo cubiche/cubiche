@@ -18,6 +18,7 @@ use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Selector\Custom;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 
 /**
  * Specification Visitor Interface.
@@ -109,4 +110,11 @@ interface SpecificationVisitorInterface
      * @return mixed
      */
     public function visitGreaterThan(GreaterThan $specification);
+
+    /**
+     * @param GreaterThanEqual $specification
+     *
+     * @return mixed
+     */
+    public function visitGreaterThanEqual(GreaterThanEqual $specification);
 }

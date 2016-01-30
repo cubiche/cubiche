@@ -20,6 +20,7 @@ use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\Collections\Specification\Selector\Custom;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 
 /**
  * Criteria Test Class.
@@ -121,6 +122,19 @@ class CriteriaTest extends TestCase
         $this->assertTrue($gt->evaluate(6));
         $this->assertFalse($gt->evaluate(5));
         $this->assertFalse($gt->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testGte()
+    {
+        $gte = Criteria::gte(5);
+        $this->assertInstanceOf(GreaterThanEqual::class, $gte);
+
+        $this->assertTrue($gte->evaluate(6));
+        $this->assertTrue($gte->evaluate(5));
+        $this->assertFalse($gte->evaluate(4));
     }
 
     /**

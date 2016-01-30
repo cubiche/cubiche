@@ -143,6 +143,16 @@ class Criteria
     }
 
     /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual
+     */
+    public function gte($value)
+    {
+        return self::this()->gte($value);
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Collections\Specification\Quantifier\All

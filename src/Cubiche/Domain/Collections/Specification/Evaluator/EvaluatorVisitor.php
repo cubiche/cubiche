@@ -11,7 +11,9 @@
 namespace Cubiche\Domain\Collections\Specification\Evaluator;
 
 use Cubiche\Domain\Collections\Specification\AndSpecification;
+use Cubiche\Domain\Collections\Specification\Constraint\BinarySelectorOperator;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 use Cubiche\Domain\Collections\Specification\NotSpecification;
 use Cubiche\Domain\Collections\Specification\OrSpecification;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
@@ -190,15 +192,38 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
     public function visitGreaterThan(GreaterThan $specification)
     {
         return Evaluator::fromClosure(function ($value) use ($specification) {
-            $leftValue = $specification->left()->apply($value);
-            $rightValue = $specification->right()->apply($value);
-
-            if ($leftValue instanceof ComparableInterface) {
-                return $leftValue->compareTo($rightValue) === 1;
-            }
-
-            return $leftValue > $rightValue;
+            return $this->comparison($value, $specification) === 1;
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitGreaterThanEqual()
+     */
+    public function visitGreaterThanEqual(GreaterThanEqual $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->comparison($value, $specification) >= 0;
+        });
+    }
+
+    /**
+     * @param mixed                  $value
+     * @param BinarySelectorOperator $operator
+     *
+     * @return int
+     */
+    protected function comparison($value, BinarySelectorOperator $operator)
+    {
+        $leftValue = $operator->left()->apply($value);
+        $rightValue = $operator->right()->apply($value);
+
+        if ($leftValue instanceof ComparableInterface) {
+            return $leftValue->compareTo($rightValue);
+        }
+
+        return $leftValue < $rightValue ? -1 : ($leftValue == $rightValue ? 0 : 1);
     }
 
     /**
