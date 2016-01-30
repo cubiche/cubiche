@@ -147,7 +147,7 @@ class Criteria
      *
      * @return \Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual
      */
-    public function gte($value)
+    public static function gte($value)
     {
         return self::this()->gte($value);
     }
@@ -157,7 +157,7 @@ class Criteria
      *
      * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThan
      */
-    public function lt($value)
+    public static function lt($value)
     {
         return self::this()->lt($value);
     }
@@ -167,7 +167,7 @@ class Criteria
      *
      * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual
      */
-    public function lte($value)
+    public static function lte($value)
     {
         return self::this()->lte($value);
     }
