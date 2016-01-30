@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\System;
+namespace Cubiche\Domain\Delegate;
 
 /**
  * Delegate.

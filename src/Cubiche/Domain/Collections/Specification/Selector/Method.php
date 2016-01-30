@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\Collections\Specification\Selector;
 
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
-use Cubiche\Domain\System\Delegate;
+use Cubiche\Domain\Delegate\Delegate;
 
 /**
  * Method Selector Class.

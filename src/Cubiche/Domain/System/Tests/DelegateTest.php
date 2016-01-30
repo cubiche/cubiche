@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\System\Tests;
 
 use Cubiche\Domain\Model\Tests\TestCase;
-use Cubiche\Domain\System\Delegate;
+use Cubiche\Domain\Delegate\Delegate;
 
 /**
  * Delegate Test.

@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\Collections\Specification\Evaluator;
 
 use Cubiche\Domain\Collections\Specification\EvaluatorInterface;
-use Cubiche\Domain\System\Delegate;
+use Cubiche\Domain\Delegate\Delegate;
 
 /**
  * Evaluator Class.

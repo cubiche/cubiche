@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Async\Tests;
 
 use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\Async\PromiseInterface;
-use Cubiche\Domain\System\Delegate;
+use Cubiche\Domain\Delegate\Delegate;
 
 /**
  * Promise Test Case.
