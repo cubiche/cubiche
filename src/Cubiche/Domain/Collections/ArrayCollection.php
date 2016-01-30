@@ -79,11 +79,31 @@ class ArrayCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::exists()
+     */
+    public function exists($key)
+    {
+        return isset($this->items[$key]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\CollectionInterface::get()
      */
     public function get($key)
     {
         return isset($this->items[$key]) ? $this->items[$key] : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::set()
+     */
+    public function set($key, $value)
+    {
+        $this->items[$key] = $value;
     }
 
     /**
@@ -147,7 +167,7 @@ class ArrayCollection implements CollectionInterface
      */
     public function offsetExists($offset)
     {
-        return isset($this->items[$offset]);
+        return $this->exists($offset);
     }
 
     /**
@@ -167,7 +187,11 @@ class ArrayCollection implements CollectionInterface
      */
     public function offsetSet($offset, $value)
     {
-        $this->items[$offset] = $value;
+        if (!isset($offset)) {
+            return $this->add($value);
+        }
+
+        $this->set($offset, $value);
     }
 
     /**

@@ -29,6 +29,8 @@ interface CollectionInterface extends \Countable, \IteratorAggregate, \ArrayAcce
      */
     public function remove($item);
 
+    /**
+     */
     public function clear();
 
     /**
@@ -41,9 +43,22 @@ interface CollectionInterface extends \Countable, \IteratorAggregate, \ArrayAcce
     /**
      * @param mixed $key
      *
+     * @return bool
+     */
+    public function exists($key);
+
+    /**
+     * @param mixed $key
+     *
      * @return mixed
      */
     public function get($key);
+
+    /**
+     * @param string|int $key
+     * @param mixed      $value
+     */
+    public function set($key, $value);
 
     /**
      * @param SpecificationInterface $specification
