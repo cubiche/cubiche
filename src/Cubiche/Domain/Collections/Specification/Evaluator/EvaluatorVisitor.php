@@ -27,6 +27,8 @@ use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 use Cubiche\Domain\Comparable\ComparableInterface;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
 
 /**
  * Evaluator Visitor Class.
@@ -205,6 +207,30 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
     {
         return Evaluator::fromClosure(function ($value) use ($specification) {
             return $this->comparison($value, $specification) >= 0;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitLessThan()
+     */
+    public function visitLessThan(LessThan $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->comparison($value, $specification) === -1;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitLessThanEqual()
+     */
+    public function visitLessThanEqual(LessThanEqual $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->comparison($value, $specification) <= 0;
         });
     }
 

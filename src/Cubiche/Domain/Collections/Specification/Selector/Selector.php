@@ -11,11 +11,13 @@
 namespace Cubiche\Domain\Collections\Specification\Selector;
 
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
 use Cubiche\Domain\Collections\Specification\SelectorInterface;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 
 /**
  * Abstract Selector Class.
@@ -52,6 +54,26 @@ abstract class Selector extends Specification implements SelectorInterface
     public function gte($value)
     {
         return new GreaterThanEqual($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThan
+     */
+    public function lt($value)
+    {
+        return new LessThan($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual
+     */
+    public function lte($value)
+    {
+        return new LessThanEqual($this, $this->selector($value));
     }
 
     /**

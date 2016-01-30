@@ -11,16 +11,18 @@
 namespace Cubiche\Domain\Collections\Tests\Specification;
 
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
 use Cubiche\Domain\Collections\Specification\Criteria;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Model\Tests\TestCase;
-use Cubiche\Domain\Collections\Specification\Selector\Custom;
-use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 
 /**
  * Criteria Test Class.
@@ -135,6 +137,32 @@ class CriteriaTest extends TestCase
         $this->assertTrue($gte->evaluate(6));
         $this->assertTrue($gte->evaluate(5));
         $this->assertFalse($gte->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testLt()
+    {
+        $lt = Criteria::lt(5);
+        $this->assertInstanceOf(LessThan::class, $lt);
+
+        $this->assertFalse($lt->evaluate(6));
+        $this->assertFalse($lt->evaluate(5));
+        $this->assertTrue($lt->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testLte()
+    {
+        $lte = Criteria::lte(5);
+        $this->assertInstanceOf(LessThanEqual::class, $lte);
+
+        $this->assertFalse($lte->evaluate(6));
+        $this->assertTrue($lte->evaluate(5));
+        $this->assertTrue($lte->evaluate(4));
     }
 
     /**

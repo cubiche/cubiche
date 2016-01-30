@@ -153,6 +153,26 @@ class Criteria
     }
 
     /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThan
+     */
+    public function lt($value)
+    {
+        return self::this()->lt($value);
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual
+     */
+    public function lte($value)
+    {
+        return self::this()->lte($value);
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Collections\Specification\Quantifier\All

@@ -11,14 +11,16 @@
 namespace Cubiche\Domain\Collections\Specification;
 
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
+use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
-use Cubiche\Domain\Collections\Specification\Selector\Custom;
-use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 
 /**
  * Specification Visitor Interface.
@@ -117,4 +119,18 @@ interface SpecificationVisitorInterface
      * @return mixed
      */
     public function visitGreaterThanEqual(GreaterThanEqual $specification);
+
+    /**
+     * @param LessThan $specification
+     *
+     * @return mixed
+     */
+    public function visitLessThan(LessThan $specification);
+
+    /**
+     * @param LessThanEqual $specification
+     *
+     * @return mixed
+     */
+    public function visitLessThanEqual(LessThanEqual $specification);
 }
