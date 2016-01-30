@@ -15,6 +15,7 @@ use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\NotSpecification;
 use Cubiche\Domain\Collections\Specification\OrSpecification;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
@@ -142,6 +143,16 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
      * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitThis()
      */
     public function visitThis(This $specification)
+    {
+        return $this->visitSelector($specification);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitCustom()
+     */
+    public function visitCustom(Custom $specification)
     {
         return $this->visitSelector($specification);
     }

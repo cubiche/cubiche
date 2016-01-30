@@ -19,6 +19,7 @@ use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Model\Tests\TestCase;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 
 /**
  * Criteria Test Class.
@@ -95,6 +96,18 @@ class CriteriaTest extends TestCase
     {
         $self = Criteria::this();
         $this->assertInstanceOf(This::class, $self);
+    }
+
+    /**
+     * @test
+     */
+    public function testCustom()
+    {
+        $custom = Criteria::custom(function ($value) {
+            return $value + 1;
+        });
+        $this->assertInstanceOf(Custom::class, $custom);
+        $this->assertEquals(3, $custom->apply(2));
     }
 
     /**

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
 /**
@@ -54,15 +55,15 @@ class Delegate
     }
 
     /**
-     * @param callable $function
+     * @param callable $callable
      */
-    public function __construct($function)
+    public function __construct($callable)
     {
-        if (\is_object($function) && ($function instanceof \Closure)) {
-            $this->closure = $function;
-        } elseif (\is_callable($function)) {
-            $this->closure = function () use ($function) {
-                return \call_user_func_array($function, \func_get_args());
+        if (\is_object($callable) && ($callable instanceof \Closure)) {
+            $this->closure = $callable;
+        } elseif (\is_callable($callable)) {
+            $this->closure = function () use ($callable) {
+                return \call_user_func_array($callable, \func_get_args());
             };
         } else {
             throw new \InvalidArgumentException('The function must be a \Closure instance or a callable.');

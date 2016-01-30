@@ -17,6 +17,7 @@ use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 
 /**
  * Specification Visitor Interface.
@@ -87,6 +88,13 @@ interface SpecificationVisitorInterface
      * @return mixed
      */
     public function visitThis(This $specification);
+
+    /**
+     * @param Custom $specification
+     *
+     * @return mixed
+     */
+    public function visitCustom(Custom $specification);
 
     /**
      * @param All $specification

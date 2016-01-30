@@ -15,6 +15,7 @@ use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 
 /**
  * Criteria Class.
@@ -119,6 +120,16 @@ class Criteria
         }
 
         return self::$self;
+    }
+
+    /**
+     * @param callable $callable
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Custom
+     */
+    public static function custom($callable)
+    {
+        return new Custom($callable);
     }
 
     /**
