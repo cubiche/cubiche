@@ -41,7 +41,7 @@ abstract class NativeValueObjectTestCase extends ValueObjectTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Jadddp\Tests\Domain\Core\ValueObjectTestCase::firstValue()
+     * @see \Cubiche\Domain\Model\Tests\ValueObjectTestCase::firstValue()
      */
     protected function firstValue()
     {
@@ -51,7 +51,7 @@ abstract class NativeValueObjectTestCase extends ValueObjectTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Jadddp\Tests\Domain\Core\ValueObjectTestCase::secondValue()
+     * @see \Cubiche\Domain\Model\Tests\ValueObjectTestCase::secondValue()
      */
     protected function secondValue()
     {
