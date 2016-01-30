@@ -113,7 +113,7 @@ class ArrayCollection implements CollectionInterface
      */
     public function slice($offset, $length = null)
     {
-        return \array_slice($this->items, $offset, $length, true);
+        return new static(\array_slice($this->items, $offset, $length, true));
     }
 
     /**
@@ -147,7 +147,7 @@ class ArrayCollection implements CollectionInterface
      */
     public function offsetExists($offset)
     {
-        return isset($this->elements[$offset]);
+        return isset($this->items[$offset]);
     }
 
     /**

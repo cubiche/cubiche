@@ -10,15 +10,15 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Specification;
 
-use Cubiche\Domain\Model\Tests\TestCase;
-use Cubiche\Domain\Collections\Specification\Criteria;
-use Cubiche\Domain\Collections\Specification\Selector\Value;
-use Cubiche\Domain\Collections\Specification\Selector\Key;
-use Cubiche\Domain\Collections\Specification\Selector\Property;
-use Cubiche\Domain\Collections\Specification\Selector\Method;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
+use Cubiche\Domain\Collections\Specification\Criteria;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Selector\Key;
+use Cubiche\Domain\Collections\Specification\Selector\Method;
+use Cubiche\Domain\Collections\Specification\Selector\Property;
+use Cubiche\Domain\Collections\Specification\Selector\This;
+use Cubiche\Domain\Collections\Specification\Selector\Value;
+use Cubiche\Domain\Model\Tests\TestCase;
 
 /**
  * Criteria Test Class.
@@ -91,10 +91,10 @@ class CriteriaTest extends TestCase
     /**
      * @test
      */
-    public function testSelf()
+    public function testThis()
     {
-        $self = Criteria::self();
-        $this->assertInstanceOf(SelfSelector::class, $self);
+        $self = Criteria::this();
+        $this->assertInstanceOf(This::class, $self);
     }
 
     /**

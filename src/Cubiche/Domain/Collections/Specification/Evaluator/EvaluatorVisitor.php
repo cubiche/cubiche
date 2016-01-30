@@ -19,7 +19,7 @@ use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\Selector;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
@@ -139,9 +139,9 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitSelf()
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitThis()
      */
-    public function visitSelf(SelfSelector $specification)
+    public function visitThis(This $specification)
     {
         return $this->visitSelector($specification);
     }
@@ -156,7 +156,7 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
         return Evaluator::fromClosure(function ($value) use ($specification) {
             $items = $specification->selector()->apply($value);
 
-            if (!is_array($items) && !$value instanceof Traversable) {
+            if (!is_array($items) && !$value instanceof \Traversable) {
                 $items = array($items);
             }
             $specificationEvaluator = $this->evaluator($specification->specification());

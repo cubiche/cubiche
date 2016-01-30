@@ -11,21 +11,21 @@
 namespace Cubiche\Domain\Collections\Tests\Specification\Selector;
 
 use Cubiche\Domain\Collections\Tests\Specification\SpecificationTestCase;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 
 /**
- * Self Selector Test Class.
+ * This Selector Test Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SelfSelectorTest extends SpecificationTestCase
+class ThisTest extends SpecificationTestCase
 {
     /**
      * @test
      */
     public function testEvaluate()
     {
-        $self = new SelfSelector();
+        $self = new This();
         $this->assertTrue($self->evaluate(true));
         $this->assertFalse($self->evaluate(false));
         $this->assertFalse($self->evaluate($this));
@@ -36,7 +36,7 @@ class SelfSelectorTest extends SpecificationTestCase
      */
     public function testApply()
     {
-        $self = new SelfSelector();
+        $self = new This();
         $this->assertTrue($self->apply(true));
         $this->assertFalse($self->apply(false));
         $this->assertEquals($this, $self->apply($this));
@@ -47,6 +47,6 @@ class SelfSelectorTest extends SpecificationTestCase
      */
     public function testVisit()
     {
-        $this->visitTest(new SelfSelector(), 'visitSelf');
+        $this->visitTest(new This(), 'visitThis');
     }
 }

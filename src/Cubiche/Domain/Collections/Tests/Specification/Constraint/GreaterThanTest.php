@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\Collections\Tests\Specification\Constraint;
 
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Tests\Specification\SpecificationTestCase;
 use Cubiche\Domain\Comparable\ComparableInterface;
@@ -28,7 +28,7 @@ class GreaterThanTest extends SpecificationTestCase
      */
     public function testEvaluate()
     {
-        $gt = new GreaterThan(new SelfSelector(), new Value(5));
+        $gt = new GreaterThan(new This(), new Value(5));
         $this->assertTrue($gt->evaluate(6));
         $this->assertFalse($gt->evaluate(5));
         $this->assertFalse($gt->evaluate(4));
@@ -46,7 +46,7 @@ class GreaterThanTest extends SpecificationTestCase
             ->with($this->identicalTo(5))
             ->willReturnOnConsecutiveCalls(1, 0, -1);
 
-        $gt = new GreaterThan(new SelfSelector(), new Value(5));
+        $gt = new GreaterThan(new This(), new Value(5));
         $this->assertTrue($gt->evaluate($comparableMock));
         $this->assertFalse($gt->evaluate($comparableMock));
         $this->assertFalse($gt->evaluate($comparableMock));

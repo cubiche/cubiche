@@ -15,7 +15,7 @@ use Cubiche\Domain\Collections\Specification\Quantifier\All;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 
 /**
@@ -82,11 +82,11 @@ interface SpecificationVisitorInterface
     public function visitMethod(Method $specification);
 
     /**
-     * @param SelfSelector $specification
+     * @param This $specification
      *
      * @return mixed
      */
-    public function visitSelf(SelfSelector $specification);
+    public function visitThis(This $specification);
 
     /**
      * @param All $specification

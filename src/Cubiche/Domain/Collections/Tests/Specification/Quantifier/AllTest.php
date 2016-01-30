@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\Collections\Tests\Specification\Quantifier;
 
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Tests\Specification\SpecificationTestCase;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
@@ -28,7 +28,7 @@ class AllTest extends SpecificationTestCase
      */
     public function testEvaluate()
     {
-        $all = new All(new SelfSelector(), new GreaterThan(new SelfSelector(), new Value(5)));
+        $all = new All(new This(), new GreaterThan(new This(), new Value(5)));
         $this->assertTrue($all->evaluate(array(6, 7, 8, 9)));
         $this->assertTrue($all->evaluate(array()));
         $this->assertTrue($all->evaluate(6));
@@ -40,6 +40,6 @@ class AllTest extends SpecificationTestCase
      */
     public function testVisit()
     {
-        $this->visitTest(new All(new SelfSelector(), new Value(true)), 'visitAll');
+        $this->visitTest(new All(new This(), new Value(true)), 'visitAll');
     }
 }

@@ -13,8 +13,8 @@ namespace Cubiche\Domain\Collections\Specification;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
-use Cubiche\Domain\Collections\Specification\Selector\SelfSelector;
 
 /**
  * Criteria Class.
@@ -37,6 +37,11 @@ class Criteria
      * @var Value
      */
     protected static $null = null;
+
+    /**
+     * @var This
+     */
+    protected static $self = null;
 
     /**
      * @return \Cubiche\Domain\Collections\Specification\Value
@@ -105,11 +110,15 @@ class Criteria
     }
 
     /**
-     * @return \Cubiche\Domain\Collections\Specification\Selector\SelfSelector
+     * @return \Cubiche\Domain\Collections\Specification\Selector\This
      */
-    public static function self()
+    public static function this()
     {
-        return new SelfSelector();
+        if (self::$self === null) {
+            self::$self = new This();
+        }
+
+        return self::$self;
     }
 
     /**
@@ -119,7 +128,7 @@ class Criteria
      */
     public static function gt($value)
     {
-        return self::self()->gt($value);
+        return self::this()->gt($value);
     }
 
     /**
@@ -129,7 +138,7 @@ class Criteria
      */
     public static function all(SpecificationInterface $specification)
     {
-        return self::self()->all($specification);
+        return self::this()->all($specification);
     }
 
     /**

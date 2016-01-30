@@ -13,11 +13,11 @@ namespace Cubiche\Domain\Collections\Specification\Selector;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 
 /**
- * Self Selector Class.
+ * This Selector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SelfSelector extends Selector
+class This extends Selector
 {
     /**
      * {@inheritdoc}
@@ -36,6 +36,6 @@ class SelfSelector extends Selector
      */
     public function visit(SpecificationVisitorInterface $visitor)
     {
-        return $visitor->visitSelf($this);
+        return $visitor->visitThis($this);
     }
 }
