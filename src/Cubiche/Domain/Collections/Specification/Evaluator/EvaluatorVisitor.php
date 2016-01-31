@@ -12,8 +12,11 @@ namespace Cubiche\Domain\Collections\Specification\Evaluator;
 
 use Cubiche\Domain\Collections\Specification\AndSpecification;
 use Cubiche\Domain\Collections\Specification\Constraint\BinarySelectorOperator;
+use Cubiche\Domain\Collections\Specification\Constraint\Equal;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
+use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
 use Cubiche\Domain\Collections\Specification\NotSpecification;
 use Cubiche\Domain\Collections\Specification\OrSpecification;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
@@ -27,8 +30,10 @@ use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 use Cubiche\Domain\Comparable\ComparableInterface;
-use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
-use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
+use Cubiche\Domain\Equatable\EquatableInterface;
+use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\Same;
+use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 
 /**
  * Evaluator Visitor Class.
@@ -232,6 +237,84 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
         return Evaluator::fromClosure(function ($value) use ($specification) {
             return $this->comparison($value, $specification) <= 0;
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitEqual()
+     */
+    public function visitEqual(Equal $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->equals($value, $specification, true);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitNotEqual()
+     */
+    public function visitNotEqual(NotEqual $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->equals($value, $specification, false);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitSame()
+     */
+    public function visitSame(Same $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->same($value, $specification, true);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitNotSame()
+     */
+    public function visitNotSame(NotSame $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            return $this->same($value, $specification, false);
+        });
+    }
+
+    /**
+     * @param mixed                  $value
+     * @param BinarySelectorOperator $operator
+     * @param bool                   $same
+     */
+    protected function same($value, BinarySelectorOperator $operator, $same)
+    {
+        $leftValue = $operator->left()->apply($value);
+        $rightValue = $operator->right()->apply($value);
+
+        return $same ? $leftValue === $rightValue : $leftValue !== $rightValue;
+    }
+
+    /**
+     * @param mixed                  $value
+     * @param BinarySelectorOperator $operator
+     * @param bool                   $equals
+     */
+    protected function equals($value, BinarySelectorOperator $operator, $equals)
+    {
+        $leftValue = $operator->left()->apply($value);
+        $rightValue = $operator->right()->apply($value);
+
+        if ($leftValue instanceof EquatableInterface) {
+            return $equals ? $leftValue->equals($rightValue) : !$leftValue->equals($rightValue);
+        }
+
+        return $equals ? $leftValue == $rightValue : $leftValue != $rightValue;
     }
 
     /**

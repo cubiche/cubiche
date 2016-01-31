@@ -10,10 +10,14 @@
  */
 namespace Cubiche\Domain\Collections\Specification\Selector;
 
+use Cubiche\Domain\Collections\Specification\Constraint\Equal;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
+use Cubiche\Domain\Collections\Specification\Constraint\Same;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
 use Cubiche\Domain\Collections\Specification\SelectorInterface;
 use Cubiche\Domain\Collections\Specification\Specification;
@@ -74,6 +78,46 @@ abstract class Selector extends Specification implements SelectorInterface
     public function lte($value)
     {
         return new LessThanEqual($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Equal
+     */
+    public function eq($value)
+    {
+        return new Equal($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotEqual
+     */
+    public function neq($value)
+    {
+        return new NotEqual($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Same
+     */
+    public function same($value)
+    {
+        return new Same($this, $this->selector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotSame
+     */
+    public function notsame($value)
+    {
+        return new NotSame($this, $this->selector($value));
     }
 
     /**

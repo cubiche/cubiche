@@ -23,6 +23,10 @@ use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Model\Tests\TestCase;
+use Cubiche\Domain\Collections\Specification\Constraint\Equal;
+use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\Same;
+use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 
 /**
  * Criteria Test Class.
@@ -163,6 +167,58 @@ class CriteriaTest extends TestCase
         $this->assertFalse($lte->evaluate(6));
         $this->assertTrue($lte->evaluate(5));
         $this->assertTrue($lte->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testEq()
+    {
+        $eq = Criteria::eq(5);
+        $this->assertInstanceOf(Equal::class, $eq);
+
+        $this->assertTrue($eq->evaluate(5));
+        $this->assertTrue($eq->evaluate(5.0));
+        $this->assertFalse($eq->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testNeq()
+    {
+        $neq = Criteria::neq(5);
+        $this->assertInstanceOf(NotEqual::class, $neq);
+
+        $this->assertFalse($neq->evaluate(5));
+        $this->assertFalse($neq->evaluate(5.0));
+        $this->assertTrue($neq->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testSame()
+    {
+        $same = Criteria::same(5);
+        $this->assertInstanceOf(Same::class, $same);
+
+        $this->assertTrue($same->evaluate(5));
+        $this->assertFalse($same->evaluate(5.0));
+        $this->assertFalse($same->evaluate(4));
+    }
+
+    /**
+     * @test
+     */
+    public function testNotSame()
+    {
+        $notsame = Criteria::notsame(5);
+        $this->assertInstanceOf(NotSame::class, $notsame);
+
+        $this->assertFalse($notsame->evaluate(5));
+        $this->assertTrue($notsame->evaluate(5.0));
+        $this->assertTrue($notsame->evaluate(4));
     }
 
     /**

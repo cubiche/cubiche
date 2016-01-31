@@ -173,6 +173,46 @@ class Criteria
     }
 
     /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Equal
+     */
+    public static function eq($value)
+    {
+        return self::this()->eq($value);
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotEqual
+     */
+    public static function neq($value)
+    {
+        return self::this()->neq($value);
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Same
+     */
+    public static function same($value)
+    {
+        return self::this()->same($value);
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotSame
+     */
+    public static function notsame($value)
+    {
+        return self::this()->notsame($value);
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Collections\Specification\Quantifier\All
