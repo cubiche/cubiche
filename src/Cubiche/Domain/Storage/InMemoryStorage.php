@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -13,11 +14,11 @@ use Cubiche\Domain\Storage\Exception\KeyNotFoundException;
 use Cubiche\Domain\Collections\ArrayCollection;
 
 /**
- * ArrayStorage class.
+ * InMemoryStorage class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayStorage extends AbstractStorage
+class InMemoryStorage extends AbstractStorage
 {
     /**
      * @var ArrayCollection
