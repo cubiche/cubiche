@@ -213,6 +213,22 @@ class Criteria
     }
 
     /**
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Same
+     */
+    public static function isNull()
+    {
+        return self::this()->isNull();
+    }
+
+    /**
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotSame
+     */
+    public static function notNull()
+    {
+        return self::this()->notNull();
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Collections\Specification\Quantifier\All

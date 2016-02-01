@@ -121,6 +121,22 @@ abstract class Selector extends Specification implements SelectorInterface
     }
 
     /**
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\Same
+     */
+    public function isNull()
+    {
+        return new Same($this, $this->selector(null));
+    }
+
+    /**
+     * @return \Cubiche\Domain\Collections\Specification\Constraint\NotSame
+     */
+    public function notNull()
+    {
+        return new NotSame($this, $this->selector(null));
+    }
+
+    /**
      * @param SelectorInterface|mixed $value
      *
      * @return \Cubiche\Domain\Collections\Specification\SelectorInterface
