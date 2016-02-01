@@ -224,6 +224,32 @@ class CriteriaTest extends TestCase
     /**
      * @test
      */
+    public function testIsNull()
+    {
+        $null = Criteria::isNull();
+        $this->assertInstanceOf(Same::class, $null);
+
+        $this->assertFalse($null->evaluate(5));
+        $this->assertFalse($null->evaluate(0));
+        $this->assertTrue($null->evaluate(null));
+    }
+
+    /**
+     * @test
+     */
+    public function testNotNull()
+    {
+        $notnull = Criteria::notNull();
+        $this->assertInstanceOf(NotSame::class, $notnull);
+
+        $this->assertTrue($notnull->evaluate(5));
+        $this->assertTrue($notnull->evaluate(0));
+        $this->assertFalse($notnull->evaluate(null));
+    }
+
+    /**
+     * @test
+     */
     public function testAll()
     {
         $all = Criteria::all(Criteria::gt(5));
