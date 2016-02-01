@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\Specification\Evaluator\EvaluatorVisitor;
@@ -17,8 +18,9 @@ use Cubiche\Domain\Collections\Specification\SpecificationInterface;
  * Collection Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayCollection implements CollectionInterface
+class ArrayCollection implements ArrayCollectionInterface
 {
     /**
      * @var array
@@ -99,7 +101,7 @@ class ArrayCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::set()
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::set()
      */
     public function set($key, $value)
     {
