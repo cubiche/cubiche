@@ -44,7 +44,7 @@ class InvalidKeyExceptionTests extends TestCase
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
-                ->isIdenticalTo($cause)
+                    ->isIdenticalTo($cause)
         ;
 
         $this

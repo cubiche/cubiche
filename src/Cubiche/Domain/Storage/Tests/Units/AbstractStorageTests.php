@@ -39,6 +39,13 @@ class AbstractStorageTests extends TestCase
         $this
             ->if($storage = new \mock\Cubiche\Domain\Storage\AbstractStorage())
             ->then
+                ->boolean($this->invoke($storage)->validateKey(''))
+                ->isTrue()
+        ;
+
+        $this
+            ->if($storage = new \mock\Cubiche\Domain\Storage\AbstractStorage())
+            ->then
                 ->exception(
                     function () use ($storage) {
                         $this->invoke($storage)->validateKey(new \StdClass());

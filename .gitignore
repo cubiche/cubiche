@@ -2,7 +2,7 @@ composer.phar
 vendor/
 
 bin/
-coverage/
+build/
 
 .buildpath
 .project
