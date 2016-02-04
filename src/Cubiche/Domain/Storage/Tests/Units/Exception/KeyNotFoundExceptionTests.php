@@ -25,8 +25,9 @@ class KeyNotFoundExceptionTests extends TestCase
      */
     public function testClass()
     {
-        $this->testedClass
-            ->extends('RuntimeException')
+        $this
+            ->testedClass
+            ->extends(\RuntimeException::class)
         ;
     }
 
@@ -40,7 +41,7 @@ class KeyNotFoundExceptionTests extends TestCase
             ->when($exception = KeyNotFoundException::forKey('foo', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf('Cubiche\Domain\Storage\Exception\KeyNotFoundException')
+                    ->isInstanceOf(KeyNotFoundException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Storage\Tests\Units;
 
+use Cubiche\Domain\Storage\Exception\InvalidKeyException;
+use Cubiche\Domain\Storage\StorageInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
 /**
@@ -27,7 +29,7 @@ class AbstractStorageTests extends TestCase
         $this
             ->testedClass
             ->isAbstract()
-            ->hasInterface('Cubiche\Domain\Storage\StorageInterface')
+            ->hasInterface(StorageInterface::class)
         ;
     }
 
@@ -51,7 +53,7 @@ class AbstractStorageTests extends TestCase
                         $this->invoke($storage)->validateKey(new \StdClass());
                     }
                 )
-                ->isInstanceOf('Cubiche\Domain\Storage\Exception\InvalidKeyException')
+                ->isInstanceOf(InvalidKeyException::class)
         ;
     }
 }

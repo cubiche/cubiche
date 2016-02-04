@@ -25,8 +25,9 @@ class WriteExceptionTests extends TestCase
      */
     public function testClass()
     {
-        $this->testedClass
-            ->extends('RuntimeException')
+        $this
+            ->testedClass
+            ->extends(\RuntimeException::class)
         ;
     }
 
@@ -43,7 +44,7 @@ class WriteExceptionTests extends TestCase
             ->when($exception = WriteException::forException($cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf('Cubiche\Domain\Storage\Exception\WriteException')
+                    ->isInstanceOf(WriteException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo($exceptionCode)
                 ->object($exception->getPrevious())

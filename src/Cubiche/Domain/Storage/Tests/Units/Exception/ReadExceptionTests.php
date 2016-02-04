@@ -25,8 +25,9 @@ class ReadExceptionTests extends TestCase
      */
     public function testClass()
     {
-        $this->testedClass
-            ->extends('RuntimeException')
+        $this
+            ->testedClass
+            ->extends(\RuntimeException::class)
         ;
     }
 
@@ -43,7 +44,7 @@ class ReadExceptionTests extends TestCase
             ->when($exception = ReadException::forException($cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf('Cubiche\Domain\Storage\Exception\ReadException')
+                    ->isInstanceOf(ReadException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo($exceptionCode)
                 ->object($exception->getPrevious())

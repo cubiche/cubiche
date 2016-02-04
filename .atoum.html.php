@@ -11,7 +11,7 @@
 use \mageekguy\atoum;
 
 // Code coverage setup
-$coverageHtmlField = new atoum\report\fields\runner\coverage\html('Cubiche', __DIR__.'/build/html');
+$coverageHtmlField = new atoum\report\fields\runner\coverage\html('Cubiche', '/var/www/coverage/web');
 $coverageHtmlField->setRootUrl('http://coverage.cubiche.dev');
 
 $script

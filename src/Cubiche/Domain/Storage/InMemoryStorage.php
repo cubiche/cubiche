@@ -23,7 +23,7 @@ class InMemoryStorage extends AbstractStorage
     /**
      * @var ArrayCollection
      */
-    private $store;
+    protected $store;
 
     /**
      * Creates a new store.
@@ -127,7 +127,6 @@ class InMemoryStorage extends AbstractStorage
     public function remove($key)
     {
         $this->validateKey($key);
-
         if ($this->store->exists($key)) {
             $this->store->remove(
                 $this->store->get($key)

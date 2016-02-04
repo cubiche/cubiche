@@ -25,8 +25,9 @@ class InvalidKeyExceptionTests extends TestCase
      */
     public function testClass()
     {
-        $this->testedClass
-            ->extends('RuntimeException')
+        $this
+            ->testedClass
+            ->extends(\RuntimeException::class)
         ;
     }
 
@@ -40,7 +41,7 @@ class InvalidKeyExceptionTests extends TestCase
             ->when($exception = InvalidKeyException::forKey('foo', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf('Cubiche\Domain\Storage\Exception\InvalidKeyException')
+                    ->isInstanceOf(InvalidKeyException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
