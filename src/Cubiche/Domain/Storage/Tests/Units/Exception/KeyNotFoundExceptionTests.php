@@ -27,12 +27,12 @@ class KeyNotFoundExceptionTests extends TestCase
     {
         $this
             ->testedClass
-            ->extends(\RuntimeException::class)
+                ->extends(\RuntimeException::class)
         ;
     }
 
     /*
-     * Test forKey method
+     * Test forKey method.
      */
     public function testForKey()
     {
@@ -50,8 +50,8 @@ class KeyNotFoundExceptionTests extends TestCase
 
         $this
             ->given($exception = KeyNotFoundException::forKey('bar'))
-            ->variable($exception->getPrevious())
-            ->isNull()
+            ->then
+                ->variable($exception->getPrevious())->isNull()
         ;
     }
 }

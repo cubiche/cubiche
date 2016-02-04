@@ -28,8 +28,8 @@ class AbstractStorageTests extends TestCase
     {
         $this
             ->testedClass
-            ->isAbstract()
-            ->hasInterface(StorageInterface::class)
+                ->isAbstract()
+                ->hasInterface(StorageInterface::class)
         ;
     }
 
@@ -39,21 +39,14 @@ class AbstractStorageTests extends TestCase
     public function testValidateKey()
     {
         $this
-            ->if($storage = new \mock\Cubiche\Domain\Storage\AbstractStorage())
+            ->given($this->newTestedInstance())
             ->then
-                ->boolean($this->invoke($storage)->validateKey(''))
-                ->isTrue()
-        ;
-
-        $this
-            ->if($storage = new \mock\Cubiche\Domain\Storage\AbstractStorage())
-            ->then
+                ->boolean($this->invoke($this->testedInstance)->validateKey(''))->isTrue()
                 ->exception(
-                    function () use ($storage) {
-                        $this->invoke($storage)->validateKey(new \StdClass());
+                    function () {
+                        $this->invoke($this->testedInstance)->validateKey(new \StdClass());
                     }
-                )
-                ->isInstanceOf(InvalidKeyException::class)
+                )->isInstanceOf(InvalidKeyException::class)
         ;
     }
 }

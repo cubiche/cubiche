@@ -27,12 +27,12 @@ class ReadExceptionTests extends TestCase
     {
         $this
             ->testedClass
-            ->extends(\RuntimeException::class)
+                ->extends(\RuntimeException::class)
         ;
     }
 
     /*
-     * Test forException method
+     * Test forException method.
      */
     public function testForKey()
     {

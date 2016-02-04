@@ -24,8 +24,8 @@ class InMemoryStorageTests extends TestCase
     {
         $this
             ->testedClass
-            ->extends(AbstractStorage::class)
-            ->implements(StorageInterface::class)
+                ->extends(AbstractStorage::class)
+                ->implements(StorageInterface::class)
         ;
     }
 
@@ -35,14 +35,14 @@ class InMemoryStorageTests extends TestCase
     public function testConstruct()
     {
         $this
-            ->if($this->newTestedInstance())
+            ->given($this->newTestedInstance())
             ->then
                 ->array($this->testedInstance->keys())->isEmpty()
         ;
     }
 
     /**
-     * Test set.
+     * Test set method.
      */
     public function testSet()
     {
@@ -55,7 +55,7 @@ class InMemoryStorageTests extends TestCase
     }
 
     /**
-     * Test get.
+     * Test get method.
      */
     public function testGet()
     {
@@ -68,7 +68,7 @@ class InMemoryStorageTests extends TestCase
     }
 
     /**
-     * Test get or fail.
+     * Test getOrFail method.
      */
     public function testGetOrFail()
     {
@@ -78,15 +78,15 @@ class InMemoryStorageTests extends TestCase
                 ->array($this->testedInstance->getOrFail('baz'))
                     ->string['foo']->isEqualTo('bar')
                 ->exception(
-                    function ($test) {
-                        $test->testedInstance->getOrFail('invalid-key');
+                    function () {
+                        $this->testedInstance->getOrFail('invalid-key');
                     }
                 )->isInstanceOf(KeyNotFoundException::class)
         ;
     }
 
     /**
-     * Test get multiple.
+     * Test getMultiple method.
      */
     public function testGetMultiple()
     {
@@ -103,7 +103,7 @@ class InMemoryStorageTests extends TestCase
     }
 
     /**
-     * Test get multiple or fail.
+     * Test getMultipleOrFail method.
      */
     public function testGetMultipleOrFail()
     {
@@ -114,15 +114,15 @@ class InMemoryStorageTests extends TestCase
                     ->string['a']->isEqualTo('red')
                     ->string['b']->isEqualTo('blue')
                 ->exception(
-                    function ($test) {
-                        $test->testedInstance->getMultipleOrFail(array('a', 'invalid-key'));
+                    function () {
+                        $this->testedInstance->getMultipleOrFail(array('a', 'invalid-key'));
                     }
                 )->isInstanceOf(KeyNotFoundException::class)
         ;
     }
 
     /**
-     * Test remove.
+     * Test remove method.
      */
     public function testRemove()
     {
@@ -135,7 +135,7 @@ class InMemoryStorageTests extends TestCase
     }
 
     /**
-     * Test clear.
+     * Test clear method.
      */
     public function testClear()
     {
