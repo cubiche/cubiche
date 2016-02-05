@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 use \mageekguy\atoum;
+use Cubiche\Domain\Tests\Atoum\Report\Coverage\Html;
 
 // Code coverage setup
-$coverageHtmlField = new atoum\report\fields\runner\coverage\html('Cubiche', '/var/www/coverage');
+//$coverageHtmlField = new atoum\report\fields\runner\coverage\html('Cubiche', '/var/www/coverage');
+$coverageHtmlField = new Html('Cubiche', '/var/www/coverage');
 $coverageHtmlField->setRootUrl('http://coverage.cubiche.dev');
 $coverageHtmlField->setTemplatesDirectory(__DIR__.'/resources/coverage');
 
