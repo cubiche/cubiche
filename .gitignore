@@ -4,6 +4,8 @@ vendor/
 bin/
 build/
 
+.atoum.html.php
+
 .buildpath
 .project
 .settings/

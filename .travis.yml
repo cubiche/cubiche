@@ -8,9 +8,8 @@ php:
 install:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
+before_script:
+  - "[ -n \"$COVERALLS_REPO_TOKEN\" ] && sed -i s/YouCoverallsProjectToken/$COVERALLS_REPO_TOKEN/ .atoum.travis.php || true"
 script:
-  - mkdir -p build/logs
-  - bin/phpunit --coverage-clover build/logs/clover.xml
-after_success:
-  - travis_retry sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php bin/coveralls -v; fi;'
+  - bin/atoum -c .atoum.travis.php +verbose
   

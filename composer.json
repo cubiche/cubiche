@@ -26,7 +26,6 @@
         "atoum/stubs": "~2.5",
         "atoum/visibility-extension": "~1.0",
         "phpunit/phpunit": "~4.2",
-        "satooshi/php-coveralls": "^1.0",
         "cubiche/cqt": "dev-master"
     },
     "autoload": {
