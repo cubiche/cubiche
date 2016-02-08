@@ -8,11 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Tests\Atoum\Report\Coverage;
 
 use mageekguy\atoum\report\fields\runner\coverage\html as Report;
 
+/**
+ * Html class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class Html extends Report
 {
     /**
