@@ -26,6 +26,14 @@ class Coveralls extends Report
      */
     protected $rootDir;
 
+    /**
+     * Coveralls constructor.
+     *
+     * @param string       $sourceDir
+     * @param string       $repositoryToken
+     * @param string       $rootDir
+     * @param adapter|null $adapter
+     */
     public function __construct($sourceDir, $repositoryToken, $rootDir = null, adapter $adapter = null)
     {
         parent::__construct($sourceDir, $repositoryToken, $adapter);
@@ -41,7 +49,7 @@ class Coveralls extends Report
         $sources = parent::makeSourceElement($coverage);
 
         if ($this->rootDir !== null) {
-            foreach ($sources as $source) {
+            foreach ($sources as &$source) {
                 $source['name'] = $this->rootDir.'/'.$source['name'];
             }
         }
