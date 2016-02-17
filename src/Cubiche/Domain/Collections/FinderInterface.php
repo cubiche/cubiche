@@ -11,18 +11,17 @@
 namespace Cubiche\Domain\Collections;
 
 /**
- * ArrayCollection Interface.
+ * Finder Interface.
  *
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
+interface FinderInterface extends \Countable, \IteratorAggregate
 {
     /**
-     * Sets an element in the collection at the specified key/index.
+     * @param int $offset
+     * @param int $length
      *
-     * @param string|int $key
-     * @param mixed      $value
+     * @return FinderInterface
      */
-    public function set($key, $value);
+    public function sliceFinder($offset, $length = null);
 }

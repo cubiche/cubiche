@@ -10,12 +10,13 @@
  */
 namespace Cubiche\Domain\Collections\Specification;
 
+use Cubiche\Domain\Collections\Specification\Selector\Count;
+use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
 use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
-use Cubiche\Domain\Collections\Specification\Selector\Custom;
 
 /**
  * Criteria Class.
@@ -133,6 +134,16 @@ class Criteria
     }
 
     /**
+     * @param callable $callable
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Count
+     */
+    public static function count()
+    {
+        return new Count();
+    }
+
+    /**
      * @param SelectorInterface|mixed $value
      *
      * @return \Cubiche\Domain\Collections\Specification\Constraint\GreaterThan
@@ -236,6 +247,27 @@ class Criteria
     public static function all(SpecificationInterface $specification)
     {
         return self::this()->all($specification);
+    }
+
+    /**
+     * @param int                    $count
+     * @param SpecificationInterface $specification
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Quantifier\AtLeast
+     */
+    public static function atLeast($count, SpecificationInterface $specification)
+    {
+        return self::this()->atLeast($count, $specification);
+    }
+
+    /**
+     * @param SpecificationInterface $specification
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Quantifier\AtLeast
+     */
+    public static function any(SpecificationInterface $specification)
+    {
+        return self::this()->any($specification);
     }
 
     /**

@@ -10,16 +10,15 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Specification;
 
-use Cubiche\Domain\Model\Tests\TestCase;
-use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 
 /**
  * Specification Test Case Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class SpecificationTestCase extends TestCase
+abstract class SpecificationTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param SpecificationInterface $specification

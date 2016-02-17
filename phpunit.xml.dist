@@ -22,8 +22,11 @@
             <exclude>
                 <directory>./vendor</directory>
                 <directory>./src/Cubiche/*/*/Tests</directory>
-                <directory>./src/Elcodi/*/*/vendor</directory>
             </exclude>
         </whitelist>
     </filter>
+    <php>
+        <const name="DOCTRINE_MONGODB_SERVER" value="mongodb://192.168.1.43:27017" />
+        <const name="DOCTRINE_MONGODB_DATABASE" value="doctrine_odm_tests" />
+    </php>
 </phpunit>

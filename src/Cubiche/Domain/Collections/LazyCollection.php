@@ -13,24 +13,38 @@ namespace Cubiche\Domain\Collections;
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
 
 /**
- * Array Collection Class.
+ * Lazy Collection.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayCollection implements ArrayCollectionInterface
+abstract class LazyCollection implements CollectionInterface
 {
     /**
-     * @var array
+     * @var CollectionInterface
      */
-    protected $items;
+    protected $collection;
 
     /**
-     * @param array $items
+     * @var bool
      */
-    public function __construct(array $items = array())
+    protected $initialized = false;
+
+    protected function lazyInitialize()
     {
-        $this->items = $items;
+        if (!$this->isInitialized()) {
+            $this->initialize();
+            $this->initialized = true;
+        }
+    }
+
+    abstract protected function initialize();
+
+    /**
+     * @return bool
+     */
+    protected function isInitialized()
+    {
+        return $this->initialized;
     }
 
     /**
@@ -40,7 +54,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function add($item)
     {
-        $this->items[] = $item;
+        $this->initialize();
+
+        return $this->collection->add($item);
     }
 
     /**
@@ -50,10 +66,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function remove($item)
     {
-        $key = \array_search($item, $this->items, true);
-        if ($key !== false) {
-            unset($this->items[$key]);
-        }
+        $this->initialize();
+
+        return $this->collection->remove($item);
     }
 
     /**
@@ -63,7 +78,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function clear()
     {
-        $this->items = array();
+        $this->initialize();
+
+        return $this->collection->clear();
     }
 
     /**
@@ -73,7 +90,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function contains($item)
     {
-        return \in_array($item, $this->items, true);
+        $this->initialize();
+
+        return $this->collection->contains($item);
     }
 
     /**
@@ -83,7 +102,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function exists($key)
     {
-        return isset($this->items[$key]);
+        $this->initialize();
+
+        return $this->collection->exists($key);
     }
 
     /**
@@ -93,17 +114,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function get($key)
     {
-        return isset($this->items[$key]) ? $this->items[$key] : null;
-    }
+        $this->initialize();
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::set()
-     */
-    public function set($key, $value)
-    {
-        $this->items[$key] = $value;
+        return $this->collection->get($key);
     }
 
     /**
@@ -113,7 +126,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function count()
     {
-        return \count($this->items);
+        $this->initialize();
+
+        return $this->collection->count();
     }
 
     /**
@@ -123,7 +138,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->items);
+        $this->initialize();
+
+        return $this->collection->getIterator();
     }
 
     /**
@@ -133,7 +150,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function slice($offset, $length = null)
     {
-        return new static(\array_slice($this->items, $offset, $length, true));
+        $this->initialize();
+
+        return $this->collection->slice($offset, $length);
     }
 
     /**
@@ -143,7 +162,9 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function find(SpecificationInterface $specification)
     {
-        return new FinderLazyCollection(new ArrayFinder($this->items, $specification));
+        $this->initialize();
+
+        return $this->collection->find($specification);
     }
 
     /**
@@ -153,50 +174,8 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function toArray()
     {
-        return $this->items;
-    }
+        $this->initialize();
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetExists()
-     */
-    public function offsetExists($offset)
-    {
-        return $this->exists($offset);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetGet()
-     */
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetSet()
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (!isset($offset)) {
-            return $this->add($value);
-        }
-
-        $this->set($offset, $value);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetUnset()
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->items[$offset]);
+        return $this->collection->toArray();
     }
 }
