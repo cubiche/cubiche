@@ -18,13 +18,8 @@ use Cubiche\Domain\Delegate\Delegate;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Method extends Selector
+class Method extends Field
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
     /**
      * @var array
      */
@@ -36,7 +31,8 @@ class Method extends Selector
      */
     public function __construct($name, array $args = array())
     {
-        $this->name = $name;
+        parent::__construct($name);
+
         $this->args = $args;
     }
 
@@ -48,14 +44,6 @@ class Method extends Selector
         $this->args = func_get_args();
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function name()
-    {
-        return $this->name;
     }
 
     /**

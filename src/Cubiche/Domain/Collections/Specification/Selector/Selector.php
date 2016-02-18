@@ -19,6 +19,7 @@ use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
 use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 use Cubiche\Domain\Collections\Specification\Constraint\Same;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Quantifier\AtLeast;
 use Cubiche\Domain\Collections\Specification\SelectorInterface;
 use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
@@ -31,6 +32,54 @@ use Cubiche\Domain\Collections\Specification\SpecificationInterface;
 abstract class Selector extends Specification implements SelectorInterface
 {
     /**
+     * @param unknown $key
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Composite
+     */
+    public function key($key)
+    {
+        return new Composite($this, new Key($key));
+    }
+
+    /**
+     * @param unknown $property
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Composite
+     */
+    public function property($property)
+    {
+        return new Composite($this, new Property($property));
+    }
+
+    /**
+     * @param unknown $method
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Composite
+     */
+    public function method($method)
+    {
+        return new Composite($this, new Method($method));
+    }
+
+    /**
+     * @param callable $callable
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Composite
+     */
+    public function custom($callable)
+    {
+        return new Composite($this, new Custom($callable));
+    }
+
+    /**
+     * @return \Cubiche\Domain\Collections\Specification\Selector\Composite
+     */
+    public function count()
+    {
+        return new Composite($this, new Count());
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Collections\Specification\Quantifier\All
@@ -38,6 +87,27 @@ abstract class Selector extends Specification implements SelectorInterface
     public function all(SpecificationInterface $specification)
     {
         return new All($this, $specification);
+    }
+
+    /**
+     * @param int                    $count
+     * @param SpecificationInterface $specification
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Quantifier\AtLeast
+     */
+    public function atLeast($count, SpecificationInterface $specification)
+    {
+        return new AtLeast($count, $this, $specification);
+    }
+
+    /**
+     * @param SpecificationInterface $specification
+     *
+     * @return \Cubiche\Domain\Collections\Specification\Quantifier\AtLeast
+     */
+    public function any(SpecificationInterface $specification)
+    {
+        return $this->atLeast(1, $specification);
     }
 
     /**

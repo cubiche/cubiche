@@ -17,29 +17,8 @@ use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Property extends Selector
+class Property extends Field
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function name()
-    {
-        return $this->name;
-    }
-
     /**
      * {@inheritdoc}
      *

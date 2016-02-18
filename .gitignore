@@ -5,6 +5,7 @@ bin/
 build/
 
 .atoum.html.php
+phpunit.xml
 
 .buildpath
 .project

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
@@ -19,7 +18,7 @@ use Cubiche\Domain\Collections\Specification\SpecificationInterface;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface CollectionInterface extends \Countable, \IteratorAggregate, \ArrayAccess
+interface CollectionInterface extends \Countable, \IteratorAggregate
 {
     /**
      * Adds an element at the end of the collection.

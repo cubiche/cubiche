@@ -19,6 +19,9 @@ use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
 use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 use Cubiche\Domain\Collections\Specification\Constraint\Same;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Quantifier\AtLeast;
+use Cubiche\Domain\Collections\Specification\Selector\Composite;
+use Cubiche\Domain\Collections\Specification\Selector\Count;
 use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
@@ -104,11 +107,18 @@ interface SpecificationVisitorInterface
     public function visitCustom(Custom $specification);
 
     /**
-     * @param All $specification
+     * @param Count $specification
      *
      * @return mixed
      */
-    public function visitAll(All $specification);
+    public function visitCount(Count $specification);
+
+    /**
+     * @param Composite $specification
+     *
+     * @return mixed
+     */
+    public function visitComposite(Composite $specification);
 
     /**
      * @param GreaterThan $specification
@@ -165,4 +175,18 @@ interface SpecificationVisitorInterface
      * @return mixed
      */
     public function visitNotSame(NotSame $specification);
+
+    /**
+     * @param All $specification
+     *
+     * @return mixed
+     */
+    public function visitAll(All $specification);
+
+    /**
+     * @param AtLeast $specification
+     *
+     * @return mixed
+     */
+    public function visitAtLeast(AtLeast $specification);
 }

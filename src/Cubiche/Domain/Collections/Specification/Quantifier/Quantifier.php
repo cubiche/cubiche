@@ -33,8 +33,8 @@ abstract class Quantifier extends Specification implements QuantifierInterface
     protected $specification;
 
     /**
-     * @param SelectorInterface $selector
-     * @param SelectorInterface $right
+     * @param SelectorInterface      $selector
+     * @param SpecificationInterface $specification
      */
     public function __construct(SelectorInterface $selector, SpecificationInterface $specification)
     {

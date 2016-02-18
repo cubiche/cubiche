@@ -13,11 +13,11 @@ namespace Cubiche\Domain\Collections\Specification\Selector;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 
 /**
- * Key Selector Class.
+ * Count Selector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Key extends Field
+class Count extends Selector
 {
     /**
      * {@inheritdoc}
@@ -26,7 +26,7 @@ class Key extends Field
      */
     public function visit(SpecificationVisitorInterface $visitor)
     {
-        return $visitor->visitKey($this);
+        return $visitor->visitCount($this);
     }
 
     /**
@@ -36,6 +36,6 @@ class Key extends Field
      */
     public function apply($value)
     {
-        return \is_array($value) && isset($value[$this->name]) ? $value[$this->name] : null;
+        return \count($value);
     }
 }

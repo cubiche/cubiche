@@ -17,9 +17,16 @@ use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
+use Cubiche\Domain\Collections\Specification\Constraint\Same;
 use Cubiche\Domain\Collections\Specification\NotSpecification;
 use Cubiche\Domain\Collections\Specification\OrSpecification;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Quantifier\AtLeast;
+use Cubiche\Domain\Collections\Specification\Quantifier\Quantifier;
+use Cubiche\Domain\Collections\Specification\Selector\Composite;
+use Cubiche\Domain\Collections\Specification\Selector\Count;
 use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
@@ -31,9 +38,6 @@ use Cubiche\Domain\Collections\Specification\Specification;
 use Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface;
 use Cubiche\Domain\Comparable\ComparableInterface;
 use Cubiche\Domain\Equatable\EquatableInterface;
-use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
-use Cubiche\Domain\Collections\Specification\Constraint\Same;
-use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 
 /**
  * Evaluator Visitor Class.
@@ -169,26 +173,21 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitAll()
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitCount()
      */
-    public function visitAll(All $specification)
+    public function visitCount(Count $specification)
     {
-        return Evaluator::fromClosure(function ($value) use ($specification) {
-            $items = $specification->selector()->apply($value);
+        return $this->visitSelector($specification);
+    }
 
-            if (!is_array($items) && !$value instanceof \Traversable) {
-                $items = array($items);
-            }
-            $specificationEvaluator = $this->evaluator($specification->specification());
-
-            foreach ($items as $item) {
-                if ($specificationEvaluator->evaluate($item) === false) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitComposite()
+     */
+    public function visitComposite(Composite $specification)
+    {
+        return $this->visitSelector($specification);
     }
 
     /**
@@ -285,6 +284,78 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
         return Evaluator::fromClosure(function ($value) use ($specification) {
             return $this->same($value, $specification, false);
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitAll()
+     */
+    public function visitAll(All $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            $items = $specification->selector()->apply($value);
+
+            if (!is_array($items) && !$value instanceof \Traversable) {
+                $items = array($items);
+            }
+            $specificationEvaluator = $this->evaluator($specification->specification());
+
+            foreach ($items as $item) {
+                if ($specificationEvaluator->evaluate($item) === false) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\SpecificationVisitorInterface::visitAtLeast()
+     */
+    public function visitAtLeast(AtLeast $specification)
+    {
+        return Evaluator::fromClosure(function ($value) use ($specification) {
+            if ($specification->count() == 0) {
+                return true;
+            }
+            $count = 0;
+            /** @var bool $result */
+            foreach ($this->quantifierIterator($value, $specification) as $result) {
+                if ($result) {
+                    ++$count;
+                    if ($specification->count() == $count) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * @param unknown    $value
+     * @param Quantifier $quantifier
+     *
+     * @return Generator
+     */
+    protected function quantifierIterator($value, Quantifier $quantifier)
+    {
+        $items = $quantifier->selector()->apply($value);
+
+        if (!is_array($items) && !$value instanceof \Traversable) {
+            $items = array($items);
+        }
+
+        $specificationEvaluator = $this->evaluator($quantifier->specification());
+
+        foreach ($items as $item) {
+            yield $specificationEvaluator->evaluate($item);
+        }
     }
 
     /**

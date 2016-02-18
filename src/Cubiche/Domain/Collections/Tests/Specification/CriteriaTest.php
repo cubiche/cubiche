@@ -10,12 +10,19 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Specification;
 
+use Cubiche\Domain\Collections\Specification\Constraint\Equal;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThan;
 use Cubiche\Domain\Collections\Specification\Constraint\GreaterThanEqual;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThan;
 use Cubiche\Domain\Collections\Specification\Constraint\LessThanEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
+use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
+use Cubiche\Domain\Collections\Specification\Constraint\Same;
 use Cubiche\Domain\Collections\Specification\Criteria;
 use Cubiche\Domain\Collections\Specification\Quantifier\All;
+use Cubiche\Domain\Collections\Specification\Quantifier\AtLeast;
+use Cubiche\Domain\Collections\Specification\Selector\Composite;
+use Cubiche\Domain\Collections\Specification\Selector\Count;
 use Cubiche\Domain\Collections\Specification\Selector\Custom;
 use Cubiche\Domain\Collections\Specification\Selector\Key;
 use Cubiche\Domain\Collections\Specification\Selector\Method;
@@ -23,10 +30,6 @@ use Cubiche\Domain\Collections\Specification\Selector\Property;
 use Cubiche\Domain\Collections\Specification\Selector\This;
 use Cubiche\Domain\Collections\Specification\Selector\Value;
 use Cubiche\Domain\Model\Tests\TestCase;
-use Cubiche\Domain\Collections\Specification\Constraint\Equal;
-use Cubiche\Domain\Collections\Specification\Constraint\NotEqual;
-use Cubiche\Domain\Collections\Specification\Constraint\Same;
-use Cubiche\Domain\Collections\Specification\Constraint\NotSame;
 
 /**
  * Criteria Test Class.
@@ -115,6 +118,59 @@ class CriteriaTest extends TestCase
         });
         $this->assertInstanceOf(Custom::class, $custom);
         $this->assertEquals(3, $custom->apply(2));
+    }
+
+    /**
+     * @test
+     */
+    public function testCount()
+    {
+        $count = Criteria::count();
+
+        $this->assertInstanceOf(Count::class, $count);
+        $this->assertEquals(4, $count->apply(array(6, 7, 8, 9)));
+        $this->assertEquals(0, $count->apply(array()));
+        $this->assertEquals(5, $count->apply(array(6, 7, 8, 9, 5)));
+    }
+
+    /**
+     * @test
+     */
+    public function testCompositeKey()
+    {
+        $composite = Criteria::key('foo')->key('bar');
+        $this->assertInstanceOf(Composite::class, $composite);
+        $this->assertEquals(5, $composite->apply(array('foo' => array('bar' => 5))));
+    }
+
+    /**
+     * @test
+     */
+    public function testCompositeProperty()
+    {
+        $composite = Criteria::key('foo')->property('bar');
+        $this->assertInstanceOf(Composite::class, $composite);
+        $this->assertEquals(5, $composite->apply(array('foo' => (object) array('bar' => 5))));
+    }
+
+    /**
+     * @test
+     */
+    public function testCompositeMethod()
+    {
+        $composite = Criteria::method('valueSelector')->method('name');
+        $this->assertInstanceOf(Composite::class, $composite);
+        $this->assertEquals('valueSelector', $composite->apply($composite));
+    }
+
+    /**
+     * @test
+     */
+    public function testCompositeCount()
+    {
+        $composite = Criteria::key('foo')->count();
+        $this->assertInstanceOf(Composite::class, $composite);
+        $this->assertEquals(5, $composite->apply(array('foo' => array(1, 2, 3, 4, 5))));
     }
 
     /**
@@ -259,5 +315,33 @@ class CriteriaTest extends TestCase
         $this->assertTrue($all->evaluate(array()));
         $this->assertTrue($all->evaluate(6));
         $this->assertFalse($all->evaluate(array(6, 7, 8, 9, 5)));
+    }
+
+    /**
+     * @test
+     */
+    public function testAtLeast()
+    {
+        $atLeast = Criteria::atLeast(2, Criteria::gt(5));
+
+        $this->assertInstanceOf(AtLeast::class, $atLeast);
+        $this->assertTrue($atLeast->evaluate(array(4, 6, 5, 3, 9)));
+        $this->assertFalse($atLeast->evaluate(array()));
+        $this->assertFalse($atLeast->evaluate(6));
+        $this->assertFalse($atLeast->evaluate(array(1, 2, 3, 4, 5, 6)));
+    }
+
+    /**
+     * @test
+     */
+    public function testAny()
+    {
+        $any = Criteria::any(Criteria::gt(5));
+
+        $this->assertInstanceOf(AtLeast::class, $any);
+        $this->assertTrue($any->evaluate(array(4, 6, 5, 3, 9)));
+        $this->assertFalse($any->evaluate(array()));
+        $this->assertTrue($any->evaluate(6));
+        $this->assertFalse($any->evaluate(array(1, 2, 3, 4, 5)));
     }
 }

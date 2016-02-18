@@ -19,7 +19,8 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "myclabs/php-enum": "^1.4"
+        "myclabs/php-enum": "^1.4",
+        "doctrine/mongodb-odm": "^1.0"
     },
     "require-dev": {
         "atoum/atoum": "~2.5",
