@@ -10,17 +10,16 @@
  */
 namespace Cubiche\Domain\Collections\Tests;
 
-use Cubiche\Domain\Collections\Specification\Selector\This;
-use Cubiche\Domain\Model\Tests\TestCase;
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\Specification\Criteria;
+use Cubiche\Domain\Collections\Specification\Selector\This;
 
 /**
  * Array Collection Test Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ArrayCollectionTest extends TestCase
+class ArrayCollectionTest extends CollectionTestCase
 {
     /**
      * @param array $items
@@ -31,10 +30,7 @@ class ArrayCollectionTest extends TestCase
     public function testFind(array $items)
     {
         $collection = new ArrayCollection($items);
-        $search = $collection->find(Criteria::gt(8));
-
-        $this->assertEquals($search->count(), 2);
-        $this->assertEquals($search->toArray(), array(9, 10));
+        $this->findTest($collection, Criteria::gt(8));
     }
 
     /**
@@ -46,10 +42,11 @@ class ArrayCollectionTest extends TestCase
     public function testFindAndSlice(array $items)
     {
         $collection = new ArrayCollection($items);
-        $search = $collection->find(Criteria::gt(3))->slice(2, 4);
 
-        $this->assertEquals($search->count(), 4);
-        $this->assertEquals($search->toArray(), array(6, 7, 8, 9));
+        $this->findAndSliceTest($collection, Criteria::gt(3), 2, 4);
+        $this->findAndSliceTest($collection, Criteria::gt(3), 0, 5);
+        $this->findAndSliceTest($collection, Criteria::gt(3), 4, 4);
+        $this->findAndSliceTest($collection, Criteria::gt(3), 8, 4);
     }
 
     /**

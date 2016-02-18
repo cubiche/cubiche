@@ -69,7 +69,7 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      *
      * @param SpecificationInterface $specification
      *
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     public function find(SpecificationInterface $specification);
 
@@ -86,7 +86,7 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @param int $offset
      * @param int $length
      *
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     public function slice($offset, $length = null);
 }

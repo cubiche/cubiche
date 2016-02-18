@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\Tests\CollectionTestCase;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -21,7 +22,7 @@ use Doctrine\ODM\MongoDB\UnitOfWork;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends CollectionTestCase
 {
     /**
      * @var DocumentManager
@@ -34,6 +35,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected $uow;
 
     /**
+     * @var array
+     */
+    private $lastQuery;
+
+    /**
      * {@inheritdoc}
      *
      * @see PHPUnit_Framework_TestCase::setUp()
@@ -42,6 +48,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
         $this->dm = $this->createTestDocumentManager();
         $this->uow = $this->dm->getUnitOfWork();
+        $this->lastQuery = null;
 
         AnnotationDriver::registerAnnotationClasses();
     }
@@ -76,6 +83,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $config->setDefaultDB(DOCTRINE_MONGODB_DATABASE);
         $config->setMetadataDriverImpl($this->createMetadataDriverImpl());
 
+        $config->setLoggerCallable(function (array $log) {
+            $this->lastQuery = $log;
+        });
+
         return $config;
     }
 
@@ -96,6 +107,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $connection = new Connection(DOCTRINE_MONGODB_SERVER, array(), $config);
 
         return DocumentManager::create($connection, $config);
+    }
+
+    /**
+     * @return array
+     */
+    protected function lastQuery()
+    {
+        return $this->lastQuery;
     }
 
     /**

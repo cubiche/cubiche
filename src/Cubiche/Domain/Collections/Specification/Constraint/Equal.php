@@ -28,4 +28,14 @@ class Equal extends BinarySelectorOperator
     {
         return $visitor->visitEqual($this);
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\Specification::not()
+     */
+    public function not()
+    {
+        return new NotEqual($this->left(), $this->right());
+    }
 }

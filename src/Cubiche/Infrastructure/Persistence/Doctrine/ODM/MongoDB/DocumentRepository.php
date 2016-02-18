@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\FinderLazyCollection;
 use Cubiche\Domain\Collections\Specification\SpecificationInterface;
 use Cubiche\Domain\Model\EntityInterface;
 use Cubiche\Domain\Persistence\RepositoryInterface;
@@ -26,6 +27,14 @@ class DocumentRepository implements RepositoryInterface
      * @var MongoDBDocumentRepository
      */
     protected $repository;
+
+    /**
+     * @param MongoDBDocumentRepository $repository
+     */
+    public function __construct(MongoDBDocumentRepository $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * @return \Doctrine\ODM\MongoDB\DocumentManager
@@ -123,7 +132,7 @@ class DocumentRepository implements RepositoryInterface
      */
     public function getIterator()
     {
-        //TODO
+        return $this->repository->createQueryBuilder()->getQuery()->getIterator();
     }
 
     /**
@@ -133,7 +142,13 @@ class DocumentRepository implements RepositoryInterface
      */
     public function slice($offset, $length = null)
     {
-        //TODO
+        $queryBuilder = $this->repository->createQueryBuilder();
+        $queryBuilder->skip($offset);
+        if ($length !== null) {
+            $queryBuilder->limit($length);
+        }
+
+        return $queryBuilder->getQuery()->getIterator();
     }
 
     /**
@@ -143,7 +158,7 @@ class DocumentRepository implements RepositoryInterface
      */
     public function find(SpecificationInterface $specification)
     {
-        //TODO
+        return new FinderLazyCollection(new DocumentFinder($this->repository, $specification));
     }
 
     /**
@@ -153,6 +168,6 @@ class DocumentRepository implements RepositoryInterface
      */
     public function toArray()
     {
-        //TODO
+        return $this->repository->createQueryBuilder()->getQuery()->toArray();
     }
 }

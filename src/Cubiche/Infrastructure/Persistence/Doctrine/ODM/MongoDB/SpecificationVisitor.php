@@ -334,11 +334,15 @@ class SpecificationVisitor implements SpecificationVisitorInterface
      */
     public function visitAtLeast(AtLeast $specification)
     {
-        $builder = new QueryBuilder($this->dm, $this->documentName);
-        $field = $this->createField($specification->selector());
-        $specificationQueryBuilder = $this->queryBuilder($specification->specification());
+        if ($specification->count() === 1) {
+            $builder = new QueryBuilder($this->dm, $this->documentName);
+            $field = $this->createField($specification->selector());
+            $specificationQueryBuilder = $this->queryBuilder($specification->specification());
 
-        return $builder->field($field->name())->elemMatch($specificationQueryBuilder->currentExpr());
+            return $builder->field($field->name())->elemMatch($specificationQueryBuilder->currentExpr());
+        }
+
+        $this->notSupportedException($specification);
     }
 
     /**

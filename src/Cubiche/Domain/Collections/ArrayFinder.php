@@ -19,7 +19,7 @@ use Cubiche\Domain\Collections\Specification\Evaluator\Evaluator;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ArrayFinder implements FinderInterface
+class ArrayFinder extends Finder
 {
     /**
      * @var array
@@ -27,29 +27,9 @@ class ArrayFinder implements FinderInterface
     protected $items;
 
     /**
-     * @var SpecificationInterface
-     */
-    protected $specification;
-
-    /**
-     * @var int
-     */
-    protected $offset;
-
-    /**
-     * @var int
-     */
-    protected $length;
-
-    /**
      * @var Evaluator
      */
     protected $evaluator;
-
-    /**
-     * @var int
-     */
-    protected $count;
 
     /**
      * @param array                  $items
@@ -63,10 +43,8 @@ class ArrayFinder implements FinderInterface
         $offset = null,
         $length = null
     ) {
+        parent::__construct($specification, $offset, $length);
         $this->items = $items;
-        $this->specification = $specification;
-        $this->offset = $offset;
-        $this->length = $length;
     }
 
     /**
@@ -98,7 +76,7 @@ class ArrayFinder implements FinderInterface
      *
      * @return bool
      */
-    protected function checkOffset($offset)
+    private function checkOffset($offset)
     {
         return $this->offset === null || $offset === $this->offset;
     }
@@ -108,16 +86,15 @@ class ArrayFinder implements FinderInterface
      *
      * @return bool
      */
-    protected function checkLenght($count)
+    private function checkLenght($count)
     {
         return $this->length === null || $count < $this->length;
     }
 
     /**
-     * @param int $offset
-     * @param int $length
+     * {@inheritdoc}
      *
-     * @return FinderInterface
+     * @see \Cubiche\Domain\Collections\FinderInterface::sliceFinder()
      */
     public function sliceFinder($offset, $length = null)
     {
@@ -127,15 +104,11 @@ class ArrayFinder implements FinderInterface
     /**
      * {@inheritdoc}
      *
-     * @see Countable::count()
+     * @see \Cubiche\Domain\Collections\Finder::calculateCount()
      */
-    public function count()
+    protected function calculateCount()
     {
-        if ($this->count === null) {
-            $this->count = \iterator_count($this->getIterator());
-        }
-
-        return $this->count;
+        return \iterator_count($this->getIterator());
     }
 
     /**

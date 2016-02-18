@@ -28,4 +28,14 @@ class GreaterThan extends BinarySelectorOperator
     {
         return $visitor->visitGreaterThan($this);
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Specification\Specification::not()
+     */
+    public function not()
+    {
+        return new LessThanEqual($this->left(), $this->right());
+    }
 }

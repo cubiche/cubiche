@@ -45,6 +45,12 @@ class Document
      */
     protected $embedded;
 
+    public function __construct($textValue, $intValue)
+    {
+        $this->textValue = $textValue;
+        $this->intValue = $intValue;
+    }
+
     /**
      * @return int
      */
