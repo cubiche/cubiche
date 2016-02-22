@@ -14,6 +14,11 @@ use Cubiche\Domain\Async\Deferred;
 use Cubiche\Domain\Async\DeferredInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
+/**
+ * DeferredTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class DeferredTests extends TestCase
 {
     /**
@@ -40,17 +45,4 @@ class DeferredTests extends TestCase
                 ->isNotIdenticalTo(Deferred::defer())
         ;
     }
-
-//    /*
-//     * Test resolve method.
-//     */
-//    public function testThenSucceed()
-//    {
-//        $this
-//            ->given($deferred = Deferred::defer())
-//            ->then
-//            ->object($deferred)
-//            ->isInstanceOf(Deferred::class)
-//        ;
-//    }
 }

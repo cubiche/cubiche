@@ -20,6 +20,11 @@ use mageekguy\atoum\asserter\generator;
 use mageekguy\atoum\mock;
 use mageekguy\atoum\test\assertion\manager;
 
+/**
+ * PromiseTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class PromiseTests extends TestCase
 {
     /**
