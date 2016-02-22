@@ -11,6 +11,8 @@ matrix:
 install:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
+before_script:
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 script:
   - bin/atoum -c .atoum.travis.php +verbose
   
