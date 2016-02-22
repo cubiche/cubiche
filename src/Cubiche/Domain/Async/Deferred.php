@@ -93,6 +93,7 @@ class Deferred implements DeferredInterface
     public function resolve($value = null)
     {
         $this->promise();
+
         $this->resolveDelegate->__invoke($value);
     }
 
@@ -104,6 +105,7 @@ class Deferred implements DeferredInterface
     public function reject($reason = null)
     {
         $this->promise();
+
         $this->rejectDelegate->__invoke($reason);
     }
 
@@ -115,6 +117,7 @@ class Deferred implements DeferredInterface
     public function notify($state = null)
     {
         $this->promise();
+
         $this->notifyDelegate->__invoke($state);
     }
 
