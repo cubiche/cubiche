@@ -127,7 +127,7 @@ class PromiseTests extends TestCase
                 'delegateCall',
                 function (mock\aggregator $mock) use ($test) {
                     return $test
-                        ->mock($mock)
+                        ->MockBuilder($mock)
                         ->call('__invoke')
                     ;
                 }
@@ -175,38 +175,40 @@ class PromiseTests extends TestCase
         $this
             ->given(
                 $promise = $this->promise(),
-                $succeedMock = $this->delegateMock(),
-                $rejectedMock = $this->delegateMock(),
-                $notifyMock = $this->delegateMock()
+                $succeed = $this->delegateMock(),
+                $rejected = $this->delegateMock(),
+                $notify = $this->delegateMock()
             )
-            ->if($promise->then($succeedMock, $rejectedMock, $notifyMock))
+            ->if($promiseThen = $promise->then($succeed, $rejected, $notify))
             ->when($this->resolve('foo'))
             ->then
-                ->delegateCall($succeedMock)
+                ->object($promiseThen)
+                    ->isInstanceOf(Promise::class)
+                ->delegateCall($succeed)
                     ->withArguments('foo')
                     ->once()
-                ->delegateCall($rejectedMock)
+                ->delegateCall($rejected)
                     ->never()
-                ->delegateCall($notifyMock)
+                ->delegateCall($notify)
                     ->never()
         ;
 
         $this
             ->given(
                 $promise = $this->promise(),
-                $succeedMock = $this->delegateMock(),
-                $rejectedMock = $this->delegateMock(),
-                $notifyMock = $this->delegateMock()
+                $succeed = $this->delegateMock(),
+                $rejected = $this->delegateMock(),
+                $notify = $this->delegateMock()
             )
-            ->if($promise->then($succeedMock, $rejectedMock, $notifyMock))
+            ->if($promise->then($succeed, $rejected, $notify))
             ->when($this->reject($reason = new \Exception()))
             ->then
-                ->delegateCall($succeedMock)
+                ->delegateCall($succeed)
                     ->never()
-                ->delegateCall($rejectedMock)
+                ->delegateCall($rejected)
                     ->withArguments($reason)
                     ->once()
-                ->delegateCall($notifyMock)
+                ->delegateCall($notify)
                     ->never()
         ;
 
@@ -215,23 +217,270 @@ class PromiseTests extends TestCase
         $this
             ->given(
                 $promise = $this->promise(),
-                $succeedMock = $this->delegateMock(),
-                $rejectedMock = $this->delegateMock(),
-                $notifyMock = $this->delegateMock()
+                $succeed = $this->delegateMock(),
+                $rejected = $this->delegateMock(),
+                $notify = $this->delegateMock()
             )
-            ->if($promise->then($succeedMock, $rejectedMock, $notifyMock))
+            ->if($promise->then($succeed, $rejected, $notify))
             ->when(function () use ($test) {
                 for ($i = 0; $i < 10; ++$i) {
                     $test->notify(($i + 1) * 10);
                 }
             })
             ->then
-                ->delegateCall($succeedMock)
+                ->delegateCall($succeed)
                    ->never()
-                ->delegateCall($rejectedMock)
+                ->delegateCall($rejected)
                     ->never()
-                ->delegateCall($notifyMock)
+                ->delegateCall($notify)
                     ->exactly(10)
+        ;
+    }
+
+    /*
+     * Test otherwise.
+     */
+    public function testOtherwise()
+    {
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $otherwise = $this->delegateMock()
+            )
+            ->if($promiseOtherwise = $promise->otherwise($otherwise))
+            ->when($this->reject($reason = new \Exception()))
+            ->then
+                ->object($promiseOtherwise)
+                    ->isInstanceOf(Promise::class)
+                ->delegateCall($otherwise)
+                    ->withArguments($reason)
+                    ->once()
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock(),
+                $rejected = $this->delegateMock(),
+                $notify = $this->delegateMock(),
+                $otherwise = $this->delegateMock()
+            )
+            ->if(
+                $promiseOtherwise = $promise
+                    ->then($succeed, $rejected, $notify)
+                    ->otherwise($otherwise)
+            )
+            ->when($this->reject($reason = new \Exception()))
+            ->then
+                ->object($promiseOtherwise)
+                    ->isInstanceOf(Promise::class)
+                ->delegateCall($rejected)
+                    ->withArguments($reason)
+                    ->once()
+                ->delegateCall($otherwise)
+                    ->withArguments($reason)
+                    ->once()
+        ;
+    }
+
+    /*
+     * Test always.
+     */
+    public function testAlways()
+    {
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $notify = $this->delegateMock(),
+                $finally = $this->delegateMock()
+            )
+            ->if($promiseAlways = $promise->always($finally, $notify))
+            ->when($this->resolve('foo'))
+            ->then
+                ->object($promiseAlways)
+                    ->isInstanceOf(Promise::class)
+                ->delegateCall($finally)
+                    ->withArguments('foo')
+                    ->once()
+                ->delegateCall($notify)
+                    ->never()
+                    ->never()
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $notify = $this->delegateMock(),
+                $finally = $this->delegateMock()
+            )
+            ->if($promiseAlways = $promise->always($finally, $notify))
+            ->when($this->reject($reason = new \Exception()))
+            ->then
+                ->delegateCall($finally)
+                    ->withArguments(null, $reason)
+                    ->once()
+                ->delegateCall($notify)
+                    ->never()
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $notify = $this->delegateMock(),
+                $finally = $this->delegateMock()
+            )
+            ->if($promiseAlways = $promise->always($finally, $notify))
+            ->when($this->notify('bar'))
+            ->then
+                ->delegateCall($finally)
+                    ->never()
+                ->delegateCall($notify)
+                    ->withArguments('bar')
+                    ->once()
+        ;
+    }
+
+    /*
+     * Test cancel.
+     */
+    public function testCancel()
+    {
+        $test = $this;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $otherwise = $this->delegateMock()
+            )
+            ->if($promise->otherwise($otherwise))
+            ->when($this->cancel())
+            ->then
+                ->delegateCall($otherwise)
+                    ->with()
+                        ->arguments(0, function ($argument) use ($test) {
+                            $test->object($argument)->isInstanceOf(\RuntimeException::class);
+                        })
+                    ->once()
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock(),
+                $rejected = $this->delegateMock(),
+                $notify = $this->delegateMock()
+            )
+            ->if($promiseThen = $promise->then($succeed, $rejected, $notify))
+            ->when($this->resolve('foo'))
+            ->and($this->cancel())
+            ->then
+                ->delegateCall($succeed)
+                    ->withArguments('foo')
+                    ->once()
+                ->delegateCall($rejected)
+                    ->never()
+                ->delegateCall($notify)
+                    ->never()
+        ;
+    }
+
+    /*
+     * Test resolved promise.
+     */
+    public function testResolvedPromise()
+    {
+        $test = $this;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->resolve())
+            ->exception(
+                function () use ($test) {
+                    $test->resolve();
+                }
+            )->isInstanceOf(\LogicException::class)
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->resolve())
+            ->exception(
+                function () use ($test) {
+                    $test->reject();
+                }
+            )->isInstanceOf(\LogicException::class)
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->resolve())
+            ->exception(
+                function () use ($test) {
+                    $test->notify();
+                }
+            )->isInstanceOf(\LogicException::class)
+        ;
+    }
+
+    /*
+     * Test rejected promise.
+     */
+    public function testRejectedPromise()
+    {
+        $test = $this;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->reject())
+            ->exception(
+                function () use ($test) {
+                    $test->resolve();
+                }
+            )->isInstanceOf(\LogicException::class)
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->reject())
+            ->exception(
+                function () use ($test) {
+                    $test->reject();
+                }
+            )->isInstanceOf(\LogicException::class)
+        ;
+
+        $this
+            ->given(
+                $promise = $this->promise(),
+                $succeed = $this->delegateMock()
+            )
+            ->if($promise->then($succeed))
+            ->when($this->reject())
+            ->exception(
+                function () use ($test) {
+                    $test->notify();
+                }
+            )->isInstanceOf(\LogicException::class)
         ;
     }
 }
