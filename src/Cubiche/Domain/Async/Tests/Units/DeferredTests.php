@@ -8,16 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Async\Tests\Units;
 
 use Cubiche\Domain\Async\Deferred;
 use Cubiche\Domain\Async\DeferredInterface;
-use Cubiche\Domain\Async\Promise;
-use mageekguy\atoum\adapter;
-use mageekguy\atoum\annotations\extractor;
-use mageekguy\atoum\asserter\generator;
-use mageekguy\atoum\mock;
-use mageekguy\atoum\test\assertion\manager;
 
 /**
  * DeferredTests class.
@@ -27,31 +22,60 @@ use mageekguy\atoum\test\assertion\manager;
 class DeferredTests extends PromiseTestCase
 {
     /**
-     * {@inheritdoc}
+     * @var DeferredInterface
      */
-    public function __construct(
-        adapter $adapter = null,
-        extractor $annotationExtractor = null,
-        generator $asserterGenerator = null,
-        manager $assertionManager = null,
-        \closure $reflectionClassFactory = null
-    ) {
-        parent::__construct(
-            $adapter,
-            $annotationExtractor,
-            $asserterGenerator,
-            $assertionManager,
-            $reflectionClassFactory
-        );
+    protected $deferred;
 
-        $this->getAssertionManager()
-            ->setHandler(
-                'deferredMock',
-                function () {
-                    return \mock\Cubiche\Domain\Async\Deferred::defer();
-                }
-            )
-        ;
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::promise()
+     */
+    protected function promise()
+    {
+        $this->deferred = Deferred::defer();
+
+        return $this->deferred->promise();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::resolve()
+     */
+    protected function resolve($value = null)
+    {
+        $this->deferred->resolve($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::reject()
+     */
+    protected function reject($reason = null)
+    {
+        $this->deferred->reject($reason);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::notify()
+     */
+    protected function notify($state = null)
+    {
+        $this->deferred->notify($state);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::cancel()
+     */
+    protected function cancel()
+    {
+        return $this->deferred->cancel();
     }
 
     /**
@@ -74,106 +98,8 @@ class DeferredTests extends PromiseTestCase
             ->given($deferred = Deferred::defer())
             ->then
                 ->object($deferred)
-                ->isInstanceOf(Deferred::class)
+                ->isInstanceOf(DeferredInterface::class)
                 ->isNotIdenticalTo(Deferred::defer())
-        ;
-    }
-
-    /*
-     * Test promise method.
-     */
-    public function testPromise()
-    {
-        $this
-            ->given($deferred = Deferred::defer())
-            ->when($promise = $deferred->promise())
-            ->then
-                ->object($promise)
-                ->isInstanceOf(Promise::class)
-        ;
-    }
-
-    /*
-     * Test resolve method.
-     */
-    public function testResolve()
-    {
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock(),
-                $deferred = $this->deferredMock()
-            )
-            ->when(
-                $this->invoke($promise)->addSucceedDelegate($deferred, $succeed)
-            )
-            ->and($this->resolve('bar'))
-            ->then
-                ->mock($deferred)
-                    ->call('resolve')
-                        ->withArguments('bar')
-                        ->once()
-        ;
-    }
-
-    /*
-     * Test reject method.
-     */
-    public function testReject()
-    {
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $rejected = $this->delegateMock(),
-                $deferred = $this->deferredMock()
-            )
-            ->when(
-                $this->invoke($promise)->addRejectedDelegate($deferred, $rejected)
-            )
-            ->and($this->reject($reason = new \Exception()))
-            ->then
-                ->mock($deferred)
-                    ->call('reject')
-                        ->withArguments($reason)
-                        ->once()
-        ;
-    }
-
-    /*
-     * Test notify method.
-     */
-    public function testNotify()
-    {
-        $this
-            ->given($deferred = Deferred::defer())
-            ->when($deferred->resolve())
-            ->then
-                ->object($deferred->promise())
-                ->isInstanceOf(Promise::class)
-        ;
-
-        $this
-            ->given($deferred = Deferred::defer())
-            ->when($deferred->reject())
-            ->then
-                ->object($deferred->promise())
-                ->isInstanceOf(Promise::class)
-        ;
-
-        $this
-            ->given($deferred = Deferred::defer())
-            ->when($deferred->notify())
-            ->then
-                ->object($deferred->promise())
-                ->isInstanceOf(Promise::class)
-        ;
-
-        $this
-            ->given($deferred = Deferred::defer())
-            ->when($deferred->cancel())
-            ->then
-            ->object($deferred->promise())
-            ->isInstanceOf(Promise::class)
         ;
     }
 }

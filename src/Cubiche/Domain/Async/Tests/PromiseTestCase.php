@@ -99,7 +99,7 @@ abstract class PromiseTestCase extends TestCase
             $this->expectDelegateOnce('bar'),
             $this->expectDelegateNever(),
             $this->expectDelegateNever()
-        );
+        )->always($this->expectDelegateOnce('bar'));
 
         $this->resolve('foo');
 
