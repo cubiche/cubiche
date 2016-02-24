@@ -15,6 +15,11 @@ use Cubiche\Domain\Identity\Id;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
+/**
+ * AutoIncrementIdTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class AutoIncrementIdTests extends TestCase
 {
     /**

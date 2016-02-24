@@ -15,6 +15,11 @@ use Cubiche\Domain\Identity\Id;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
+/**
+ * HashIdTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class HashIdTests extends TestCase
 {
     /**

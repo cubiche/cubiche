@@ -15,6 +15,11 @@ use Cubiche\Domain\Identity\SequenceId;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
+/**
+ * SequenceIdTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class SequenceIdTests extends TestCase
 {
     /**
