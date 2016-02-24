@@ -25,16 +25,16 @@ class MultiComparator extends Comparator
     /**
      * @var ComparatorInterface
      */
-    protected $secondcomparator;
+    protected $secondComparator;
 
     /**
      * @param ComparatorInterface $firstComparator
      * @param ComparatorInterface $secondcomparator
      */
-    public function __construct(ComparatorInterface $firstComparator, ComparatorInterface $secondcomparator)
+    public function __construct(ComparatorInterface $firstComparator, ComparatorInterface $secondComparator)
     {
         $this->firstComparator = $firstComparator;
-        $this->secondcomparator = $secondcomparator;
+        $this->secondComparator = $secondComparator;
     }
 
     /**
@@ -50,7 +50,7 @@ class MultiComparator extends Comparator
      */
     public function secondComparator()
     {
-        return $this->secondcomparator;
+        return $this->secondComparator;
     }
 
     /**
