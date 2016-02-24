@@ -11,7 +11,8 @@
 namespace Cubiche\Domain\Collections\Tests;
 
 use Cubiche\Domain\Collections\CollectionInterface;
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Collection Test Case Class.
@@ -80,6 +81,21 @@ abstract class CollectionTestCase extends \PHPUnit_Framework_TestCase
     {
         foreach ($collection as $item) {
             $this->assertFalse($criteria->evaluate($item));
+        }
+    }
+
+    /**
+     * @param CollectionInterface $collection
+     * @param ComparatorInterface $comparator
+     */
+    protected function assertSorted(CollectionInterface $collection, ComparatorInterface $comparator)
+    {
+        $last = null;
+        foreach ($collection as $item) {
+            if ($last !== null) {
+                $this->assertTrue($comparator->compare($last, $item) <= 0);
+            }
+            $last = $item;
         }
     }
 }

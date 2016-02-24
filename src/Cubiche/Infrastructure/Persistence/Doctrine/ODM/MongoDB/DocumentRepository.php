@@ -11,10 +11,11 @@
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\FinderLazyCollection;
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Model\EntityInterface;
 use Cubiche\Domain\Persistence\RepositoryInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Document Repository Class.
@@ -169,5 +170,15 @@ class DocumentRepository implements RepositoryInterface
     public function toArray()
     {
         return $this->repository->createQueryBuilder()->getQuery()->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     */
+    public function sorted(ComparatorInterface $comparator)
+    {
+        return new FinderLazyCollection(new DocumentFinder($this->repository, null, $comparator));
     }
 }

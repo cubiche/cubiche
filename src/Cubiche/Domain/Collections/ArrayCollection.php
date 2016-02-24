@@ -10,7 +10,9 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Comparable\Comparator;
 
 /**
  * Array Collection Class.
@@ -154,6 +156,32 @@ class ArrayCollection implements ArrayCollectionInterface
     public function toArray()
     {
         return $this->items;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::sort()
+     */
+    public function sort(ComparatorInterface $comparator = null)
+    {
+        if ($comparator === null) {
+            $comparator = new Comparator();
+        }
+
+        usort($this->items, function ($a, $b) use ($comparator) {
+            return $comparator->compare($a, $b);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     */
+    public function sorted(ComparatorInterface $comparator)
+    {
+        return new FinderLazyCollection(new ArrayFinder($this->items, null, $comparator));
     }
 
     /**

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Domain\Comparable\ComparatorInterface;
+
 /**
  * ArrayCollection Interface.
  *
@@ -25,4 +27,9 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
      * @param mixed      $value
      */
     public function set($key, $value);
+
+    /**
+     * @param ComparatorInterface $comparator
+     */
+    public function sort(ComparatorInterface $comparator = null);
 }

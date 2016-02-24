@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Collection Interface.
@@ -89,4 +90,11 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     public function slice($offset, $length = null);
+
+    /**
+     * @param ComparatorInterface $comparator
+     *
+     * @return \Cubiche\Domain\Collections\CollectionInterface
+     */
+    public function sorted(ComparatorInterface $comparator);
 }

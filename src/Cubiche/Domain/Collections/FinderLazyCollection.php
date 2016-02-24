@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Domain\Comparable\ComparatorInterface;
+
 /**
  * Finder Lazy Collection.
  *
@@ -84,5 +86,19 @@ class FinderLazyCollection extends LazyCollection
         }
 
         return new self($this->finder->sliceFinder($offset, $length));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\LazyCollection::sorted()
+     */
+    public function sorted(ComparatorInterface $comparator)
+    {
+        if ($this->isInitialized()) {
+            return parent::sorted($comparator);
+        }
+
+        return new self($this->finder->sortedFinder($comparator));
     }
 }

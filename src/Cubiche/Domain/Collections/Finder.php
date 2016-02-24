@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Finder Class.
@@ -25,6 +26,11 @@ abstract class Finder implements FinderInterface
     protected $specification;
 
     /**
+     * @var ComparatorInterface
+     */
+    protected $comparator;
+
+    /**
      * @var int
      */
     protected $offset;
@@ -37,19 +43,22 @@ abstract class Finder implements FinderInterface
     /**
      * @var int
      */
-    protected $count;
+    private $count;
 
     /**
      * @param SpecificationInterface $specification
+     * @param ComparatorInterface    $comparator
      * @param int                    $offset
      * @param int                    $length
      */
     public function __construct(
-        SpecificationInterface $specification,
+        SpecificationInterface $specification = null,
+        ComparatorInterface $comparator = null,
         $offset = null,
         $length = null
     ) {
         $this->specification = $specification;
+        $this->comparator = $comparator;
         $this->offset = $offset;
         $this->length = $length;
     }
@@ -66,6 +75,54 @@ abstract class Finder implements FinderInterface
         }
 
         return $this->count;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\FinderInterface::length()
+     */
+    public function length()
+    {
+        return $this->length;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\FinderInterface::offset()
+     */
+    public function offset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\FinderInterface::specification()
+     */
+    public function specification()
+    {
+        return $this->specification;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\FinderInterface::comparator()
+     */
+    public function comparator()
+    {
+        return $this->comparator;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSorted()
+    {
+        return $this->comparator !== null;
     }
 
     /**

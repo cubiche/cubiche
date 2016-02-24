@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Lazy Collection.
@@ -177,5 +178,17 @@ abstract class LazyCollection implements CollectionInterface
         $this->initialize();
 
         return $this->collection->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     */
+    public function sorted(ComparatorInterface $comparator)
+    {
+        $this->initialize();
+
+        return $this->collection->sorted($comparator);
     }
 }

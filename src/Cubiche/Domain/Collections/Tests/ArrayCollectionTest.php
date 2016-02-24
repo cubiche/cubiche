@@ -11,8 +11,9 @@
 namespace Cubiche\Domain\Collections\Tests;
 
 use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\Specification\Criteria;
-use Cubiche\Domain\Collections\Specification\Selector\This;
+use Cubiche\Domain\Specification\Criteria;
+use Cubiche\Domain\Specification\Selector\This;
+use Cubiche\Domain\Comparable\Comparator;
 
 /**
  * Array Collection Test Class.
@@ -50,13 +51,39 @@ class ArrayCollectionTest extends CollectionTestCase
     }
 
     /**
+     * @param array $items
+     *
+     * @test
+     * @dataProvider provideItems
+     */
+    public function testSort(array $items)
+    {
+        $collection = new ArrayCollection($items);
+        $collection->sort();
+        $this->assertSorted($collection, new Comparator());
+    }
+
+    /**
+     * @param array $items
+     *
+     * @test
+     * @dataProvider provideItems
+     */
+    public function testSorted(array $items)
+    {
+        $comparator = new Comparator();
+        $collection = new ArrayCollection($items);
+        $this->assertSorted($collection->sorted($comparator), $comparator);
+    }
+
+    /**
      * @return number[][][]
      */
     public function provideItems()
     {
         return array(
             array(
-                array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                array(8, 7, 1, 2, 3, 10, 9, 5, 4, 6),
             ),
         );
     }

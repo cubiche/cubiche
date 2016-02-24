@@ -10,9 +10,11 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\Specification\Evaluator\EvaluatorVisitor;
-use Cubiche\Domain\Collections\Specification\Evaluator\Evaluator;
+use Cubiche\Domain\Specification\Evaluator\Evaluator;
+use Cubiche\Domain\Specification\Evaluator\EvaluatorVisitor;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * ArrayFinder Class.
@@ -34,16 +36,18 @@ class ArrayFinder extends Finder
     /**
      * @param array                  $items
      * @param SpecificationInterface $specification
+     * @param ComparatorInterface    $comparator
      * @param int                    $offset
      * @param int                    $length
      */
     public function __construct(
         array $items,
-        SpecificationInterface $specification,
+        SpecificationInterface $specification = null,
+        ComparatorInterface $comparator = null,
         $offset = null,
         $length = null
     ) {
-        parent::__construct($specification, $offset, $length);
+        parent::__construct($specification, $comparator, $offset, $length);
         $this->items = $items;
     }
 
@@ -54,6 +58,12 @@ class ArrayFinder extends Finder
      */
     public function getIterator()
     {
+        if ($this->isSorted()) {
+            usort($this->items, function ($a, $b) {
+                return $this->comparator()->compare($a, $b);
+            });
+        }
+
         $count = 0;
         $offset = 0;
         foreach ($this->items as $item) {
@@ -98,7 +108,17 @@ class ArrayFinder extends Finder
      */
     public function sliceFinder($offset, $length = null)
     {
-        return new self($this->items, $this->specification, $offset, $length);
+        return new self($this->items, $this->specification(), $this->comparator(), $offset, $length);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\FinderInterface::sortedFinder()
+     */
+    public function sortedFinder(ComparatorInterface $comparator)
+    {
+        return new self($this->items, $this->specification(), $this->comparator(), $this->offset(), $this->length());
     }
 
     /**
@@ -112,13 +132,17 @@ class ArrayFinder extends Finder
     }
 
     /**
-     * @return \Cubiche\Domain\Collections\Specification\Evaluator\Evaluator
+     * @return \Cubiche\Domain\Specification\Evaluator\Evaluator
      */
     protected function evaluator()
     {
         if ($this->evaluator === null) {
             $evaluatorVisitor = new EvaluatorVisitor();
-            $this->evaluator = $evaluatorVisitor->evaluator($this->specification);
+            $ciriteria = $this->specification();
+            if ($ciriteria === null) {
+                $ciriteria = Criteria::true();
+            }
+            $this->evaluator = $evaluatorVisitor->evaluator($ciriteria);
         }
 
         return $this->evaluator;

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Domain\Comparable\ComparatorInterface;
+
 /**
  * Finder Interface.
  *
@@ -18,10 +20,37 @@ namespace Cubiche\Domain\Collections;
 interface FinderInterface extends \Countable, \IteratorAggregate
 {
     /**
+     * @return int
+     */
+    public function length();
+
+    /**
+     * @return int
+     */
+    public function offset();
+
+    /**
+     * @return \Cubiche\Domain\Specification\SpecificationInterface
+     */
+    public function specification();
+
+    /**
+     * @return \Cubiche\Domain\Comparable\ComparatorInterface
+     */
+    public function comparator();
+
+    /**
      * @param int $offset
      * @param int $length
      *
      * @return FinderInterface
      */
     public function sliceFinder($offset, $length = null);
+
+    /**
+     * @param ComparatorInterface $comparator
+     *
+     * @return FinderInterface
+     */
+    public function sortedFinder(ComparatorInterface $comparator);
 }
