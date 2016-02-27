@@ -14,6 +14,7 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\Selector\This;
 
 /**
  * Array Data Source Class.
@@ -33,22 +34,30 @@ class ArrayDataSource extends DataSource
     protected $evaluator;
 
     /**
+     * @var bool
+     */
+    private $sorted;
+
+    /**
      * @param array                  $items
      * @param SpecificationInterface $searchCriteria
      * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
+     * @param bool                   $sorted
      */
     public function __construct(
         array $items,
         SpecificationInterface $searchCriteria = null,
         ComparatorInterface $sortCriteria = null,
         $offset = null,
-        $length = null
+        $length = null,
+        $sorted = false
     ) {
         parent::__construct($searchCriteria, $sortCriteria, $offset, $length);
 
         $this->items = $items;
+        $this->sorted = $sorted;
     }
 
     /**
@@ -58,11 +67,7 @@ class ArrayDataSource extends DataSource
      */
     public function getIterator()
     {
-        if ($this->isSorted()) {
-            usort($this->items, function ($a, $b) {
-                return $this->sortCriteria()->compare($a, $b);
-            });
-        }
+        $this->sort();
 
         $count = 0;
         $offset = 0;
@@ -82,23 +87,38 @@ class ArrayDataSource extends DataSource
     }
 
     /**
-     * @param int $offset
+     * {@inheritdoc}
      *
-     * @return bool
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::findOne()
      */
-    private function checkOffset($offset)
+    public function findOne()
     {
-        return $this->offset === null || $offset === $this->offset;
+        foreach ($this->getIterator() as $item) {
+            return $item;
+        }
+
+        return;
     }
 
     /**
-     * @param int $count
+     * {@inheritdoc}
      *
-     * @return bool
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::filteredDataSource()
      */
-    private function checkLenght($count)
+    public function filteredDataSource(SpecificationInterface $criteria)
     {
-        return $this->length === null || $count < $this->length;
+        if ($this->isFiltered()) {
+            $criteria = $this->searchCriteria()->andX($criteria);
+        }
+
+        return new self(
+            $this->items,
+            $criteria,
+            $this->sortCriteria(),
+            $this->offset(),
+            $this->length(),
+            $this->sorted
+        );
     }
 
     /**
@@ -108,7 +128,14 @@ class ArrayDataSource extends DataSource
      */
     public function slicedDataSource($offset, $length = null)
     {
-        return new self($this->items, $this->searchCriteria(), $this->sortCriteria(), $offset, $length);
+        return new self(
+            $this->items,
+            $this->searchCriteria(),
+            $this->sortCriteria(),
+            $this->actualOffset($offset),
+            $this->actualLength($offset, $length),
+            $this->sorted
+        );
     }
 
     /**
@@ -118,7 +145,7 @@ class ArrayDataSource extends DataSource
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
-        return new self($this->items, $this->searchCriteria(), $sortCriteria, $this->offset(), $this->length());
+        return new self($this->items, $this->searchCriteria(), $sortCriteria, $this->offset(), $this->length(), false);
     }
 
     /**
@@ -147,5 +174,35 @@ class ArrayDataSource extends DataSource
         }
 
         return $this->evaluator;
+    }
+
+    /**
+     * @param int $offset
+     *
+     * @return bool
+     */
+    private function checkOffset($offset)
+    {
+        return $this->offset === null || $offset === $this->offset;
+    }
+
+    /**
+     * @param int $count
+     *
+     * @return bool
+     */
+    private function checkLenght($count)
+    {
+        return $this->length === null || $count < $this->length;
+    }
+
+    private function sort()
+    {
+        if (!$this->sorted && $this->isSorted()) {
+            usort($this->items, function ($a, $b) {
+                return $this->sortCriteria()->compare($a, $b);
+            });
+            $this->sorted = true;
+        }
     }
 }

@@ -21,6 +21,33 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
 {
     /**
+     * Checks whether an element is contained in the collection.
+     *
+     * @param mixed $item
+     *
+     * @return bool
+     */
+    public function contains($item);
+
+    /**
+     * Checks the existence of an element by a given key/index.
+     *
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    public function exists($key);
+
+    /**
+     * Gets the element at the specified key/index.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    public function get($key);
+
+    /**
      * Sets an element in the collection at the specified key/index.
      *
      * @param string|int $key
@@ -29,7 +56,7 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
     public function set($key, $value);
 
     /**
-     * @param ComparatorInterface $comparator
+     * @param ComparatorInterface $criteria
      */
-    public function sort(ComparatorInterface $comparator = null);
+    public function sort(ComparatorInterface $criteria = null);
 }

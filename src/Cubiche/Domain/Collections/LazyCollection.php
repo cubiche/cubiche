@@ -30,24 +30,6 @@ abstract class LazyCollection implements CollectionInterface
      */
     protected $initialized = false;
 
-    protected function lazyInitialize()
-    {
-        if (!$this->isInitialized()) {
-            $this->initialize();
-            $this->initialized = true;
-        }
-    }
-
-    abstract protected function initialize();
-
-    /**
-     * @return bool
-     */
-    protected function isInitialized()
-    {
-        return $this->initialized;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -82,42 +64,6 @@ abstract class LazyCollection implements CollectionInterface
         $this->initialize();
 
         return $this->collection->clear();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::contains()
-     */
-    public function contains($item)
-    {
-        $this->initialize();
-
-        return $this->collection->contains($item);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::exists()
-     */
-    public function exists($key)
-    {
-        $this->initialize();
-
-        return $this->collection->exists($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::get()
-     */
-    public function get($key)
-    {
-        $this->initialize();
-
-        return $this->collection->get($key);
     }
 
     /**
@@ -161,11 +107,23 @@ abstract class LazyCollection implements CollectionInterface
      *
      * @see \Cubiche\Domain\Collections\CollectionInterface::find()
      */
-    public function find(SpecificationInterface $specification)
+    public function find(SpecificationInterface $criteria)
     {
         $this->initialize();
 
-        return $this->collection->find($specification);
+        return $this->collection->find($criteria);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     */
+    public function findOne(SpecificationInterface $criteria)
+    {
+        $this->initialize();
+
+        return $this->collection->findOne($criteria);
     }
 
     /**
@@ -185,10 +143,28 @@ abstract class LazyCollection implements CollectionInterface
      *
      * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
      */
-    public function sorted(ComparatorInterface $comparator)
+    public function sorted(ComparatorInterface $criteria)
     {
         $this->initialize();
 
-        return $this->collection->sorted($comparator);
+        return $this->collection->sorted($criteria);
     }
+
+    protected function lazyInitialize()
+    {
+        if (!$this->isInitialized()) {
+            $this->initialize();
+            $this->initialized = true;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isInitialized()
+    {
+        return $this->initialized;
+    }
+
+    abstract protected function initialize();
 }

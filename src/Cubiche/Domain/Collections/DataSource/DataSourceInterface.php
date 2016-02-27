@@ -11,6 +11,7 @@
 namespace Cubiche\Domain\Collections\DataSource;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Data Source Interface.
@@ -38,6 +39,18 @@ interface DataSourceInterface extends \Countable, \IteratorAggregate
      * @return \Cubiche\Domain\Comparable\ComparatorInterface
      */
     public function sortCriteria();
+
+    /**
+     * @return mixed
+     */
+    public function findOne();
+
+    /**
+     * @param SpecificationInterface $criteria
+     *
+     * @return DataSourceInterface
+     */
+    public function filteredDataSource(SpecificationInterface $criteria);
 
     /**
      * @param int $offset

@@ -64,11 +64,47 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::findOne()
+     */
+    public function findOne()
+    {
+        return $this->queryBuilder()->getQuery()->getSingleResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::filteredDataSource()
+     */
+    public function filteredDataSource(SpecificationInterface $criteria)
+    {
+        if ($this->isFiltered()) {
+            $criteria = $this->searchCriteria()->andX($criteria);
+        }
+
+        return new self(
+            $this->repository,
+            $criteria,
+            $this->sortCriteria(),
+            $this->offset(),
+            $this->length()
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
     public function slicedDataSource($offset, $length = null)
     {
-        return new self($this->repository, $this->searchCriteria(), $this->sortCriteria(), $offset, $length);
+        return new self(
+            $this->repository,
+            $this->searchCriteria(),
+            $this->sortCriteria(),
+            $this->actualOffset($offset),
+            $this->actualLength($offset, $length)
+        );
     }
 
     /**

@@ -12,6 +12,7 @@ namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Data Source Collection.
@@ -31,20 +32,6 @@ class DataSourceCollection extends LazyCollection
     public function __construct(DataSourceInterface $dataSource)
     {
         $this->dataSource = $dataSource;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\LazyCollection::initialize()
-     */
-    protected function initialize()
-    {
-        $this->collection = new ArrayCollection();
-
-        foreach ($this->dataSource->getIterator() as $item) {
-            $this->collection->add($item);
-        }
     }
 
     /**
@@ -78,6 +65,34 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\LazyCollection::find()
+     */
+    public function find(SpecificationInterface $criteria)
+    {
+        if ($this->isInitialized()) {
+            return parent::find($criteria);
+        }
+
+        return new self($this->dataSource->filteredDataSource($criteria));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     */
+    public function findOne(SpecificationInterface $criteria)
+    {
+        if ($this->isInitialized()) {
+            return parent::findOne($criteria);
+        }
+
+        return $this->dataSource->filteredDataSource($criteria)->findOne();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\LazyCollection::slice()
      */
     public function slice($offset, $length = null)
@@ -94,12 +109,26 @@ class DataSourceCollection extends LazyCollection
      *
      * @see \Cubiche\Domain\Collections\LazyCollection::sorted()
      */
-    public function sorted(ComparatorInterface $comparator)
+    public function sorted(ComparatorInterface $criteria)
     {
         if ($this->isInitialized()) {
-            return parent::sorted($comparator);
+            return parent::sorted($criteria);
         }
 
-        return new self($this->dataSource->sortedDataSource($comparator));
+        return new self($this->dataSource->sortedDataSource($criteria));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\LazyCollection::initialize()
+     */
+    protected function initialize()
+    {
+        $this->collection = new ArrayCollection();
+
+        foreach ($this->dataSource->getIterator() as $item) {
+            $this->collection->add($item);
+        }
     }
 }

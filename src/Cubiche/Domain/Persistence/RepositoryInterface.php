@@ -19,4 +19,10 @@ use Cubiche\Domain\Collections\CollectionInterface;
  */
 interface RepositoryInterface extends CollectionInterface
 {
+    /**
+     * @param mixed $id
+     *
+     * @return mixed
+     */
+    public function get($id);
 }

@@ -126,6 +126,57 @@ abstract class DataSource implements DataSourceInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isFiltered()
+    {
+        return $this->searchCriteria() !== null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSliced()
+    {
+        return $this->offset() !== null || $this->length() !== null;
+    }
+
+    /**
+     * @param int $offset
+     */
+    protected function actualOffset($offset)
+    {
+        $actualOffset = (int) $offset;
+        if ($this->offset() !== null) {
+            $actualOffset += $this->offset();
+        }
+
+        return $actualOffset;
+    }
+
+    /**
+     * @param int $offset
+     * @param int $length
+     */
+    protected function actualLength($offset, $length = null)
+    {
+        $actualLength = $length;
+        if ($this->isSliced()) {
+            if ($this->length() !== null && $offset >= $this->length()) {
+                return 0;
+            }
+            if ($this->length() !== null) {
+                $actualLength = $this->length() - (int) $offset;
+                if ($length !== null) {
+                    $actualLength = \min([$actualLength, $length]);
+                }
+            }
+        }
+
+        return $actualLength;
+    }
+
+    /**
      * @return int
      */
     abstract protected function calculateCount();

@@ -12,7 +12,6 @@ namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\DataSourceCollection;
 use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Model\EntityInterface;
 use Cubiche\Domain\Persistence\RepositoryInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
@@ -35,14 +34,6 @@ class DocumentRepository implements RepositoryInterface
     public function __construct(MongoDBDocumentRepository $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @return \Doctrine\ODM\MongoDB\DocumentManager
-     */
-    protected function dm()
-    {
-        return $this->repository->getDocumentManager();
     }
 
     /**
@@ -85,35 +76,11 @@ class DocumentRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::contains()
+     * @see \Cubiche\Domain\Persistence\RepositoryInterface::get()
      */
-    public function contains($item)
+    public function get($id)
     {
-        if ($item instanceof EntityInterface) {
-            return $this->exists($item->id());
-        }
-
-        //TODO
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::exists()
-     */
-    public function exists($key)
-    {
-        return $this->get($key) !== null;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::get()
-     */
-    public function get($key)
-    {
-        return $this->repository->find($key);
+        return $this->repository->find($id);
     }
 
     /**
@@ -157,11 +124,20 @@ class DocumentRepository implements RepositoryInterface
      *
      * @see \Cubiche\Domain\Collections\CollectionInterface::find()
      */
-    public function find(SpecificationInterface $specification)
+    public function find(SpecificationInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, $specification));
+        return new DataSourceCollection(new DocumentDataSource($this->repository, $criteria));
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     */
+    public function findOne(SpecificationInterface $criteria)
+    {
+        return (new DocumentDataSource($this->repository, $criteria))->findOne();
+    }
     /**
      * {@inheritdoc}
      *
@@ -177,8 +153,16 @@ class DocumentRepository implements RepositoryInterface
      *
      * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
      */
-    public function sorted(ComparatorInterface $comparator)
+    public function sorted(ComparatorInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, null, $comparator));
+        return new DataSourceCollection(new DocumentDataSource($this->repository, null, $criteria));
+    }
+
+    /**
+     * @return \Doctrine\ODM\MongoDB\DocumentManager
+     */
+    protected function dm()
+    {
+        return $this->repository->getDocumentManager();
     }
 }
