@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Domain\Collections\DataSource;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
- * Finder Interface.
+ * Data Source Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface FinderInterface extends \Countable, \IteratorAggregate
+interface DataSourceInterface extends \Countable, \IteratorAggregate
 {
     /**
      * @return int
@@ -32,25 +32,25 @@ interface FinderInterface extends \Countable, \IteratorAggregate
     /**
      * @return \Cubiche\Domain\Specification\SpecificationInterface
      */
-    public function specification();
+    public function searchCriteria();
 
     /**
      * @return \Cubiche\Domain\Comparable\ComparatorInterface
      */
-    public function comparator();
+    public function sortCriteria();
 
     /**
      * @param int $offset
      * @param int $length
      *
-     * @return FinderInterface
+     * @return DataSourceInterface
      */
-    public function sliceFinder($offset, $length = null);
+    public function slicedDataSource($offset, $length = null);
 
     /**
-     * @param ComparatorInterface $comparator
+     * @param ComparatorInterface $sortCriteria
      *
-     * @return FinderInterface
+     * @return DataSourceInterface
      */
-    public function sortedFinder(ComparatorInterface $comparator);
+    public function sortedDataSource(ComparatorInterface $sortCriteria);
 }

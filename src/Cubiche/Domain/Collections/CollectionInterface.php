@@ -72,7 +72,7 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      *
      * @return \Cubiche\Domain\Collections\CollectionInterface
      */
-    public function find(SpecificationInterface $specification);
+    public function find(SpecificationInterface $sort);
 
     /**
      * Gets a native PHP array representation of the collection.

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Specification;
 
-use Cubiche\Domain\Specification\Evaluator\EvaluatorVisitor;
+use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 
 /**
  * Abstract Specification Class.
@@ -20,14 +20,14 @@ use Cubiche\Domain\Specification\Evaluator\EvaluatorVisitor;
 abstract class Specification implements SpecificationInterface
 {
     /**
-     * @var EvaluatorVisitor
+     * @var EvaluatorBuilder
      */
-    protected $evaluatorVisitor = null;
+    protected $evaluatorBuilder = null;
 
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::and($specification)
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::andX()
      */
     public function andX(SpecificationInterface $specification)
     {
@@ -37,7 +37,7 @@ abstract class Specification implements SpecificationInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::or($specification)
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::orX()
      */
     public function orX(SpecificationInterface $specification)
     {
@@ -61,18 +61,18 @@ abstract class Specification implements SpecificationInterface
      */
     public function evaluate($value)
     {
-        return $this->evaluatorVisitor()->evaluator($this)->evaluate($value);
+        return $this->evaluatorBuilder()->evaluator($this)->evaluate($value);
     }
 
     /**
-     * @return \Cubiche\Domain\Specification\Evaluator\EvaluatorVisitor
+     * @return \Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder
      */
-    protected function evaluatorVisitor()
+    protected function evaluatorBuilder()
     {
-        if ($this->evaluatorVisitor === null) {
-            $this->evaluatorVisitor = new EvaluatorVisitor();
+        if ($this->evaluatorBuilder === null) {
+            $this->evaluatorBuilder = new EvaluatorBuilder();
         }
 
-        return $this->evaluatorVisitor;
+        return $this->evaluatorBuilder;
     }
 }

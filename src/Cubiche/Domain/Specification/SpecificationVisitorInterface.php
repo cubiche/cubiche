@@ -20,21 +20,13 @@ use Cubiche\Domain\Specification\Constraint\NotSame;
 use Cubiche\Domain\Specification\Constraint\Same;
 use Cubiche\Domain\Specification\Quantifier\All;
 use Cubiche\Domain\Specification\Quantifier\AtLeast;
-use Cubiche\Domain\Specification\Selector\Composite;
-use Cubiche\Domain\Specification\Selector\Count;
-use Cubiche\Domain\Specification\Selector\Custom;
-use Cubiche\Domain\Specification\Selector\Key;
-use Cubiche\Domain\Specification\Selector\Method;
-use Cubiche\Domain\Specification\Selector\Property;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
 
 /**
  * Specification Visitor Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface SpecificationVisitorInterface
+interface SpecificationVisitorInterface extends SelectorVisitorInterface
 {
     /**
      * @param AndSpecification $specification
@@ -56,62 +48,6 @@ interface SpecificationVisitorInterface
      * @return mixed
      */
     public function visitNot(NotSpecification $specification);
-
-    /**
-     * @param Value $specification
-     *
-     * @return mixed
-     */
-    public function visitValue(Value $specification);
-
-    /**
-     * @param Key $specification
-     *
-     * @return mixed
-     */
-    public function visitKey(Key $specification);
-
-    /**
-     * @param Property $specification
-     *
-     * @return mixed
-     */
-    public function visitProperty(Property $specification);
-
-    /**
-     * @param Method $specification
-     *
-     * @return mixed
-     */
-    public function visitMethod(Method $specification);
-
-    /**
-     * @param This $specification
-     *
-     * @return mixed
-     */
-    public function visitThis(This $specification);
-
-    /**
-     * @param Custom $specification
-     *
-     * @return mixed
-     */
-    public function visitCustom(Custom $specification);
-
-    /**
-     * @param Count $specification
-     *
-     * @return mixed
-     */
-    public function visitCount(Count $specification);
-
-    /**
-     * @param Composite $specification
-     *
-     * @return mixed
-     */
-    public function visitComposite(Composite $specification);
 
     /**
      * @param GreaterThan $specification

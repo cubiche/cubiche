@@ -8,20 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Domain\Collections\DataSource;
 
-use Cubiche\Domain\Specification\Evaluator\Evaluator;
-use Cubiche\Domain\Specification\Evaluator\EvaluatorVisitor;
-use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
+use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
+use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
- * ArrayFinder Class.
+ * Array Data Source Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ArrayFinder extends Finder
+class ArrayDataSource extends DataSource
 {
     /**
      * @var array
@@ -29,25 +28,26 @@ class ArrayFinder extends Finder
     protected $items;
 
     /**
-     * @var Evaluator
+     * @var \Cubiche\Domain\Specification\Evaluator\Evaluator
      */
     protected $evaluator;
 
     /**
      * @param array                  $items
-     * @param SpecificationInterface $specification
-     * @param ComparatorInterface    $comparator
+     * @param SpecificationInterface $searchCriteria
+     * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
      */
     public function __construct(
         array $items,
-        SpecificationInterface $specification = null,
-        ComparatorInterface $comparator = null,
+        SpecificationInterface $searchCriteria = null,
+        ComparatorInterface $sortCriteria = null,
         $offset = null,
         $length = null
     ) {
-        parent::__construct($specification, $comparator, $offset, $length);
+        parent::__construct($searchCriteria, $sortCriteria, $offset, $length);
+
         $this->items = $items;
     }
 
@@ -60,7 +60,7 @@ class ArrayFinder extends Finder
     {
         if ($this->isSorted()) {
             usort($this->items, function ($a, $b) {
-                return $this->comparator()->compare($a, $b);
+                return $this->sortCriteria()->compare($a, $b);
             });
         }
 
@@ -104,27 +104,27 @@ class ArrayFinder extends Finder
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::sliceFinder()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
-    public function sliceFinder($offset, $length = null)
+    public function slicedDataSource($offset, $length = null)
     {
-        return new self($this->items, $this->specification(), $this->comparator(), $offset, $length);
+        return new self($this->items, $this->searchCriteria(), $this->sortCriteria(), $offset, $length);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::sortedFinder()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
-    public function sortedFinder(ComparatorInterface $comparator)
+    public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
-        return new self($this->items, $this->specification(), $this->comparator(), $this->offset(), $this->length());
+        return new self($this->items, $this->searchCriteria(), $sortCriteria, $this->offset(), $this->length());
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Finder::calculateCount()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {
@@ -137,12 +137,13 @@ class ArrayFinder extends Finder
     protected function evaluator()
     {
         if ($this->evaluator === null) {
-            $evaluatorVisitor = new EvaluatorVisitor();
-            $ciriteria = $this->specification();
-            if ($ciriteria === null) {
-                $ciriteria = Criteria::true();
+            $evaluatorBuilder = new EvaluatorBuilder();
+            $criteria = $this->searchCriteria();
+            if ($criteria === null) {
+                $criteria = Criteria::true();
             }
-            $this->evaluator = $evaluatorVisitor->evaluator($ciriteria);
+
+            $this->evaluator = $evaluatorBuilder->evaluator($criteria);
         }
 
         return $this->evaluator;

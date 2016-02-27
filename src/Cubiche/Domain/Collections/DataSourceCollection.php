@@ -10,26 +10,27 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
- * Finder Lazy Collection.
+ * Data Source Collection.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class FinderLazyCollection extends LazyCollection
+class DataSourceCollection extends LazyCollection
 {
     /**
-     * @var FinderInterface
+     * @var DataSourceInterface
      */
-    protected $finder;
+    protected $dataSource;
 
     /**
-     * @param FinderInterface $finder
+     * @param DataSourceInterface $dataSource
      */
-    public function __construct(FinderInterface $finder)
+    public function __construct(DataSourceInterface $dataSource)
     {
-        $this->finder = $finder;
+        $this->dataSource = $dataSource;
     }
 
     /**
@@ -41,7 +42,7 @@ class FinderLazyCollection extends LazyCollection
     {
         $this->collection = new ArrayCollection();
 
-        foreach ($this->finder->getIterator() as $item) {
+        foreach ($this->dataSource->getIterator() as $item) {
             $this->collection->add($item);
         }
     }
@@ -57,7 +58,7 @@ class FinderLazyCollection extends LazyCollection
             return parent::count();
         }
 
-        return $this->finder->count();
+        return $this->dataSource->count();
     }
 
     /**
@@ -71,7 +72,7 @@ class FinderLazyCollection extends LazyCollection
             return parent::getIterator();
         }
 
-        return $this->finder->getIterator();
+        return $this->dataSource->getIterator();
     }
 
     /**
@@ -85,7 +86,7 @@ class FinderLazyCollection extends LazyCollection
             return parent::slice($offset, $length);
         }
 
-        return new self($this->finder->sliceFinder($offset, $length));
+        return new self($this->dataSource->slicedDataSource($offset, $length));
     }
 
     /**
@@ -99,6 +100,6 @@ class FinderLazyCollection extends LazyCollection
             return parent::sorted($comparator);
         }
 
-        return new self($this->finder->sortedFinder($comparator));
+        return new self($this->dataSource->sortedDataSource($comparator));
     }
 }

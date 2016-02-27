@@ -41,11 +41,11 @@ use Cubiche\Domain\Specification\Specification;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 
 /**
- * Evaluator Visitor Class.
+ * Evaluator Builder Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class EvaluatorVisitor implements SpecificationVisitorInterface
+class EvaluatorBuilder implements SpecificationVisitorInterface
 {
     /**
      * @var ComparatorInterface
@@ -55,7 +55,7 @@ class EvaluatorVisitor implements SpecificationVisitorInterface
     /**
      * @param Specification $specification
      *
-     * @return \Cubiche\Domain\Specification\Evaluator
+     * @return \Cubiche\Domain\Specification\EvaluatorInterface
      */
     public function evaluator(Specification $specification)
     {

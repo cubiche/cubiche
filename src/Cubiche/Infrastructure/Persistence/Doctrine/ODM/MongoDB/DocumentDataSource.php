@@ -10,17 +10,17 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Collections\Finder;
+use Cubiche\Domain\Collections\DataSource\DataSource;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
 /**
- * Document Finder Class.
+ * Document Data Source Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DocumentFinder extends Finder
+class DocumentDataSource extends DataSource
 {
     /**
      * @var MongoDBDocumentRepository
@@ -34,19 +34,20 @@ class DocumentFinder extends Finder
 
     /**
      * @param MongoDBDocumentRepository $repository
-     * @param SpecificationInterface    $specification
-     * @param ComparatorInterface       $comparator
+     * @param SpecificationInterface    $searchCriteria
+     * @param ComparatorInterface       $sortCriteria
      * @param int                       $offset
      * @param int                       $length
      */
     public function __construct(
         MongoDBDocumentRepository $repository,
-        SpecificationInterface $specification = null,
-        ComparatorInterface $comparator = null,
+        SpecificationInterface $searchCriteria = null,
+        ComparatorInterface $sortCriteria = null,
         $offset = null,
         $length = null
     ) {
-        parent::__construct($specification, $comparator, $offset, $length);
+        parent::__construct($searchCriteria, $sortCriteria, $offset, $length);
+
         $this->repository = $repository;
     }
 
@@ -63,24 +64,24 @@ class DocumentFinder extends Finder
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::sliceFinder()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
-    public function sliceFinder($offset, $length = null)
+    public function slicedDataSource($offset, $length = null)
     {
-        return new self($this->repository, $this->specification(), $this->comparator(), $offset, $length);
+        return new self($this->repository, $this->searchCriteria(), $this->sortCriteria(), $offset, $length);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::sortedFinder()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
-    public function sortedFinder(ComparatorInterface $comparator)
+    public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
         return new self(
             $this->repository,
-            $this->specification(),
-            $this->comparator(),
+            $this->searchCriteria(),
+            $sortCriteria,
             $this->offset(),
             $this->length()
         );
@@ -89,7 +90,7 @@ class DocumentFinder extends Finder
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Finder::calculateCount()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {
@@ -105,7 +106,7 @@ class DocumentFinder extends Finder
             $this->queryBuilder = new SpecificationQueryBuilder(
                 $this->repository->getDocumentManager(),
                 $this->repository->getDocumentName(),
-                $this->specification()
+                $this->searchCriteria()
             );
 
             if ($this->offset !== null) {
@@ -116,7 +117,7 @@ class DocumentFinder extends Finder
             }
 
             if ($this->isSorted()) {
-                $this->comparator()->accept($this->queryBuilder);
+                $this->sortCriteria()->accept($this->queryBuilder);
             }
         }
 

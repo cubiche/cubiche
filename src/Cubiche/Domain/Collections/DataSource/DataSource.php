@@ -8,27 +8,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Domain\Collections\DataSource;
 
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
- * Finder Class.
+ * Data Source Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Finder implements FinderInterface
+abstract class DataSource implements DataSourceInterface
 {
     /**
      * @var SpecificationInterface
      */
-    protected $specification;
+    protected $searchCriteria;
 
     /**
      * @var ComparatorInterface
      */
-    protected $comparator;
+    protected $sortCriteria;
 
     /**
      * @var int
@@ -46,19 +46,19 @@ abstract class Finder implements FinderInterface
     private $count;
 
     /**
-     * @param SpecificationInterface $specification
-     * @param ComparatorInterface    $comparator
+     * @param SpecificationInterface $searchCriteria
+     * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
      */
     public function __construct(
-        SpecificationInterface $specification = null,
-        ComparatorInterface $comparator = null,
+        SpecificationInterface $searchCriteria = null,
+        ComparatorInterface $sortCriteria = null,
         $offset = null,
         $length = null
     ) {
-        $this->specification = $specification;
-        $this->comparator = $comparator;
+        $this->searchCriteria = $searchCriteria;
+        $this->sortCriteria = $sortCriteria;
         $this->offset = $offset;
         $this->length = $length;
     }
@@ -80,7 +80,7 @@ abstract class Finder implements FinderInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::length()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::length()
      */
     public function length()
     {
@@ -90,7 +90,7 @@ abstract class Finder implements FinderInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::offset()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::offset()
      */
     public function offset()
     {
@@ -100,21 +100,21 @@ abstract class Finder implements FinderInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::specification()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::searchCriteria()
      */
-    public function specification()
+    public function searchCriteria()
     {
-        return $this->specification;
+        return $this->searchCriteria;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\FinderInterface::comparator()
+     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortCriteria()
      */
-    public function comparator()
+    public function sortCriteria()
     {
-        return $this->comparator;
+        return $this->sortCriteria;
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class Finder implements FinderInterface
      */
     public function isSorted()
     {
-        return $this->comparator !== null;
+        return $this->sortCriteria() !== null;
     }
 
     /**

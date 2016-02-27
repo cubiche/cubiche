@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Collections\FinderLazyCollection;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Collections\DataSourceCollection;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Model\EntityInterface;
 use Cubiche\Domain\Persistence\RepositoryInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
-use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Document Repository Class.
@@ -159,7 +159,7 @@ class DocumentRepository implements RepositoryInterface
      */
     public function find(SpecificationInterface $specification)
     {
-        return new FinderLazyCollection(new DocumentFinder($this->repository, $specification));
+        return new DataSourceCollection(new DocumentDataSource($this->repository, $specification));
     }
 
     /**
@@ -179,6 +179,6 @@ class DocumentRepository implements RepositoryInterface
      */
     public function sorted(ComparatorInterface $comparator)
     {
-        return new FinderLazyCollection(new DocumentFinder($this->repository, null, $comparator));
+        return new DataSourceCollection(new DocumentDataSource($this->repository, null, $comparator));
     }
 }

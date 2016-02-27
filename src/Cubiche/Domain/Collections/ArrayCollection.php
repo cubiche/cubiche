@@ -10,9 +10,10 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
 use Cubiche\Domain\Comparable\Comparator;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Array Collection Class.
@@ -145,7 +146,7 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function find(SpecificationInterface $specification)
     {
-        return new FinderLazyCollection(new ArrayFinder($this->items, $specification));
+        return new DataSourceCollection(new ArrayDataSource($this->items, $specification));
     }
 
     /**
@@ -181,7 +182,7 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function sorted(ComparatorInterface $comparator)
     {
-        return new FinderLazyCollection(new ArrayFinder($this->items, null, $comparator));
+        return new DataSourceCollection(new ArrayDataSource($this->items, null, $comparator));
     }
 
     /**
