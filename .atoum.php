@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 $report = $script->addDefaultReport();
+$script->excludeDirectoriesFromCoverage(array(__DIR__.'/vendor'));
 
 $runner->addTestsFromDirectory(__DIR__.'/src');
 $runner->addExtension(new mageekguy\atoum\visibility\extension($script));
