@@ -9,66 +9,83 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units;
 
-use Closure;
 use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\ArrayCollectionInterface;
+use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Tests\Units\TestCase;
-use mageekguy\atoum\adapter as Adapter;
-use mageekguy\atoum\annotations\extractor as Extractor;
-use mageekguy\atoum\asserter\generator as Generator;
-use mageekguy\atoum\test\assertion\manager as Manager;
 
+/**
+ * ArrayCollectionTests class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
 class ArrayCollectionTests extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(
-        Adapter $adapter = null,
-        Extractor $annotationExtractor = null,
-        Generator $asserterGenerator = null,
-        Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
-    ) {
-        parent::__construct(
-            $adapter,
-            $annotationExtractor,
-            $asserterGenerator,
-            $assertionManager,
-            $reflectionClassFactory
-        );
-
-        $this->getAssertionManager()
-            ->setHandler(
-                'arrayCollection',
-                function (array $items = array()) {
-                    return new ArrayCollection($items);
-                }
-            )
-        ;
-    }
-
-    /**
-     * Test class.
-     */
-    public function testClass()
-    {
-        $this
-            ->testedClass
-                ->implements(ArrayCollectionInterface::class)
-        ;
-    }
-
     /*
      * Test create.
      */
     public function testCreate()
     {
         $this
-            ->given($arrayCollection = $this->arrayCollection())
+            ->given($collection = new ArrayCollection())
             ->then
-                ->object($arrayCollection)
-                ->isInstanceOf(ArrayCollectionInterface::class)
+                ->collection($collection)
+                ->isInstanceOf(CollectionInterface::class)
+        ;
+    }
+
+    /*
+     * Test find.
+     */
+    public function testFind()
+    {
+        $this
+            ->given(
+                $criteria = Criteria::gt(8),
+                $items = array(8, 7, 1, 2, 3, 10, 9, 5, 4, 6),
+                $collection = new ArrayCollection($items)
+            )
+            ->when($result = $collection->find($criteria))
+            ->then
+                ->collection($result)
+                    ->isNotEmpty()
+                    ->size
+                        ->isEqualTo(2)
+                ->collection($result)
+                    ->hasAllElements
+                        ->thatMatchToCriteria($criteria)
+                    ->hasNoElements
+                        ->thatMatchToCriteria(Criteria::lt(8))
+        ;
+    }
+
+    /*
+     * Test slice.
+     */
+    public function testSlice()
+    {
+        $this
+            ->given(
+                $criteria = Criteria::gt(3),
+                $items = array(8, 7, 1, 2, 3, 10, 9, 5, 4, 6),
+                $collection = new ArrayCollection($items)
+            )
+            ->when($result = $collection->find($criteria))
+            ->and($resultSlice = $result->slice(2, 4))
+            ->then
+                ->collection($result)
+                    ->isNotEmpty()
+                        ->size
+                            ->isEqualTo(7)
+                ->collection($resultSlice)
+                    ->isNotEmpty()
+                        ->size
+                            ->isEqualTo(4)
+                ->collection($resultSlice)
+                    ->hasAllElements
+                        ->thatMatchToCriteria($criteria)
+                    ->hasNoElements
+                        ->thatMatchToCriteria(Criteria::lt(3))
         ;
     }
 }

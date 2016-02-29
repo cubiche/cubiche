@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Tests\Units;
 
 use Closure;
@@ -41,7 +40,10 @@ abstract class TestCase extends Test
         );
 
         $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Tests\Atoum\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Collections\Tests\Asserters');
+
         $this->getAssertionManager()->setAlias('getMock', 'MockBuilder');
+        $this->getAssertionManager()->setAlias('collection', 'Collection');
     }
 
     /**
