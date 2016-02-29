@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,21 +8,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Persistence;
 
-use Cubiche\Domain\Collections\CollectionInterface;
+namespace Cubiche\Domain\Collections\Comparator;
+
+use Cubiche\Domain\System\Enum;
 
 /**
- * Repository Interface.
+ * Sorting Order Enum.
+ *
+ * @method Order ASC()
+ * @method Order DESC()
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface RepositoryInterface extends CollectionInterface
+final class Order extends Enum
 {
-    /**
-     * @param mixed $id
-     *
-     * @return mixed
-     */
-    public function get($id);
+    const ASC = 1;
+    const DESC = -1;
 }

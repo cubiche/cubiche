@@ -8,21 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Persistence;
-
-use Cubiche\Domain\Collections\CollectionInterface;
+namespace Cubiche\Domain\Specification;
 
 /**
- * Repository Interface.
+ * Evaluator Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface RepositoryInterface extends CollectionInterface
+interface EvaluatorInterface
 {
     /**
-     * @param mixed $id
+     * @param mixed $value
      *
-     * @return mixed
+     * @return bool
      */
-    public function get($id);
+    public function evaluate($value);
 }

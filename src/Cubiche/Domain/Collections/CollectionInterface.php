@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
 
 /**
  * Collection Interface.
@@ -28,6 +29,8 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function add($item);
 
     /**
+     * Removes an element from the collection.
+     *
      * @param mixed $item
      */
     public function remove($item);
@@ -38,40 +41,22 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function clear();
 
     /**
-     * Checks whether an element is contained in the collection.
+     * Find all elements that match with a given specification.
      *
-     * @param mixed $item
+     * @param SpecificationInterface $criteria
      *
-     * @return bool
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
-    public function contains($item);
-
-    /**
-     * Checks the existence of an element by a given key/index.
-     *
-     * @param mixed $key
-     *
-     * @return bool
-     */
-    public function exists($key);
-
-    /**
-     * Gets the element at the specified key/index.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    public function get($key);
+    public function find(SpecificationInterface $criteria);
 
     /**
      * Find an element collection by a given specification.
      *
-     * @param SpecificationInterface $specification
+     * @param SpecificationInterface $criteria
      *
-     * @return CollectionInterface
+     * @return mixed
      */
-    public function find(SpecificationInterface $specification);
+    public function findOne(SpecificationInterface $criteria);
 
     /**
      * Gets a native PHP array representation of the collection.
@@ -86,7 +71,14 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @param int $offset
      * @param int $length
      *
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     public function slice($offset, $length = null);
+
+    /**
+     * @param ComparatorInterface $criteria
+     *
+     * @return \Cubiche\Domain\Collections\CollectionInterface
+     */
+    public function sorted(ComparatorInterface $criteria);
 }

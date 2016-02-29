@@ -26,7 +26,7 @@
         </whitelist>
     </filter>
     <php>
-        <const name="DOCTRINE_MONGODB_SERVER" value="mongodb://192.168.1.43:27017" />
+        <const name="DOCTRINE_MONGODB_SERVER" value="mongodb://172.17.0.3 :27017" />
         <const name="DOCTRINE_MONGODB_DATABASE" value="doctrine_odm_tests" />
     </php>
 </phpunit>

@@ -7,6 +7,9 @@ build/
 .atoum.html.php
 phpunit.xml
 
+src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Proxies/*
+src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Hydrators/*
+
 .buildpath
 .project
 .settings/

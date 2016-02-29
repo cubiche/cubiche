@@ -10,7 +10,10 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Collections\Specification\SpecificationInterface;
+use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
+use Cubiche\Domain\Comparable\Comparator;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Array Collection Class.
@@ -69,7 +72,7 @@ class ArrayCollection implements ArrayCollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::contains()
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::contains()
      */
     public function contains($item)
     {
@@ -79,7 +82,7 @@ class ArrayCollection implements ArrayCollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::exists()
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::exists()
      */
     public function exists($key)
     {
@@ -89,7 +92,7 @@ class ArrayCollection implements ArrayCollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::get()
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::get()
      */
     public function get($key)
     {
@@ -141,9 +144,19 @@ class ArrayCollection implements ArrayCollectionInterface
      *
      * @see \Cubiche\Domain\Collections\CollectionInterface::find()
      */
-    public function find(SpecificationInterface $specification)
+    public function find(SpecificationInterface $criteria)
     {
-        return new FinderLazyCollection(new ArrayFinder($this->items, $specification));
+        return new DataSourceCollection(new ArrayDataSource($this->items, $criteria));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     */
+    public function findOne(SpecificationInterface $criteria)
+    {
+        return (new ArrayDataSource($this->items, $criteria))->findOne();
     }
 
     /**
@@ -154,6 +167,32 @@ class ArrayCollection implements ArrayCollectionInterface
     public function toArray()
     {
         return $this->items;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::sort()
+     */
+    public function sort(ComparatorInterface $criteria = null)
+    {
+        if ($criteria === null) {
+            $criteria = new Comparator();
+        }
+
+        usort($this->items, function ($a, $b) use ($criteria) {
+            return $criteria->compare($a, $b);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     */
+    public function sorted(ComparatorInterface $criteria)
+    {
+        return new DataSourceCollection(new ArrayDataSource($this->items, null, $criteria));
     }
 
     /**
