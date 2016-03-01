@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Tests\Atoum\Asserters;
+namespace Cubiche\Domain\Tests\Asserters;
 
 use mageekguy\atoum\asserters\mock as BaseMock;
 
 /**
- * Mock class.
+ * MockAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MockBuilder extends BaseMock
+class MockAsserter extends BaseMock
 {
     /**
      * {@inheritdoc}

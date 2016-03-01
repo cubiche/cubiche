@@ -11,21 +11,19 @@
 namespace Cubiche\Domain\Collections\Tests\Asserters;
 
 use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Domain\Comparable\Comparator;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use mageekguy\atoum\asserters\object as Object;
 
 /**
- * Mock class.
+ * CollectionAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Collection extends Object
+class CollectionAsserter extends Object
 {
-    /**
-     * @var SpecificationInterface
-     */
-    protected $searchCriteria;
-
     /**
      * @var bool
      */
@@ -47,6 +45,10 @@ class Collection extends Object
                 return $this->hasAllElements();
             case 'hasnoelements':
                 return $this->hasNoElements();
+            case 'issorted':
+                return $this->isSorted();
+            case 'isnotsorted':
+                return $this->isNotSorted();
             default:
                 return parent::__get($asserter);
         }
@@ -59,7 +61,7 @@ class Collection extends Object
     {
         return $this->generator->__call(
             'integer',
-            array(count($this->valueIsSet()->value->toArray()))
+            array($this->valueIsSet()->value->count())
         );
     }
 
@@ -70,7 +72,7 @@ class Collection extends Object
      */
     public function isEmpty($failMessage = null)
     {
-        if (($actual = count($this->valueIsSet()->value->toArray())) === 0) {
+        if (($actual = $this->valueIsSet()->value->count()) === 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->getLocale()->_('%s is not empty', $this, $actual));
@@ -86,7 +88,7 @@ class Collection extends Object
      */
     public function isNotEmpty($failMessage = null)
     {
-        if (count($this->valueIsSet()->value->toArray()) > 0) {
+        if ($this->valueIsSet()->value->count() > 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->_('%s is empty', $this));
@@ -134,18 +136,6 @@ class Collection extends Object
     }
 
     /**
-     * @param SpecificationInterface $searchCriteria
-     *
-     * @return $this
-     */
-    public function setSearchCriteria(SpecificationInterface $searchCriteria)
-    {
-        $this->searchCriteria = $searchCriteria;
-
-        return $this;
-    }
-
-    /**
      * @param SpecificationInterface $criteria
      *
      * @return $this
@@ -182,11 +172,76 @@ class Collection extends Object
     }
 
     /**
-     * @return bool
+     * @return $this
      */
-    protected function isFiltered()
+    public function isSorted()
     {
-        return $this->searchCriteria !== null;
+        return $this->isSortedUsing(new Comparator());
+    }
+
+    /**
+     * @param ComparatorInterface $comparator
+     *
+     * @return $this
+     */
+    public function isSortedUsing(ComparatorInterface $comparator)
+    {
+        $collection = $this->valueIsSet()->value;
+        $last = null;
+        foreach ($collection as $item) {
+            if ($last !== null) {
+                if ($comparator->compare($last, $item) > 0) {
+                    $this->fail(
+                        $this->_("There are items [%s, %s] that aren't ordered in the given collection", $last, $item)
+                    );
+
+                    return $this;
+                }
+            }
+
+            $last = $item;
+        }
+
+        $this->pass();
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function isNotSorted()
+    {
+        return $this->isNotSortedUsing(new Comparator());
+    }
+
+    /**
+     * @param ComparatorInterface $comparator
+     *
+     * @return $this
+     */
+    public function isNotSortedUsing(ComparatorInterface $comparator)
+    {
+        $collection = $this->valueIsSet()->value;
+        $last = null;
+        $unsorted = 0;
+        foreach ($collection as $item) {
+            if ($last !== null) {
+                if ($comparator->compare($last, $item) > 0) {
+                    ++$unsorted;
+                }
+            }
+
+            $last = $item;
+        }
+
+        if ($unsorted > 0) {
+            $this->pass();
+        } else {
+            $this->fail($this->_('The given collection is sorted'));
+        }
+
+        return $this;
     }
 
     /**
@@ -208,25 +263,36 @@ class Collection extends Object
     }
 
     /**
-     * @param CollectionInterface $collection
+     * @param mixed $value
      *
      * @return mixed
      */
-    protected function getCollectionAsserter(CollectionInterface $collection)
+    public function contains($value)
     {
-        return $this->generator->__call('Collection', array($collection));
+        $collection = $this->valueIsSet()->value;
+        if ($collection->findOne(Criteria::eq($value)) !== null) {
+            $this->pass();
+        } else {
+            $this->fail($this->getLocale()->_('The collection not contain the value %s', $value));
+        }
+
+        return $this;
     }
 
     /**
-     * @param SpecificationInterface $criteria
+     * @param mixed $value
      *
      * @return mixed
      */
-    public function find(SpecificationInterface $criteria)
+    public function notContains($value)
     {
-        $filteredCollection = $this->getCollectionAsserter($this->valueIsSet()->value->find($criteria));
-        $filteredCollection->setSearchCriteria($criteria);
+        $collection = $this->valueIsSet()->value;
+        if ($collection->findOne(Criteria::eq($value)) !== null) {
+            $this->fail($this->getLocale()->_('The collection contain an element with this value %s', $value));
+        } else {
+            $this->pass();
+        }
 
-        return $filteredCollection;
+        return $this;
     }
 }

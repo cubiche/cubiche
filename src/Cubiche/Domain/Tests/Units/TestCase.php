@@ -39,11 +39,14 @@ abstract class TestCase extends Test
             $analyzer
         );
 
-        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Tests\Atoum\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Tests\Asserters');
         $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Collections\Tests\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Equatable\Tests\Asserters');
 
-        $this->getAssertionManager()->setAlias('getMock', 'MockBuilder');
-        $this->getAssertionManager()->setAlias('collection', 'Collection');
+        $this->getAssertionManager()->setAlias('mock', 'MockAsserter');
+        $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');
+        $this->getAssertionManager()->setAlias('collection', 'CollectionAsserter');
+        $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
     }
 
     /**

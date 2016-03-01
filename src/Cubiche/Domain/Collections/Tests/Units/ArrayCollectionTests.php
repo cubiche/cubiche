@@ -10,82 +10,246 @@
 namespace Cubiche\Domain\Collections\Tests\Units;
 
 use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\CollectionInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Domain\Collections\ArrayCollectionInterface;
+use Cubiche\Domain\Collections\Exception\InvalidKeyException;
+use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableComparator;
+use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
+use Cubiche\Domain\Comparable\Comparator;
 
 /**
  * ArrayCollectionTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayCollectionTests extends TestCase
+class ArrayCollectionTests extends CollectionTestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function randomCollection(array $items = array())
+    {
+        if (empty($items)) {
+            foreach (range(0, rand(10, 20)) as $value) {
+                $items[] = new EquatableObject(uniqid());
+            }
+        }
+
+        return new ArrayCollection($items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function emptyCollection()
+    {
+        return new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function uniqueValue()
+    {
+        return new EquatableObject(1000);
+    }
+
     /*
      * Test create.
      */
     public function testCreate()
     {
+        parent::testCreate();
+
         $this
-            ->given($collection = new ArrayCollection())
+            ->given($collection = $this->randomCollection())
             ->then
                 ->collection($collection)
-                ->isInstanceOf(CollectionInterface::class)
+                    ->isInstanceOf(ArrayCollectionInterface::class)
         ;
     }
 
     /*
-     * Test find.
+     * Test contains.
      */
-    public function testFind()
+    public function testContains()
     {
         $this
             ->given(
-                $criteria = Criteria::gt(8),
-                $items = array(8, 7, 1, 2, 3, 10, 9, 5, 4, 6),
-                $collection = new ArrayCollection($items)
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection()
             )
-            ->when($result = $collection->find($criteria))
             ->then
-                ->collection($result)
-                    ->isNotEmpty()
-                    ->size
-                        ->isEqualTo(2)
-                ->collection($result)
-                    ->hasAllElements
-                        ->thatMatchToCriteria($criteria)
-                    ->hasNoElements
-                        ->thatMatchToCriteria(Criteria::lt(8))
+                ->boolean($collection->contains($unique))
+                    ->isFalse()
+            ->and
+            ->when($collection->add($unique))
+            ->then
+                ->boolean($collection->contains($unique))
+                    ->isTrue()
         ;
     }
 
     /*
-     * Test slice.
+     * Test exists/set.
      */
-    public function testSlice()
+    public function testExists()
     {
         $this
             ->given(
-                $criteria = Criteria::gt(3),
-                $items = array(8, 7, 1, 2, 3, 10, 9, 5, 4, 6),
-                $collection = new ArrayCollection($items)
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection()
             )
-            ->when($result = $collection->find($criteria))
-            ->and($resultSlice = $result->slice(2, 4))
             ->then
-                ->collection($result)
-                    ->isNotEmpty()
-                        ->size
-                            ->isEqualTo(7)
-                ->collection($resultSlice)
-                    ->isNotEmpty()
-                        ->size
-                            ->isEqualTo(4)
-                ->collection($resultSlice)
-                    ->hasAllElements
-                        ->thatMatchToCriteria($criteria)
-                    ->hasNoElements
-                        ->thatMatchToCriteria(Criteria::lt(3))
+                ->boolean($collection->exists($key))
+                    ->isFalse()
+            ->and
+            ->when($collection->set($key, $unique))
+            ->then
+                ->boolean($collection->exists($key))
+                    ->isTrue()
+            ->and
+            ->exception(function () use ($collection, $unique) {
+                $collection->set($unique, $unique);
+            })->isInstanceOf(InvalidKeyException::class)
+        ;
+    }
+
+    /*
+     * Test get.
+     */
+    public function testGet()
+    {
+        $this
+            ->given(
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection()
+            )
+            ->then
+                ->variable($collection->get($key))
+                    ->isNull()
+            ->and
+            ->when($collection->set($key, $unique))
+            ->then
+                ->variable($collection->exists($key))
+                    ->isEqualTo($unique)
+        ;
+    }
+
+    /*
+     * Test sort.
+     */
+    public function testSort()
+    {
+        $this
+            ->given(
+                $equatableComparator = new EquatableComparator(),
+                $collection = $this->randomCollection()
+            )
+            ->when($collection->sort())
+            ->then
+                ->collection($collection)
+                    ->isSorted()
+            ->and
+            ->when($collection->sort($equatableComparator))
+            ->then
+                ->collection($collection)
+                    ->isSortedUsing($equatableComparator)
+                ->collection($collection)
+                    ->isNotSortedUsing(new Comparator())
+        ;
+    }
+
+    /*
+     * Test offsetExists.
+     */
+    public function testOffsetExists()
+    {
+        $this
+            ->given(
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection()
+            )
+            ->then
+                ->boolean(isset($collection[$key]))
+                    ->isFalse()
+            ->and
+            ->when($collection->set($key, $unique))
+            ->then
+                ->boolean(isset($collection[$key]))
+                    ->isTrue()
+        ;
+    }
+
+    /*
+     * Test offsetGet.
+     */
+    public function testOffsetGet()
+    {
+        $this
+            ->given(
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection()
+            )
+            ->then
+                ->variable($collection[$key])
+                    ->isNull()
+            ->and
+            ->when($collection->set($key, $unique))
+            ->then
+                ->variable($collection[$key])
+                    ->isEqualTo($unique)
+        ;
+    }
+
+    /*
+     * Test offsetSet.
+     */
+    public function testOffsetSet()
+    {
+        $this
+            ->given(
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->emptyCollection()
+            )
+            ->when($collection[$key] = $unique)
+            ->then
+                ->variable($collection[$key])
+                    ->isEqualTo($unique)
+            ->and
+            ->when($collection[] = $key)
+            ->then
+                ->collection($collection)
+                    ->contains($key)
+        ;
+    }
+
+    /*
+     * Test offsetUnset.
+     */
+    public function testOffsetUnset()
+    {
+        $this
+            ->given(
+                $key = 'foo',
+                $unique = $this->uniqueValue(),
+                $collection = $this->randomCollection(array($key => $unique))
+            )
+            ->when($collection[$key] = $unique)
+            ->then
+                ->variable($collection[$key])
+                    ->isEqualTo($unique)
+            ->and
+            ->when(function () use ($collection, $key) {
+                unset($collection[$key]);
+            })
+            ->then
+                ->variable($collection[$key])
+                    ->isNull()
         ;
     }
 }

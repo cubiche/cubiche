@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Async\Tests\Units;
 
 use Cubiche\Domain\Async\PromiseInterface;
@@ -95,7 +94,7 @@ abstract class PromiseTestCase extends TestCase
                 'delegateCall',
                 function (mock\aggregator $mock) {
                     return $this
-                        ->getMock($mock)
+                        ->mock($mock)
                         ->call('__invoke')
                     ;
                 }

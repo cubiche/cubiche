@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Tests\Atoum\Report\Coverage;
+namespace Cubiche\Domain\Tests\Report\Coverage;
 
 use mageekguy\atoum\report\fields\runner\coverage\html as Report;
 

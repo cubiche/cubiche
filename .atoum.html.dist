@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-use \mageekguy\atoum;
-use Cubiche\Domain\Tests\Atoum\Report\Coverage\Html;
+use Cubiche\Domain\Tests\Report\Coverage\Custom;
+use mageekguy\atoum;
 
 // Code coverage setup
-$coverageHtmlField = new Html('Cubiche', '/path/to/destination/directory');
+$coverageHtmlField = new Custom('Cubiche', '/path/to/destination/directory');
 $coverageHtmlField->setRootUrl('http://url/of/web/site');
-$coverageHtmlField->setTemplatesDirectory('/path/to/resources/directory');
+$coverageHtmlField->setTemplatesDirectory(__DIR__.'/resources/coverage');
 
 $script
     ->addDefaultReport()

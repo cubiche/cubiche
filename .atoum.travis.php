@@ -8,8 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-use Cubiche\Domain\Tests\Atoum\Report\Coverage\Coveralls;
-use \mageekguy\atoum\visibility\extension;
+use Cubiche\Domain\Tests\Report\Coverage\Coveralls;
+use mageekguy\atoum\visibility\extension;
 
 $script->addDefaultReport();
 if ($token = getenv('COVERALLS_REPO_TOKEN')) {
