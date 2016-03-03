@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units\Fixtures;
 
+use Cubiche\Domain\Equatable\EquatableInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 
@@ -18,8 +20,31 @@ use Cubiche\Domain\Specification\SpecificationVisitorInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FakeSpecification implements SpecificationInterface
+class FakeSpecification implements SpecificationInterface, EquatableInterface
 {
+    /**
+     * @var bool
+     */
+    protected $value;
+
+    /**
+     * FakeSpecification constructor.
+     *
+     * @param bool $value
+     */
+    public function __construct($value = false)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function value()
+    {
+        return $this->value;
+    }
+
     /**
      * @param mixed $value
      *
@@ -37,7 +62,7 @@ class FakeSpecification implements SpecificationInterface
      */
     public function andX(SpecificationInterface $specification)
     {
-        // TODO: Implement andX() method.
+        return new self($this->value() && $specification->value());
     }
 
     /**
@@ -47,7 +72,7 @@ class FakeSpecification implements SpecificationInterface
      */
     public function orX(SpecificationInterface $specification)
     {
-        // TODO: Implement orX() method.
+        return new self($this->value() || $specification->value());
     }
 
     /**
@@ -55,7 +80,7 @@ class FakeSpecification implements SpecificationInterface
      */
     public function not()
     {
-        // TODO: Implement not() method.
+        return new self(!$this->value());
     }
 
     /**
@@ -66,5 +91,19 @@ class FakeSpecification implements SpecificationInterface
     public function accept(SpecificationVisitorInterface $visitor)
     {
         // TODO: Implement accept() method.
+    }
+
+    /**
+     * @param mixed $other
+     *
+     * @return bool
+     */
+    public function equals($other)
+    {
+        if (!$other instanceof self) {
+            return false;
+        }
+
+        return $this->value() === $other->value();
     }
 }

@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\DataSource;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Specification\Selector\This;
 
 /**
  * Array Data Source Class.

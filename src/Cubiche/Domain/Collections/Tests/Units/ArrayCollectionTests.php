@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units;
 
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableComparator;
+use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
 use Cubiche\Domain\Comparable\Comparator;
 
@@ -144,7 +145,7 @@ class ArrayCollectionTests extends CollectionTestCase
     {
         $this
             ->given(
-                $equatableComparator = new EquatableComparator(),
+                $equatableComparator = new ReverseComparator(),
                 $collection = $this->randomCollection()
             )
             ->when($collection->sort())

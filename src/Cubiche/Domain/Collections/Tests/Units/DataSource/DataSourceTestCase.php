@@ -8,11 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Closure;
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableComparator;
+use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\FakeSpecification;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
@@ -194,7 +195,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->variable($datasource->sortCriteria())
                     ->isNull()
             ->given(
-                $sortCriteria = new EquatableComparator(),
+                $sortCriteria = new ReverseComparator(),
                 $datasource = $this->randomDataSource(null, $sortCriteria)
             )
             ->then
@@ -214,7 +215,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->boolean($datasource->isSorted())
                     ->isFalse()
             ->given(
-                $sortCriteria = new EquatableComparator(),
+                $sortCriteria = new ReverseComparator(),
                 $datasource = $this->randomDataSource(null, $sortCriteria)
             )
             ->then
