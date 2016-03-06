@@ -21,6 +21,13 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
 {
     /**
+     * Removes an element from the collection by a given key/index.
+     *
+     * @param mixed $key
+     */
+    public function removeAt($key);
+
+    /**
      * Checks whether an element is contained in the collection.
      *
      * @param mixed $item
@@ -36,7 +43,7 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
      *
      * @return bool
      */
-    public function exists($key);
+    public function containsKey($key);
 
     /**
      * Gets the element at the specified key/index.

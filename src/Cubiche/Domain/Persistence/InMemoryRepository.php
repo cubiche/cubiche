@@ -8,34 +8,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
+namespace Cubiche\Domain\Persistence;
 
-use Cubiche\Domain\Collections\DataSourceCollection;
+use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Persistence\Repository;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
 /**
- * Document Repository Class.
+ * In Memory Repository Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DocumentRepository extends Repository
+class InMemoryRepository extends Repository
 {
     /**
-     * @var MongoDBDocumentRepository
+     * @var ArrayCollection
      */
-    protected $repository;
+    protected $collection;
 
     /**
-     * @param MongoDBDocumentRepository $repository
+     * @param string $entityName
      */
-    public function __construct(MongoDBDocumentRepository $repository)
+    public function __construct($entityName)
     {
-        parent::__construct($repository->getDocumentName());
+        parent::__construct($entityName);
 
-        $this->repository = $repository;
+        $this->collection = new ArrayCollection();
     }
 
     /**
@@ -45,19 +44,8 @@ class DocumentRepository extends Repository
      */
     public function add($item)
     {
-        $this->dm()->persist($item);
-        $this->dm()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Persistence\RepositoryInterface::update()
-     */
-    public function update($item)
-    {
-        $this->dm()->persist($item);
-        $this->dm()->flush();
+        $this->checkType($item);
+        $this->collection->add($item);
     }
 
     /**
@@ -67,8 +55,8 @@ class DocumentRepository extends Repository
      */
     public function remove($item)
     {
-        $this->dm()->remove($item);
-        $this->dm()->flush();
+        $this->checkType($item);
+        $this->collection->remove($item);
     }
 
     /**
@@ -78,12 +66,7 @@ class DocumentRepository extends Repository
      */
     public function clear()
     {
-        $this->repository
-            ->createQueryBuilder()
-            ->remove()
-            ->getQuery()
-            ->execute()
-        ;
+        $this->collection->clear();
     }
 
     /**
@@ -93,7 +76,7 @@ class DocumentRepository extends Repository
      */
     public function get($id)
     {
-        return $this->repository->find($id);
+        return $this->collection->findOne(Criteria::method('id')->eq($id));
     }
 
     /**
@@ -103,7 +86,7 @@ class DocumentRepository extends Repository
      */
     public function count()
     {
-        return $this->repository->createQueryBuilder()->getQuery()->count(true);
+        return $this->collection->count();
     }
 
     /**
@@ -113,7 +96,7 @@ class DocumentRepository extends Repository
      */
     public function getIterator()
     {
-        return $this->repository->createQueryBuilder()->getQuery()->getIterator();
+        return $this->collection->getIterator();
     }
 
     /**
@@ -123,13 +106,7 @@ class DocumentRepository extends Repository
      */
     public function slice($offset, $length = null)
     {
-        $queryBuilder = $this->repository->createQueryBuilder();
-        $queryBuilder->skip($offset);
-        if ($length !== null) {
-            $queryBuilder->limit($length);
-        }
-
-        return $queryBuilder->getQuery()->getIterator();
+        return $this->collection->slice($offset, $length);
     }
 
     /**
@@ -139,7 +116,7 @@ class DocumentRepository extends Repository
      */
     public function find(SpecificationInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, $criteria));
+        return $this->collection->find($criteria);
     }
 
     /**
@@ -149,7 +126,7 @@ class DocumentRepository extends Repository
      */
     public function findOne(SpecificationInterface $criteria)
     {
-        return (new DocumentDataSource($this->repository, $criteria))->findOne();
+        return $this->collection->findOne($criteria);
     }
 
     /**
@@ -159,7 +136,7 @@ class DocumentRepository extends Repository
      */
     public function toArray()
     {
-        return $this->repository->createQueryBuilder()->getQuery()->toArray();
+        return $this->collection->toArray();
     }
 
     /**
@@ -169,14 +146,6 @@ class DocumentRepository extends Repository
      */
     public function sorted(ComparatorInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, null, $criteria));
-    }
-
-    /**
-     * @return \Doctrine\ODM\MongoDB\DocumentManager
-     */
-    protected function dm()
-    {
-        return $this->repository->getDocumentManager();
+        return $this->collection->sorted($criteria);
     }
 }

@@ -40,10 +40,28 @@ class EmbeddedDocument
     protected $intValue;
 
     /**
+     * @param string $textValue
+     * @param int    $intValue
+     */
+    public function __construct($textValue, $intValue)
+    {
+        $this->textValue = $textValue;
+        $this->intValue = $intValue;
+    }
+
+    /**
      * @return int
      */
     public function intValue()
     {
         return $this->intValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function textValue()
+    {
+        return $this->textValue;
     }
 }
