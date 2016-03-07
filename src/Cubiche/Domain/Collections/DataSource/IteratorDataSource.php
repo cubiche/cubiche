@@ -24,7 +24,7 @@ use Cubiche\Domain\Specification\SpecificationInterface;
 class IteratorDataSource extends DataSource
 {
     /**
-     * @var \Iterator
+     * @var \Traversable
      */
     protected $iterator;
 
@@ -39,14 +39,14 @@ class IteratorDataSource extends DataSource
     private $iteratorSorted;
 
     /**
-     * @param \Iterator              $iterator
+     * @param \Traversable           $iterator
      * @param SpecificationInterface $searchCriteria
      * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
      */
     public function __construct(
-        \Iterator $iterator,
+        \Traversable $iterator,
         SpecificationInterface $searchCriteria = null,
         ComparatorInterface $sortCriteria = null,
         $offset = null,

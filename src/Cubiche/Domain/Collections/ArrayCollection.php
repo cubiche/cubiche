@@ -217,7 +217,7 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function offsetExists($offset)
     {
-        return $this->exists($offset);
+        return $this->containsKey($offset);
     }
 
     /**

@@ -19,6 +19,9 @@ use Cubiche\Domain\Collections\CollectionInterface;
  */
 interface RepositoryInterface extends CollectionInterface
 {
+    /**
+     * @param mixed $item
+     */
     public function update($item);
 
     /**

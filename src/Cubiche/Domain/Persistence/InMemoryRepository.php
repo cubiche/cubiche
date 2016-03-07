@@ -51,6 +51,16 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Persistence\RepositoryInterface::update()
+     */
+    public function update($item)
+    {
+        $this->checkType($item);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
      */
     public function remove($item)

@@ -18,6 +18,7 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\PersistentCollection;
+use Cubiche\Domain\Collections\ArrayCollection;
 
 /**
  * Persistent Array Collection Class.
@@ -528,7 +529,7 @@ class PersistentArrayCollection extends PersistentCollection implements ArrayCol
      */
     public function slice($offset, $length = null)
     {
-        return $this->collection->slice($offset, $length);
+        return new ArrayCollection($this->collection->slice($offset, $length));
     }
 
     /**

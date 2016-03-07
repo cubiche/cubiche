@@ -97,23 +97,23 @@ class EventListener
     }
 
     /**
-     * @param OnFlushEventArgs $args
+     * @param OnFlushEventArgs $eventArgs
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
     }
 
     /**
-     * @param PostFlushEventArgs $args
+     * @param PostFlushEventArgs $eventArgs
      */
-    public function postFlush(PostFlushEventArgs $args)
+    public function postFlush(PostFlushEventArgs $eventArgs)
     {
     }
 
     /**
-     * @param LoadClassMetadataEventArgs $args
+     * @param LoadClassMetadataEventArgs $eventArgs
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $args)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
     }
 
