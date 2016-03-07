@@ -134,8 +134,6 @@ class Criteria
     }
 
     /**
-     * @param callable $callable
-     *
      * @return \Cubiche\Domain\Specification\Selector\Count
      */
     public static function count()

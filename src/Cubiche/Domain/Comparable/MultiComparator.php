@@ -29,7 +29,7 @@ class MultiComparator extends Comparator
 
     /**
      * @param ComparatorInterface $firstComparator
-     * @param ComparatorInterface $secondcomparator
+     * @param ComparatorInterface $secondComparator
      */
     public function __construct(ComparatorInterface $firstComparator, ComparatorInterface $secondComparator)
     {

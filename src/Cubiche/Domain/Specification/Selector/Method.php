@@ -26,7 +26,7 @@ class Method extends Field
     protected $args;
 
     /**
-     * @param string $method
+     * @param string $name
      * @param array  $args
      */
     public function __construct($name, array $args = array())

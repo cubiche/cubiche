@@ -33,7 +33,7 @@ abstract class Repository implements RepositoryInterface
         if (!$this->entityReflectionClass->isSubclassOf(AggregateRootInterface::class)) {
             throw new \LogicException(\sprintf(
                 '%s not implement %s, only the aggregate roots can have a repository class',
-                $this->entityReflectionClass->getName(),
+                $this->entityReflectionClass->name,
                 AggregateRootInterface::class
             ));
         }
@@ -46,10 +46,10 @@ abstract class Repository implements RepositoryInterface
      */
     protected function checkType($item)
     {
-        if (!is_object($item) || !($item instanceof $this->entityName)) {
+        if (!is_object($item) || !$this->entityReflectionClass->isInstance($item)) {
             throw new \InvalidArgumentException(\sprintf(
                 'Expected %s instance, instance of %s given',
-                $this->entityName,
+                $this->entityReflectionClass->name,
                 is_object($item) ? \gettype($item) : \get_class($item)
             ));
         }

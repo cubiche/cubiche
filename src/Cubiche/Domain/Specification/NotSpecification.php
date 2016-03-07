@@ -23,8 +23,7 @@ class NotSpecification extends Specification
     protected $specification;
 
     /**
-     * @param SpecificationInterface $left
-     * @param SpecificationInterface $right
+     * @param SpecificationInterface $specification
      */
     public function __construct(SpecificationInterface $specification)
     {

@@ -117,7 +117,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function gt($value)
     {
-        return new GreaterThan($this, $this->selector($value));
+        return new GreaterThan($this, $this->createSelector($value));
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function gte($value)
     {
-        return new GreaterThanEqual($this, $this->selector($value));
+        return new GreaterThanEqual($this, $this->createSelector($value));
     }
 
     /**
@@ -137,7 +137,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function lt($value)
     {
-        return new LessThan($this, $this->selector($value));
+        return new LessThan($this, $this->createSelector($value));
     }
 
     /**
@@ -147,7 +147,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function lte($value)
     {
-        return new LessThanEqual($this, $this->selector($value));
+        return new LessThanEqual($this, $this->createSelector($value));
     }
 
     /**
@@ -157,7 +157,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function eq($value)
     {
-        return new Equal($this, $this->selector($value));
+        return new Equal($this, $this->createSelector($value));
     }
 
     /**
@@ -167,7 +167,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function neq($value)
     {
-        return new NotEqual($this, $this->selector($value));
+        return new NotEqual($this, $this->createSelector($value));
     }
 
     /**
@@ -177,7 +177,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function same($value)
     {
-        return new Same($this, $this->selector($value));
+        return new Same($this, $this->createSelector($value));
     }
 
     /**
@@ -187,7 +187,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function notsame($value)
     {
-        return new NotSame($this, $this->selector($value));
+        return new NotSame($this, $this->createSelector($value));
     }
 
     /**
@@ -195,7 +195,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function isNull()
     {
-        return new Same($this, $this->selector(null));
+        return new Same($this, $this->createSelector(null));
     }
 
     /**
@@ -203,7 +203,7 @@ abstract class Selector extends Specification implements SelectorInterface
      */
     public function notNull()
     {
-        return new NotSame($this, $this->selector(null));
+        return new NotSame($this, $this->createSelector(null));
     }
 
     /**
@@ -211,7 +211,7 @@ abstract class Selector extends Specification implements SelectorInterface
      *
      * @return \Cubiche\Domain\Specification\SelectorInterface
      */
-    protected function selector($value)
+    protected function createSelector($value)
     {
         return $value instanceof SelectorInterface ? $value : new Value($value);
     }
