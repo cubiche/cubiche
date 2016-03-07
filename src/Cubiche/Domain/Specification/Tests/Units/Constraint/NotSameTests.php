@@ -17,18 +17,18 @@ use Cubiche\Domain\Specification\Selector\Value;
 use Cubiche\Domain\Specification\Tests\Units\SpecificationTestCase;
 
 /**
- * SameTests class.
+ * NotSameTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SameThanTests extends SpecificationTestCase
+class NotSameTests extends SpecificationTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function randomSpecification()
     {
-        return new Same(new This(), new Value(rand(1, 10)));
+        return new NotSame(new This(), new Value(rand(1, 10)));
     }
 
     /**
@@ -36,7 +36,7 @@ class SameThanTests extends SpecificationTestCase
      */
     protected function shouldVisitMethod()
     {
-        return 'visitSame';
+        return 'visitNotSame';
     }
 
     /*
@@ -50,7 +50,7 @@ class SameThanTests extends SpecificationTestCase
             ->given($specification = $this->randomSpecification())
             ->then
                 ->object($specification)
-                    ->isInstanceOf(Same::class)
+                    ->isInstanceOf(NotSame::class)
         ;
     }
 
@@ -64,7 +64,7 @@ class SameThanTests extends SpecificationTestCase
             ->then
             ->when($notSpecification = $specification->not($specification))
                 ->object($notSpecification)
-                    ->isInstanceOf(NotSame::class)
+                    ->isInstanceOf(Same::class)
                 ->object($notSpecification->left())
                     ->isIdenticalTo($specification->left())
                 ->object($notSpecification->right())
@@ -78,14 +78,14 @@ class SameThanTests extends SpecificationTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = new Same(new This(), new Value(5)))
+            ->given($specification = new NotSame(new This(), new Value(5)))
             ->then
                 ->boolean($specification->evaluate(6))
-                    ->isFalse()
-                ->boolean($specification->evaluate(5.0))
-                    ->isFalse()
-                ->boolean($specification->evaluate(5))
                     ->isTrue()
+                ->boolean($specification->evaluate(5.0))
+                    ->isTrue()
+                ->boolean($specification->evaluate(5))
+                    ->isFalse()
         ;
     }
 }
