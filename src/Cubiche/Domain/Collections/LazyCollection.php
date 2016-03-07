@@ -37,7 +37,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function add($item)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->add($item);
     }
@@ -49,7 +49,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function remove($item)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->remove($item);
     }
@@ -61,7 +61,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function clear()
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->clear();
     }
@@ -73,7 +73,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function count()
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->count();
     }
@@ -85,7 +85,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function getIterator()
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->getIterator();
     }
@@ -97,7 +97,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function slice($offset, $length = null)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->slice($offset, $length);
     }
@@ -109,7 +109,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function find(SpecificationInterface $criteria)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->find($criteria);
     }
@@ -121,7 +121,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function findOne(SpecificationInterface $criteria)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->findOne($criteria);
     }
@@ -133,7 +133,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function toArray()
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->toArray();
     }
@@ -145,7 +145,7 @@ abstract class LazyCollection implements CollectionInterface
      */
     public function sorted(ComparatorInterface $criteria)
     {
-        $this->initialize();
+        $this->lazyInitialize();
 
         return $this->collection->sorted($criteria);
     }

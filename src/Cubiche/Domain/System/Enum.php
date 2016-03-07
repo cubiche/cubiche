@@ -28,7 +28,11 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
      */
     public static function fromNative($value)
     {
-        return new static($value);
+        try {
+            return new static($value);
+        } catch (\UnexpectedValueException $e) {
+            throw new \InvalidArgumentException($e->getMessage(), $e->getCode());
+        }
     }
 
     /**

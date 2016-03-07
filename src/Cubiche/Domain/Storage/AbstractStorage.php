@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -23,6 +24,8 @@ abstract class AbstractStorage implements StorageInterface
      *
      * @param int|string $key
      *
+     * @return bool
+     *
      * @throws InvalidKeyException If the key is invalid.
      */
     protected function validateKey($key)
@@ -30,5 +33,7 @@ abstract class AbstractStorage implements StorageInterface
         if (!is_string($key) && !is_int($key)) {
             throw InvalidKeyException::forKey($key);
         }
+
+        return true;
     }
 }

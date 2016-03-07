@@ -35,20 +35,4 @@ class KeyNotFoundException extends RuntimeException
             $key
         ), 0, $cause);
     }
-
-    /**
-     * Creates an exception for multiple keys that were not found.
-     *
-     * @param int[]|string[] $keys
-     * @param Exception|null $cause
-     *
-     * @return KeyNotFoundException
-     */
-    public static function forKeys(array $keys, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'The keys "%s" does not exist.',
-            implode('", "', $keys)
-        ), 0, $cause);
-    }
 }

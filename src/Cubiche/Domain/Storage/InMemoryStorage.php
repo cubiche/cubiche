@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,22 +8,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Storage;
 
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Storage\Exception\KeyNotFoundException;
 
 /**
- * ArrayStorage class.
+ * InMemoryStorage class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayStorage extends AbstractStorage
+class InMemoryStorage extends AbstractStorage
 {
     /**
      * @var ArrayCollection
      */
-    private $store;
+    protected $store;
 
     /**
      * Creates a new store.

@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
+use Cubiche\Domain\Collections\Exception\InvalidKeyException;
 use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
@@ -101,6 +103,8 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function containsKey($key)
     {
+        $this->validateKey($key);
+
         return isset($this->items[$key]) || \array_key_exists($key, $this->items);
     }
 
@@ -111,6 +115,8 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function get($key)
     {
+        $this->validateKey($key);
+
         return isset($this->items[$key]) ? $this->items[$key] : null;
     }
 
@@ -121,6 +127,8 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function set($key, $value)
     {
+        $this->validateKey($key);
+
         $this->items[$key] = $value;
     }
 
@@ -252,5 +260,23 @@ class ArrayCollection implements ArrayCollectionInterface
     public function offsetUnset($offset)
     {
         unset($this->items[$offset]);
+    }
+
+    /**
+     * Validates that a key is valid.
+     *
+     * @param int|string $key
+     *
+     * @return bool
+     *
+     * @throws InvalidKeyException If the key is invalid.
+     */
+    protected function validateKey($key)
+    {
+        if (!is_string($key) && !is_int($key)) {
+            throw InvalidKeyException::forKey($key);
+        }
+
+        return true;
     }
 }

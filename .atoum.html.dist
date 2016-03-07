@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * This file is part of the Cubiche package.
+ *
+ * Copyright (c) Cubiche
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+use Cubiche\Domain\Tests\Report\Coverage\Custom;
+use mageekguy\atoum;
+
+// Code coverage setup
+$coverageHtmlField = new Custom('Cubiche', '/path/to/destination/directory', '/path/to/source/directory');
+$coverageHtmlField->setRootUrl('http://url/of/web/site');
+$coverageHtmlField->setTemplatesDirectory(__DIR__.'/resources/coverage');
+
+$script
+    ->addDefaultReport()
+    ->addField($coverageHtmlField)
+;
