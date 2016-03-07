@@ -26,23 +26,20 @@ class ArrayDataSource extends IteratorDataSource
      * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
-     * @param bool                   $iteratorSorted
      */
     public function __construct(
         array $items,
         SpecificationInterface $searchCriteria = null,
         ComparatorInterface $sortCriteria = null,
         $offset = null,
-        $length = null,
-        $iteratorSorted = false
+        $length = null
     ) {
         parent::__construct(
             new \ArrayIterator($items),
             $searchCriteria,
             $sortCriteria,
             $offset,
-            $length,
-            $iteratorSorted
+            $length
         );
     }
 }

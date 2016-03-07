@@ -44,20 +44,18 @@ class IteratorDataSource extends DataSource
      * @param ComparatorInterface    $sortCriteria
      * @param int                    $offset
      * @param int                    $length
-     * @param bool                   $iteratorSorted
      */
     public function __construct(
         \Iterator $iterator,
         SpecificationInterface $searchCriteria = null,
         ComparatorInterface $sortCriteria = null,
         $offset = null,
-        $length = null,
-        $iteratorSorted = false
+        $length = null
     ) {
         parent::__construct($searchCriteria, $sortCriteria, $offset, $length);
 
         $this->iterator = $iterator;
-        $this->iteratorSorted = $iteratorSorted;
+        $this->iteratorSorted = false;
     }
 
     /**
@@ -114,10 +112,9 @@ class IteratorDataSource extends DataSource
         return new self(
             $this->iterator,
             $criteria,
-            $this->sortCriteria(),
+            $this->iteratorSorted ? null : $this->sortCriteria(),
             $this->offset(),
-            $this->length(),
-            $this->iteratorSorted
+            $this->length()
         );
     }
 
@@ -131,10 +128,9 @@ class IteratorDataSource extends DataSource
         return new self(
             $this->iterator,
             $this->searchCriteria(),
-            $this->sortCriteria(),
+            $this->iteratorSorted ? null : $this->sortCriteria(),
             $this->actualOffset($offset),
-            $this->actualLength($offset, $length),
-            $this->iteratorSorted
+            $this->actualLength($offset, $length)
         );
     }
 
@@ -150,8 +146,7 @@ class IteratorDataSource extends DataSource
             $this->searchCriteria(),
             $sortCriteria,
             $this->offset(),
-            $this->length(),
-            false
+            $this->length()
         );
     }
 
