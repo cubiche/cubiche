@@ -8,12 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\Comparator\Sort;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\DocumentRepository;
 use Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents\Document;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Collections\Comparator\Sort;
+use Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents\EmbeddedDocument;
 
 /**
  * Document Repository Test Class.
@@ -64,5 +66,30 @@ class DocumentRepositoryTest extends TestCase
 
         $sortCriteria = Sort::by(Criteria::method('intValue'));
         $this->assertSorted($respository->sorted($sortCriteria), $sortCriteria);
+    }
+
+    /**
+     * @test
+     */
+    public function testEventListener()
+    {
+        $repository = new DocumentRepository($this->dm->getRepository(Document::class));
+        $doc = new Document('hola', 1);
+
+        $repository->add($doc);
+        $doc->embeddeds()->add(new EmbeddedDocument('Embedded', 0));
+
+        $repository->update($doc);
+
+        $this->dm->clear(Document::class);
+
+        $repository = new DocumentRepository($this->dm->getRepository(Document::class));
+        $found = $repository->find(Criteria::method('embeddeds')->any(Criteria::method('intValue')->eq(0)));
+
+        /** @var \Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents\Document $document */
+        foreach ($found as $document) {
+            $embedded = $document->embeddeds()->findOne(Criteria::method('intValue')->eq(0));
+            $this->assertNotNull($embedded);
+        }
     }
 }

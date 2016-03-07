@@ -8,8 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents;
 
+use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Domain\Model\AggregateRoot;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -19,7 +23,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Document
+class Document extends AggregateRoot
 {
     /**
      * @var mixed
@@ -45,10 +49,21 @@ class Document
      */
     protected $embedded;
 
+    /**
+     * @var CollectionInterface
+     * @ODM\EmbedMany(targetDocument="EmbeddedDocument")
+     */
+    protected $embeddeds;
+
+    /**
+     * @param string $textValue
+     * @param int    $intValue
+     */
     public function __construct($textValue, $intValue)
     {
         $this->textValue = $textValue;
         $this->intValue = $intValue;
+        $this->embeddeds = new ArrayCollection();
     }
 
     /**
@@ -60,10 +75,26 @@ class Document
     }
 
     /**
+     * @return string
+     */
+    public function textValue()
+    {
+        return $this->textValue;
+    }
+
+    /**
      * @return \Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents\EmbeddedDocument
      */
     public function embedded()
     {
         return $this->embedded;
+    }
+
+    /**
+     * @return \Cubiche\Domain\Collections\CollectionInterface
+     */
+    public function embeddeds()
+    {
+        return $this->embeddeds;
     }
 }

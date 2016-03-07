@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\Tests\CollectionTestCase;
@@ -16,6 +17,8 @@ use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 use Doctrine\ODM\MongoDB\UnitOfWork;
+use Doctrine\ODM\MongoDB\Events;
+use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventListener;
 
 /**
  * Test Case Class.
@@ -51,6 +54,23 @@ abstract class TestCase extends CollectionTestCase
         $this->lastQuery = null;
 
         AnnotationDriver::registerAnnotationClasses();
+
+        $events = array(
+            Events::prePersist,
+            Events::postPersist,
+            Events::preUpdate,
+            Events::postUpdate,
+            Events::preLoad,
+            Events::postLoad,
+            Events::preRemove,
+            Events::postRemove,
+            Events::preFlush,
+            Events::onFlush,
+            Events::postFlush,
+            Events::loadClassMetadata,
+        );
+
+        $this->dm->getEventManager()->addEventListener($events, new EventListener());
     }
 
     /**

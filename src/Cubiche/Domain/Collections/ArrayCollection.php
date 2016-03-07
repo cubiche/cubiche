@@ -8,12 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
 use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
@@ -54,8 +56,22 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function remove($item)
     {
-        $key = \array_search($item, $this->items, true);
-        if ($key !== false) {
+        $criteria = Criteria::eq($item);
+        foreach ($this->items as $key => $value) {
+            if ($criteria->evaluate($value)) {
+                unset($this->items[$key]);
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::removeAt()
+     */
+    public function removeAt($key)
+    {
+        if ($this->containsKey($key)) {
             unset($this->items[$key]);
         }
     }
@@ -85,11 +101,11 @@ class ArrayCollection implements ArrayCollectionInterface
      *
      * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::exists()
      */
-    public function exists($key)
+    public function containsKey($key)
     {
         $this->validateKey($key);
 
-        return isset($this->items[$key]);
+        return isset($this->items[$key]) || \array_key_exists($key, $this->items);
     }
 
     /**
@@ -209,7 +225,7 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function offsetExists($offset)
     {
-        return $this->exists($offset);
+        return $this->containsKey($offset);
     }
 
     /**

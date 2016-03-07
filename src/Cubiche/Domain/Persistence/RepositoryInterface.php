@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Persistence;
 
 use Cubiche\Domain\Collections\CollectionInterface;
@@ -19,6 +20,11 @@ use Cubiche\Domain\Collections\CollectionInterface;
  */
 interface RepositoryInterface extends CollectionInterface
 {
+    /**
+     * @param mixed $item
+     */
+    public function update($item);
+
     /**
      * @param mixed $id
      *

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification;
 
 /**
@@ -23,8 +24,7 @@ class NotSpecification extends Specification
     protected $specification;
 
     /**
-     * @param SpecificationInterface $left
-     * @param SpecificationInterface $right
+     * @param SpecificationInterface $specification
      */
     public function __construct(SpecificationInterface $specification)
     {

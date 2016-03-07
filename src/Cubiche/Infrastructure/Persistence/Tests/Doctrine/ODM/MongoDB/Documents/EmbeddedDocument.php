@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Tests\Doctrine\ODM\MongoDB\Documents;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
@@ -40,10 +41,28 @@ class EmbeddedDocument
     protected $intValue;
 
     /**
+     * @param string $textValue
+     * @param int    $intValue
+     */
+    public function __construct($textValue, $intValue)
+    {
+        $this->textValue = $textValue;
+        $this->intValue = $intValue;
+    }
+
+    /**
      * @return int
      */
     public function intValue()
     {
         return $this->intValue;
+    }
+
+    /**
+     * @return string
+     */
+    public function textValue()
+    {
+        return $this->textValue;
     }
 }

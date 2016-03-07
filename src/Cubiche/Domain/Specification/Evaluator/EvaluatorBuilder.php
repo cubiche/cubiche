@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification\Evaluator;
 
 use Cubiche\Domain\Comparable\Comparator;
@@ -37,8 +38,9 @@ use Cubiche\Domain\Specification\Selector\Property;
 use Cubiche\Domain\Specification\Selector\Selector;
 use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Specification;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
+use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Specification\SelectorInterface;
 
 /**
  * Evaluator Builder Class.
@@ -53,11 +55,11 @@ class EvaluatorBuilder implements SpecificationVisitorInterface
     protected $comparator;
 
     /**
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Specification\EvaluatorInterface
      */
-    public function evaluator(Specification $specification)
+    public function evaluator(SpecificationInterface $specification)
     {
         return $specification->accept($this);
     }
@@ -411,11 +413,11 @@ class EvaluatorBuilder implements SpecificationVisitorInterface
     }
 
     /**
-     * @param Selector $specification
+     * @param SelectorInterface $specification
      *
      * @return Evaluator
      */
-    protected function visitSelector(Selector $specification)
+    protected function visitSelector(SelectorInterface $specification)
     {
         return Evaluator::fromClosure(function ($value) use ($specification) {
             return $specification->apply($value) === true;

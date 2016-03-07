@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
@@ -20,6 +21,13 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
  */
 interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
 {
+    /**
+     * Removes an element from the collection by a given key/index.
+     *
+     * @param mixed $key
+     */
+    public function removeAt($key);
+
     /**
      * Checks whether an element is contained in the collection.
      *
@@ -36,7 +44,7 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
      *
      * @return bool
      */
-    public function exists($key);
+    public function containsKey($key);
 
     /**
      * Gets the element at the specified key/index.

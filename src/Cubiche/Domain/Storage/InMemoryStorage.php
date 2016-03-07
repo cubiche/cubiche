@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Storage;
 
-use Cubiche\Domain\Storage\Exception\KeyNotFoundException;
 use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Domain\Storage\Exception\KeyNotFoundException;
 
 /**
  * InMemoryStorage class.
@@ -55,7 +56,7 @@ class InMemoryStorage extends AbstractStorage
     public function get($key, $default = null)
     {
         $this->validateKey($key);
-        if (!$this->store->exists($key)) {
+        if (!$this->store->containsKey($key)) {
             return $default;
         }
 
@@ -70,7 +71,7 @@ class InMemoryStorage extends AbstractStorage
     public function getOrFail($key)
     {
         $this->validateKey($key);
-        if (!$this->store->exists($key)) {
+        if (!$this->store->containsKey($key)) {
             throw KeyNotFoundException::forKey($key);
         }
 
@@ -116,7 +117,7 @@ class InMemoryStorage extends AbstractStorage
     {
         $this->validateKey($key);
 
-        return $this->store->exists($key);
+        return $this->store->containsKey($key);
     }
 
     /**
@@ -127,7 +128,8 @@ class InMemoryStorage extends AbstractStorage
     public function remove($key)
     {
         $this->validateKey($key);
-        if ($this->store->exists($key)) {
+
+        if ($this->store->containsKey($key)) {
             $this->store->remove(
                 $this->store->get($key)
             );

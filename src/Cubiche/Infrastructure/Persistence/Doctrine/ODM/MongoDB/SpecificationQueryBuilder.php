@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\Comparator\ComparatorVisitorInterface;
@@ -45,6 +46,7 @@ use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Query\Builder;
+use Cubiche\Domain\Specification\SelectorInterface;
 
 /**
  * Specification Query Builder Class.
@@ -425,13 +427,13 @@ class SpecificationQueryBuilder extends Builder implements SpecificationVisitorI
     }
 
     /**
-     * @param Selector $selector
+     * @param SelectorInterface $selector
      *
      * @throws \LogicException
      *
      * @return \Cubiche\Domain\Specification\Selector\Field
      */
-    protected function createField(Selector $selector)
+    protected function createField(SelectorInterface $selector)
     {
         if ($selector instanceof Field) {
             return $selector;

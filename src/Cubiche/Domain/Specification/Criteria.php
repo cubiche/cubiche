@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification;
 
 use Cubiche\Domain\Specification\Selector\Count;
@@ -134,8 +135,6 @@ class Criteria
     }
 
     /**
-     * @param callable $callable
-     *
      * @return \Cubiche\Domain\Specification\Selector\Count
      */
     public static function count()

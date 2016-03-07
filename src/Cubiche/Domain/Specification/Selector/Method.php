@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification\Selector;
 
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
@@ -26,7 +27,7 @@ class Method extends Field
     protected $args;
 
     /**
-     * @param string $method
+     * @param string $name
      * @param array  $args
      */
     public function __construct($name, array $args = array())

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification\Selector;
 
 use Cubiche\Domain\Specification\SelectorInterface;
@@ -31,8 +32,8 @@ class Composite extends Selector
     protected $applySelector;
 
     /**
-     * @param SelectorInterface $selector1
-     * @param SelectorInterface $selector2
+     * @param SelectorInterface $valueSelector
+     * @param SelectorInterface $applySelector
      */
     public function __construct(SelectorInterface $valueSelector, SelectorInterface $applySelector)
     {
