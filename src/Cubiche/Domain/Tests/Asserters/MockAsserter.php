@@ -8,12 +8,30 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Asserters;
 
 use mageekguy\atoum\asserters\mock as BaseMock;
 
 /**
  * MockAsserter class.
+ *
+ * @method $this call
+ * @method $this atLeastOnce
+ * @method $this exactly
+ * @method $this never
+ * @method $this thrice
+ * @method $this withAnyArguments
+ * @method $this withArguments
+ * @method $this withIdenticalArguments
+ * @method $this withAtLeastArguments
+ * @method $this withAtLeastIdenticalArguments
+ * @method $this withoutAnyArgument
+ * @method $this wasCalled
+ * @method $this wasNotCalled
+ * @method $this before
+ * @method $this after
+ * @method $this arguments
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
