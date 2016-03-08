@@ -15,14 +15,14 @@ use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use mageekguy\atoum\asserters\object as Object;
+use Cubiche\Domain\Tests\Asserters\ObjectAsserter;
 
 /**
  * CollectionAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CollectionAsserter extends Object implements CollectionAsserterInterface
+class CollectionAsserter extends ObjectAsserter
 {
     /**
      * @var bool

@@ -10,17 +10,19 @@
 namespace Cubiche\Domain\Equatable\Tests\Asserters;
 
 use Cubiche\Domain\Equatable\EquatableInterface;
-use mageekguy\atoum\asserters\variable as BaseVariable;
+use Cubiche\Domain\Tests\Asserters\VariableAsserter as BaseVariableAsserter;
 
 /**
  * VariableAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class VariableAsserter extends BaseVariable
+class VariableAsserter extends BaseVariableAsserter
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\variable::isEqualTo()
      */
     public function isEqualTo($value, $failMessage = null)
     {

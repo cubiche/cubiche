@@ -105,8 +105,6 @@ abstract class CollectionTestCase extends TestCase
                 ->collection($collection)
                     ->isInstanceOf(CollectionInterface::class)
         ;
-
-        $this->variable($a = true)->given($b = null)->variable($b)->isNull();
     }
 
     /*

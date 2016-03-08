@@ -22,9 +22,6 @@ use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 /**
  * Abstract Test Case class.
  *
- * @method \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter collection()
- * @method \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter datasource()
- *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -58,8 +55,10 @@ abstract class TestCase extends BaseTestCase
             $analyzer
         );
 
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Equatable\Tests\Asserters');
         $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Collections\Tests\Asserters');
 
+        $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');
         $this->getAssertionManager()->setAlias('collection', 'CollectionAsserter');
         $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
     }
