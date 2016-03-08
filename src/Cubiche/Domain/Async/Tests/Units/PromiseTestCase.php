@@ -33,7 +33,7 @@ abstract class PromiseTestCase extends TestCase
         extractor $annotationExtractor = null,
         generator $asserterGenerator = null,
         manager $assertionManager = null,
-        \closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null
     ) {
         parent::__construct(
             $adapter,
@@ -77,7 +77,9 @@ abstract class PromiseTestCase extends TestCase
             ->setHandler(
                 'delegateMock',
                 function () {
-                    return new \mock\Cubiche\Domain\Delegate\Delegate(function ($value = null) {
+                    $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
+
+                    return new $mockName(function ($value = null) {
                         return $value;
                     });
                 }
@@ -85,7 +87,9 @@ abstract class PromiseTestCase extends TestCase
             ->setHandler(
                 'delegateMockWithReturn',
                 function ($return) {
-                    return new \mock\Cubiche\Domain\Delegate\Delegate(function ($value = null) use ($return) {
+                    $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
+
+                    return new $mockName(function ($value = null) use ($return) {
                         return $return;
                     });
                 }

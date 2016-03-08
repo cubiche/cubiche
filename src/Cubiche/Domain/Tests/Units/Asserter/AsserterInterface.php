@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,20 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\System\Tests;
-
-use Cubiche\Domain\System\Enum;
+namespace Cubiche\Domain\Tests\Units\Asserter;
 
 /**
- * Test Enum.
+ * Asserter Interface.
  *
- * @method TestEnum FOO()
- * @method TestEnum BAR()
+ * @method \Cubiche\Domain\Tests\Units\Asserter\AsserterInterface|$this foreach($items, \Clousure $clousure)
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-final class TestEnum extends Enum
+interface AsserterInterface
 {
-    const FOO = 'foo';
-    const BAR = 'bar';
 }

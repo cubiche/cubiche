@@ -22,7 +22,7 @@ use mageekguy\atoum\asserters\object as Object;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CollectionAsserter extends Object
+class CollectionAsserter extends Object implements CollectionAsserterInterface
 {
     /**
      * @var bool
@@ -57,7 +57,7 @@ class CollectionAsserter extends Object
     /**
      * @return mixed
      */
-    protected function size()
+    public function size()
     {
         return $this->generator->__call(
             'integer',

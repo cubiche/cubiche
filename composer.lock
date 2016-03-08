@@ -957,19 +957,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/cqt.git",
-                "reference": "5362149f8baf1fb1922ad0445e9b41dae569bb63"
+                "reference": "114a002449d3f19a59962fa25d1fd7d4877a6f9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/cqt/zipball/5362149f8baf1fb1922ad0445e9b41dae569bb63",
-                "reference": "5362149f8baf1fb1922ad0445e9b41dae569bb63",
+                "url": "https://api.github.com/repos/cubiche/cqt/zipball/114a002449d3f19a59962fa25d1fd7d4877a6f9b",
+                "reference": "114a002449d3f19a59962fa25d1fd7d4877a6f9b",
                 "shasum": ""
             },
             "require": {
+                "atoum/atoum": "~2.5",
                 "fabpot/php-cs-fixer": "@stable",
                 "php": ">=5.5.0",
                 "phpmd/phpmd": "@stable",
-                "phpunit/phpunit": "~4.2",
                 "squizlabs/php_codesniffer": "@stable"
             },
             "bin": [
@@ -1006,7 +1006,7 @@
                 "phpunit",
                 "quality"
             ],
-            "time": "2016-01-17 22:22:21"
+            "time": "2016-03-07 17:15:09"
         },
         {
             "name": "fabpot/php-cs-fixer",

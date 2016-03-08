@@ -44,7 +44,7 @@ class AbstractStorageTests extends TestCase
                 ->boolean($this->invoke($this->testedInstance)->validateKey(''))->isTrue()
                 ->exception(
                     function () {
-                        $this->invoke($this->testedInstance)->validateKey(new \StdClass());
+                        $this->invoke($this->testedInstance)->validateKey(new \stdClass());
                     }
                 )->isInstanceOf(InvalidKeyException::class)
         ;

@@ -8,33 +8,35 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Tests\Units;
+namespace Cubiche\Domain\Collections\Tests\Units;
 
+use Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter;
+use Cubiche\Domain\Collections\Tests\Asserters\DataSourceAsserter;
+use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\test\assertion\manager as Manager;
-use mageekguy\atoum\test as Test;
 use mageekguy\atoum\tools\variable\analyzer as Analyzer;
-use Cubiche\Domain\Tests\Units\Traits\TestCaseTrait;
 
 /**
- * Abstract Test Case Class.
+ * Abstract Test Case class.
+ *
+ * @method \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter collection()
+ * @method \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter datasource()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class TestCase extends Test implements TestCaseInterface
+abstract class TestCase extends BaseTestCase
 {
-    use TestCaseTrait;
-
     /**
      * @param Adapter   $adapter
      * @param Extractor $annotationExtractor
      * @param Generator $asserterGenerator
      * @param Manager   $assertionManager
-     * @param Closure   $reflectionClassFactory
-     * @param Closure   $phpExtensionFactory
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
      * @param Analyzer  $analyzer
      */
     public function __construct(
@@ -56,22 +58,9 @@ abstract class TestCase extends Test implements TestCaseInterface
             $analyzer
         );
 
-        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Tests\Asserters');
-        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Equatable\Tests\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Collections\Tests\Asserters');
 
-        $this->getAssertionManager()->setAlias('mock', 'MockAsserter');
-        $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \mageekguy\atoum\test::getTestedClassName()
-     */
-    public function getTestedClassName()
-    {
-        $className = parent::getTestedClassName();
-
-        return substr($className, 0, strrpos($className, 'Tests'));
+        $this->getAssertionManager()->setAlias('collection', 'CollectionAsserter');
+        $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
     }
 }
