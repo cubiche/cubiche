@@ -208,6 +208,22 @@ abstract class Selector extends Specification implements SelectorInterface
     }
 
     /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public function isTrue()
+    {
+        return new Same($this, $this->createSelector(true));
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public function isFalse()
+    {
+        return new Same($this, $this->createSelector(false));
+    }
+
+    /**
      * @param SelectorInterface|mixed $value
      *
      * @return \Cubiche\Domain\Specification\SelectorInterface

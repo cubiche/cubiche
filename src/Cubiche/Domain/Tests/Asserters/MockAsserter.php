@@ -32,6 +32,10 @@ use mageekguy\atoum\asserters\mock as BaseMock;
  * @method $this before
  * @method $this after
  * @method $this arguments
+ * @method $this once
+ * @method $this twice
+ * @method $this thrice
+ * @method $this exactly
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */

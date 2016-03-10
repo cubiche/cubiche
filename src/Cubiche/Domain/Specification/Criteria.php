@@ -239,6 +239,22 @@ class Criteria
     }
 
     /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public static function isTrue()
+    {
+        return self::this()->isTrue();
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public static function isFalse()
+    {
+        return self::this()->isFalse();
+    }
+
+    /**
      * @param SpecificationInterface $specification
      *
      * @return \Cubiche\Domain\Specification\Quantifier\All
