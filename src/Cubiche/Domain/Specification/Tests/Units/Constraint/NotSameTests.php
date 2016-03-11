@@ -26,9 +26,9 @@ class NotSameTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new NotSame(new This(), new Value(rand(1, 10)));
+        return new NotSame(new This(), new Value($value !== null ? $value : rand(1, 10)));
     }
 
     /**
@@ -78,7 +78,7 @@ class NotSameTests extends SpecificationTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = new NotSame(new This(), new Value(5)))
+            ->given($specification = $this->randomSpecification(5))
             ->then
                 ->boolean($specification->evaluate(6))
                     ->isTrue()

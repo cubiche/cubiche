@@ -186,7 +186,7 @@ abstract class Selector extends Specification implements SelectorInterface
      *
      * @return \Cubiche\Domain\Specification\Constraint\NotSame
      */
-    public function notsame($value)
+    public function notSame($value)
     {
         return new NotSame($this, $this->createSelector($value));
     }

@@ -16,9 +16,12 @@ use Cubiche\Domain\Specification\Evaluator\Evaluator;
 use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 use Cubiche\Domain\Specification\NotSpecification;
 use Cubiche\Domain\Specification\OrSpecification;
+use Cubiche\Domain\Specification\Selector\Count;
+use Cubiche\Domain\Specification\Selector\Custom;
 use Cubiche\Domain\Specification\Selector\Key;
 use Cubiche\Domain\Specification\Selector\Method;
 use Cubiche\Domain\Specification\Selector\Property;
+use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
 use Cubiche\Domain\Tests\Units\TestCase;
 
@@ -165,10 +168,6 @@ class EvaluatorBuilderTests extends TestCase
             ->then()
                 ->object($resultVisit)
                     ->isInstanceOf(Evaluator::class)
-                ->boolean($resultVisit->evaluate(array('bar' => 'baz')))
-                    ->isFalse()
-                ->boolean($resultVisit->evaluate(array()))
-                    ->isFalse()
                 ->boolean($resultVisit->evaluate(array('foo' => true)))
                     ->isTrue()
         ;
@@ -186,15 +185,8 @@ class EvaluatorBuilderTests extends TestCase
             ->then()
                 ->object($resultVisit)
                     ->isInstanceOf(Evaluator::class)
-                ->boolean($resultVisit->evaluate((object) array('foo' => 'baz')))
-                    ->isFalse()
-                ->boolean($resultVisit->evaluate((object) array('foo' => false)))
-                    ->isFalse()
                 ->boolean($resultVisit->evaluate((object) array('foo' => true)))
                     ->isTrue()
-                ->exception(function () use ($resultVisit) {
-                    $resultVisit->evaluate((object) array('bar' => true));
-                })->isInstanceOf(\RuntimeException::class)
         ;
     }
 
@@ -207,6 +199,53 @@ class EvaluatorBuilderTests extends TestCase
             ->given($evaluatorBuilder = new EvaluatorBuilder())
             ->and($specification = new Method('foo'))
             ->when($resultVisit = $evaluatorBuilder->visitMethod($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+        ;
+    }
+
+    /*
+     * Test visitThis.
+     */
+    public function testVisitThis()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = new This())
+            ->when($resultVisit = $evaluatorBuilder->visitThis($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+        ;
+    }
+
+    /*
+     * Test visitCustom.
+     */
+    public function testVisitCustom()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = new Custom(function ($value) {
+                return !$value;
+            }))
+            ->when($resultVisit = $evaluatorBuilder->visitCustom($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+        ;
+    }
+
+    /*
+     * Test visitCount.
+     */
+    public function testVisitCount()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = new Count())
+            ->when($resultVisit = $evaluatorBuilder->visitCount($specification))
             ->then()
                 ->object($resultVisit)
                     ->isInstanceOf(Evaluator::class)

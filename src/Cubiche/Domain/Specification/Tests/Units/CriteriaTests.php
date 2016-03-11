@@ -301,6 +301,32 @@ class CriteriaTests extends TestCase
     }
 
     /*
+     * Test isTrue.
+     */
+    public function testIsTrue()
+    {
+        $this
+            ->given($criteria = Criteria::isTrue())
+            ->then
+                ->object($criteria)
+                    ->isInstanceOf(Same::class)
+        ;
+    }
+
+    /*
+     * Test isFalse.
+     */
+    public function testIsFalse()
+    {
+        $this
+            ->given($criteria = Criteria::isFalse())
+            ->then
+                ->object($criteria)
+                    ->isInstanceOf(Same::class)
+        ;
+    }
+
+    /*
      * Test all.
      */
     public function testAll()

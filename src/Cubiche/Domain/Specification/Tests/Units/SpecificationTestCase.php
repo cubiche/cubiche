@@ -48,8 +48,8 @@ abstract class SpecificationTestCase extends TestCase
         $this->getAssertionManager()
             ->setHandler(
                 'randomSpecification',
-                function () {
-                    return $this->randomSpecification();
+                function ($value = null) {
+                    return $this->randomSpecification($value);
                 }
             )
             ->setHandler(
@@ -62,9 +62,11 @@ abstract class SpecificationTestCase extends TestCase
     }
 
     /**
+     * @param null $value
+     *
      * @return SpecificationInterface
      */
-    abstract protected function randomSpecification();
+    abstract protected function randomSpecification($value = null);
 
     /**
      * @return string

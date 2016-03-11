@@ -26,9 +26,9 @@ class EqualTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new Equal(new This(), new Value(rand(1, 10)));
+        return new Equal(new This(), new Value($value !== null ? $value : rand(1, 10)));
     }
 
     /**
@@ -78,7 +78,7 @@ class EqualTests extends SpecificationTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = new Equal(new This(), new Value(5)))
+            ->given($specification = $this->randomSpecification(5))
             ->then
                 ->boolean($specification->evaluate(5))
                     ->isTrue()

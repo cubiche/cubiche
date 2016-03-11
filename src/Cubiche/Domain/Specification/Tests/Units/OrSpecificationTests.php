@@ -26,10 +26,10 @@ class OrSpecificationTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        $left = new Equal(new This(), new Value(rand(1, 10)));
-        $right = new LessThan(new This(), new Value(rand(1, 10)));
+        $left = new Equal(new This(), new Value($value !== null ? $value : rand(1, 10)));
+        $right = new LessThan(new This(), new Value($value !== null ? $value : rand(1, 10)));
 
         return new OrSpecification($left, $right);
     }

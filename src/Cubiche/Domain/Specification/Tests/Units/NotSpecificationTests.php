@@ -25,9 +25,9 @@ class NotSpecificationTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new NotSpecification(new LessThan(new This(), new Value(rand(1, 10))));
+        return new NotSpecification(new LessThan(new This(), new Value($value !== null ? $value : rand(1, 10))));
     }
 
     /**
