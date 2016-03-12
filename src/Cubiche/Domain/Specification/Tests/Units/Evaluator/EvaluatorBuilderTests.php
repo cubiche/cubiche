@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Evaluator;
 
 use Cubiche\Domain\Specification\AndSpecification;
@@ -16,6 +15,7 @@ use Cubiche\Domain\Specification\Evaluator\Evaluator;
 use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 use Cubiche\Domain\Specification\NotSpecification;
 use Cubiche\Domain\Specification\OrSpecification;
+use Cubiche\Domain\Specification\Selector\Composite;
 use Cubiche\Domain\Specification\Selector\Count;
 use Cubiche\Domain\Specification\Selector\Custom;
 use Cubiche\Domain\Specification\Selector\Key;
@@ -246,6 +246,21 @@ class EvaluatorBuilderTests extends TestCase
             ->given($evaluatorBuilder = new EvaluatorBuilder())
             ->and($specification = new Count())
             ->when($resultVisit = $evaluatorBuilder->visitCount($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+        ;
+    }
+
+    /*
+     * Test visitComposite.
+     */
+    public function testVisitComposite()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = new Composite(new Key('foo'), new Key('bar')))
+            ->when($resultVisit = $evaluatorBuilder->visitComposite($specification))
             ->then()
                 ->object($resultVisit)
                     ->isInstanceOf(Evaluator::class)
