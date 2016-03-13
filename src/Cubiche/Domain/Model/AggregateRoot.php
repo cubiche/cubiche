@@ -18,21 +18,4 @@ namespace Cubiche\Domain\Model;
  */
 abstract class AggregateRoot extends Entity implements AggregateRootInterface
 {
-    /**
-     * @param IdInterface $id
-     */
-    public function __construct(IdInterface $id)
-    {
-        parent::__construct($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
-     */
-    public function equals($other)
-    {
-        return $other instanceof self && $this->id()->equals($other->id());
-    }
 }

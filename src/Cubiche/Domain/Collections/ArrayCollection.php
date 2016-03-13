@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
@@ -47,6 +46,18 @@ class ArrayCollection implements ArrayCollectionInterface
     public function add($item)
     {
         $this->items[] = $item;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        foreach ($items as $item) {
+            $this->add($item);
+        }
     }
 
     /**

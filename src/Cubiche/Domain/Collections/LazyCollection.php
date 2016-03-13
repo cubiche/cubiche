@@ -45,6 +45,18 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        $this->lazyInitialize();
+
+        return $this->collection->addAll($items);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
      */
     public function remove($item)

@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units;
 
 use Cubiche\Domain\Specification\AndSpecification;
@@ -35,7 +34,7 @@ abstract class SpecificationTestCase extends TestCase
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null
     ) {
         parent::__construct(
             $adapter,

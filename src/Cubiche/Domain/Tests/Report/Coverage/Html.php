@@ -71,7 +71,7 @@ class Html extends Report
 
                 ksort($classes, \SORT_STRING);
 
-                foreach ($classes as $className => $classFile) {
+                foreach (array_keys($classes) as $className) {
                     $classCoverageTemplates->className = $className;
                     $classCoverageTemplates->classUrl = str_replace('\\', '/', $className).self::htmlExtensionFile;
 
@@ -109,10 +109,11 @@ class Html extends Report
                 $methodCoverageUnavailableTemplates = $methodTemplates->methodCoverageUnavailable;
 
                 $sourceFileTemplates = $classTemplate->sourceFile;
-
-                $lineTemplates = $sourceFileTemplates->line;
-                $coveredLineTemplates = $sourceFileTemplates->coveredLine;
-                $notCoveredLineTemplates = $sourceFileTemplates->notCoveredLine;
+                $templates = array(
+                    'lineTemplates' => $sourceFileTemplates->line,
+                    'coveredLineTemplates' => $sourceFileTemplates->coveredLine,
+                    'notCoveredLineTemplates' => $sourceFileTemplates->notCoveredLine,
+                );
 
                 foreach ($this->coverage->getMethods() as $className => $methods) {
                     $classTemplate->className = $className;
@@ -202,18 +203,18 @@ class Html extends Report
                                     $lineTemplateName = 'coveredLineTemplates';
                             }
 
-                            ${$lineTemplateName}->lineNumber = $lineNumber;
-                            ${$lineTemplateName}->code = htmlentities($line, ENT_QUOTES, 'UTF-8');
+                            $templates[$lineTemplateName]->lineNumber = $lineNumber;
+                            $templates[$lineTemplateName]->code = htmlentities($line, ENT_QUOTES, 'UTF-8');
 
                             if (isset($methodLines[$lineNumber]) === true) {
-                                foreach (${$lineTemplateName}->anchor as $anchorTemplate) {
+                                foreach ($templates[$lineTemplateName]->anchor as $anchorTemplate) {
                                     $anchorTemplate->resetData();
                                     $anchorTemplate->method = $currentMethod;
                                     $anchorTemplate->build();
                                 }
                             }
 
-                            ${$lineTemplateName}
+                            $templates[$lineTemplateName]
                                 ->addToParent()
                                 ->resetData();
                         }

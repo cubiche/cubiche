@@ -15,14 +15,14 @@ use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use mageekguy\atoum\asserters\object as Object;
+use mageekguy\atoum\asserters\object as ObjectAsserter;
 
 /**
  * CollectionAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CollectionAsserter extends Object
+class CollectionAsserter extends ObjectAsserter
 {
     /**
      * @var bool
@@ -55,9 +55,9 @@ class CollectionAsserter extends Object
     }
 
     /**
-     * @return mixed
+     * @return \mageekguy\atoum\stubs\asserters\integer
      */
-    protected function size()
+    public function size()
     {
         return $this->generator->__call(
             'integer',
@@ -125,8 +125,8 @@ class CollectionAsserter extends Object
         parent::setWith($value, $checkType);
 
         if ($checkType === true) {
-            if (self::isCollection($this->value) === false) {
-                $this->fail($this->getLocale()->_('%s is not an collection', $this));
+            if (!$this->value instanceof CollectionInterface) {
+                $this->fail($this->getLocale()->_('%s is not a collection', $this));
             } else {
                 $this->pass();
             }
@@ -242,16 +242,6 @@ class CollectionAsserter extends Object
         }
 
         return $this;
-    }
-
-    /**
-     * @param $value
-     *
-     * @return bool
-     */
-    protected static function isCollection($value)
-    {
-        return $value instanceof CollectionInterface;
     }
 
     /**

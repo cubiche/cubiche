@@ -29,6 +29,13 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function add($item);
 
     /**
+     * Adds elements at the end of the collection.
+     *
+     * @param array|\Traversable $items
+     */
+    public function addAll($items);
+
+    /**
      * Removes an element from the collection.
      *
      * @param mixed $item

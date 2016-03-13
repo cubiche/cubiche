@@ -11,6 +11,8 @@
 namespace Cubiche\Domain\Specification\Selector;
 
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Property Selector Class.
@@ -19,6 +21,23 @@ use Cubiche\Domain\Specification\SpecificationVisitorInterface;
  */
 class Property extends Field
 {
+    /**
+     * @var PropertyAccessorInterface
+     */
+    private static $accessor = null;
+
+    /**
+     * @return \Cubiche\Domain\Specification\Selector\PropertyAccessor
+     */
+    protected static function accessor()
+    {
+        if (self::$accessor === null) {
+            self::$accessor = PropertyAccess::createPropertyAccessor();
+        }
+
+        return self::$accessor;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -44,6 +63,6 @@ class Property extends Field
             throw new \RuntimeException(\sprintf('Undefined property %s::%s', \get_class($value), $this->name));
         }
 
-        return $value->{$this->name};
+        return self::accessor()->getValue($value, $this->name);
     }
 }

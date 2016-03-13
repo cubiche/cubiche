@@ -98,7 +98,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -132,7 +131,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -166,7 +164,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -200,7 +197,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then

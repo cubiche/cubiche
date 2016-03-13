@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections\Tests\Units;
 
 use Cubiche\Domain\Collections\ArrayCollection;
@@ -31,7 +30,7 @@ class ArrayCollectionTests extends CollectionTestCase
     {
         if (empty($items)) {
             foreach (range(0, rand(10, 20)) as $value) {
-                $items[] = new EquatableObject(uniqid());
+                $items[] = new EquatableObject($value);
             }
         }
 
@@ -59,8 +58,6 @@ class ArrayCollectionTests extends CollectionTestCase
      */
     public function testCreate()
     {
-        parent::testCreate();
-
         $this
             ->given($collection = $this->randomCollection())
             ->then
