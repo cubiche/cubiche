@@ -119,16 +119,18 @@ class CollectionAsserter extends ObjectAsserter
 
     /**
      * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\object::setWith()
      */
     public function setWith($value, $checkType = true)
     {
         parent::setWith($value, $checkType);
 
         if ($checkType === true) {
-            if (!$this->value instanceof CollectionInterface) {
-                $this->fail($this->getLocale()->_('%s is not a collection', $this));
-            } else {
+            if ($this->value instanceof CollectionInterface) {
                 $this->pass();
+            } else {
+                $this->fail($this->getLocale()->_('%s is not a collection', $this));
             }
         }
 
@@ -144,7 +146,7 @@ class CollectionAsserter extends ObjectAsserter
     {
         $passed = 0;
         $failed = 0;
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         foreach ($collection as $item) {
             if ($criteria->evaluate($item)) {
                 ++$passed;
@@ -289,10 +291,10 @@ class CollectionAsserter extends ObjectAsserter
     }
 
     /**
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     protected function valueAsCollection()
     {
-        return $this->valueIsSet()->value;
+        return $this->valueIsSet()->getValue();
     }
 }

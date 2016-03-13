@@ -507,9 +507,10 @@ class Custom extends Report
                 }
             }
         } catch (\Exception $exception) {
-        } finally {
             return $this;
         }
+
+        return $this;
     }
 
     /**
