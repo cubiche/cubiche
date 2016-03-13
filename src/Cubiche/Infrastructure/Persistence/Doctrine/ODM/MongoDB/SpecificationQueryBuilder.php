@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\Comparator\ComparatorVisitorInterface;
@@ -47,6 +46,7 @@ use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Query\Builder;
 use Cubiche\Domain\Specification\SelectorInterface;
+use Cubiche\Domain\Model\EntityInterface;
 
 /**
  * Specification Query Builder Class.
@@ -439,6 +439,10 @@ class SpecificationQueryBuilder extends Builder implements SpecificationVisitorI
             return $selector;
         }
 
+        if ($selector instanceof This) {
+            return new Property('id');
+        }
+
         if ($selector instanceof Composite) {
             return $this->createFieldFromComposite($selector);
         }
@@ -459,7 +463,12 @@ class SpecificationQueryBuilder extends Builder implements SpecificationVisitorI
     protected function createValue(SpecificationInterface $value)
     {
         if ($value instanceof Value) {
-            return $value->value();
+            $actualValue = $value->value();
+            if ($actualValue instanceof EntityInterface) {
+                return $actualValue->id()->toNative();
+            }
+
+            return $actualValue;
         }
 
         throw new \LogicException(\sprintf(

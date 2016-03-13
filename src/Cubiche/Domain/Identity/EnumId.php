@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Model;
+namespace Cubiche\Domain\Identity;
+
+use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\System\Enum;
 
 /**
- * Abstract Aggregate Root Class.
+ * Abstract Enum Id Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+abstract class EnumId extends Enum implements IdInterface
 {
 }

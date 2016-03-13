@@ -10,7 +10,7 @@
 namespace Cubiche\Domain\Equatable\Tests\Asserters;
 
 use Cubiche\Domain\Equatable\EquatableInterface;
-use Cubiche\Domain\Tests\Asserters\VariableAsserter as BaseVariableAsserter;
+use mageekguy\atoum\asserters\variable as BaseVariableAsserter;
 
 /**
  * VariableAsserter class.

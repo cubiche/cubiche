@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * This file is part of the Cubiche package.
+ *
+ * Copyright (c) Cubiche
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+define('DOCTRINE_MONGODB_SERVER', 'mongodb://127.0.0.1:27017');
+define('DOCTRINE_MONGODB_DATABASE', 'doctrine_odm_tests');

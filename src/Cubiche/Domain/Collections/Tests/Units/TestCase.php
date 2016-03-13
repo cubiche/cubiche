@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units;
 
+use Cubiche\Domain\Collections\Tests\Asserters\Asserters;
 use Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter;
 use Cubiche\Domain\Collections\Tests\Asserters\DataSourceAsserter;
 use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
@@ -27,6 +28,8 @@ use mageekguy\atoum\tools\variable\analyzer as Analyzer;
  */
 abstract class TestCase extends BaseTestCase
 {
+    use Asserters;
+
     /**
      * @param Adapter   $adapter
      * @param Extractor $annotationExtractor

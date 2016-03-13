@@ -9,20 +9,21 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
-use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
+use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\FakeSpecification;
+use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
- * ArrayDataSourceTests class.
+ * Iterator Data Source Tests Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ArrayDataSourceTests extends DataSourceTestCase
+class IteratorDataSourceTests extends DataSourceTestCase
 {
     /**
      * {@inheritdoc}
@@ -33,12 +34,13 @@ class ArrayDataSourceTests extends DataSourceTestCase
         $offset = null,
         $length = null
     ) {
-        $items = array();
-        foreach (range(0, rand(10, 20)) as $value) {
-            $items[] = new EquatableObject($value);
-        }
-
-        return new ArrayDataSource($items, $searchCriteria, $sortCriteria, $offset, $length);
+        return new IteratorDataSource(
+            $this->generator(rand(10, 20)),
+            $searchCriteria,
+            $sortCriteria,
+            $offset,
+            $length
+        );
     }
 
     /**
@@ -46,7 +48,7 @@ class ArrayDataSourceTests extends DataSourceTestCase
      */
     protected function emptyDataSource()
     {
-        return new ArrayDataSource(array());
+        return new IteratorDataSource($this->generator(0));
     }
 
     /**
@@ -55,6 +57,20 @@ class ArrayDataSourceTests extends DataSourceTestCase
     protected function uniqueValue()
     {
         return new EquatableObject(1000);
+    }
+
+    /**
+     * @param int $count
+     *
+     * @return Generator
+     */
+    protected function generator($count)
+    {
+        if ($count > 0) {
+            foreach (range(0, $count) as $value) {
+                yield new EquatableObject($value);
+            }
+        }
     }
 
     /*
@@ -68,11 +84,11 @@ class ArrayDataSourceTests extends DataSourceTestCase
             ->given($datasource = $this->randomDataSource())
             ->then
                 ->datasource($datasource)
-                    ->isInstanceOf(ArrayDataSource::class)
+                    ->isInstanceOf(IteratorDataSource::class)
         ;
     }
 
-    /*
+    /**
      * Test findOne.
      */
     public function testFindOne()
@@ -169,7 +185,7 @@ class ArrayDataSourceTests extends DataSourceTestCase
             ->then
                 ->boolean($slicedDataSource->isSliced())
                     ->isTrue()
-                ->variable($slicedDataSource->offset())
+                ->integer($slicedDataSource->offset())
                     ->isEqualTo(2)
                 ->variable($slicedDataSource->length())
                     ->isNull()
@@ -180,18 +196,18 @@ class ArrayDataSourceTests extends DataSourceTestCase
             ->then
                 ->boolean($randomDataSource->isSliced())
                     ->isTrue()
-                ->variable($randomDataSource->offset())
+                ->integer($randomDataSource->offset())
                     ->isEqualTo(2)
-                ->variable($randomDataSource->length())
+                ->integer($randomDataSource->length())
                     ->isEqualTo(10)
             ->and
             ->when($slicedDataSource = $randomDataSource->slicedDataSource(2, 4))
             ->then
                 ->boolean($slicedDataSource->isSliced())
                     ->isTrue()
-                ->variable($slicedDataSource->offset())
+                ->integer($slicedDataSource->offset())
                     ->isEqualTo(4)
-                ->variable($slicedDataSource->length())
+                ->integer($slicedDataSource->length())
                     ->isEqualTo(4)
         ;
 
@@ -200,18 +216,18 @@ class ArrayDataSourceTests extends DataSourceTestCase
             ->then
                 ->boolean($randomDataSource->isSliced())
                     ->isTrue()
-                ->variable($randomDataSource->offset())
+                ->integer($randomDataSource->offset())
                     ->isEqualTo(2)
-                ->variable($randomDataSource->length())
+                ->integer($randomDataSource->length())
                     ->isEqualTo(10)
             ->and
             ->when($slicedDataSource = $randomDataSource->slicedDataSource(8, 4))
             ->then
                 ->boolean($slicedDataSource->isSliced())
                     ->isTrue()
-                ->variable($slicedDataSource->offset())
+                ->integer($slicedDataSource->offset())
                     ->isEqualTo(10)
-                ->variable($slicedDataSource->length())
+                ->integer($slicedDataSource->length())
                     ->isEqualTo(2)
         ;
 
@@ -234,6 +250,15 @@ class ArrayDataSourceTests extends DataSourceTestCase
                 ->variable($slicedDataSource->length())
                     ->isEqualTo(0)
         ;
+
+        $this
+            ->given($randomDataSource = $this->randomDataSource(null, null, 2, 4))
+            ->let($iterator = $randomDataSource->getIterator())
+            ->then()
+                ->object($iterator)
+                    ->isInstanceOf(\Traversable::class)
+                ->integer(\iterator_count($iterator))
+                    ->isEqualTo(4);
     }
 
     /*

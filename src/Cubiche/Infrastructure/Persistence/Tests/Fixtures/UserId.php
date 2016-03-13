@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,14 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Cubiche\Infrastructure\Persistence\Tests\Fixtures;
 
-namespace Cubiche\Domain\Model;
+use Cubiche\Domain\Identity\UUID;
 
 /**
- * Abstract Aggregate Root Class.
+ * User Id Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+class UserId extends UUID
 {
 }

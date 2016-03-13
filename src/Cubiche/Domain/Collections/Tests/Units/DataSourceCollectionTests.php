@@ -57,8 +57,6 @@ class DataSourceCollectionTests extends CollectionTestCase
      */
     public function testCreate()
     {
-        parent::testCreate();
-
         $this
             ->given($collection = $this->randomCollection())
             ->then

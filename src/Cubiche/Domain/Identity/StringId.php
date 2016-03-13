@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Model;
+namespace Cubiche\Domain\Identity;
+
+use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
- * Abstract Aggregate Root Class.
+ * String Id Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+class StringId extends StringLiteral implements IdInterface
 {
 }
