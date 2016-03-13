@@ -61,7 +61,7 @@ class CollectionAsserter extends ObjectAsserter
     {
         return $this->generator->__call(
             'integer',
-            array($this->valueIsSet()->value->count())
+            array($this->valueAsCollection()->count())
         );
     }
 
@@ -72,7 +72,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isEmpty($failMessage = null)
     {
-        if (($actual = $this->valueIsSet()->value->count()) === 0) {
+        if (($actual = $this->valueAsCollection()->count()) === 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->getLocale()->_('%s is not empty', $this, $actual));
@@ -88,7 +88,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isNotEmpty($failMessage = null)
     {
-        if ($this->valueIsSet()->value->count() > 0) {
+        if ($this->valueAsCollection()->count() > 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->_('%s is empty', $this));
@@ -186,7 +186,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         $last = null;
         foreach ($collection as $item) {
             if ($last !== null) {
@@ -222,7 +222,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isNotSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         $last = null;
         $unsorted = 0;
         foreach ($collection as $item) {
@@ -245,21 +245,13 @@ class CollectionAsserter extends ObjectAsserter
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function valueIsSet($message = 'Collection is undefined')
-    {
-        return parent::valueIsSet($message);
-    }
-
-    /**
      * @param mixed $value
      *
      * @return mixed
      */
     public function contains($value)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         if ($collection->findOne(Criteria::eq($value)) !== null) {
             $this->pass();
         } else {
@@ -276,7 +268,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function notContains($value)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         if ($collection->findOne(Criteria::eq($value)) !== null) {
             $this->fail($this->getLocale()->_('The collection contain an element with this value %s', $value));
         } else {
@@ -284,5 +276,23 @@ class CollectionAsserter extends ObjectAsserter
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\object::valueIsSet()
+     */
+    protected function valueIsSet($message = 'Collection is undefined')
+    {
+        return parent::valueIsSet($message);
+    }
+
+    /**
+     * @return CollectionInterface
+     */
+    protected function valueAsCollection()
+    {
+        return $this->valueIsSet()->value;
     }
 }

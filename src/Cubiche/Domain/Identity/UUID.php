@@ -47,7 +47,7 @@ class UUID extends StringId
     }
 
     /**
-     * @return \Cubiche\Domain\Identity\UUID
+     * @return static
      */
     public static function next()
     {

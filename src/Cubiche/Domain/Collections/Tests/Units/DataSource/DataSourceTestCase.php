@@ -11,10 +11,10 @@
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\FakeSpecification;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
 use Cubiche\Domain\Collections\Tests\Units\TestCase;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
@@ -185,7 +185,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->variable($datasource->searchCriteria())
                     ->isNull()
             ->given(
-                $searchCriteria = new FakeSpecification(),
+                $searchCriteria = Criteria::false(),
                 $datasource = $this->randomDataSource($searchCriteria)
             )
             ->then
@@ -245,7 +245,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->boolean($datasource->isFiltered())
                     ->isFalse()
             ->given(
-                $searchCriteria = new FakeSpecification(),
+                $searchCriteria = Criteria::false(),
                 $datasource = $this->randomDataSource($searchCriteria)
             )
             ->then

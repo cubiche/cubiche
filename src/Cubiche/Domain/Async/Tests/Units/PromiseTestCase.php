@@ -12,11 +12,12 @@ namespace Cubiche\Domain\Async\Tests\Units;
 
 use Cubiche\Domain\Async\PromiseInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
-use mageekguy\atoum\adapter;
-use mageekguy\atoum\annotations\extractor;
-use mageekguy\atoum\asserter\generator;
-use mageekguy\atoum\mock;
-use mageekguy\atoum\test\assertion\manager;
+use mageekguy\atoum\adapter as Adapter;
+use mageekguy\atoum\annotations\extractor as Extractor;
+use mageekguy\atoum\asserter\generator as Generator;
+use mageekguy\atoum\mock\aggregator as MockAggregator;
+use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * PromiseTestCase class.
@@ -26,21 +27,31 @@ use mageekguy\atoum\test\assertion\manager;
 abstract class PromiseTestCase extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param Closure   $reflectionClassFactory
+     * @param Closure   $phpExtensionFactory
+     * @param Analyzer  $analyzer
      */
     public function __construct(
-        adapter $adapter = null,
-        extractor $annotationExtractor = null,
-        generator $asserterGenerator = null,
-        manager $assertionManager = null,
-        \Closure $reflectionClassFactory = null
+        Adapter $adapter = null,
+        Extractor $annotationExtractor = null,
+        Generator $asserterGenerator = null,
+        Manager $assertionManager = null,
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
     ) {
         parent::__construct(
             $adapter,
             $annotationExtractor,
             $asserterGenerator,
             $assertionManager,
-            $reflectionClassFactory
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
         );
 
         $this->getAssertionManager()
@@ -77,30 +88,19 @@ abstract class PromiseTestCase extends TestCase
             ->setHandler(
                 'delegateMock',
                 function () {
-                    $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
-
-                    return new $mockName(function ($value = null) {
-                        return $value;
-                    });
+                    $this->delegateMock();
                 }
             )
             ->setHandler(
                 'delegateMockWithReturn',
                 function ($return) {
-                    $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
-
-                    return new $mockName(function ($value = null) use ($return) {
-                        return $return;
-                    });
+                    $this->delegateMockWithReturn($return);
                 }
             )
             ->setHandler(
                 'delegateCall',
-                function (mock\aggregator $mock) {
-                    return $this
-                        ->mock($mock)
-                        ->call('__invoke')
-                    ;
+                function (MockAggregator $mock) {
+                    return $this->delegateCall($mock);
                 }
             )
         ;
@@ -445,5 +445,37 @@ abstract class PromiseTestCase extends TestCase
                 }
             )->isInstanceOf(\LogicException::class)
         ;
+    }
+
+    /**
+     * @return \Cubiche\Domain\Delegate\Delegate
+     */
+    protected function delegateMock($return = null)
+    {
+        $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
+
+        return new $mockName(function ($value = null) use ($return) {
+            return $return === null ? $value : $return;
+        });
+    }
+
+    /**
+     * @param mixed $return
+     *
+     * @return \Cubiche\Domain\Delegate\Delegate
+     */
+    protected function delegateMockWithReturn($return)
+    {
+        return $this->delegateMock($return);
+    }
+
+    /**
+     * @param MockAggregator $mock
+     *
+     * @return mixed
+     */
+    protected function delegateCall(MockAggregator $mock)
+    {
+        return $this->mock($mock)->call('__invoke');
     }
 }

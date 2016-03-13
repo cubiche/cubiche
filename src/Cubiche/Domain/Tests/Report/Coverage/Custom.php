@@ -434,7 +434,6 @@ class Custom extends Report
     protected function getHierarchy($fileName)
     {
         $directories = explode('/', $fileName);
-        //unset($directories[count($directories) - 1]);
 
         $path = '/';
         $result = [];
@@ -507,10 +506,10 @@ class Custom extends Report
                     $this->adapter->rmdir($pathname);
                 }
             }
-        } catch (\exception $exception) {
+        } catch (\Exception $exception) {
+        } finally {
+            return $this;
         }
-
-        return $this;
     }
 
     /**

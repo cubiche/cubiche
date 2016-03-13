@@ -11,7 +11,6 @@ namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\FakeSpecification;
 use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
@@ -136,7 +135,7 @@ class IteratorDataSourceTests extends DataSourceTestCase
     {
         $this
             ->given(
-                $searchCriteria = new FakeSpecification(),
+                $searchCriteria = Criteria::false(),
                 $emptyDataSource = $this->emptyDataSource()
             )
             ->then
@@ -153,8 +152,8 @@ class IteratorDataSourceTests extends DataSourceTestCase
 
         $this
             ->given(
-                $searchCriteria = new FakeSpecification(true),
-                $filteredCriteria = new FakeSpecification(false),
+                $searchCriteria = Criteria::true(),
+                $filteredCriteria = Criteria::false(),
                 $randomDataSource = $this->randomDataSource($searchCriteria)
             )
             ->then
