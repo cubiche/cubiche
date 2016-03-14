@@ -7,14 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units;
 
 use Cubiche\Domain\Specification\AndSpecification;
-use Cubiche\Domain\Specification\Constraint\Equal;
-use Cubiche\Domain\Specification\Constraint\LessThan;
-use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Selector\This;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * AndSpecificationTests class.
@@ -28,8 +24,8 @@ class AndSpecificationTests extends SpecificationTestCase
      */
     protected function randomSpecification($value = null)
     {
-        $left = new Equal(new This(), new Value($value !== null ? $value : rand(1, 10)));
-        $right = new LessThan(new This(), new Value($value !== null ? $value : rand(1, 10)));
+        $left = Criteria::eq($value !== null ? $value : rand(1, 10));
+        $right = Criteria::lt($value !== null ? $value : rand(1, 10));
 
         return new AndSpecification($left, $right);
     }

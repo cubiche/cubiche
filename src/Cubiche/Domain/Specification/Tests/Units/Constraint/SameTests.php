@@ -7,28 +7,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
 
 use Cubiche\Domain\Specification\Constraint\NotSame;
 use Cubiche\Domain\Specification\Constraint\Same;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Tests\Units\SpecificationTestCase;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * SameTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SameTests extends SpecificationTestCase
+class SameTests extends BinarySelectorOperatorTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function randomSpecification($value = null)
     {
-        return new Same(new This(), new Value($value !== null ? $value : rand(1, 10)));
+        return Criteria::same($value !== null ? $value : rand(1, 10));
     }
 
     /**

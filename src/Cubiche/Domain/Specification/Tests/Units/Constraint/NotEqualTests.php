@@ -7,28 +7,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
 
 use Cubiche\Domain\Specification\Constraint\Equal;
 use Cubiche\Domain\Specification\Constraint\NotEqual;
-use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Tests\Units\SpecificationTestCase;
-use Cubiche\Domain\Specification\Selector\This;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * NotEqualTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NotEqualTests extends SpecificationTestCase
+class NotEqualTests extends BinarySelectorOperatorTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function randomSpecification($value = null)
     {
-        return new NotEqual(new This(), new Value($value !== null ? $value : rand(1, 10)));
+        return Criteria::neq($value !== null ? $value : rand(1, 10));
     }
 
     /**

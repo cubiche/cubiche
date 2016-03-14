@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Selector;
 
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Selector\Method;
 
 /**
@@ -55,7 +55,7 @@ class MethodTests extends FieldTestCase
      */
     protected function randomSpecification($value = null)
     {
-        return new Method($value !== null ? $value : uniqid());
+        return Criteria::method($value !== null ? $value : uniqid());
     }
 
     /**

@@ -9,9 +9,10 @@
  */
 namespace Cubiche\Domain\Specification\Tests\Units\Selector;
 
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Selector\Composite;
 use Cubiche\Domain\Specification\Selector\Key;
-use Cubiche\Domain\Specification\Selector\Property;
+use Cubiche\Domain\Specification\Selector\Method;
 
 /**
  * CompositeTests class.
@@ -65,7 +66,7 @@ class CompositeTests extends SelectorTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = $this->randomSpecification(array(new Key('foo'), new Key('bar'))))
+            ->given($specification = Criteria::key('foo')->key('bar'))
             ->then()
                 ->boolean($specification->evaluate(array('foo' => array('bar' => true))))
                     ->isTrue()
@@ -76,7 +77,7 @@ class CompositeTests extends SelectorTestCase
         ;
 
         $this
-            ->given($specification = $this->randomSpecification(array(new Key('foo'), new Property('bar'))))
+            ->given($specification = Criteria::key('foo')->property('bar'))
             ->then()
                 ->boolean($specification->evaluate(array('foo' => (object) array('bar' => true))))
                     ->isTrue()
@@ -96,7 +97,7 @@ class CompositeTests extends SelectorTestCase
     public function testApply()
     {
         $this
-            ->given($specification = $this->randomSpecification(array(new Key('foo'), new Key('bar'))))
+            ->given($specification = Criteria::key('foo')->key('bar'))
             ->then()
                 ->string($specification->apply(array('foo' => array('bar' => 'some-value'))))
                     ->isEqualTo('some-value')
@@ -107,7 +108,7 @@ class CompositeTests extends SelectorTestCase
         ;
 
         $this
-            ->given($specification = $this->randomSpecification(array(new Key('foo'), new Property('bar'))))
+            ->given($specification = Criteria::key('foo')->property('bar'))
             ->then()
                 ->string($specification->apply(array('foo' => (object) array('bar' => 'baz'))))
                     ->isEqualTo('baz')
@@ -117,6 +118,31 @@ class CompositeTests extends SelectorTestCase
                 ->exception(function () use ($specification) {
                     $specification->apply(array('foo' => (object) array()));
                 })->isInstanceOf(\RuntimeException::class)
+        ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function methodTrue()
+    {
+        return true;
+    }
+
+    /*
+     * Test value/apply selector.
+     */
+    public function testValueApplySelector()
+    {
+        $this
+            ->given($specification = Criteria::key('foo')->method('methodTrue'))
+            ->then()
+                ->boolean($specification->apply(array('foo' => $this)))
+                    ->isTrue()
+                ->object($specification->valueSelector())
+                    ->isInstanceOf(Key::class)
+                ->object($specification->applySelector())
+                    ->isInstanceOf(Method::class)
         ;
     }
 }

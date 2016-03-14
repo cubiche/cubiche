@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Selector;
 
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Selector\Key;
 
 /**
@@ -24,7 +24,7 @@ class KeyTests extends FieldTestCase
      */
     protected function randomSpecification($value = null)
     {
-        return new Key($value !== null ? $value : uniqid());
+        return Criteria::key($value !== null ? $value : uniqid());
     }
 
     /**

@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Domain\Specification\Tests\Units\Evaluator;
 
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\AndSpecification;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Evaluator\Evaluator;
@@ -264,6 +265,235 @@ class EvaluatorBuilderTests extends TestCase
             ->then()
                 ->object($resultVisit)
                     ->isInstanceOf(Evaluator::class)
+        ;
+    }
+
+    /*
+     * Test visitGreaterThan.
+     */
+    public function testVisitGreaterThan()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::gt(5))
+            ->when($resultVisit = $evaluatorBuilder->visitGreaterThan($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(6))
+                    ->isTrue()
+        ;
+    }
+
+    /*
+     * Test visitGreaterThanEqual.
+     */
+    public function testVisitGreaterThanEqual()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::gte(5))
+            ->when($resultVisit = $evaluatorBuilder->visitGreaterThanEqual($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(4))
+                    ->isFalse()
+        ;
+    }
+
+    /*
+     * Test visitLessThan.
+     */
+    public function testVisitLessThan()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::lt(5))
+            ->when($resultVisit = $evaluatorBuilder->visitLessThan($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(6))
+                    ->isFalse()
+        ;
+    }
+
+    /*
+     * Test visitLessThanEqual.
+     */
+    public function testVisitLessThanEqual()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::lte(5))
+            ->when($resultVisit = $evaluatorBuilder->visitLessThanEqual($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(5))
+                    ->isTrue()
+        ;
+    }
+
+    /*
+     * Test visitEqual.
+     */
+    public function testVisitEqual()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::eq(5))
+            ->when($resultVisit = $evaluatorBuilder->visitEqual($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(5.0))
+                    ->isTrue()
+        ;
+
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::eq(new EquatableObject(2)))
+            ->when($resultVisit = $evaluatorBuilder->visitEqual($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(new EquatableObject(2)))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(new EquatableObject(5.4)))
+                    ->isFalse()
+        ;
+    }
+
+    /*
+     * Test visitNotEqual.
+     */
+    public function testVisitNotEqual()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::neq(5))
+            ->when($resultVisit = $evaluatorBuilder->visitNotEqual($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(4))
+                    ->isTrue()
+        ;
+    }
+
+    /*
+     * Test visitSame.
+     */
+    public function testVisitSame()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::same(5))
+            ->when($resultVisit = $evaluatorBuilder->visitSame($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(5.0))
+                    ->isFalse()
+        ;
+    }
+
+    /*
+     * Test visitNotSame.
+     */
+    public function testVisitNotSame()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::notSame(5))
+            ->when($resultVisit = $evaluatorBuilder->visitNotSame($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(4))
+                    ->isTrue()
+        ;
+    }
+
+    /*
+     * Test visitAll.
+     */
+    public function testVisitAll()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::all(Criteria::gt(5)))
+            ->when($resultVisit = $evaluatorBuilder->visitAll($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(array(6, 7, 8, 9)))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array()))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(6))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array(6, 7, 8, 9, 5)))
+                    ->isFalse()
+        ;
+    }
+
+    /*
+     * Test visitAtLeast.
+     */
+    public function testVisitAtLeast()
+    {
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::atLeast(2, Criteria::gt(5)))
+            ->when($resultVisit = $evaluatorBuilder->visitAtLeast($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(array(4, 6, 5, 3, 9)))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array()))
+                    ->isFalse()
+                ->boolean($resultVisit->evaluate(6))
+                    ->isFalse()
+                ->boolean($resultVisit->evaluate(array(1, 2, 3, 4, 5, 6)))
+                    ->isFalse()
+        ;
+
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::any(Criteria::gt(5)))
+            ->when($resultVisit = $evaluatorBuilder->visitAtLeast($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(array(4, 6, 5, 3, 9)))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array()))
+                    ->isFalse()
+                ->boolean($resultVisit->evaluate(6))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array(1, 2, 3, 4, 5)))
+                    ->isFalse()
+        ;
+
+        $this
+            ->given($evaluatorBuilder = new EvaluatorBuilder())
+            ->and($specification = Criteria::atLeast(0, Criteria::gt(5)))
+            ->when($resultVisit = $evaluatorBuilder->visitAtLeast($specification))
+            ->then()
+                ->object($resultVisit)
+                    ->isInstanceOf(Evaluator::class)
+                ->boolean($resultVisit->evaluate(array(4, 6, 5, 3, 9)))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array()))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(6))
+                    ->isTrue()
+                ->boolean($resultVisit->evaluate(array(1, 2, 3, 4, 5, 6)))
+                    ->isTrue()
         ;
     }
 }

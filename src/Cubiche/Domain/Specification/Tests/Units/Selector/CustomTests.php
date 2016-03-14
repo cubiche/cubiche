@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Selector;
 
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Selector\Custom;
 
 /**
@@ -24,7 +24,7 @@ class CustomTests extends SelectorTestCase
      */
     protected function randomSpecification($value = null)
     {
-        return new Custom($value !== null ? $value : function () {
+        return Criteria::custom($value !== null ? $value : function () {
 
         });
     }

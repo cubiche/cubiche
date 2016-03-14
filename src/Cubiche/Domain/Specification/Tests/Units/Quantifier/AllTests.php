@@ -7,24 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Specification\Tests\Units\Selector;
+namespace Cubiche\Domain\Specification\Tests\Units\Quantifier;
 
 use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\Selector\This;
+use Cubiche\Domain\Specification\Quantifier\All;
 
 /**
- * ThisTests class.
+ * AllTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ThisTests extends SelectorTestCase
+class AllTests extends QuantifierTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function randomSpecification($value = null)
     {
-        return Criteria::this();
+        return Criteria::all(Criteria::gt($value !== null ? $value : rand(1, 10)));
     }
 
     /**
@@ -32,7 +32,7 @@ class ThisTests extends SelectorTestCase
      */
     protected function shouldVisitMethod()
     {
-        return 'visitThis';
+        return 'visitAll';
     }
 
     /*
@@ -46,7 +46,7 @@ class ThisTests extends SelectorTestCase
             ->given($specification = $this->randomSpecification())
             ->then
                 ->object($specification)
-                    ->isInstanceOf(This::class)
+                    ->isInstanceOf(All::class)
         ;
     }
 
@@ -56,31 +56,16 @@ class ThisTests extends SelectorTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = $this->randomSpecification())
-            ->then()
-                ->boolean($specification->evaluate(true))
+            ->given($specification = $this->randomSpecification(5))
+            ->then
+                ->boolean($specification->evaluate(array(6, 7, 8, 9)))
                     ->isTrue()
-                ->boolean($specification->evaluate(false))
-                    ->isFalse()
-                ->boolean($specification->evaluate($this))
-                    ->isFalse()
-        ;
-    }
-
-    /*
-     * Test apply.
-     */
-    public function testApply()
-    {
-        $this
-            ->given($specification = $this->randomSpecification())
-            ->then()
-                ->boolean($specification->apply(true))
+                ->boolean($specification->evaluate(array()))
                     ->isTrue()
-                ->boolean($specification->apply(false))
+                ->boolean($specification->evaluate(6))
+                    ->isTrue()
+                ->boolean($specification->evaluate(array(6, 7, 8, 9, 5)))
                     ->isFalse()
-                ->object($specification->apply($this))
-                    ->isEqualTo($this)
         ;
     }
 }

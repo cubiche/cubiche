@@ -7,9 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification\Tests\Units\Selector;
 
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\Selector\Count;
 
 /**
@@ -24,7 +24,7 @@ class CountTests extends SelectorTestCase
      */
     protected function randomSpecification($value = null)
     {
-        return new Count();
+        return Criteria::count();
     }
 
     /**
