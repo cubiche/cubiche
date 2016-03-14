@@ -26,20 +26,6 @@ class ArrayCollectionTests extends CollectionTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomCollection(array $items = array())
-    {
-        if (empty($items)) {
-            foreach (range(0, rand(10, 20)) as $value) {
-                $items[] = new EquatableObject($value);
-            }
-        }
-
-        return new ArrayCollection($items);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function emptyCollection()
     {
         return new ArrayCollection();
@@ -47,6 +33,18 @@ class ArrayCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomValue()
+     */
+    protected function randomValue()
+    {
+        return new EquatableObject(\rand(0, 100));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {
@@ -258,17 +256,17 @@ class ArrayCollectionTests extends CollectionTestCase
             ->given(
                 $key = 'foo',
                 $unique = $this->uniqueValue(),
-                $collection = $this->randomCollection(array($key => $unique))
+                $collection = $this->emptyCollection()
             )
             ->when($collection[$key] = $unique)
-            ->then
+            ->then()
                 ->variable($collection[$key])
                     ->isEqualTo($unique)
-            ->and
+            ->and()
             ->when(function () use ($collection, $key) {
                 unset($collection[$key]);
             })
-            ->then
+            ->then()
                 ->variable($collection[$key])
                     ->isNull()
         ;

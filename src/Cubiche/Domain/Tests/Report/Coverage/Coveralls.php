@@ -10,9 +10,9 @@
  */
 namespace Cubiche\Domain\Tests\Report\Coverage;
 
-use mageekguy\atoum\adapter;
+use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\reports\asynchronous\coveralls as Report;
-use mageekguy\atoum\score\coverage;
+use mageekguy\atoum\score\coverage as Coverage;
 
 /**
  * Coveralls class.
@@ -34,7 +34,7 @@ class Coveralls extends Report
      * @param string       $rootDir
      * @param adapter|null $adapter
      */
-    public function __construct($sourceDir, $repositoryToken, $rootDir = null, adapter $adapter = null)
+    public function __construct($sourceDir, $repositoryToken, $rootDir = null, Adapter $adapter = null)
     {
         parent::__construct($sourceDir, $repositoryToken, $adapter);
 
@@ -44,7 +44,7 @@ class Coveralls extends Report
     /**
      * {@inheritdoc}
      */
-    protected function makeSourceElement(coverage $coverage)
+    protected function makeSourceElement(Coverage $coverage)
     {
         $sources = parent::makeSourceElement($coverage);
 

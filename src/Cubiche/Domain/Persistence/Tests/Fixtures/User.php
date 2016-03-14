@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Persistence\Tests\Fixtures;
+namespace Cubiche\Domain\Persistence\Tests\Fixtures;
 
 use Cubiche\Domain\Model\AggregateRoot;
 

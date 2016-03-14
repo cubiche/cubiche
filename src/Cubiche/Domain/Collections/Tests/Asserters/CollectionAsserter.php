@@ -16,6 +16,7 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use mageekguy\atoum\asserters\object as ObjectAsserter;
+use mageekguy\atoum\exceptions\logic as LogicException;
 
 /**
  * CollectionAsserter class.
@@ -264,6 +265,20 @@ class CollectionAsserter extends ObjectAsserter
     }
 
     /**
+     * @param array|\Traversable $values
+     *
+     * @return mixed
+     */
+    public function containsValues($values)
+    {
+        foreach ($values as $value) {
+            $this->contains($value);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param mixed $value
      *
      * @return mixed
@@ -291,10 +306,17 @@ class CollectionAsserter extends ObjectAsserter
     }
 
     /**
+     * @throws LogicException
+     *
      * @return \Cubiche\Domain\Collections\CollectionInterface
      */
     protected function valueAsCollection()
     {
-        return $this->valueIsSet()->getValue();
+        $value = $this->valueIsSet()->getValue();
+        if ($value instanceof CollectionInterface) {
+            return $value;
+        }
+
+        throw new LogicException('Collection is undefined');
     }
 }

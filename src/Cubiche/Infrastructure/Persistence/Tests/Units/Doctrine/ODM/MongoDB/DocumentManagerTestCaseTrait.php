@@ -11,7 +11,6 @@
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventListener;
-use Cubiche\Infrastructure\Persistence\Tests\Fixtures\UserId;
 use Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB\Types\UserIdType;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -114,7 +113,7 @@ trait DocumentManagerTestCaseTrait
     protected function createMetadataDriverImpl()
     {
         $prefixs = array(
-          __DIR__.'/mapping' => 'Cubiche\Infrastructure\Persistence\Tests\Fixtures',
+          __DIR__.'/mapping' => 'Cubiche\Domain\Persistence\Tests\Fixtures',
         );
 
         return new SimplifiedXmlDriver($prefixs);

@@ -58,14 +58,20 @@ abstract class CollectionTestCase extends TestCase
         $this->getAssertionManager()
             ->setHandler(
                 'randomCollection',
-                function (array $items = array()) {
-                    return $this->randomCollection($items);
+                function ($size = null) {
+                    return $this->randomCollection($size);
                 }
             )
             ->setHandler(
                 'emptyCollection',
                 function () {
                     return $this->emptyCollection();
+                }
+            )
+            ->setHandler(
+                'randomValue',
+                function () {
+                    return $this->randomValue();
                 }
             )
             ->setHandler(
@@ -84,16 +90,43 @@ abstract class CollectionTestCase extends TestCase
     }
 
     /**
-     * @param array $items
-     *
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
-    abstract protected function randomCollection(array $items = array());
+    protected function randomCollection($size = null)
+    {
+        $collection = $this->emptyCollection();
+        $collection->addAll($this->randomValues($size));
+
+        return $collection;
+    }
+
+    /**
+     * @param int $size
+     *
+     * @return mixed[]
+     */
+    protected function randomValues($size = null)
+    {
+        $items = array();
+        if ($size === null) {
+            $size = \rand(10, 20);
+        }
+        foreach (\range(0, $size - 1) as $value) {
+            $items[$value] = $this->randomValue();
+        }
+
+        return $items;
+    }
 
     /**
      * @return CollectionInterface
      */
     abstract protected function emptyCollection();
+
+    /**
+     * @return mixed
+     */
+    abstract protected function randomValue();
 
     /**
      * @return mixed
@@ -118,11 +151,26 @@ abstract class CollectionTestCase extends TestCase
             ->given($unique = $this->uniqueValue())
             ->let($count = $collection->count())
             ->when($collection->add($unique))
-            ->then()
                 ->collection($collection)
                     ->contains($unique)
                     ->size()
                         ->isEqualTo($count + 1)
+        ;
+    }
+
+    /**
+     * Test add.
+     */
+    public function testAddAll()
+    {
+        $this
+        ->given($collection = $this->emptyCollection())
+        ->given($items = $this->randomValues(10))
+        ->when($collection->addAll($items))
+            ->collection($collection)
+                ->containsValues($items)
+                ->size()
+                    ->isEqualTo(\count($items))
         ;
     }
 
@@ -188,10 +236,11 @@ abstract class CollectionTestCase extends TestCase
     public function testCount()
     {
         $this
-            ->given($collection = $this->randomCollection(array($this->uniqueValue())))
-            ->then
-                ->integer($collection->count())
-                    ->isEqualTo(1)
+            ->given($collection = $this->randomCollection(5))
+            ->then()
+                ->collection($collection)
+                    ->size()
+                        ->isEqualTo(5)
         ;
     }
 
@@ -306,12 +355,10 @@ abstract class CollectionTestCase extends TestCase
     public function testToArray()
     {
         $this
-            ->given($collection = $this->randomCollection(array($this->uniqueValue())))
+            ->given($collection = $this->randomCollection())
             ->when($array = $collection->toArray())
-            ->then
                 ->array($array)
-                    ->isEqualTo($array)
-        ;
+                    ->isEqualTo(\iterator_to_array($collection->getIterator()));
     }
 
     /**

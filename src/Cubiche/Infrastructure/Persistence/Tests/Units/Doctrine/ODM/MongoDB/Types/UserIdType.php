@@ -11,7 +11,7 @@
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types\UUIDType;
-use Cubiche\Infrastructure\Persistence\Tests\Fixtures\UserId;
+use Cubiche\Domain\Persistence\Tests\Fixtures\UserId;
 
 /**
  * User Id Type Class.
