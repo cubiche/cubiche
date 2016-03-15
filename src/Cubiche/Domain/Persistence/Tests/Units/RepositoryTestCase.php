@@ -131,8 +131,82 @@ abstract class RepositoryTestCase extends CollectionTestCase
         return new User(UserId::next(), 'Methuselah', 1000);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::comparator()
+     */
     protected function comparator()
     {
         return Sort::by(Criteria::property('age'));
+    }
+
+    /**
+     * Test add.
+     */
+    public function testAdd()
+    {
+        parent::testAdd();
+
+        $this
+            ->given($repository = $this->randomRepository())
+            ->given($id = UserId::next())
+            ->then()
+                ->exception(function () use ($repository, $id) {
+                    $repository->add($id);
+                })
+                    ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test addAll.
+     */
+    public function testAddAll()
+    {
+        parent::testAddAll();
+
+        $this
+            ->given($repository = $this->randomRepository())
+            ->given($id = UserId::next())
+            ->then()
+                ->exception(function () use ($repository, $id) {
+                    $repository->addAll(array($id));
+                })
+                    ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test addAll.
+     */
+    public function testGet()
+    {
+        $this
+            ->given($repository = $this->randomRepository())
+            ->given($unique = $this->uniqueValue())
+            ->when($repository->add($unique))
+            ->then()
+                ->object($repository->get($unique->id()))
+                    ->isEqualTo($unique);
+    }
+
+    /**
+     * Test addAll.
+     */
+    public function testUpdate()
+    {
+        $this
+            ->given($repository = $this->emptyRepository())
+            ->given($value = $this->randomValue())
+            ->let($age = $value->age())
+            ->when(function () use ($repository, $value, $age) {
+                $repository->add($value);
+                $value->setAge($age + 1);
+                $repository->update($value);
+            })
+                ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
+                ->integer($other->age())
+                    ->isEqualTo($age + 1);
     }
 }

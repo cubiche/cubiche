@@ -51,6 +51,14 @@ class User extends AggregateRoot
     }
 
     /**
+     * @param int $age
+     */
+    public function setAge($age)
+    {
+        $this->age = $age;
+    }
+
+    /**
      * @return string
      */
     public function name()

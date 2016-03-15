@@ -25,6 +25,8 @@ class ArrayCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {

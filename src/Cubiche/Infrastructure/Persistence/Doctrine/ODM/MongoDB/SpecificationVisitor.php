@@ -75,7 +75,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
     public function visitNot(NotSpecification $specification)
     {
         $specificationQueryBuilder = $this->queryBuilderFromSpecification($specification->specification());
-        $this->queryBuilder->not($specificationQueryBuilder->currentExpr());
+        $this->queryBuilder->not($specificationQueryBuilder->getExpr());
     }
 
     /**
