@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Collections\Tests\Units\Fixtures;
+namespace Cubiche\Domain\Collections\Tests\Fixtures;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Comparable\ComparatorVisitorInterface;

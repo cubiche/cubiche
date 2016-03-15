@@ -186,7 +186,7 @@ abstract class Selector extends Specification implements SelectorInterface
      *
      * @return \Cubiche\Domain\Specification\Constraint\NotSame
      */
-    public function notsame($value)
+    public function notSame($value)
     {
         return new NotSame($this, $this->createSelector($value));
     }
@@ -205,6 +205,22 @@ abstract class Selector extends Specification implements SelectorInterface
     public function notNull()
     {
         return new NotSame($this, $this->createSelector(null));
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public function isTrue()
+    {
+        return new Same($this, $this->createSelector(true));
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public function isFalse()
+    {
+        return new Same($this, $this->createSelector(false));
     }
 
     /**

@@ -7,11 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**

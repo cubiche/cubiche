@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventListener;

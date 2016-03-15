@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
+use Cubiche\Domain\Collections\Tests\Fixtures\ReverseComparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 

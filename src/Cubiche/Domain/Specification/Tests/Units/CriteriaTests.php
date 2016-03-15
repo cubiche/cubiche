@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification\Tests\Units;
 
 use Cubiche\Domain\Specification\Constraint\Equal;
@@ -296,6 +297,32 @@ class CriteriaTests extends TestCase
             ->then
                 ->object($criteria)
                     ->isInstanceOf(NotSame::class)
+        ;
+    }
+
+    /*
+     * Test isTrue.
+     */
+    public function testIsTrue()
+    {
+        $this
+            ->given($criteria = Criteria::isTrue())
+            ->then
+                ->object($criteria)
+                    ->isInstanceOf(Same::class)
+        ;
+    }
+
+    /*
+     * Test isFalse.
+     */
+    public function testIsFalse()
+    {
+        $this
+            ->given($criteria = Criteria::isFalse())
+            ->then
+                ->object($criteria)
+                    ->isInstanceOf(Same::class)
         ;
     }
 
