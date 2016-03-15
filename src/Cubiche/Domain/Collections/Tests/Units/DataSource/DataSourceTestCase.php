@@ -12,8 +12,8 @@
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Collections\Tests\Fixtures\ReverseComparator;
 use Cubiche\Domain\Collections\Tests\Units\TestCase;
+use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
@@ -206,7 +206,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->variable($datasource->sortCriteria())
                     ->isNull()
             ->given(
-                $sortCriteria = new ReverseComparator(),
+                $sortCriteria = new Comparator(),
                 $datasource = $this->randomDataSource(null, $sortCriteria)
             )
             ->then
@@ -226,7 +226,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->boolean($datasource->isSorted())
                     ->isFalse()
             ->given(
-                $sortCriteria = new ReverseComparator(),
+                $sortCriteria = new Comparator(),
                 $datasource = $this->randomDataSource(null, $sortCriteria)
             )
             ->then
