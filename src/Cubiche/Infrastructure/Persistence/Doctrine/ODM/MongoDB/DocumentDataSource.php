@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
 use Cubiche\Domain\Collections\DataSource\DataSource;
@@ -28,7 +29,7 @@ class DocumentDataSource extends DataSource
     protected $repository;
 
     /**
-     * @var SpecificationQueryBuilder
+     * @var QueryBuilder
      */
     protected $queryBuilder;
 
@@ -134,26 +135,26 @@ class DocumentDataSource extends DataSource
     }
 
     /**
-     * @return \Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\SpecificationQueryBuilder
+     * @return \Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\QueryBuilder
      */
     protected function queryBuilder()
     {
         if ($this->queryBuilder === null) {
-            $this->queryBuilder = new SpecificationQueryBuilder(
+            $this->queryBuilder = new QueryBuilder(
                 $this->repository->getDocumentManager(),
-                $this->repository->getDocumentName(),
-                $this->searchCriteria()
+                $this->repository->getDocumentName()
             );
-
+            if ($this->isFiltered()) {
+                $this->queryBuilder->addSearchCriteria($this->searchCriteria());
+            }
             if ($this->offset !== null) {
                 $this->queryBuilder->skip($this->offset);
             }
             if ($this->length !== null) {
                 $this->queryBuilder->limit($this->length);
             }
-
             if ($this->isSorted()) {
-                $this->sortCriteria()->accept($this->queryBuilder);
+                $this->queryBuilder->addSortCriteria($this->sortCriteria());
             }
         }
 

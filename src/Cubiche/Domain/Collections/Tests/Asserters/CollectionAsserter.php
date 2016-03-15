@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Asserters;
 
 use Cubiche\Domain\Collections\CollectionInterface;
@@ -15,14 +16,15 @@ use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use mageekguy\atoum\asserters\object as Object;
+use mageekguy\atoum\asserters\object as ObjectAsserter;
+use mageekguy\atoum\exceptions\logic as LogicException;
 
 /**
  * CollectionAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CollectionAsserter extends Object
+class CollectionAsserter extends ObjectAsserter
 {
     /**
      * @var bool
@@ -55,13 +57,13 @@ class CollectionAsserter extends Object
     }
 
     /**
-     * @return mixed
+     * @return \mageekguy\atoum\stubs\asserters\integer
      */
-    protected function size()
+    public function size()
     {
         return $this->generator->__call(
             'integer',
-            array($this->valueIsSet()->value->count())
+            array($this->valueAsCollection()->count())
         );
     }
 
@@ -72,7 +74,7 @@ class CollectionAsserter extends Object
      */
     public function isEmpty($failMessage = null)
     {
-        if (($actual = $this->valueIsSet()->value->count()) === 0) {
+        if (($actual = $this->valueAsCollection()->count()) === 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->getLocale()->_('%s is not empty', $this, $actual));
@@ -88,7 +90,7 @@ class CollectionAsserter extends Object
      */
     public function isNotEmpty($failMessage = null)
     {
-        if ($this->valueIsSet()->value->count() > 0) {
+        if ($this->valueAsCollection()->count() > 0) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->_('%s is empty', $this));
@@ -119,16 +121,18 @@ class CollectionAsserter extends Object
 
     /**
      * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\object::setWith()
      */
     public function setWith($value, $checkType = true)
     {
         parent::setWith($value, $checkType);
 
         if ($checkType === true) {
-            if (self::isCollection($this->value) === false) {
-                $this->fail($this->getLocale()->_('%s is not an collection', $this));
-            } else {
+            if ($this->value instanceof CollectionInterface) {
                 $this->pass();
+            } else {
+                $this->fail($this->getLocale()->_('%s is not a collection', $this));
             }
         }
 
@@ -144,7 +148,7 @@ class CollectionAsserter extends Object
     {
         $passed = 0;
         $failed = 0;
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         foreach ($collection as $item) {
             if ($criteria->evaluate($item)) {
                 ++$passed;
@@ -186,7 +190,7 @@ class CollectionAsserter extends Object
      */
     public function isSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         $last = null;
         foreach ($collection as $item) {
             if ($last !== null) {
@@ -222,7 +226,7 @@ class CollectionAsserter extends Object
      */
     public function isNotSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         $last = null;
         $unsorted = 0;
         foreach ($collection as $item) {
@@ -245,35 +249,31 @@ class CollectionAsserter extends Object
     }
 
     /**
-     * @param $value
-     *
-     * @return bool
-     */
-    protected static function isCollection($value)
-    {
-        return $value instanceof CollectionInterface;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function valueIsSet($message = 'Collection is undefined')
-    {
-        return parent::valueIsSet($message);
-    }
-
-    /**
      * @param mixed $value
      *
      * @return mixed
      */
     public function contains($value)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         if ($collection->findOne(Criteria::eq($value)) !== null) {
             $this->pass();
         } else {
             $this->fail($this->getLocale()->_('The collection not contain the value %s', $value));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array|\Traversable $values
+     *
+     * @return mixed
+     */
+    public function containsValues($values)
+    {
+        foreach ($values as $value) {
+            $this->contains($value);
         }
 
         return $this;
@@ -286,7 +286,7 @@ class CollectionAsserter extends Object
      */
     public function notContains($value)
     {
-        $collection = $this->valueIsSet()->value;
+        $collection = $this->valueAsCollection();
         if ($collection->findOne(Criteria::eq($value)) !== null) {
             $this->fail($this->getLocale()->_('The collection contain an element with this value %s', $value));
         } else {
@@ -294,5 +294,30 @@ class CollectionAsserter extends Object
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\object::valueIsSet()
+     */
+    protected function valueIsSet($message = 'Collection is undefined')
+    {
+        return parent::valueIsSet($message);
+    }
+
+    /**
+     * @throws LogicException
+     *
+     * @return \Cubiche\Domain\Collections\CollectionInterface
+     */
+    protected function valueAsCollection()
+    {
+        $value = $this->valueIsSet()->getValue();
+        if ($value instanceof CollectionInterface) {
+            return $value;
+        }
+
+        throw new LogicException('Collection is undefined');
     }
 }

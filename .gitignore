@@ -5,6 +5,7 @@ bin/
 build/
 
 .atoum.html.php
+.atoum.config.php
 phpunit.xml
 
 src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Proxies/*

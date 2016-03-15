@@ -11,6 +11,7 @@
 
 namespace Cubiche\Infrastructure\Persistence\Doctrine\Common\Collections;
 
+use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
 use Cubiche\Domain\Collections\DataSourceCollection;
@@ -19,7 +20,6 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\PersistentCollection;
-use Cubiche\Domain\Collections\ArrayCollection;
 
 /**
  * Persistent Array Collection Class.
@@ -39,6 +39,18 @@ class PersistentArrayCollection extends PersistentCollection implements ArrayCol
     public function __construct(PersistentCollection $collection)
     {
         $this->collection = $collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        foreach ($items as $item) {
+            $this->add($item);
+        }
     }
 
     /**

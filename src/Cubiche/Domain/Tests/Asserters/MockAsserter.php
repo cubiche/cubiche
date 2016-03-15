@@ -16,33 +16,14 @@ use mageekguy\atoum\asserters\mock as BaseMock;
 /**
  * MockAsserter class.
  *
- * @method $this call
- * @method $this atLeastOnce
- * @method $this exactly
- * @method $this never
- * @method $this thrice
- * @method $this withAnyArguments
- * @method $this withArguments
- * @method $this withIdenticalArguments
- * @method $this withAtLeastArguments
- * @method $this withAtLeastIdenticalArguments
- * @method $this withoutAnyArgument
- * @method $this wasCalled
- * @method $this wasNotCalled
- * @method $this before
- * @method $this after
- * @method $this arguments
- * @method $this once
- * @method $this twice
- * @method $this thrice
- * @method $this exactly
- *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class MockAsserter extends BaseMock
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserter::__call()
      */
     public function __call($method, $arguments)
     {
@@ -72,6 +53,8 @@ class MockAsserter extends BaseMock
 
     /**
      * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\asserters\adapter::__get()
      */
     public function __get($property)
     {

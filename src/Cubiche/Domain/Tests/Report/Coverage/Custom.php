@@ -8,10 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Report\Coverage;
 
 use mageekguy\atoum;
 use mageekguy\atoum\cli\colorizer;
+use mageekguy\atoum\exceptions\logic\invalidArgument as InvalidArgumentException;
+use mageekguy\atoum\exceptions\runtime\unexpectedValue as UnexpectedValueException;
 use mageekguy\atoum\fs\path;
 use mageekguy\atoum\report\fields\runner\coverage\cli as Report;
 use mageekguy\atoum\score\coverage;
@@ -432,7 +435,6 @@ class Custom extends Report
     protected function getHierarchy($fileName)
     {
         $directories = explode('/', $fileName);
-        //unset($directories[count($directories) - 1]);
 
         $path = '/';
         $result = [];
@@ -481,14 +483,14 @@ class Custom extends Report
      */
     protected function getDestinationDirectoryIterator()
     {
-        return new \recursiveIteratorIterator(
-            new \recursiveDirectoryIterator(
+        return new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
                 $this->destinationDirectory,
-                \filesystemIterator::KEY_AS_PATHNAME |
-                \filesystemIterator::CURRENT_AS_FILEINFO |
-                \filesystemIterator::SKIP_DOTS
+                \FilesystemIterator::KEY_AS_PATHNAME |
+                \FilesystemIterator::CURRENT_AS_FILEINFO |
+                \FilesystemIterator::SKIP_DOTS
             ),
-            \recursiveIteratorIterator::CHILD_FIRST
+            \RecursiveIteratorIterator::CHILD_FIRST
         );
     }
 
@@ -505,7 +507,8 @@ class Custom extends Report
                     $this->adapter->rmdir($pathname);
                 }
             }
-        } catch (\exception $exception) {
+        } catch (\Exception $exception) {
+            return $this;
         }
 
         return $this;
@@ -726,9 +729,11 @@ class Custom extends Report
         $methodCoverageUnavailableTemplates = $methodTemplates->methodCoverageUnavailable;
 
         $sourceFileTemplates = $template->sourceFile;
-        $lineTemplates = $sourceFileTemplates->line;
-        $coveredLineTemplates = $sourceFileTemplates->coveredLine;
-        $notCoveredLineTemplates = $sourceFileTemplates->notCoveredLine;
+        $templates = array(
+            'lineTemplates' => $sourceFileTemplates->line,
+            'coveredLineTemplates' => $sourceFileTemplates->coveredLine,
+            'notCoveredLineTemplates' => $sourceFileTemplates->notCoveredLine,
+        );
 
         $className = $classData['className'];
         $template->className = $className;
@@ -802,19 +807,18 @@ class Custom extends Report
                     default:
                         $lineTemplateName = 'coveredLineTemplates';
                 }
-
-                ${$lineTemplateName}->lineNumber = $lineNumber;
-                ${$lineTemplateName}->code = htmlentities($line, ENT_QUOTES, 'UTF-8');
+                $templates[$lineTemplateName]->lineNumber = $lineNumber;
+                $templates[$lineTemplateName]->code = htmlentities($line, ENT_QUOTES, 'UTF-8');
 
                 if (isset($methodLines[$lineNumber]) === true) {
-                    foreach (${$lineTemplateName}->anchor as $anchorTemplate) {
+                    foreach ($templates[$lineTemplateName]->anchor as $anchorTemplate) {
                         $anchorTemplate->resetData();
                         $anchorTemplate->method = $currentMethod;
                         $anchorTemplate->build();
                     }
                 }
 
-                ${$lineTemplateName}
+                $templates[$lineTemplateName]
                     ->addToParent()
                     ->resetData();
             }
@@ -835,18 +839,18 @@ class Custom extends Report
     }
 
     /**
-     * @param \closure $reflectionClassInjector
+     * @param \Closure $reflectionClassInjector
      *
      * @return $this
      *
-     * @throws exceptions\logic\invalidArgument
+     * @throws InvalidArgumentException
      */
-    public function setReflectionClassInjector(\closure $reflectionClassInjector)
+    public function setReflectionClassInjector(\Closure $reflectionClassInjector)
     {
-        $closure = new \reflectionMethod($reflectionClassInjector, '__invoke');
+        $closure = new \ReflectionMethod($reflectionClassInjector, '__invoke');
 
         if ($closure->getNumberOfParameters() != 1) {
-            throw new exceptions\logic\invalidArgument('Reflection class injector must take one argument');
+            throw new InvalidArgumentException('Reflection class injector must take one argument');
         }
 
         $this->reflectionClassInjector = $reflectionClassInjector;
@@ -857,19 +861,19 @@ class Custom extends Report
     /**
      * @param $class
      *
-     * @return \reflectionClass
+     * @return \ReflectionClass
      *
-     * @throws exceptions\runtime\unexpectedValue
+     * @throws UnexpectedValueException
      */
     public function getReflectionClass($class)
     {
         if ($this->reflectionClassInjector === null) {
-            $reflectionClass = new \reflectionClass($class);
+            $reflectionClass = new \ReflectionClass($class);
         } else {
             $reflectionClass = $this->reflectionClassInjector->__invoke($class);
 
-            if ($reflectionClass instanceof \reflectionClass === false) {
-                throw new exceptions\runtime\unexpectedValue(
+            if ($reflectionClass instanceof \ReflectionClass === false) {
+                throw new UnexpectedValueException(
                     'Reflection class injector must return a \reflectionClass instance'
                 );
             }

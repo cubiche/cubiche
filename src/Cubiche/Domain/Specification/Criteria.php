@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Specification;
 
 use Cubiche\Domain\Specification\Selector\Count;
@@ -92,7 +93,7 @@ class Criteria
     }
 
     /**
-     * @param unknown $property
+     * @param string $property
      *
      * @return \Cubiche\Domain\Specification\Selector\Property
      */

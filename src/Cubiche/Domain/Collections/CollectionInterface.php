@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Specification\SpecificationInterface;
@@ -27,6 +28,13 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @param mixed $item
      */
     public function add($item);
+
+    /**
+     * Adds elements at the end of the collection.
+     *
+     * @param array|\Traversable $items
+     */
+    public function addAll($items);
 
     /**
      * Removes an element from the collection.

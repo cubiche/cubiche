@@ -16,6 +16,7 @@ use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Persistence\Repository;
 use Cubiche\Domain\Specification\SpecificationInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
+use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
 
 /**
  * Document Repository Class.
@@ -46,7 +47,20 @@ class DocumentRepository extends Repository
      */
     public function add($item)
     {
-        $this->dm()->persist($item);
+        $this->persist($item);
+        $this->dm()->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        foreach ($items as $item) {
+            $this->persist($item);
+        }
         $this->dm()->flush();
     }
 
@@ -57,8 +71,7 @@ class DocumentRepository extends Repository
      */
     public function update($item)
     {
-        $this->dm()->persist($item);
-        $this->dm()->flush();
+        $this->add($item);
     }
 
     /**
@@ -130,7 +143,7 @@ class DocumentRepository extends Repository
             $queryBuilder->limit($length);
         }
 
-        return $queryBuilder->getQuery()->getIterator();
+        return new DataSourceCollection(new IteratorDataSource($queryBuilder->getQuery()->getIterator()));
     }
 
     /**
@@ -171,6 +184,15 @@ class DocumentRepository extends Repository
     public function sorted(ComparatorInterface $criteria)
     {
         return new DataSourceCollection(new DocumentDataSource($this->repository, null, $criteria));
+    }
+
+    /**
+     * @param mixed $item
+     */
+    protected function persist($item)
+    {
+        $this->checkType($item);
+        $this->dm()->persist($item);
     }
 
     /**

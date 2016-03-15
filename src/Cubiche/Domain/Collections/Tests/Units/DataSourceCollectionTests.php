@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
@@ -23,17 +24,12 @@ class DataSourceCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
-    protected function randomCollection(array $items = array())
+    protected function randomCollection($size = null)
     {
-        if (empty($items)) {
-            $range = range(0, 100);
-            shuffle($range);
-
-            $items = array_slice($range, 0, rand(10, 20));
-        }
-
-        return new DataSourceCollection(new ArrayDataSource($items));
+        return new DataSourceCollection(new ArrayDataSource($this->randomValues($size)));
     }
 
     /**
@@ -42,6 +38,16 @@ class DataSourceCollectionTests extends CollectionTestCase
     protected function emptyCollection()
     {
         return new DataSourceCollection(new ArrayDataSource([]));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomValue()
+     */
+    protected function randomValue()
+    {
+        return \rand(0, 100);
     }
 
     /**
@@ -57,8 +63,6 @@ class DataSourceCollectionTests extends CollectionTestCase
      */
     public function testCreate()
     {
-        parent::testCreate();
-
         $this
             ->given($collection = $this->randomCollection())
             ->then

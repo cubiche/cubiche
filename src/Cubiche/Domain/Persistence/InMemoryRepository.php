@@ -52,6 +52,18 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        foreach ($items as $item) {
+            $this->add($item);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Persistence\RepositoryInterface::update()
      */
     public function update($item)

@@ -8,47 +8,59 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Units;
 
-use Closure;
 use Cubiche\Domain\Collections\CollectionInterface;
 use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Tests\Units\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * CollectionTestCase class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 abstract class CollectionTestCase extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
+     * @param Analyzer  $analyzer
      */
     public function __construct(
         Adapter $adapter = null,
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
     ) {
         parent::__construct(
             $adapter,
             $annotationExtractor,
             $asserterGenerator,
             $assertionManager,
-            $reflectionClassFactory
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
         );
+
         $this->getAssertionManager()
             ->setHandler(
                 'randomCollection',
-                function (array $items = array()) {
-                    return $this->randomCollection($items);
+                function ($size = null) {
+                    return $this->randomCollection($size);
                 }
             )
             ->setHandler(
@@ -58,20 +70,54 @@ abstract class CollectionTestCase extends TestCase
                 }
             )
             ->setHandler(
+                'randomValue',
+                function () {
+                    return $this->randomValue();
+                }
+            )
+            ->setHandler(
                 'uniqueValue',
                 function () {
                     return $this->uniqueValue();
+                }
+            )
+            ->setHandler(
+                'comparator',
+                function () {
+                    return $this->comparator();
                 }
             )
         ;
     }
 
     /**
-     * @param array $items
-     *
-     * @return CollectionInterface
+     * @return \Cubiche\Domain\Collections\CollectionInterface
      */
-    abstract protected function randomCollection(array $items = array());
+    protected function randomCollection($size = null)
+    {
+        $collection = $this->emptyCollection();
+        $collection->addAll($this->randomValues($size));
+
+        return $collection;
+    }
+
+    /**
+     * @param int $size
+     *
+     * @return mixed[]
+     */
+    protected function randomValues($size = null)
+    {
+        $items = array();
+        if ($size === null) {
+            $size = \rand(10, 20);
+        }
+        foreach (\range(0, $size - 1) as $value) {
+            $items[$value] = $this->randomValue();
+        }
+
+        return $items;
+    }
 
     /**
      * @return CollectionInterface
@@ -81,58 +127,55 @@ abstract class CollectionTestCase extends TestCase
     /**
      * @return mixed
      */
+    abstract protected function randomValue();
+
+    /**
+     * @return mixed
+     */
     abstract protected function uniqueValue();
 
-    /*
-     * Test create.
+    /**
+     * @return \Cubiche\Domain\Comparable\Comparator
      */
-    public function testCreate()
+    protected function comparator()
     {
-        $this
-            ->given($collection = $this->randomCollection())
-            ->then
-                ->collection($collection)
-                    ->isInstanceOf(CollectionInterface::class)
-        ;
+        return new Comparator();
     }
 
-    /*
+    /**
      * Test add.
      */
     public function testAdd()
     {
         $this
-            ->given(
-                $unique = $this->uniqueValue(),
-                $emptyCollection = $this->emptyCollection()
-            )
-            ->then
-                ->collection($emptyCollection)
-                    ->notContains($unique)
-            ->and
-            ->when($emptyCollection->add($unique))
-            ->then
-                ->collection($emptyCollection)
+            ->given($collection = $this->randomCollection())
+            ->given($unique = $this->uniqueValue())
+            ->let($count = $collection->count())
+            ->when($collection->add($unique))
+                ->collection($collection)
                     ->contains($unique)
-        ;
-
-        $this
-            ->given(
-                $unique = $this->uniqueValue(),
-                $randomCollection = $this->randomCollection()
-            )
-            ->then
-                ->collection($randomCollection)
-                    ->notContains($unique)
-            ->and
-            ->when($randomCollection->add($unique))
-            ->then
-                ->collection($randomCollection)
-                    ->contains($unique)
+                    ->size()
+                        ->isEqualTo($count + 1)
         ;
     }
 
-    /*
+    /**
+     * Test add.
+     */
+    public function testAddAll()
+    {
+        $this
+        ->given($collection = $this->emptyCollection())
+        ->given($items = $this->randomValues(10))
+        ->when($collection->addAll($items))
+            ->collection($collection)
+                ->containsValues($items)
+                ->size()
+                    ->isEqualTo(\count($items))
+        ;
+    }
+
+    /**
      * Test remove.
      */
     public function testRemove()
@@ -170,7 +213,7 @@ abstract class CollectionTestCase extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test clear.
      */
     public function testClear()
@@ -180,28 +223,29 @@ abstract class CollectionTestCase extends TestCase
             ->then
                 ->collection($randomCollection)
                     ->isNotEmpty()
-            ->and
+            ->and()
             ->when($randomCollection->clear())
-            ->then
+            ->then()
                 ->collection($randomCollection)
                     ->isEmpty()
         ;
     }
 
-    /*
+    /**
      * Test count.
      */
     public function testCount()
     {
         $this
-            ->given($collection = $this->randomCollection(array($this->uniqueValue())))
-            ->then
-                ->integer($collection->count())
-                    ->isEqualTo(1)
+            ->given($collection = $this->randomCollection(5))
+            ->then()
+                ->collection($collection)
+                    ->size()
+                        ->isEqualTo(5)
         ;
     }
 
-    /*
+    /**
      * Test getIterator.
      */
     public function testGetIterator()
@@ -214,7 +258,7 @@ abstract class CollectionTestCase extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test find.
      */
     public function testFind()
@@ -260,7 +304,7 @@ abstract class CollectionTestCase extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test findOne.
      */
     public function testFindOne()
@@ -306,55 +350,50 @@ abstract class CollectionTestCase extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test toArray.
      */
     public function testToArray()
     {
         $this
-            ->given($collection = $this->randomCollection(array($this->uniqueValue())))
+            ->given($collection = $this->randomCollection())
             ->when($array = $collection->toArray())
-            ->then
                 ->array($array)
-                    ->isEqualTo($array)
-        ;
+                    ->isEqualTo(\iterator_to_array($collection->getIterator()));
     }
 
-    /*
+    /**
      * Test slice.
      */
     public function testSlice()
     {
         $this
-            ->given(
-                $collection = $this->randomCollection(),
-                $count = $collection->count(),
-                $offset = rand(0, $count / 2),
-                $length = rand($count / 2, $count),
-                $maxCount = max([$count - $offset, 0])
-            )
-            ->when($slicedCollection = $collection->slice($offset, $length))
-            ->then
-                ->collection($slicedCollection)
-                    ->size
+            ->given($collection = $this->randomCollection())
+            ->let($count = $collection->count())
+            ->let($offset = rand(0, $count / 2))
+            ->let($length = rand($count / 2, $count))
+            ->let($maxCount = max([$count - $offset, 0]))
+            ->when($slice = $collection->slice($offset, $length))
+            ->then()
+                ->collection($slice)
+                    ->size()
                         ->isEqualTo(min($maxCount, $length))
         ;
     }
 
-    /*
+    /**
      * Test sorted.
      */
     public function testSorted()
     {
         $this
             ->given(
-                $comparator = new Comparator(),
+                $comparator = $this->comparator(),
                 $collection = $this->randomCollection()
             )
             ->when($sortedCollection = $collection->sorted($comparator))
-            ->then
+            ->then()
                 ->collection($sortedCollection)
-                    ->isSorted()
-        ;
+                    ->isSortedUsing($comparator);
     }
 }

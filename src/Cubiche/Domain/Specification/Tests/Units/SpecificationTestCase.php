@@ -19,6 +19,7 @@ use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\test\assertion\manager as Manager;
+use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 
 /**
  * SpecificationTestCase class.
@@ -35,7 +36,7 @@ abstract class SpecificationTestCase extends TestCase
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null
     ) {
         parent::__construct(
             $adapter,
@@ -152,7 +153,8 @@ abstract class SpecificationTestCase extends TestCase
         $shouldVisitMethod = $this->shouldVisitMethod();
 
         $this
-            ->given($visitorMock = new \mock\Cubiche\Domain\Specification\SpecificationVisitorInterface())
+            ->let($mockClass = '\\mock\\'.SpecificationVisitorInterface::class)
+            ->given($visitorMock = new $mockClass())
             ->calling($visitorMock)
                 ->methods(
                     function ($method) use ($shouldVisitMethod) {

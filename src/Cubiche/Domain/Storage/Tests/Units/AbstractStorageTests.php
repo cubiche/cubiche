@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Storage\Tests\Units;
 
 use Cubiche\Domain\Storage\Exception\InvalidKeyException;
@@ -44,7 +45,7 @@ class AbstractStorageTests extends TestCase
                 ->boolean($this->invoke($this->testedInstance)->validateKey(''))->isTrue()
                 ->exception(
                     function () {
-                        $this->invoke($this->testedInstance)->validateKey(new \StdClass());
+                        $this->invoke($this->testedInstance)->validateKey(new \stdClass());
                     }
                 )->isInstanceOf(InvalidKeyException::class)
         ;

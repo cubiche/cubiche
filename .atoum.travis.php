@@ -11,6 +11,7 @@
 use Cubiche\Domain\Tests\Report\Coverage\Coveralls;
 use mageekguy\atoum\visibility\extension;
 
+/* @var \mageekguy\atoum\configurator $script */
 $script->addDefaultReport();
 if ($token = getenv('COVERALLS_REPO_TOKEN')) {
     $coverallsReport = new Coveralls(__DIR__.'/src', $token, 'src');
@@ -29,6 +30,7 @@ if ($token = getenv('COVERALLS_REPO_TOKEN')) {
         ->addDefaultWriter()
     ;
 
+    /* @var \mageekguy\atoum\runner $runner */
     $runner->addReport($coverallsReport);
     $runner->addExtension(new extension($script));
 }

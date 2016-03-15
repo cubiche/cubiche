@@ -11,17 +11,17 @@
 
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
-use Closure;
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\FakeSpecification;
+use Cubiche\Domain\Collections\Tests\Fixtures\ReverseComparator;
+use Cubiche\Domain\Collections\Tests\Units\TestCase;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * DataSourceTestCase class.
@@ -31,22 +31,33 @@ use mageekguy\atoum\test\assertion\manager as Manager;
 abstract class DataSourceTestCase extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
+     * @param Analyzer  $analyzer
      */
     public function __construct(
         Adapter $adapter = null,
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
     ) {
         parent::__construct(
             $adapter,
             $annotationExtractor,
             $asserterGenerator,
             $assertionManager,
-            $reflectionClassFactory
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
         );
+
         $this->getAssertionManager()
             ->setHandler(
                 'randomDataSource',
@@ -175,7 +186,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->variable($datasource->searchCriteria())
                     ->isNull()
             ->given(
-                $searchCriteria = new FakeSpecification(),
+                $searchCriteria = Criteria::false(),
                 $datasource = $this->randomDataSource($searchCriteria)
             )
             ->then
@@ -235,7 +246,7 @@ abstract class DataSourceTestCase extends TestCase
                 ->boolean($datasource->isFiltered())
                     ->isFalse()
             ->given(
-                $searchCriteria = new FakeSpecification(),
+                $searchCriteria = Criteria::false(),
                 $datasource = $this->randomDataSource($searchCriteria)
             )
             ->then

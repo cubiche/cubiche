@@ -8,43 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections\Tests\Asserters;
 
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use mageekguy\atoum\asserters\object as Object;
+use mageekguy\atoum\asserters\object as ObjectAsserter;
 
 /**
  * DataSourceAsserter class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DataSourceAsserter extends Object
+class DataSourceAsserter extends ObjectAsserter
 {
-    //    /**
-//     * {@inheritdoc}
-//     */
-//    public function __get($asserter)
-//    {
-//        switch (strtolower($asserter)) {
-//            case 'size':
-//                return $this->size();
-//            case 'isempty':
-//                return $this->isEmpty();
-//            case 'isnotempty':
-//                return $this->isNotEmpty();
-//            case 'hasallelements':
-//                return $this->hasAllElements();
-//            case 'hasnoelements':
-//                return $this->hasNoElements();
-//            case 'issorted':
-//                return $this->isSorted();
-//            case 'isnotsorted':
-//                return $this->isNotSorted();
-//            default:
-//                return parent::__get($asserter);
-//        }
-//    }
-
     /**
      * {@inheritdoc}
      */

@@ -52,6 +52,18 @@ class ArrayCollection implements ArrayCollectionInterface
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        foreach ($items as $item) {
+            $this->add($item);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
      */
     public function remove($item)

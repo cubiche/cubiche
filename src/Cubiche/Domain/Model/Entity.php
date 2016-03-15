@@ -23,7 +23,7 @@ abstract class Entity implements EntityInterface
      */
     protected $id;
 
-    /**S
+    /**
      * @param IdInterface $id
      */
     public function __construct(IdInterface $id)
@@ -48,6 +48,6 @@ abstract class Entity implements EntityInterface
      */
     public function equals($other)
     {
-        return $other instanceof self && $this->id()->equals($other->id());
+        return $other instanceof static && $this->id()->equals($other->id());
     }
 }

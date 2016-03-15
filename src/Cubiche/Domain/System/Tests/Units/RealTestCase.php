@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests\Units;
 
 use Cubiche\Domain\System\Integer;
@@ -31,7 +32,7 @@ abstract class RealTestCase extends NumberTestCase
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        Closure $reflectionClassFactory = null
+        \Closure $reflectionClassFactory = null
     ) {
         parent::__construct(
             $adapter,
@@ -227,7 +228,6 @@ abstract class RealTestCase extends NumberTestCase
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
                 $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber()),
-                $positiveNumber = $this->fromNative($this->randomNativeNumber()),
                 $negativeNumber = $this->fromNative($this->negativeNativeNumber())
             )
             ->then
@@ -277,7 +277,6 @@ abstract class RealTestCase extends NumberTestCase
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
                 $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber()),
-                $positiveNumber = $this->fromNative($this->randomNativeNumber()),
                 $negativeNumber = $this->fromNative($this->negativeNativeNumber())
             )
             ->then
@@ -313,7 +312,6 @@ abstract class RealTestCase extends NumberTestCase
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
                 $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber()),
-                $positiveNumber = $this->fromNative($this->randomNativeNumber()),
                 $negativeNumber = $this->fromNative($this->negativeNativeNumber())
             )
             ->then

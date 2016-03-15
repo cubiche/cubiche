@@ -20,7 +20,9 @@
     "require": {
         "php": ">=5.5.0",
         "myclabs/php-enum": "^1.4",
-        "doctrine/mongodb-odm": "^1.0"
+        "doctrine/mongodb-odm": "^1.0",
+        "ramsey/uuid": "^3.2",
+        "symfony/property-access": "^3.0"
     },
     "require-dev": {
         "atoum/atoum": "~2.5",
@@ -30,13 +32,11 @@
         "cubiche/cqt": "dev-master"
     },
     "autoload": {
+        "exclude-from-classmap": [
+            "src/**/Tests/"
+        ],
         "psr-0": {
             "Cubiche\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-0": {
-            "Cubiche\\Tests\\": "tests/"
         }
     },
     "config": {

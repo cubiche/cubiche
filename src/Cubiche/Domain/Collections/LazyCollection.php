@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Specification\SpecificationInterface;
@@ -40,6 +41,18 @@ abstract class LazyCollection implements CollectionInterface
         $this->lazyInitialize();
 
         return $this->collection->add($item);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     */
+    public function addAll($items)
+    {
+        $this->lazyInitialize();
+
+        return $this->collection->addAll($items);
     }
 
     /**

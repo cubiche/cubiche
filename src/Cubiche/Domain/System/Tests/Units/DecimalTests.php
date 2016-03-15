@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests\Units;
 
 use Cubiche\Domain\Exception\NotImplementedException;
@@ -98,7 +99,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -132,7 +132,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -166,7 +165,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
@@ -200,7 +198,6 @@ class DecimalTests extends RealTestCase
         $this
             ->given(
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber()),
-                $negativeInfinite = $this->fromNative($this->negativeInfiniteNativeNumber()),
                 $number = $this->fromNative($this->randomNativeNumber())
             )
             ->then
