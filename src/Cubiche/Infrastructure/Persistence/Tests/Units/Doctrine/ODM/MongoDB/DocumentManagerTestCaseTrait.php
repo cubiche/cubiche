@@ -10,12 +10,16 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventListener;
-use Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB\Types\UserIdType;
+use Cubiche\Infrastructure\Collections\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as CollectionsEventSubscriber;
+use Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
+use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
+use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
+use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as PersistenceEventSubscriber;
+use Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
+use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\Events;
 use Doctrine\ODM\MongoDB\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ODM\MongoDB\Types\Type;
 use Doctrine\ODM\MongoDB\UnitOfWork;
@@ -52,24 +56,12 @@ trait DocumentManagerTestCaseTrait
             $this->uow = $this->dm->getUnitOfWork();
             $this->lastQuery = null;
 
-            Type::registerType('UserId', UserIdType::class);
+            Type::addType('Phonenumber', PhonenumberType::class);
 
-            $events = array(
-                Events::prePersist,
-                Events::postPersist,
-                Events::preUpdate,
-                Events::postUpdate,
-                Events::preLoad,
-                Events::postLoad,
-                Events::preRemove,
-                Events::postRemove,
-                Events::preFlush,
-                Events::onFlush,
-                Events::postFlush,
-                Events::loadClassMetadata,
-            );
-
-            $this->dm->getEventManager()->addEventListener($events, new EventListener());
+            $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new PersistenceEventSubscriber());
         }
 
         return $this->dm;
@@ -99,7 +91,9 @@ trait DocumentManagerTestCaseTrait
         $config->setHydratorDir(__DIR__.'/Hydrators');
         $config->setHydratorNamespace('Hydrators');
         $config->setDefaultDB(DOCTRINE_MONGODB_DATABASE);
+        $config->setClassMetadataFactoryName(ClassMetadataFactory::class);
         $config->setMetadataDriverImpl($this->createMetadataDriverImpl());
+        $config->setMetadataCacheImpl(new FilesystemCache(__DIR__.'/Cache'));
         $config->setLoggerCallable(function (array $log) {
             $this->lastQuery = $log;
         });

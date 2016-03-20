@@ -10,22 +10,14 @@
  */
 namespace Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Domain\Identity\UUID;
+use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Types\DynamicTypeTrait;
 
 /**
- * UUID Type Class.
+ * Dynamic Id Type Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class UUIDType extends StringIdType
+class DynamicIdType extends IdType
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types\StringIdType::targetClass()
-     */
-    public function targetClass()
-    {
-        return UUID::class;
-    }
+    use DynamicTypeTrait;
 }

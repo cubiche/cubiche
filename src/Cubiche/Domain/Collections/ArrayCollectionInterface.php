@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
@@ -67,4 +66,18 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
      * @param ComparatorInterface $criteria
      */
     public function sort(ComparatorInterface $criteria = null);
+
+    /**
+     * Gets keys collection.
+     *
+     * @return ArrayCollectionInterface
+     */
+    public function keys();
+
+    /**
+     * Gets values collection.
+     *
+     * @return ArrayCollectionInterface
+     */
+    public function values();
 }

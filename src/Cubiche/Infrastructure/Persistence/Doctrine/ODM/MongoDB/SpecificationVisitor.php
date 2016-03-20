@@ -10,9 +10,10 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Specification\AndSpecification;
-use Cubiche\Domain\Specification\BinarySpecification;
 use Cubiche\Domain\Specification\Constraint\BinarySelectorOperator;
 use Cubiche\Domain\Specification\Constraint\Equal;
 use Cubiche\Domain\Specification\Constraint\GreaterThan;
@@ -22,6 +23,7 @@ use Cubiche\Domain\Specification\Constraint\LessThanEqual;
 use Cubiche\Domain\Specification\Constraint\NotEqual;
 use Cubiche\Domain\Specification\Constraint\NotSame;
 use Cubiche\Domain\Specification\Constraint\Same;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\NotSpecification;
 use Cubiche\Domain\Specification\OrSpecification;
 use Cubiche\Domain\Specification\Quantifier\All;
@@ -54,7 +56,16 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitAnd(AndSpecification $specification)
     {
-        $this->visitLogicalOperator($specification, Delegate::fromMethod($this->queryBuilder, 'addAnd'));
+        $leftQueryBuilder = $this->queryBuilderFromSpecification($specification->left());
+        $rightQueryBuilder = $this->queryBuilderFromSpecification($specification->right());
+
+        if ($this->hasSameOperator($leftQueryBuilder, $rightQueryBuilder)) {
+            $this->queryBuilder->addAnd($leftQueryBuilder->getExpr());
+            $this->queryBuilder->addAnd($rightQueryBuilder->getExpr());
+        } else {
+            $this->queryBuilder->addSearchCriteria($specification->left());
+            $this->queryBuilder->addSearchCriteria($specification->right());
+        }
     }
 
     /**
@@ -64,7 +75,11 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitOr(OrSpecification $specification)
     {
-        $this->visitLogicalOperator($specification, Delegate::fromMethod($this->queryBuilder, 'addOr'));
+        $leftQueryBuilder = $this->queryBuilderFromSpecification($specification->left());
+        $rightQueryBuilder = $this->queryBuilderFromSpecification($specification->right());
+
+        $this->queryBuilder->addOr($leftQueryBuilder->getExpr());
+        $this->queryBuilder->addOr($rightQueryBuilder->getExpr());
     }
 
     /**
@@ -85,7 +100,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitValue(Value $specification)
     {
-        $this->notSupportedException($specification);
+        throw $this->notSupportedException($specification);
     }
 
     /**
@@ -115,7 +130,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitMethod(Method $specification)
     {
-        $this->visitField($specification);
+        throw $this->notSupportedException($specification);
     }
 
     /**
@@ -125,7 +140,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitThis(This $specification)
     {
-        $this->notSupportedException($specification);
+        throw $this->notSupportedException($specification);
     }
 
     /**
@@ -135,7 +150,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitCustom(Custom $specification)
     {
-        $this->notSupportedException($specification);
+        throw $this->notSupportedException($specification);
     }
 
     /**
@@ -155,7 +170,7 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
      */
     public function visitCount(Count $specification)
     {
-        $this->notSupportedException($specification);
+        throw $this->notSupportedException($specification);
     }
 
     /**
@@ -246,11 +261,11 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
     public function visitAll(All $specification)
     {
         $field = $this->createField($specification->selector());
-        $specificationQueryBuilder = $this->queryBuilderFromSpecification($specification->specification()->not());
-
-        $this->queryBuilder->not(
-            $this->queryBuilder->expr()->field($field->name())->elemMatch($specificationQueryBuilder->getExpr())
-        );
+        $specificationQueryBuilder = $this->queryBuilderFromSpecification($specification->specification());
+        $this->queryBuilder
+            ->field($field->name())->all(
+                $this->queryBuilder->expr()->elemMatch($specificationQueryBuilder->getExpr())->getQuery()
+            );
     }
 
     /**
@@ -263,24 +278,27 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
         if ($specification->count() === 1) {
             $field = $this->createField($specification->selector());
             $specificationQueryBuilder = $this->queryBuilderFromSpecification($specification->specification());
-
-            $this->queryBuilder->field($field->name())->elemMatch($specificationQueryBuilder->currentExpr());
+            $this->queryBuilder->field($field->name())->elemMatch($specificationQueryBuilder->getExpr());
         } else {
-            $this->notSupportedException($specification);
+            throw $this->notSupportedException($specification);
         }
     }
 
     /**
-     * @param BinarySpecification $operator
-     * @param Delegate            $addOperator
+     * @param QueryBuilder $queryBuilder1
+     * @param QueryBuilder $queryBuilder2
+     *
+     * @return bool
      */
-    protected function visitLogicalOperator(BinarySpecification $operator, Delegate $addOperator)
+    protected function hasSameOperator(QueryBuilder $queryBuilder1, QueryBuilder $queryBuilder2)
     {
-        $leftQueryBuilder = $this->queryBuilderFromSpecification($operator->left());
-        $rightQueryBuilder = $this->queryBuilderFromSpecification($operator->right());
+        $intersection = new ArrayCollection(
+            \array_intersect_key($queryBuilder1->getQueryArray(), $queryBuilder2->getQueryArray())
+        );
 
-        $addOperator($leftQueryBuilder->getExpr());
-        $addOperator($rightQueryBuilder->getExpr());
+        return $intersection->keys()->findOne(Criteria::custom(function ($value) {
+            return \strpos($value, '$') === 0;
+        })) !== null;
     }
 
     /**
@@ -327,8 +345,18 @@ class SpecificationVisitor extends AbstractCriteriaVisitor implements Specificat
         SpecificationInterface $value,
         Delegate $addOperator
     ) {
-        $this->queryBuilder->field($this->createField($selector)->name());
-        $addOperator($this->createValue($value));
+        $actualValue = $this->createValue($value);
+        $isEntityValue = false;
+        if ($actualValue instanceof IdInterface) {
+            $actualValue = $actualValue->toNative();
+            $isEntityValue = true;
+        }
+
+        $field = $this->createField($selector, $isEntityValue);
+        if ($field !== null) {
+            $this->queryBuilder->field($field->name());
+        }
+        $addOperator($actualValue);
     }
 
     /**

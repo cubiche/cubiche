@@ -273,4 +273,34 @@ class ArrayCollectionTests extends CollectionTestCase
                     ->isNull()
         ;
     }
+
+    /**
+     * Test keys.
+     */
+    public function testKeys()
+    {
+        $this
+            ->given(
+                $collection = $this->randomCollection()
+            )
+            ->when($keys = $collection->keys())
+                ->collection($keys)
+                   ->array($keys->toArray())
+                        ->isEqualTo(\array_keys($collection->toArray()));
+    }
+
+    /**
+     * Test values.
+     */
+    public function testValues()
+    {
+        $this
+            ->given(
+                $collection = $this->randomCollection()
+            )
+            ->when($values = $collection->values())
+                ->collection($values)
+                    ->array($values->toArray())
+                        ->isEqualTo(\array_values($collection->toArray()));
+    }
 }

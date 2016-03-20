@@ -10,20 +10,13 @@
  */
 namespace Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Types;
 
-use Doctrine\ODM\MongoDB\Types\Type as BaseType;
-
 /**
  * Abstract Native Value Object Type Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class NativeValueObjectType extends BaseType
+abstract class NativeValueObjectType extends ValueObjectType
 {
-    /**
-     * @return string
-     */
-    abstract protected function nativeValueObjectClass();
-
     /**
      * {@inheritdoc}
      *
@@ -31,15 +24,7 @@ abstract class NativeValueObjectType extends BaseType
      */
     public function convertToDatabaseValue($value)
     {
-        if ($value === null) {
-            return;
-        }
-        $class = $this->nativeValueObjectClass();
-        if (!$value instanceof $class) {
-            return $value;
-        }
-
-        return $value->toNative();
+        return $value !== null ? $value->toNative() : null;
     }
 
     /**
@@ -49,7 +34,7 @@ abstract class NativeValueObjectType extends BaseType
      */
     public function convertToPHPValue($value)
     {
-        $class = $this->nativeValueObjectClass();
+        $class = $this->targetClass();
 
         return $value !== null ? $class::fromNative($value) : null;
     }
@@ -71,8 +56,8 @@ abstract class NativeValueObjectType extends BaseType
      */
     public function closureToPHP()
     {
-        $class = $this->nativeValueObjectClass();
+        $class = $this->targetClass();
 
-        return 'return $value !== null && $value instanceof '.$class.' ? '.$class.'::fromNative($value) : $value;';
+        return 'return $value !== null ? '.$class.'::fromNative($value) : null;';
     }
 }

@@ -18,6 +18,7 @@ use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
 use Cubiche\Domain\Specification\SelectorInterface;
 use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Domain\Model\NativeValueObjectInterface;
 
 /**
  * Abstract Criteria Visitor Class.
@@ -59,14 +60,14 @@ abstract class AbstractCriteriaVisitor
      *
      * @return \Cubiche\Domain\Specification\Selector\Field
      */
-    protected function createField(SelectorInterface $selector)
+    protected function createField(SelectorInterface $selector, $isEntityValue = false)
     {
         if ($selector instanceof Field) {
             return $selector;
         }
 
         if ($selector instanceof This) {
-            return new Property('id');
+            return $isEntityValue ? new Property('id') : null;
         }
 
         if ($selector instanceof Composite) {
@@ -91,7 +92,10 @@ abstract class AbstractCriteriaVisitor
         if ($value instanceof Value) {
             $actualValue = $value->value();
             if ($actualValue instanceof EntityInterface) {
-                return $actualValue->id()->toNative();
+                return $actualValue->id();
+            }
+            if ($actualValue instanceof NativeValueObjectInterface) {
+                return $actualValue->toNative();
             }
 
             return $actualValue;
@@ -106,11 +110,11 @@ abstract class AbstractCriteriaVisitor
     /**
      * @param mixed $operation
      *
-     * @throws \LogicException
+     * @return \LogicException
      */
     protected function notSupportedException($operation)
     {
-        throw new \LogicException(
+        return new \LogicException(
             \sprintf('The %s operation is not supported by Doctrine\ODM\MongoDB', \get_class($operation))
         );
     }

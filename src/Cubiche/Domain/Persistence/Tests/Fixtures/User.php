@@ -11,6 +11,8 @@
 namespace Cubiche\Domain\Persistence\Tests\Fixtures;
 
 use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\Collections\ArrayCollectionInterface;
+use Cubiche\Domain\Collections\ArrayCollection;
 
 /**
  * User Class.
@@ -30,6 +32,11 @@ class User extends AggregateRoot
     protected $age;
 
     /**
+     * @var ArrayCollectionInterface
+     */
+    protected $phonenumbers;
+
+    /**
      * @param UserId $id
      * @param string $name
      * @param int    $age
@@ -40,6 +47,7 @@ class User extends AggregateRoot
 
         $this->name = $name;
         $this->age = $age;
+        $this->phonenumbers = new ArrayCollection();
     }
 
     /**
@@ -64,5 +72,13 @@ class User extends AggregateRoot
     public function name()
     {
         return $this->name;
+    }
+
+    /**
+     * @return ArrayCollectionInterface
+     */
+    public function phonenumbers()
+    {
+        return $this->phonenumbers;
     }
 }

@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Persistence\Doctrine\Common\Collections;
+namespace Cubiche\Infrastructure\Collections\Persistence\Doctrine\Common\Collections;
 
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
@@ -112,6 +112,26 @@ class PersistentArrayCollection extends PersistentCollection implements ArrayCol
     public function removeAt($key)
     {
         $this->collection->remove($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::keys()
+     */
+    public function keys()
+    {
+        return new ArrayCollection($this->getKeys());
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::values()
+     */
+    public function values()
+    {
+        return new ArrayCollection($this->getValues());
     }
 
     /**

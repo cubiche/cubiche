@@ -8,13 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types;
+namespace Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Types;
 
 /**
- * Enum Id Type Class.
+ * Dynamic Native Value Object Type Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class EnumIdType extends IdType
+class DynamicNativeValueObjectType extends NativeValueObjectType
 {
+    use DynamicTypeTrait;
 }

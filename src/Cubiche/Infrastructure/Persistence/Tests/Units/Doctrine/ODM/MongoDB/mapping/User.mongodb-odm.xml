@@ -4,9 +4,10 @@
                 http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="Cubiche\Domain\Persistence\Tests\Fixtures\User" collection="user">
-        <field name="id" id="true" type="UserId" strategy="none"/>
-        <field fieldName="name" name="name" type="string"/>
-        <field fieldName="age" name="age" type="integer"/>
+        <field name="id" id="true" type="Identifier" strategy="none" target="Cubiche\Domain\Persistence\Tests\Fixtures\UserId"/>
+        <field fieldName="name" name="name" type="string" />
+        <field fieldName="age" name="age" type="integer" />
+        <field fieldName="phonenumbers" name="phonenumbers" type="ArrayCollection" innerType="Phonenumber"/>
     </document>
     
 </doctrine-mongo-mapping>

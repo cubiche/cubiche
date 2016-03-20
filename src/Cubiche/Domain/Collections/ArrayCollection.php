@@ -232,6 +232,26 @@ class ArrayCollection implements ArrayCollectionInterface
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::keys()
+     */
+    public function keys()
+    {
+        return new self(\array_keys($this->items));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::values()
+     */
+    public function values()
+    {
+        return new self(\array_values($this->items));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see ArrayAccess::offsetExists()
      */
     public function offsetExists($offset)

@@ -11,21 +11,20 @@
 namespace Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Domain\Identity\IntegerId;
-use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
 
 /**
  * Integer Id Type Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class IntegerIdType extends NativeValueObjectType
+class IntegerIdType extends IdType
 {
     /**
      * {@inheritdoc}
      *
-     * @see NativeValueObjectType::nativeValueObjectClass()
+     * @see \Cubiche\Infrastructure\Model\Persistence\Doctrine\Common\Types\ValueObjectTypeInterface::targetClass()
      */
-    protected function nativeValueObjectClass()
+    public function targetClass()
     {
         return IntegerId::class;
     }

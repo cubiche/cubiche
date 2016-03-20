@@ -10,9 +10,6 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Asserters;
 
-use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Collections\CollectionInterface;
-
 /**
  * Asserters trait.
  *
@@ -21,21 +18,17 @@ use Cubiche\Domain\Collections\CollectionInterface;
 trait Asserters
 {
     /**
-     * @param CollectionInterface
-     *
      * @return \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter
      */
-    public function collection($collection)
+    public function collection()
     {
         return static::__call(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param DataSourceInterface
-     *
      * @return \Cubiche\Domain\Collections\Tests\Asserters\DataSourceAsserter
      */
-    public function datasource($datasource)
+    public function datasource()
     {
         return static::__call(__FUNCTION__, func_get_args());
     }

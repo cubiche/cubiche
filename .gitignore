@@ -10,6 +10,7 @@ phpunit.xml
 
 src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Proxies/*
 src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Hydrators/*
+src/Cubiche/Infrastructure/Persistence/Tests/Doctrine/ODM/MongoDB/Cache/**/*
 
 .buildpath
 .project

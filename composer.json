@@ -20,7 +20,7 @@
     "require": {
         "php": ">=5.5.0",
         "myclabs/php-enum": "^1.4",
-        "doctrine/mongodb-odm": "^1.0",
+        "doctrine/mongodb-odm": "^1.0.5",
         "ramsey/uuid": "^3.2",
         "symfony/property-access": "^3.0"
     },
