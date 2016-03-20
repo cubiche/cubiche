@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Collections\Persistence\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\CollectionInterface;
 use Cubiche\Infrastructure\Collections\Persistence\Doctrine\Common\Collections\PersistentArrayCollection;
 use Cubiche\Infrastructure\Collections\Persistence\Doctrine\ODM\MongoDB\Types\ArrayCollectionType;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
@@ -18,6 +19,7 @@ use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Doctrine\ODM\MongoDB\PersistentCollection;
 use Doctrine\ODM\MongoDB\Types\Type;
 
 /**
@@ -100,7 +102,9 @@ class EventListener
     }
 
     /**
-     * @param LoadClassMetadataEventArgs $eventArgs
+     * @param ClassMetadata $classMetadata
+     *
+     * @throws MappingException
      */
     protected function checkArrayCollectionType(ClassMetadata $classMetadata)
     {

@@ -24,6 +24,7 @@ use Cubiche\Domain\Specification\Selector\Method;
 use Cubiche\Domain\Specification\Selector\Property;
 use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
+use Cubiche\Domain\Specification\SpecificationInterface;
 use Cubiche\Domain\Tests\Units\TestCase;
 
 /**
@@ -52,7 +53,8 @@ class EvaluatorBuilderTests extends TestCase
     public function testEvaluator()
     {
         $this
-            ->given($specificationMock = new \mock\Cubiche\Domain\Specification\SpecificationInterface())
+            ->given($mockName = '\mock\\'.SpecificationInterface::class)
+            ->given($specificationMock = new $mockName())
             ->calling($specificationMock)
             ->methods(
                 function ($method) {

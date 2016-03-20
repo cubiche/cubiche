@@ -69,20 +69,20 @@ abstract class PromiseTestCase extends TestCase
             )
             ->setHandler(
                 'reject',
-                function ($value = null) {
-                    return $this->reject($value);
+                function ($reason = null) {
+                    return $this->reject($reason);
                 }
             )
             ->setHandler(
                 'notify',
-                function ($value = null) {
-                    return $this->notify($value);
+                function ($state = null) {
+                    return $this->notify($state);
                 }
             )
             ->setHandler(
                 'cancel',
-                function ($value = null) {
-                    return $this->cancel($value);
+                function () {
+                    return $this->cancel();
                 }
             )
             ->setHandler(

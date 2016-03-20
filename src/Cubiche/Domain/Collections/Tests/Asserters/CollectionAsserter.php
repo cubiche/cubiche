@@ -168,7 +168,6 @@ class CollectionAsserter extends ObjectAsserter
             } else {
                 $this->fail($this->_('There is %s items that match with the given criteria', $failed));
             }
-        } else {
         }
 
         return $this;

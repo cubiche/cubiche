@@ -35,7 +35,7 @@ class DelegateTests extends TestCase
     public function testFromClosure()
     {
         $this
-            ->given($closure = function ($value = null) {
+            ->given($closure = function () {
 
             })
             ->when($delegate = Delegate::fromClosure($closure))

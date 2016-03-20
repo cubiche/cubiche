@@ -26,12 +26,12 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
     /**
      * @var ClassMetadata[]
      */
-    private $loadedMetadata = [];
+    private $innerLoadedMetadata = [];
 
     /**
      * @var DocumentManager
      */
-    private $dm;
+    private $documentManager;
 
     /**
      * {@inheritdoc}
@@ -40,24 +40,24 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
      */
     public function getMetadataFor($className)
     {
-        if (!isset($this->loadedMetadata[$className])) {
-            $evm = $this->dm->getEventManager();
+        if (!isset($this->innerLoadedMetadata[$className])) {
+            $evm = $this->documentManager->getEventManager();
             if ($evm->hasListeners(Events::PRE_LOAD_CLASSMETADATA)) {
-                $eventArgs = new PreLoadClassMetadataEventArgs($className, $this->dm);
+                $eventArgs = new PreLoadClassMetadataEventArgs($className, $this->documentManager);
                 $evm->dispatchEvent(Events::PRE_LOAD_CLASSMETADATA, $eventArgs);
             }
 
             $classMetadata = parent::getMetadataFor($className);
 
             if ($evm->hasListeners(Events::POST_LOAD_CLASS_METADATA)) {
-                $eventArgs = new LoadClassMetadataEventArgs($classMetadata, $this->dm);
+                $eventArgs = new LoadClassMetadataEventArgs($classMetadata, $this->documentManager);
                 $evm->dispatchEvent(Events::POST_LOAD_CLASS_METADATA, $eventArgs);
             }
 
-            $this->loadedMetadata[$className] = $classMetadata;
+            $this->innerLoadedMetadata[$className] = $classMetadata;
         }
 
-        return $this->loadedMetadata[$className];
+        return $this->innerLoadedMetadata[$className];
     }
 
     /**
@@ -68,6 +68,6 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
     public function setDocumentManager(DocumentManager $dm)
     {
         parent::setDocumentManager($dm);
-        $this->dm = $dm;
+        $this->documentManager = $dm;
     }
 }

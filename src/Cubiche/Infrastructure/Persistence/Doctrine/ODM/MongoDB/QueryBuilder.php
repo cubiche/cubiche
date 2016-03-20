@@ -72,11 +72,6 @@ class QueryBuilder extends Builder
      */
     public function getExpr()
     {
-        /*$expr = $this->expr();
-        $expr->setQuery($this->getQueryArray());
-
-        return $expr;*/
-
         return $this->expr;
     }
 

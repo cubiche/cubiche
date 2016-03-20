@@ -326,13 +326,13 @@ class SpecificationVisitorTests extends TestCase
 
     /**
      * @param Field|Composite $field
-     * @param string          $expectedFieldName
+     * @param string          $expected
      */
-    protected function visitFieldTest($field, $expectedFieldName = null)
+    protected function visitFieldTest($field, $expected = null)
     {
-        $expectedFieldName = $expectedFieldName === null ? $field->name() : $expectedFieldName;
-        $this->visitTest($field, function () use ($expectedFieldName) {
-            return $this->createQueryBuilder()->field($expectedFieldName)->equals(true);
+        $expected = $expected === null && $field instanceof Field ? $field->name() : $expected;
+        $this->visitTest($field, function () use ($expected) {
+            return $this->createQueryBuilder()->field($expected)->equals(true);
         });
     }
 

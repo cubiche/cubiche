@@ -25,7 +25,7 @@ class Phonenumber extends NativeValueObject
     protected $number;
 
     /**
-     * @param string $phonenumber
+     * @param string $number
      *
      * @return static
      */
@@ -35,7 +35,7 @@ class Phonenumber extends NativeValueObject
     }
 
     /**
-     * @param string $phonenumber
+     * @param string $number
      *
      * @throws \InvalidArgumentException
      */

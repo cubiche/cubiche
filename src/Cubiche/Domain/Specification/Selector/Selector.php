@@ -32,7 +32,7 @@ use Cubiche\Domain\Specification\SpecificationInterface;
 abstract class Selector extends Specification implements SelectorInterface
 {
     /**
-     * @param unknown $key
+     * @param string $key
      *
      * @return \Cubiche\Domain\Specification\Selector\Composite
      */
@@ -42,7 +42,7 @@ abstract class Selector extends Specification implements SelectorInterface
     }
 
     /**
-     * @param unknown $property
+     * @param string $property
      *
      * @return \Cubiche\Domain\Specification\Selector\Composite
      */
@@ -52,7 +52,7 @@ abstract class Selector extends Specification implements SelectorInterface
     }
 
     /**
-     * @param unknown $method
+     * @param string $method
      *
      * @return \Cubiche\Domain\Specification\Selector\Composite
      */
