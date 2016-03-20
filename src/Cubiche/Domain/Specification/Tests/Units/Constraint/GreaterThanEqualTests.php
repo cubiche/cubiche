@@ -11,23 +11,21 @@ namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
 
 use Cubiche\Domain\Specification\Constraint\GreaterThanEqual;
 use Cubiche\Domain\Specification\Constraint\LessThan;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Tests\Units\SpecificationTestCase;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * GreaterThanEqualTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class GreaterThanEqualTests extends SpecificationTestCase
+class GreaterThanEqualTests extends BinarySelectorOperatorTestCase
 {
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new GreaterThanEqual(new This(), new Value(rand(1, 10)));
+        return Criteria::gte($value !== null ? $value : rand(1, 10));
     }
 
     /**
@@ -77,7 +75,7 @@ class GreaterThanEqualTests extends SpecificationTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = new GreaterThanEqual(new This(), new Value(5)))
+            ->given($specification = $this->randomSpecification(5))
             ->then
                 ->boolean($specification->evaluate(6))
                     ->isTrue()

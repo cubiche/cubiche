@@ -9,11 +9,8 @@
  */
 namespace Cubiche\Domain\Specification\Tests\Units;
 
-use Cubiche\Domain\Specification\Constraint\Equal;
-use Cubiche\Domain\Specification\Constraint\LessThan;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\OrSpecification;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
 
 /**
  * OrSpecificationTests class.
@@ -25,10 +22,10 @@ class OrSpecificationTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        $left = new Equal(new This(), new Value(rand(1, 10)));
-        $right = new LessThan(new This(), new Value(rand(1, 10)));
+        $left = Criteria::eq($value !== null ? $value : rand(1, 10));
+        $right = Criteria::lt($value !== null ? $value : rand(1, 10));
 
         return new OrSpecification($left, $right);
     }

@@ -216,9 +216,9 @@ class Criteria
      *
      * @return \Cubiche\Domain\Specification\Constraint\NotSame
      */
-    public static function notsame($value)
+    public static function notSame($value)
     {
-        return self::this()->notsame($value);
+        return self::this()->notSame($value);
     }
 
     /**
@@ -235,6 +235,22 @@ class Criteria
     public static function notNull()
     {
         return self::this()->notNull();
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public static function isTrue()
+    {
+        return self::this()->isTrue();
+    }
+
+    /**
+     * @return \Cubiche\Domain\Specification\Constraint\Same
+     */
+    public static function isFalse()
+    {
+        return self::this()->isFalse();
     }
 
     /**

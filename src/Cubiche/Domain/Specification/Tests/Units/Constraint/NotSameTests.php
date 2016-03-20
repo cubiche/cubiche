@@ -11,23 +11,21 @@ namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
 
 use Cubiche\Domain\Specification\Constraint\NotSame;
 use Cubiche\Domain\Specification\Constraint\Same;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Specification\Tests\Units\SpecificationTestCase;
+use Cubiche\Domain\Specification\Criteria;
 
 /**
  * NotSameTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NotSameTests extends SpecificationTestCase
+class NotSameTests extends BinarySelectorOperatorTestCase
 {
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new NotSame(new This(), new Value(rand(1, 10)));
+        return Criteria::notSame($value !== null ? $value : rand(1, 10));
     }
 
     /**
@@ -77,7 +75,7 @@ class NotSameTests extends SpecificationTestCase
     public function testEvaluate()
     {
         $this
-            ->given($specification = new NotSame(new This(), new Value(5)))
+            ->given($specification = $this->randomSpecification(5))
             ->then
                 ->boolean($specification->evaluate(6))
                     ->isTrue()

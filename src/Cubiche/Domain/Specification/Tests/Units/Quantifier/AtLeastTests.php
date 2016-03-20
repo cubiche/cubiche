@@ -7,25 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
+namespace Cubiche\Domain\Specification\Tests\Units\Quantifier;
 
-use Cubiche\Domain\Specification\Constraint\NotSame;
-use Cubiche\Domain\Specification\Constraint\Same;
 use Cubiche\Domain\Specification\Criteria;
+use Cubiche\Domain\Specification\Quantifier\AtLeast;
 
 /**
- * SameTests class.
+ * AtLeastTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SameTests extends BinarySelectorOperatorTestCase
+class AtLeastTests extends QuantifierTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function randomSpecification($value = null)
     {
-        return Criteria::same($value !== null ? $value : rand(1, 10));
+        return Criteria::atLeast(2, Criteria::gt($value !== null ? $value : rand(1, 10)));
     }
 
     /**
@@ -33,7 +32,7 @@ class SameTests extends BinarySelectorOperatorTestCase
      */
     protected function shouldVisitMethod()
     {
-        return 'visitSame';
+        return 'visitAtLeast';
     }
 
     /*
@@ -47,25 +46,7 @@ class SameTests extends BinarySelectorOperatorTestCase
             ->given($specification = $this->randomSpecification())
             ->then
                 ->object($specification)
-                    ->isInstanceOf(Same::class)
-        ;
-    }
-
-    /*
-     * Test not.
-     */
-    public function testNot()
-    {
-        $this
-            ->given($specification = $this->randomSpecification())
-            ->then
-            ->when($notSpecification = $specification->not($specification))
-                ->object($notSpecification)
-                    ->isInstanceOf(NotSame::class)
-                ->object($notSpecification->left())
-                    ->isIdenticalTo($specification->left())
-                ->object($notSpecification->right())
-                    ->isIdenticalTo($specification->right())
+                    ->isInstanceOf(AtLeast::class)
         ;
     }
 
@@ -77,12 +58,14 @@ class SameTests extends BinarySelectorOperatorTestCase
         $this
             ->given($specification = $this->randomSpecification(5))
             ->then
+                ->boolean($specification->evaluate(array(4, 6, 5, 3, 9)))
+                    ->isTrue()
+                ->boolean($specification->evaluate(array()))
+                    ->isFalse()
                 ->boolean($specification->evaluate(6))
                     ->isFalse()
-                ->boolean($specification->evaluate(5.0))
+                ->boolean($specification->evaluate(array(1, 2, 3, 4, 5, 6)))
                     ->isFalse()
-                ->boolean($specification->evaluate(5))
-                    ->isTrue()
         ;
     }
 }

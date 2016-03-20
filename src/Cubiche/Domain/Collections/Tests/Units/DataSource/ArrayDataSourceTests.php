@@ -10,8 +10,8 @@
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**

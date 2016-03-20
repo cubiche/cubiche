@@ -10,9 +10,10 @@
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
+use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Comparable\Custom;
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
@@ -118,7 +119,10 @@ class IteratorDataSourceTests extends DataSourceTestCase
 
         $this
             ->given(
-                $sortCriteria = new ReverseComparator(),
+                $comparator = new Comparator(),
+                $sortCriteria = new Custom(function ($a, $b) use ($comparator) {
+                    return -1 * $comparator->compare($a, $b);
+                }),
                 $datasource = $this->randomDataSource(Criteria::method('value')->lt(10), $sortCriteria)
             )
             ->when($findResult = $datasource->findOne())
@@ -267,7 +271,7 @@ class IteratorDataSourceTests extends DataSourceTestCase
     {
         $this
             ->given(
-                $sortCriteria = new ReverseComparator(),
+                $sortCriteria = new Comparator(),
                 $datasource = $this->randomDataSource()
             )
             ->then

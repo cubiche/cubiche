@@ -9,10 +9,8 @@
  */
 namespace Cubiche\Domain\Specification\Tests\Units;
 
-use Cubiche\Domain\Specification\Constraint\LessThan;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Domain\Specification\NotSpecification;
-use Cubiche\Domain\Specification\Selector\This;
-use Cubiche\Domain\Specification\Selector\Value;
 
 /**
  * NotSpecificationTests class.
@@ -24,9 +22,9 @@ class NotSpecificationTests extends SpecificationTestCase
     /**
      * {@inheritdoc}
      */
-    protected function randomSpecification()
+    protected function randomSpecification($value = null)
     {
-        return new NotSpecification(new LessThan(new This(), new Value(rand(1, 10))));
+        return new NotSpecification(Criteria::lt($value !== null ? $value : rand(1, 10)));
     }
 
     /**

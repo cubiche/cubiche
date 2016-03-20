@@ -12,9 +12,9 @@ namespace Cubiche\Domain\Collections\Tests\Units;
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\ReverseComparator;
-use Cubiche\Domain\Collections\Tests\Units\Fixtures\EquatableObject;
 use Cubiche\Domain\Comparable\Comparator;
+use Cubiche\Domain\Comparable\Custom;
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 
 /**
  * ArrayCollectionTests class.
@@ -165,20 +165,23 @@ class ArrayCollectionTests extends CollectionTestCase
     {
         $this
             ->given(
-                $equatableComparator = new ReverseComparator(),
+                $comparator = $this->comparator(),
+                $reverseComparator = new Custom(function ($a, $b) use ($comparator) {
+                    return -1 * $comparator->compare($a, $b);
+                }),
                 $collection = $this->randomCollection()
             )
-            ->when($collection->sort())
+            ->when($collection->sort($comparator))
             ->then
                 ->collection($collection)
-                    ->isSorted()
+                    ->isSortedUsing($comparator)
             ->and
-            ->when($collection->sort($equatableComparator))
+            ->when($collection->sort($reverseComparator))
             ->then
                 ->collection($collection)
-                    ->isSortedUsing($equatableComparator)
+                    ->isSortedUsing($reverseComparator)
                 ->collection($collection)
-                    ->isNotSortedUsing(new Comparator())
+                    ->isNotSortedUsing($comparator)
         ;
     }
 
