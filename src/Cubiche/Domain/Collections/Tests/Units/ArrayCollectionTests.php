@@ -165,13 +165,13 @@ class ArrayCollectionTests extends CollectionTestCase
     {
         $this
             ->given(
-                $comparator = $this->comparator(),
+                $comparator = new Comparator(),
                 $reverseComparator = new Custom(function ($a, $b) use ($comparator) {
                     return -1 * $comparator->compare($a, $b);
                 }),
                 $collection = $this->randomCollection()
             )
-            ->when($collection->sort($comparator))
+            ->when($collection->sort())
             ->then
                 ->collection($collection)
                     ->isSortedUsing($comparator)
