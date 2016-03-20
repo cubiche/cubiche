@@ -259,11 +259,10 @@ class DecimalTests extends RealTestCase
                 $a = $this->fromNative($native),
                 $positiveInfinite = $this->fromNative($this->positiveInfiniteNativeNumber())
             )
-            ->when(
-                $b = $a->sqrt(),
-                $c = $a->sqrt(2)
-            )
-            ->then
+            ->when($b = $a->sqrt())
+            ->and()
+            ->when($c = $a->sqrt(2))
+            ->then()
                 ->object($b)
                     ->isInstanceOf(Decimal::class)
                 ->variable($b->toNative())

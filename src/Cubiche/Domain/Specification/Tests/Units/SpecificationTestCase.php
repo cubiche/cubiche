@@ -80,13 +80,13 @@ abstract class SpecificationTestCase extends TestCase
     {
         $this
             ->given($specification = $this->randomSpecification())
-            ->then
+            ->then()
                 ->object($specification)
                     ->isInstanceOf(SpecificationInterface::class)
         ;
     }
 
-    /*
+    /**
      * Test andX.
      */
     public function testAndX()
@@ -96,7 +96,7 @@ abstract class SpecificationTestCase extends TestCase
                 $specification = $this->randomSpecification(),
                 $other = $this->randomSpecification()
             )
-            ->then
+            ->then()
             ->when($andSpecification = $specification->andX($other))
                 ->object($andSpecification)
                     ->isInstanceOf(AndSpecification::class)
@@ -117,7 +117,7 @@ abstract class SpecificationTestCase extends TestCase
                 $specification = $this->randomSpecification(),
                 $other = $this->randomSpecification()
             )
-            ->then
+            ->then()
             ->when($orSpecification = $specification->orX($other))
                 ->object($orSpecification)
                     ->isInstanceOf(OrSpecification::class)
@@ -135,8 +135,8 @@ abstract class SpecificationTestCase extends TestCase
     {
         $this
             ->given($specification = $this->randomSpecification())
-            ->then
-            ->when($notSpecification = $specification->not($specification))
+            ->then()
+            ->when($notSpecification = $specification->not())
                 ->object($notSpecification)
                     ->isInstanceOf(NotSpecification::class)
                 ->object($notSpecification->specification())

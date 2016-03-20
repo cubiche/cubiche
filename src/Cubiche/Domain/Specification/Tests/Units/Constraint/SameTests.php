@@ -59,7 +59,7 @@ class SameTests extends BinarySelectorOperatorTestCase
         $this
             ->given($specification = $this->randomSpecification())
             ->then
-            ->when($notSpecification = $specification->not($specification))
+            ->when($notSpecification = $specification->not())
                 ->object($notSpecification)
                     ->isInstanceOf(NotSame::class)
                 ->object($notSpecification->left())

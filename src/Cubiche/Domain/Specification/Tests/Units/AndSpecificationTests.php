@@ -47,7 +47,7 @@ class AndSpecificationTests extends SpecificationTestCase
 
         $this
             ->given($specification = $this->randomSpecification())
-            ->then
+            ->then()
                 ->object($specification)
                     ->isInstanceOf(AndSpecification::class)
         ;

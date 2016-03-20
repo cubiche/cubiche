@@ -14,7 +14,6 @@ use Cubiche\Infrastructure\Collections\Persistence\Doctrine\ODM\MongoDB\EventSub
 use Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
 use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
 use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
-use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as PersistenceEventSubscriber;
 use Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
@@ -42,11 +41,6 @@ trait DocumentManagerTestCaseTrait
     protected $uow;
 
     /**
-     * @var array
-     */
-    private $lastQuery;
-
-    /**
      * @return \Doctrine\ODM\MongoDB\DocumentManager
      */
     public function dm()
@@ -54,14 +48,12 @@ trait DocumentManagerTestCaseTrait
         if ($this->dm === null) {
             $this->dm = $this->createTestDocumentManager();
             $this->uow = $this->dm->getUnitOfWork();
-            $this->lastQuery = null;
 
             Type::addType('Phonenumber', PhonenumberType::class);
 
             $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
-            $this->dm->getEventManager()->addEventSubscriber(new PersistenceEventSubscriber());
         }
 
         return $this->dm;
@@ -94,9 +86,6 @@ trait DocumentManagerTestCaseTrait
         $config->setClassMetadataFactoryName(ClassMetadataFactory::class);
         $config->setMetadataDriverImpl($this->createMetadataDriverImpl());
         $config->setMetadataCacheImpl(new FilesystemCache(__DIR__.'/Cache'));
-        $config->setLoggerCallable(function (array $log) {
-            $this->lastQuery = $log;
-        });
 
         return $config;
     }

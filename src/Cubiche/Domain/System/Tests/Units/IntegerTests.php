@@ -71,11 +71,10 @@ class IntegerTests extends NumberTestCase
                 $invalidScale = 2.4,
                 $a = $this->fromNative($native)
             )
-            ->when(
-                $b = $a->sqrt(),
-                $c = $a->sqrt(2)
-            )
-            ->then
+            ->when($b = $a->sqrt())
+            ->and()
+            ->when($c = $a->sqrt(2))
+            ->then()
                 ->object($b)
                     ->isInstanceOf(Real::class)
                 ->variable($b->toNative())

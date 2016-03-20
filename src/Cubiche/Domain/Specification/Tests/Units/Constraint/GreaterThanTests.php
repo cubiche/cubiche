@@ -59,7 +59,7 @@ class GreaterThanTests extends BinarySelectorOperatorTestCase
         $this
             ->given($specification = $this->randomSpecification())
             ->then
-            ->when($notSpecification = $specification->not($specification))
+            ->when($notSpecification = $specification->not())
                 ->object($notSpecification)
                     ->isInstanceOf(LessThanEqual::class)
                 ->object($notSpecification->left())

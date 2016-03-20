@@ -45,7 +45,7 @@ class EqualTests extends BinarySelectorOperatorTestCase
 
         $this
             ->given($specification = $this->randomSpecification())
-            ->then
+            ->then()
                 ->object($specification)
                     ->isInstanceOf(Equal::class)
         ;
@@ -58,8 +58,8 @@ class EqualTests extends BinarySelectorOperatorTestCase
     {
         $this
             ->given($specification = $this->randomSpecification())
-            ->then
-            ->when($notSpecification = $specification->not($specification))
+            ->then()
+            ->when($notSpecification = $specification->not())
                 ->object($notSpecification)
                     ->isInstanceOf(NotEqual::class)
                 ->object($notSpecification->left())
