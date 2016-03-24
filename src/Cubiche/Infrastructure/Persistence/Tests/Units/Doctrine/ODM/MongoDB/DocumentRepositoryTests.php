@@ -10,8 +10,11 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
+use Cubiche\Domain\Collections\Comparator\Order;
+use Cubiche\Domain\Collections\Comparator\Sort;
 use Cubiche\Domain\Persistence\Tests\Fixtures\User;
 use Cubiche\Domain\Persistence\Tests\Units\RepositoryTestCase;
+use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\DocumentRepository;
 
 /**
@@ -33,5 +36,15 @@ class DocumentRepositoryTests extends RepositoryTestCase
     protected function emptyRepository()
     {
         return new DocumentRepository($this->dm()->getRepository(User::class));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::comparator()
+     */
+    protected function comparator()
+    {
+        return Sort::by(Criteria::property('age'), Order::DESC());
     }
 }

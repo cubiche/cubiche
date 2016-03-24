@@ -14,6 +14,7 @@ namespace Cubiche\Domain\Comparable;
  * Comparator Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class Comparator implements ComparatorInterface
 {
@@ -29,6 +30,16 @@ class Comparator implements ComparatorInterface
         }
 
         return $a < $b ? -1 : ($a == $b ? 0 : 1);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\ComparatorInterface::reverse()
+     */
+    public function reverse()
+    {
+        return new ReverseComparator($this);
     }
 
     /**

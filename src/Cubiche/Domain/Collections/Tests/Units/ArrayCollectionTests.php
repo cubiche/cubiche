@@ -12,8 +12,6 @@ namespace Cubiche\Domain\Collections\Tests\Units;
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\Custom;
 use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 
 /**
@@ -165,10 +163,8 @@ class ArrayCollectionTests extends CollectionTestCase
     {
         $this
             ->given(
-                $comparator = new Comparator(),
-                $reverseComparator = new Custom(function ($a, $b) use ($comparator) {
-                    return -1 * $comparator->compare($a, $b);
-                }),
+                $comparator = $this->comparator(),
+                $reverseComparator = $comparator->reverse(),
                 $collection = $this->randomCollection()
             )
             ->when($collection->sort())

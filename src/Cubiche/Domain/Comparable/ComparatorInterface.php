@@ -26,6 +26,11 @@ interface ComparatorInterface
     public function compare($a, $b);
 
     /**
+     * @return ComparatorInterface
+     */
+    public function reverse();
+
+    /**
      * @param ComparatorInterface $other
      *
      * @return \Cubiche\Domain\Comparable\ComparatorInterface

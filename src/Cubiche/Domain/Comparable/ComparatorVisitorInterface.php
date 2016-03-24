@@ -25,6 +25,13 @@ interface ComparatorVisitorInterface
     public function visitComparator(Comparator $comparator);
 
     /**
+     * @param ReverseComparator $comparator
+     *
+     * @return mixed
+     */
+    public function visitReverseComparator(ReverseComparator $comparator);
+
+    /**
      * @param Custom $comparator
      *
      * @return mixed

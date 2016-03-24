@@ -388,11 +388,15 @@ abstract class CollectionTestCase extends TestCase
         $this
             ->given(
                 $comparator = $this->comparator(),
+                $reverseComparator = $comparator->reverse(),
                 $collection = $this->randomCollection()
             )
             ->when($sortedCollection = $collection->sorted($comparator))
             ->then()
                 ->collection($sortedCollection)
-                    ->isSortedUsing($comparator);
+                    ->isSortedUsing($comparator)
+                ->collection($sortedCollection)
+                    ->isNotSortedUsing($reverseComparator)
+        ;
     }
 }
