@@ -64,7 +64,19 @@ class SelectorComparator extends Comparator
      */
     public function compare($a, $b)
     {
-        return parent::compare($this->selector->apply($a), $this->selector->apply($a)) * $this->order()->toNative();
+        if ($this->order()->equals(Order::DESC())) {
+            // to avoid enter into an infinite loop
+            $this->order = Order::ASC();
+
+            $result = $this->reverse()->compare($a, $b);
+
+            // restart the real order
+            $this->order = Order::DESC();
+
+            return $result;
+        }
+
+        return parent::compare($this->selector->apply($a), $this->selector->apply($b));
     }
 
     /**

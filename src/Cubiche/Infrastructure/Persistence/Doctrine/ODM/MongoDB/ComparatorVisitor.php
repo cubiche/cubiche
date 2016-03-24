@@ -15,6 +15,7 @@ use Cubiche\Domain\Collections\Comparator\SelectorComparator;
 use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\Custom as CustomComparator;
 use Cubiche\Domain\Comparable\MultiComparator;
+use Cubiche\Domain\Comparable\ReverseComparator;
 
 /**
  * Comparator Visitor Class.
@@ -29,6 +30,16 @@ class ComparatorVisitor extends AbstractCriteriaVisitor implements ComparatorVis
      * @see \Cubiche\Domain\Comparable\ComparatorVisitorInterface::visitComparator()
      */
     public function visitComparator(Comparator $comparator)
+    {
+        $this->notSupportedException($comparator);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\ComparatorVisitorInterface::visitReverseComparator()
+     */
+    public function visitReverseComparator(ReverseComparator $comparator)
     {
         $this->notSupportedException($comparator);
     }
