@@ -19,40 +19,12 @@ use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
  */
 abstract class Specification implements SpecificationInterface
 {
+    use SpecificationTrait;
+
     /**
      * @var EvaluatorBuilder
      */
     protected $evaluatorBuilder = null;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::andX()
-     */
-    public function andX(SpecificationInterface $specification)
-    {
-        return new AndSpecification($this, $specification);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::orX()
-     */
-    public function orX(SpecificationInterface $specification)
-    {
-        return new OrSpecification($this, $specification);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::not()
-     */
-    public function not()
-    {
-        return new NotSpecification($this);
-    }
 
     /**
      * {@inheritdoc}

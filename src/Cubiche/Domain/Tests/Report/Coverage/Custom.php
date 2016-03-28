@@ -10,15 +10,15 @@
  */
 namespace Cubiche\Domain\Tests\Report\Coverage;
 
-use mageekguy\atoum;
-use mageekguy\atoum\cli\colorizer;
+use mageekguy\atoum\cli\colorizer as Colorizer;
 use mageekguy\atoum\exceptions\logic\invalidArgument as InvalidArgumentException;
 use mageekguy\atoum\exceptions\runtime\unexpectedValue as UnexpectedValueException;
-use mageekguy\atoum\fs\path;
+use mageekguy\atoum\fs\path as Path;
 use mageekguy\atoum\report\fields\runner\coverage\cli as Report;
-use mageekguy\atoum\score\coverage;
-use mageekguy\atoum\template;
-use mageekguy\atoum\template\parser;
+use mageekguy\atoum\score\coverage as Coverage;
+use mageekguy\atoum\template\parser as Parser;
+use mageekguy\atoum\template as Template;
+use mageekguy\atoum as Atoum;
 
 /**
  * Custom class.
@@ -33,7 +33,7 @@ class Custom extends Report
     const HTML_EXTENSION_FILE = '.html';
 
     /**
-     * @var colorizer
+     * @var Colorizer
      */
     protected $urlColorizer = null;
 
@@ -48,7 +48,7 @@ class Custom extends Report
     protected $projectName = '';
 
     /**
-     * @var path
+     * @var Path
      */
     protected $sourceDirectory = null;
 
@@ -63,12 +63,12 @@ class Custom extends Report
     protected $destinationDirectory = null;
 
     /**
-     * @var parser
+     * @var Parser
      */
     protected $templateParser = null;
 
     /**
-     * @var \closure
+     * @var \Closure
      */
     protected $reflectionClassInjector = null;
 
@@ -83,7 +83,7 @@ class Custom extends Report
     {
         parent::__construct();
 
-        $this->sourceDirectory = new path($sourceDirectory);
+        $this->sourceDirectory = new Path($sourceDirectory);
 
         $this
             ->setProjectName($projectName)
@@ -94,6 +94,11 @@ class Custom extends Report
             ->setRootUrl('/');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \mageekguy\atoum\report\fields\runner\coverage\cli::__toString()
+     */
     public function __toString()
     {
         $string = '';
@@ -146,13 +151,21 @@ class Custom extends Report
         return $string;
     }
 
-    public function setUrlColorizer(colorizer $colorizer = null)
+    /**
+     * @param Colorizer $colorizer
+     *
+     * @return $this
+     */
+    public function setUrlColorizer(Colorizer $colorizer = null)
     {
-        $this->urlColorizer = $colorizer ?: new colorizer();
+        $this->urlColorizer = $colorizer ?: new Colorizer();
 
         return $this;
     }
 
+    /**
+     * @return \mageekguy\atoum\cli\colorizer
+     */
     public function getUrlColorizer()
     {
         return $this->urlColorizer;
@@ -179,7 +192,7 @@ class Custom extends Report
     }
 
     /**
-     * @return path|null
+     * @return \mageekguy\atoum\fs\path
      */
     public function getSourceDirectory()
     {
@@ -213,7 +226,7 @@ class Custom extends Report
      */
     public function setTemplatesDirectory($path = null)
     {
-        $this->templatesDirectory = atoum\directory.DIRECTORY_SEPARATOR.'resources'.
+        $this->templatesDirectory = Atoum\directory.DIRECTORY_SEPARATOR.'resources'.
             DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'coverage'
         ;
 
@@ -233,19 +246,19 @@ class Custom extends Report
     }
 
     /**
-     * @param parser $parser
+     * @param Parser $parser
      *
      * @return $this
      */
-    public function setTemplateParser(parser $parser = null)
+    public function setTemplateParser(Parser $parser = null)
     {
-        $this->templateParser = $parser ?: new parser();
+        $this->templateParser = $parser ?: new Parser();
 
         return $this;
     }
 
     /**
-     * @return parser
+     * @return Parser
      */
     public function getTemplateParser()
     {
@@ -273,17 +286,17 @@ class Custom extends Report
     }
 
     /**
-     * @param coverage $coverage
+     * @param Coverage $coverage
      *
      * @return array
      */
-    protected function getCoverageReport(coverage $coverage)
+    protected function getCoverageReport(Coverage $coverage)
     {
         $sources = [];
         $directoriesCoverage = [];
 
         foreach ($coverage->getClasses() as $class => $file) {
-            $path = new path($file);
+            $path = new Path($file);
 
             $source = $this->getSourceCode($path);
             $fileName = $this->getFileName($path);
@@ -355,7 +368,7 @@ class Custom extends Report
                 'name' => $fileName,
                 'className' => str_replace(array('.php', '/'), array('', '\\'), $fileName),
                 'source' => $source,
-                'coverage' => $this->getLinesCoverage($coverage->getCoverageForClass($class)),
+                'coverage' => $linesCoverage,
             ];
         }
 
@@ -407,21 +420,21 @@ class Custom extends Report
     }
 
     /**
-     * @param path $path
+     * @param Path $path
      *
      * @return string
      */
-    protected function getFileName(path $path)
+    protected function getFileName(Path $path)
     {
         return ltrim((string) $path->relativizeFrom($this->sourceDirectory), './');
     }
 
     /**
-     * @param path $path
+     * @param Path $path
      *
      * @return mixed
      */
-    protected function getSourceCode(path $path)
+    protected function getSourceCode(Path $path)
     {
         return $this->adapter->file_get_contents((string) $path->resolve());
     }

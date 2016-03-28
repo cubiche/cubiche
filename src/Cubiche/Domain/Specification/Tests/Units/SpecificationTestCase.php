@@ -19,6 +19,7 @@ use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\test\assertion\manager as Manager;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
+use Cubiche\Domain\Specification\Specification;
 
 /**
  * SpecificationTestCase class.
@@ -126,6 +127,30 @@ abstract class SpecificationTestCase extends TestCase
                 ->object($orSpecification->right())
                     ->isIdenticalTo($other)
         ;
+    }
+
+    /*
+     * Test __call.
+     */
+    public function testMagicCall()
+    {
+        $this
+            ->let($mockClass = '\\mock\\'.Specification::class)
+            ->given($specificationMock = new $mockClass())
+            ->given($specification = $this->randomSpecification())
+            ->when($specificationMock->and($specification))
+                ->mock($specificationMock)
+                    ->call('andX')
+                        ->withArguments($specification)->once()
+            ->when($specificationMock->or($specification))
+                ->mock($specificationMock)
+                    ->call('orX')
+                        ->withArguments($specification)->once()
+            ->exception(function () use ($specificationMock, $specification) {
+                $specificationMock->foo($specification);
+            })
+                ->isInstanceOf(\BadMethodCallException::class)
+            ;
     }
 
     /*

@@ -13,6 +13,9 @@ namespace Cubiche\Domain\Specification;
 /**
  * Specification Interface.
  *
+ * @method SpecificationInterface and(SpecificationInterface $specification)
+ * @method SpecificationInterface or(SpecificationInterface $specification)
+ *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 interface SpecificationInterface extends EvaluatorInterface

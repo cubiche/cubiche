@@ -32,7 +32,7 @@ class Coveralls extends Report
      * @param string       $sourceDir
      * @param string       $repositoryToken
      * @param string       $rootDir
-     * @param adapter|null $adapter
+     * @param Adapter|null $adapter
      */
     public function __construct($sourceDir, $repositoryToken, $rootDir = null, Adapter $adapter = null)
     {
