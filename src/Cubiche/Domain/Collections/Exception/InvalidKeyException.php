@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Collections\Exception;
 
-use RuntimeException;
+use InvalidArgumentException;
 use Exception;
 
 /**
@@ -18,7 +18,7 @@ use Exception;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidKeyException extends RuntimeException
+class InvalidKeyException extends InvalidArgumentException
 {
     /**
      * Creates an exception for an invalid key.
