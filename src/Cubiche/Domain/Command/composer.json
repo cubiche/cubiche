@@ -1,0 +1,45 @@
+{
+    "name": "cubiche/command-bus",
+    "description": "A small, flexible command bus. Handy for building service layers.",
+    "keywords": [
+        "command",
+        "command bus",
+        "service layer"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":              ">=5.5.0",
+        "cubiche/delegate": "dev-master"
+    },
+    "require-dev": {
+        "atoum/atoum":      "~2.5",
+        "cubiche/cqt":      "dev-master",
+        "cubiche/tests":    "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-0": {
+            "Cubiche\\Domain\\Command\\": ""
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Cubiche\\Tools\\CodeQualityTool::checkHooks"
+        ],
+        "post-update-cmd": [
+            "Cubiche\\Tools\\CodeQualityTool::checkHooks"
+        ]
+    }
+}
