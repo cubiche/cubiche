@@ -18,8 +18,9 @@
         }
     ],
     "require": {
-        "php":              ">=5.5.0",
-        "cubiche/delegate": "dev-master"
+        "php":                ">=5.5.0",
+        "cubiche/collection": "dev-master",
+        "cubiche/delegate":   "dev-master"
     },
     "require-dev": {
         "atoum/atoum":      "~2.5",

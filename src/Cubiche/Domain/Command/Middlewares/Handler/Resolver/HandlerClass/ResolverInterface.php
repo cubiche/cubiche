@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Command\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Domain\Command\Exception\NotFoundException;
 use Cubiche\Domain\Command\Exception\InvalidResolverException;
+use InvalidArgumentException;
 
 /**
  * Resolver interface.
@@ -25,8 +27,9 @@ interface ResolverInterface
      *
      * @param object $command
      *
-     * @return string
+     * @return callable
      *
+     * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws InvalidResolverException
      */

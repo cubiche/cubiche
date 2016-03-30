@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Command\Middlewares\Handler\Resolver\HandlerClass;
 
+use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Command\Exception\InvalidLocatorException;
 use Cubiche\Domain\Command\Exception\NotFoundException;
 use Cubiche\Domain\Command\Middlewares\Handler\Locator\LocatorInterface;
@@ -35,7 +37,7 @@ class DefaultResolver implements ResolverInterface
     protected $methodNameResolver;
 
     /**
-     * @var LocatorInterface[]
+     * @var ArrayCollection
      */
     protected $locators;
 
@@ -53,7 +55,15 @@ class DefaultResolver implements ResolverInterface
     ) {
         $this->classNameResolver = $classNameResolver;
         $this->methodNameResolver = $methodNameResolver;
-        $this->locators = $locators;
+
+        $this->locators = new ArrayCollection();
+        foreach ($locators as $locator) {
+            if (!$locator instanceof LocatorInterface) {
+                throw InvalidLocatorException::forUnknownValue($locator);
+            }
+
+            $this->locators->add($locator);
+        }
     }
 
     /**
@@ -80,12 +90,9 @@ class DefaultResolver implements ResolverInterface
      */
     protected function getHandlerForCommand($commandName)
     {
-        while ($locator = array_shift($this->locators)) {
-            if (!$locator instanceof LocatorInterface) {
-                throw InvalidLocatorException::forLocator($locator);
-            }
-
+        foreach ($this->locators as $locator) {
             try {
+                /* @var LocatorInterface $locator */
                 return $locator->locate($commandName);
             } catch (\Exception $exception) {
             }

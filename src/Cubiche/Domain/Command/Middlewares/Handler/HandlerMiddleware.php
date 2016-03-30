@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Command\Middlewares\Handler;
 
 use Cubiche\Domain\Command\MiddlewareInterface;
+use Cubiche\Domain\Command\Middlewares\Handler\Resolver\HandlerClass\ResolverInterface;
 
 /**
  * HandlerMiddleware class.
@@ -20,10 +22,31 @@ use Cubiche\Domain\Command\MiddlewareInterface;
 class HandlerMiddleware implements MiddlewareInterface
 {
     /**
+     * @var ResolverInterface
+     */
+    protected $handlerResolver;
+
+    /**
+     * HandlerMiddleware constructor.
+     *
+     * @param ResolverInterface $handlerResolver
+     */
+    public function __construct(ResolverInterface $handlerResolver)
+    {
+        $this->handlerResolver = $handlerResolver;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function execute($command, callable $next)
     {
-        // TODO: Implement execute() method.
+        $handler = $this->handlerResolver->resolve($command);
+
+        $returnValue = $handler($command);
+
+        $next($command);
+
+        return $returnValue;
     }
 }

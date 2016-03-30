@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Command\Exception;
 
 use Cubiche\Domain\Command\Middlewares\Handler\Locator\LocatorInterface;
@@ -28,7 +29,7 @@ class InvalidLocatorException extends InvalidArgumentException
      *
      * @return InvalidLocatorException
      */
-    public static function forLocator($locator, Exception $cause = null)
+    public static function forUnknownValue($locator, Exception $cause = null)
     {
         return new static(sprintf(
             'Expected a locator that implement the %s interface. Got: %s',
