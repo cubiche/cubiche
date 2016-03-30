@@ -18,8 +18,15 @@ namespace Cubiche\Domain\Specification;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface SpecificationInterface extends EvaluatorInterface
+interface SpecificationInterface
 {
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public function evaluate($value);
+
     /**
      * @param SpecificationInterface $specification
      *

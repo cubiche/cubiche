@@ -20,6 +20,16 @@ class OrSpecification extends BinarySpecification
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        return $this->left()->evaluate($value) || $this->right()->evaluate($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Specification\SpecificationInterface::accept()
      */
     public function accept(SpecificationVisitorInterface $visitor)

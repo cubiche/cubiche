@@ -32,6 +32,16 @@ use Cubiche\Domain\Specification\SpecificationInterface;
 abstract class Selector extends Specification implements SelectorInterface
 {
     /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        return $this->apply($value) === true;
+    }
+
+    /**
      * @param string $key
      *
      * @return \Cubiche\Domain\Specification\Selector\Composite

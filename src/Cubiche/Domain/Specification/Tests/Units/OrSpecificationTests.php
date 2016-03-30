@@ -52,4 +52,23 @@ class OrSpecificationTests extends SpecificationTestCase
                     ->isInstanceOf(OrSpecification::class)
         ;
     }
+
+    /**
+     * Test evaluate.
+     */
+    public function testEvaluate()
+    {
+        $this
+            ->given($specification = new OrSpecification(Criteria::isFalse(), Criteria::same(5)))
+            ->then()
+                ->boolean($specification->evaluate(true))
+                    ->isFalse()
+                ->boolean($specification->evaluate(5.0))
+                    ->isFalse()
+                ->boolean($specification->evaluate(false))
+                    ->isTrue()
+                ->boolean($specification->evaluate(5))
+                    ->isTrue()
+        ;
+    }
 }

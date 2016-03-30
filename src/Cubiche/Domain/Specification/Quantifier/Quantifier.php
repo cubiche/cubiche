@@ -57,4 +57,21 @@ abstract class Quantifier extends Specification implements QuantifierInterface
     {
         return $this->specification;
     }
+
+    /**
+     * @param mixed $value
+     *
+     * @return Generator
+     */
+    protected function evaluationIterator($value)
+    {
+        $items = $this->selector()->apply($value);
+        if (!is_array($items) && !$value instanceof \Traversable) {
+            $items = array($items);
+        }
+
+        foreach ($items as $item) {
+            yield $this->specification()->evaluate($item);
+        }
+    }
 }

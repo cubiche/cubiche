@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Domain\Specification\Tests\Units\Constraint;
 
+use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Specification\Constraint\Equal;
 use Cubiche\Domain\Specification\Constraint\NotEqual;
 use Cubiche\Domain\Specification\Criteria;
@@ -84,5 +85,13 @@ class NotEqualTests extends BinarySelectorOperatorTestCase
                 ->boolean($specification->evaluate(4))
                     ->isTrue()
         ;
+
+        $this
+            ->given($specification = Criteria::neq(new EquatableObject(2)))
+            ->then()
+                ->boolean($specification->evaluate(new EquatableObject(2)))
+                    ->isFalse()
+                ->boolean($specification->evaluate(new EquatableObject(5.4)))
+                    ->isTrue();
     }
 }

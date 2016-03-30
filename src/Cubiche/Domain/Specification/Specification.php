@@ -10,8 +10,6 @@
  */
 namespace Cubiche\Domain\Specification;
 
-use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
-
 /**
  * Abstract Specification Class.
  *
@@ -20,31 +18,4 @@ use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
 abstract class Specification implements SpecificationInterface
 {
     use SpecificationTrait;
-
-    /**
-     * @var EvaluatorBuilder
-     */
-    protected $evaluatorBuilder = null;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate($value)
-     */
-    public function evaluate($value)
-    {
-        return $this->evaluatorBuilder()->evaluator($this)->evaluate($value);
-    }
-
-    /**
-     * @return \Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder
-     */
-    protected function evaluatorBuilder()
-    {
-        if ($this->evaluatorBuilder === null) {
-            $this->evaluatorBuilder = new EvaluatorBuilder();
-        }
-
-        return $this->evaluatorBuilder;
-    }
 }

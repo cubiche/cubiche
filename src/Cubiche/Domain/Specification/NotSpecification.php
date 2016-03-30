@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Specification;
 
 /**
@@ -29,6 +28,16 @@ class NotSpecification extends Specification
     public function __construct(SpecificationInterface $specification)
     {
         $this->specification = $specification;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        return !$this->specification()->evaluate($value);
     }
 
     /**

@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\Specification\Constraint;
 
+use Cubiche\Domain\Equatable\EquatableInterface;
 use Cubiche\Domain\Specification\SpecificationVisitorInterface;
 
 /**
@@ -19,6 +20,23 @@ use Cubiche\Domain\Specification\SpecificationVisitorInterface;
  */
 class NotEqual extends BinarySelectorOperator
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        $leftValue = $this->left()->apply($value);
+        $rightValue = $this->right()->apply($value);
+
+        if ($leftValue instanceof EquatableInterface) {
+            return !$leftValue->equals($rightValue);
+        }
+
+        return $leftValue != $rightValue;
+    }
+
     /**
      * {@inheritdoc}
      *

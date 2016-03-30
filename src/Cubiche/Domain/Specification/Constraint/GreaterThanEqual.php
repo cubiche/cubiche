@@ -17,8 +17,18 @@ use Cubiche\Domain\Specification\SpecificationVisitorInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class GreaterThanEqual extends BinarySelectorOperator
+class GreaterThanEqual extends RelationalOperator
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        return $this->comparison($value) >= 0;
+    }
+
     /**
      * {@inheritdoc}
      *

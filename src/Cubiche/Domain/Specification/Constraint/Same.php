@@ -22,6 +22,16 @@ class Same extends BinarySelectorOperator
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        return $this->left()->apply($value) === $this->right()->apply($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Specification\SpecificationInterface::accept()
      */
     public function accept(SpecificationVisitorInterface $visitor)

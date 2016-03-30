@@ -22,6 +22,23 @@ class All extends Quantifier
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        /** @var bool $result */
+        foreach ($this->evaluationIterator($value) as $result) {
+            if ($result === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Specification\SpecificationInterface::accept()
      */
     public function accept(SpecificationVisitorInterface $visitor)

@@ -129,7 +129,7 @@ abstract class SpecificationTestCase extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test __call.
      */
     public function testMagicCall()

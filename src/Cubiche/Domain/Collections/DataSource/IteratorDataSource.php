@@ -8,13 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections\DataSource;
 
 use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\Evaluator\EvaluatorBuilder;
-use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
@@ -28,11 +24,6 @@ class IteratorDataSource extends DataSource
      * @var \Traversable
      */
     protected $iterator;
-
-    /**
-     * @var \Cubiche\Domain\Specification\Evaluator\Evaluator
-     */
-    protected $evaluator;
 
     /**
      * @var bool
@@ -74,7 +65,7 @@ class IteratorDataSource extends DataSource
             if (!$this->checkLenght($count)) {
                 break;
             }
-            if ($this->evaluator()->evaluate($item) === true) {
+            if ($this->evaluate($item) === true) {
                 if ($this->checkOffset($offset)) {
                     ++$count;
                     yield $item;
@@ -162,21 +153,13 @@ class IteratorDataSource extends DataSource
     }
 
     /**
-     * @return \Cubiche\Domain\Specification\Evaluator\Evaluator
+     * @param mixed $item
+     *
+     * @return bool
      */
-    protected function evaluator()
+    protected function evaluate($item)
     {
-        if ($this->evaluator === null) {
-            $evaluatorBuilder = new EvaluatorBuilder();
-            $criteria = $this->searchCriteria();
-            if ($criteria === null) {
-                $criteria = Criteria::true();
-            }
-
-            $this->evaluator = $evaluatorBuilder->evaluator($criteria);
-        }
-
-        return $this->evaluator;
+        return $this->searchCriteria() === null || $this->searchCriteria()->evaluate($item);
     }
 
     /**

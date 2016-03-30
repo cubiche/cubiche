@@ -49,4 +49,19 @@ class NotSpecificationTests extends SpecificationTestCase
                     ->isInstanceOf(NotSpecification::class)
         ;
     }
+
+    /**
+     * Test evaluate.
+     */
+    public function testEvaluate()
+    {
+        $this
+            ->given($specification = new NotSpecification(Criteria::eq(25)))
+            ->then()
+                ->boolean($specification->evaluate(25))
+                    ->isFalse()
+                ->boolean($specification->evaluate(16))
+                    ->isTrue()
+        ;
+    }
 }

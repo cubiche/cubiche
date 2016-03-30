@@ -49,6 +49,31 @@ class AtLeast extends Quantifier
     /**
      * {@inheritdoc}
      *
+     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
+     */
+    public function evaluate($value)
+    {
+        if ($this->count() == 0) {
+            return true;
+        }
+
+        $count = 0;
+        /** @var bool $result */
+        foreach ($this->evaluationIterator($value) as $result) {
+            if ($result) {
+                ++$count;
+                if ($this->count() == $count) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Cubiche\Domain\Specification\SpecificationInterface::accept()
      */
     public function accept(SpecificationVisitorInterface $visitor)

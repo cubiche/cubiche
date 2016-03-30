@@ -52,4 +52,23 @@ class AndSpecificationTests extends SpecificationTestCase
                     ->isInstanceOf(AndSpecification::class)
         ;
     }
+
+    /**
+     * Test evaluate.
+     */
+    public function testEvaluate()
+    {
+        $this
+            ->given($specification = new AndSpecification(Criteria::gt(25), Criteria::lte(30)))
+            ->then()
+                ->boolean($specification->evaluate(25))
+                    ->isFalse()
+                ->boolean($specification->evaluate(12))
+                    ->isFalse()
+                ->boolean($specification->evaluate(26))
+                    ->isTrue()
+                ->boolean($specification->evaluate(30))
+                    ->isTrue()
+        ;
+    }
 }

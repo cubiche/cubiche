@@ -57,7 +57,7 @@ class AtLeastTests extends QuantifierTestCase
     {
         $this
             ->given($specification = $this->randomSpecification(5))
-            ->then
+            ->then()
                 ->boolean($specification->evaluate(array(4, 6, 5, 3, 9)))
                     ->isTrue()
                 ->boolean($specification->evaluate(array()))
@@ -66,6 +66,15 @@ class AtLeastTests extends QuantifierTestCase
                     ->isFalse()
                 ->boolean($specification->evaluate(array(1, 2, 3, 4, 5, 6)))
                     ->isFalse()
+        ;
+
+        $this
+            ->given($specification = Criteria::atLeast(0, Criteria::gt(5)))
+            ->then()
+                ->boolean($specification->evaluate(array(4, 1, 3, 0)))
+                    ->isTrue()
+                ->boolean($specification->evaluate(array()))
+                    ->isTrue()
         ;
     }
 }
