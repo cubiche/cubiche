@@ -14,8 +14,9 @@ namespace Cubiche\Domain\Comparable;
  * ReverseComparator class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ReverseComparator extends Comparator
+class ReverseComparator extends AbstractComparator
 {
     /**
      * @var ComparatorInterface
@@ -47,7 +48,17 @@ class ReverseComparator extends Comparator
      */
     public function compare($a, $b)
     {
-        return -1 * $this->comparator->compare($a, $b);
+        return $this->comparator->compare($b, $a);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\ComparatorInterface::reverse()
+     */
+    public function reverse()
+    {
+        return $this->comparator();
     }
 
     /**

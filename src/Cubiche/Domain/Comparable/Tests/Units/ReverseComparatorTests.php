@@ -10,7 +10,6 @@
 namespace Cubiche\Domain\Comparable\Tests\Units;
 
 use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Comparable\ReverseComparator;
 
 /**
@@ -18,10 +17,12 @@ use Cubiche\Domain\Comparable\ReverseComparator;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ReverseComparatorTests extends ComparatorTests
+class ReverseComparatorTests extends ComparatorTestCase
 {
     /**
-     * @return ComparatorInterface
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::comparator()
      */
     protected function comparator()
     {
@@ -31,25 +32,12 @@ class ReverseComparatorTests extends ComparatorTests
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
         return 'visitReverseComparator';
-    }
-
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        parent::testCreate();
-
-        $this
-            ->given($comparator = $this->comparator())
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(ReverseComparator::class)
-        ;
     }
 }

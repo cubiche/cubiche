@@ -12,7 +12,6 @@ namespace Cubiche\Domain\Comparable\Tests\Units;
 
 use Cubiche\Domain\Comparable\ComparableInterface;
 use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Comparable\Custom;
 
 /**
@@ -20,10 +19,12 @@ use Cubiche\Domain\Comparable\Custom;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CustomTests extends ComparatorTests
+class CustomTests extends ComparatorTestCase
 {
     /**
-     * @return ComparatorInterface
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTests::comparator()
      */
     protected function comparator()
     {
@@ -39,25 +40,12 @@ class CustomTests extends ComparatorTests
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTests::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
         return 'visitCustomComparator';
-    }
-
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        parent::testCreate();
-
-        $this
-            ->given($comparator = $this->comparator())
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(Custom::class)
-        ;
     }
 }

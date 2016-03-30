@@ -13,13 +13,14 @@ namespace Cubiche\Domain\Collections\Comparator;
 use Cubiche\Domain\Specification\SelectorInterface;
 use Cubiche\Domain\Comparable\Comparator;
 use Cubiche\Domain\Comparable\ComparatorVisitorInterface as BaseComparatorVisitorInterface;
+use Cubiche\Domain\Comparable\AbstractComparator;
 
 /**
  * Selector Comparator Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SelectorComparator extends Comparator
+class SelectorComparator extends AbstractComparator
 {
     /**
      * @var SelectorInterface
@@ -64,19 +65,17 @@ class SelectorComparator extends Comparator
      */
     public function compare($a, $b)
     {
-        if ($this->order()->equals(Order::DESC())) {
-            // to avoid enter into an infinite loop
-            $this->order = Order::ASC();
+        return parent::compare($this->selector->apply($a), $this->selector->apply($b)) * $this->order()->toNative();
+    }
 
-            $result = $this->reverse()->compare($a, $b);
-
-            // restart the real order
-            $this->order = Order::DESC();
-
-            return $result;
-        }
-
-        return parent::compare($this->selector->apply($a), $this->selector->apply($b));
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\ComparatorInterface::reverse()
+     */
+    public function reverse()
+    {
+        return new self($this->selector(), Order::fromNative(-1 * $this->order()->toNative()));
     }
 
     /**
@@ -90,6 +89,10 @@ class SelectorComparator extends Comparator
             return $visitor->visitSelectorComparator($this);
         }
 
-        return $visitor->visitComparator($this);
+        throw new \InvalidArgumentException(\sprintf(
+            'Expected %s instance, instance of %s given',
+            ComparatorVisitorInterface::class,
+            \get_class($visitor)
+        ));
     }
 }

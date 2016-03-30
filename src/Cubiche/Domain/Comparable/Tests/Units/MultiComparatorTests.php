@@ -12,7 +12,6 @@ namespace Cubiche\Domain\Comparable\Tests\Units;
 
 use Cubiche\Domain\Comparable\ComparableInterface;
 use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
 use Cubiche\Domain\Comparable\Custom;
 use Cubiche\Domain\Comparable\MultiComparator;
 
@@ -21,10 +20,12 @@ use Cubiche\Domain\Comparable\MultiComparator;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MultiComparatorTests extends ComparatorTests
+class MultiComparatorTests extends ComparatorTestCase
 {
     /**
-     * @return ComparatorInterface
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::comparator()
      */
     protected function comparator()
     {
@@ -41,25 +42,12 @@ class MultiComparatorTests extends ComparatorTests
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
         return 'visitMultiComparator';
-    }
-
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        parent::testCreate();
-
-        $this
-            ->given($comparator = $this->comparator())
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(MultiComparator::class)
-        ;
     }
 }

@@ -11,7 +11,9 @@
 namespace Cubiche\Domain\Comparable;
 
 /**
- * Comparable Interface.
+ * Comparator Interface.
+ *
+ * @method ComparatorInterface or(ComparatorInterface $other)
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

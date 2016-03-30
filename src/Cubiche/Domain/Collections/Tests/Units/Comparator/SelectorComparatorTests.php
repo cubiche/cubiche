@@ -9,34 +9,35 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units\Comparator;
 
-use Cubiche\Domain\Collections\Comparator\ComparatorVisitorInterface;
 use Cubiche\Domain\Collections\Comparator\Order;
 use Cubiche\Domain\Collections\Comparator\SelectorComparator;
-use Cubiche\Domain\Collections\Tests\Fixtures\FooObject;
-use Cubiche\Domain\Collections\Tests\Units\TestCase;
-use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase;
 use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SelectorInterface;
+use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Domain\Collections\Comparator\ComparatorVisitorInterface;
+use Cubiche\Domain\Comparable\ComparatorVisitorInterface as BaseComparatorVisitorInterface;
 
 /**
  * SelectorComparatorTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SelectorComparatorTests extends TestCase
+class SelectorComparatorTests extends ComparatorTestCase
 {
     /**
-     * @param Order|null $oder
+     * {@inheritdoc}
      *
-     * @return SelectorComparator
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::comparator()
      */
-    protected function comparator(Order $oder = null)
+    protected function comparator()
     {
-        return new SelectorComparator(Criteria::property('bar'), $oder === null ? Order::ASC() : $oder);
+        return new SelectorComparator(Criteria::property('foo'), Order::ASC());
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -44,80 +45,78 @@ class SelectorComparatorTests extends TestCase
     }
 
     /**
-     * Test create.
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::comparatorVisitorInterface()
      */
-    public function testCreate()
+    protected function comparatorVisitorInterface()
     {
-        $this
-            ->given($comparator = $this->comparator())
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(ComparatorInterface::class)
-                ->object($comparator)
-                    ->isInstanceOf(SelectorComparator::class)
-                ->object($comparator->selector())
-                    ->isInstanceOf(SelectorInterface::class)
-                ->object($comparator->order())
-                    ->isInstanceOf(Order::class)
-        ;
+        return ComparatorVisitorInterface::class;
     }
 
     /**
-     * Test compare.
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::testCompare()
      */
     public function testCompare()
     {
         $this
             ->given($comparator = $this->comparator())
             ->then()
-                ->integer($comparator->compare(new FooObject(1), new FooObject(2)))
+                ->integer($comparator->compare((object) array('foo' => 1), (object) array('foo' => 2)))
                     ->isEqualTo(-1)
-                ->integer($comparator->compare(new FooObject(1), new FooObject(1)))
+                ->integer($comparator->compare((object) array('foo' => 1), (object) array('foo' => 1)))
                     ->isEqualTo(0)
-                ->integer($comparator->compare(new FooObject(1), new FooObject(0)))
+                ->integer($comparator->compare((object) array('foo' => 1), (object) array('foo' => 0)))
                     ->isEqualTo(1)
-        ;
-
-        $this
-            ->given($comparator = $this->comparator(Order::DESC()))
-            ->then()
-                ->integer($comparator->compare(new FooObject(1), new FooObject(2)))
-                    ->isEqualTo(1)
-                ->integer($comparator->compare(new FooObject(1), new FooObject(1)))
-                    ->isEqualTo(0)
-                ->integer($comparator->compare(new FooObject(1), new FooObject(0)))
-                    ->isEqualTo(-1)
         ;
     }
 
-    /*
-     * Test visit.
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::testReverse()
      */
-    public function testVisit()
+    public function testReverse()
     {
-        $shouldVisitMethod = 'visitSelectorComparator';
-
         $this
-            ->let($mockClass = '\\mock\\'.ComparatorVisitorInterface::class)
-            ->given($visitorMock = new $mockClass())
-            ->calling($visitorMock)
-            ->methods(
-                function ($method) use ($shouldVisitMethod) {
-                    return $method === strtolower($shouldVisitMethod);
-                }
-            )
-            ->return = 25
+            ->given($comparator = $this->comparator())
+            ->let($reverseComparator = $comparator->reverse())
+            ->then()
+                ->object($reverseComparator)
+                    ->isInstanceOf(ComparatorInterface::class)
         ;
 
         $this
+            ->given($comparator)
+            ->given($reverseComparator)
+            ->then()
+                ->integer($reverseComparator->compare((object) array('foo' => 1), (object) array('foo' => 2)))
+                    ->isEqualTo(-1 * $comparator->compare((object) array('foo' => 1), (object) array('foo' => 2)))
+                ->integer($reverseComparator->compare((object) array('foo' => 1), (object) array('foo' => 1)))
+                    ->isEqualTo(-1 * $comparator->compare((object) array('foo' => 1), (object) array('foo' => 1)))
+                ->integer($reverseComparator->compare((object) array('foo' => 1), (object) array('foo' => 0)))
+                    ->isEqualTo(-1 * $comparator->compare((object) array('foo' => 1), (object) array('foo' => 0)))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Cubiche\Domain\Comparable\Tests\Units\ComparatorTestCase::testVisit()
+     */
+    public function testVisit()
+    {
+        parent::testVisit();
+
+        $this
+            ->let($mockClass = '\\mock\\'.BaseComparatorVisitorInterface::class)
+            ->given($visitorMock = new $mockClass())
             ->given($comparator = $this->comparator())
-            ->when($result = $comparator->accept($visitorMock))
-                ->mock($visitorMock)
-                    ->call($shouldVisitMethod)
-                        ->withArguments($comparator)
-                        ->once()
-                ->integer($result)
-                    ->isEqualTo(25)
+            ->exception(function () use ($visitorMock, $comparator) {
+                $comparator->accept($visitorMock);
+            })
         ;
     }
 }

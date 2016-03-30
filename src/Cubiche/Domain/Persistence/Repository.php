@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Persistence;
 
 use Cubiche\Domain\Model\AggregateRootInterface;
@@ -51,7 +50,7 @@ abstract class Repository implements RepositoryInterface
             throw new \InvalidArgumentException(\sprintf(
                 'Expected %s instance, instance of %s given',
                 $this->entityReflectionClass->name,
-                is_object($item) ? \gettype($item) : \get_class($item)
+                \is_object($item) ? \gettype($item) : \get_class($item)
             ));
         }
     }

@@ -17,7 +17,7 @@ use Cubiche\Domain\Delegate\Delegate;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Custom extends Comparator
+class Custom extends AbstractComparator
 {
     /**
      * @var Delegate

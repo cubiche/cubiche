@@ -11,20 +11,12 @@
 namespace Cubiche\Domain\Comparable;
 
 /**
- * Comparator Class.
+ * Abstract Comparator Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Comparator extends AbstractComparator
+abstract class AbstractComparator implements ComparatorInterface
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Comparable\ComparatorInterface::accept()
-     */
-    public function accept(ComparatorVisitorInterface $visitor)
-    {
-        return $visitor->visitComparator($this);
-    }
+    use ComparatorTrait;
 }
