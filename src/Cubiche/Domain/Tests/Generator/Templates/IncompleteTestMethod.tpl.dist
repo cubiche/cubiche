@@ -1,0 +1,10 @@
+
+    /**
+     * Test {methodName} method.
+     */
+    public function test{methodName}()
+    {
+        // todo: Implement test{methodName}().
+
+        $this->markTestSkipped('todo: Implement test{methodName}()');
+    }
