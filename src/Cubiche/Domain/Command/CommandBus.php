@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Command;
 
 use Cubiche\Domain\Command\Exception\InvalidCommandException;
 use Cubiche\Domain\Command\Exception\InvalidMiddlewareException;
+use Cubiche\Domain\Delegate\Delegate;
 
 /**
  * CommandBus class.
@@ -21,11 +23,13 @@ use Cubiche\Domain\Command\Exception\InvalidMiddlewareException;
 class CommandBus
 {
     /**
-     * @var callable
+     * @var Delegate
      */
     protected $chainedMiddleware;
 
     /**
+     * CommandBus constructor.
+     *
      * @param MiddlewareInterface[] $middlewares
      */
     public function __construct(array $middlewares)
@@ -54,24 +58,25 @@ class CommandBus
     /**
      * @param MiddlewareInterface[] $middlewares
      *
-     * @return callable
+     * @return Delegate
      */
-    private function chainedExecution($middlewares)
+    private function chainedExecution(array $middlewares)
     {
-        $lastCallable = function () {
-            // the final callable is a no-op
-        };
+        $next = Delegate::fromClosure(function () {
+            // the final middleware is empty
+        });
 
+        // reverse iteration over middlewares
         while ($middleware = array_pop($middlewares)) {
             if (!$middleware instanceof MiddlewareInterface) {
                 throw InvalidMiddlewareException::forMiddleware($middleware);
             }
 
-            $lastCallable = function ($command) use ($middleware, $lastCallable) {
-                return $middleware->execute($command, $lastCallable);
-            };
+            $next = Delegate::fromClosure(function ($command) use ($middleware, $next) {
+                return $middleware->execute($command, $next);
+            });
         }
 
-        return $lastCallable;
+        return $next;
     }
 }

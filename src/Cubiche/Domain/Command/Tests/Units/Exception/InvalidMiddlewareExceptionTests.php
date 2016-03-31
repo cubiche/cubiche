@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -11,15 +10,15 @@
 
 namespace Cubiche\Domain\Command\Tests\Units\Exception;
 
-use Cubiche\Domain\Command\Exception\InvalidCommandException;
+use Cubiche\Domain\Command\Exception\InvalidMiddlewareException;
 use Cubiche\Domain\Command\Tests\Units\TestCase;
 
 /**
- * InvalidCommandExceptionTests class.
+ * InvalidMiddlewareExceptionTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidCommandExceptionTests extends TestCase
+class InvalidMiddlewareExceptionTests extends TestCase
 {
     /**
      * Test class.
@@ -33,16 +32,16 @@ class InvalidCommandExceptionTests extends TestCase
     }
 
     /*
-     * Test forUnknownValue method.
+     * Test forMiddleware method.
      */
-    public function testForUnknownValue()
+    public function testForMiddleware()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidCommandException::forUnknownValue('foo', $cause))
+            ->when($exception = InvalidMiddlewareException::forMiddleware('foo', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf(InvalidCommandException::class)
+                    ->isInstanceOf(InvalidMiddlewareException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
@@ -50,7 +49,7 @@ class InvalidCommandExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = InvalidCommandException::forUnknownValue('bar'))
+            ->given($exception = InvalidMiddlewareException::forMiddleware('bar'))
             ->then
                 ->variable($exception->getPrevious())->isNull()
         ;

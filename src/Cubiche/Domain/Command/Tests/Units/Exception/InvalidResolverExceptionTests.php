@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -11,15 +10,15 @@
 
 namespace Cubiche\Domain\Command\Tests\Units\Exception;
 
-use Cubiche\Domain\Command\Exception\InvalidCommandException;
+use Cubiche\Domain\Command\Exception\InvalidResolverException;
 use Cubiche\Domain\Command\Tests\Units\TestCase;
 
 /**
- * InvalidCommandExceptionTests class.
+ * InvalidResolverExceptionTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidCommandExceptionTests extends TestCase
+class InvalidResolverExceptionTests extends TestCase
 {
     /**
      * Test class.
@@ -39,10 +38,10 @@ class InvalidCommandExceptionTests extends TestCase
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidCommandException::forUnknownValue('foo', $cause))
+            ->when($exception = InvalidResolverException::forUnknownValue('foo', 'someType', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf(InvalidCommandException::class)
+                    ->isInstanceOf(InvalidResolverException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
@@ -50,7 +49,7 @@ class InvalidCommandExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = InvalidCommandException::forUnknownValue('bar'))
+            ->given($exception = InvalidResolverException::forUnknownValue('bar', 'someType'))
             ->then
                 ->variable($exception->getPrevious())->isNull()
         ;

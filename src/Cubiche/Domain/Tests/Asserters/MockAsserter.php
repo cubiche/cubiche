@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Asserters;
 
 use mageekguy\atoum\asserters\mock as BaseMock;
@@ -39,9 +40,13 @@ class MockAsserter extends BaseMock
 
                 $currentCall = $this->getCall();
 
-                $asserter = $this->getCalls($currentCall)->getEqualTo($currentCall)->toArray()[2]->getArguments();
-                $argument = $asserter[$arguments[0]];
+                $asserter = [];
+                foreach ($this->getCalls($currentCall)->getEqualTo($currentCall)->toArray() as $call) {
+                    $asserter = $call->getArguments();
+                    break;
+                }
 
+                $argument = $asserter[$arguments[0]];
                 $arguments[1]($argument);
 
                 return $this->callIsSet();
