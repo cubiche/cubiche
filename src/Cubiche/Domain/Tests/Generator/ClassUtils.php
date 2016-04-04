@@ -126,97 +126,16 @@ class ClassUtils
         $tokens = token_get_all(
             file_get_contents($sourceFile)
         );
-        $numTokens = count($tokens);
-        $blocks = array();
-        $line = 1;
-        $currentBlock = false;
-        $currentProject = false;
-        $currentLayer = false;
-        $currentComponent = false;
+
         $currentNamespace = false;
-        $currentClass = false;
-        $currentFunction = false;
-        $currentFunctionStartLine = false;
-        $currentFunctionTokens = array();
-        $currentDocComment = false;
-        $currentSignature = false;
-        $currentSignatureStartToken = false;
 
+        $numTokens = count($tokens);
         for ($i = 0; $i < $numTokens; ++$i) {
-            if ($currentFunction !== false) {
-                $currentFunctionTokens[] = $tokens[$i];
-            }
-
             if (is_string($tokens[$i])) {
-                if ($tokens[$i] == '{') {
-                    if ($currentBlock == T_CLASS) {
-                        $block = $currentClass;
-                    } elseif ($currentBlock == T_FUNCTION) {
-                        $currentSignature = '';
-
-                        for ($j = $currentSignatureStartToken; $j < $i; ++$j) {
-                            if (is_string($tokens[$j])) {
-                                $currentSignature .= $tokens[$j];
-                            } else {
-                                $currentSignature .= $tokens[$j][1];
-                            }
-                        }
-
-                        $currentSignature = trim($currentSignature);
-
-                        $block = $currentFunction;
-                        $currentSignatureStartToken = false;
-                    } else {
-                        $block = false;
-                    }
-
-                    array_push($blocks, $block);
-
-                    $currentBlock = false;
-                } elseif ($tokens[$i] == '}') {
-                    $block = array_pop($blocks);
-
-                    if ($block !== false && $block !== null) {
-                        if ($block == $currentFunction) {
-                            if ($currentDocComment !== false) {
-                                $docComment = $currentDocComment;
-                                $currentDocComment = false;
-                            } else {
-                                $docComment = '';
-                            }
-
-                            $tmp = array(
-                                'docComment' => $docComment,
-                                'signature' => $currentSignature,
-                                'startLine' => $currentFunctionStartLine,
-                                'endLine' => $line,
-                                'tokens' => $currentFunctionTokens,
-                            );
-
-                            if ($currentClass !== false) {
-                                $result[$currentClass]['methods'][$currentFunction] = $tmp;
-                            }
-
-                            $currentFunction = false;
-                            $currentFunctionStartLine = false;
-                            $currentFunctionTokens = array();
-                            $currentSignature = false;
-                        } elseif ($block == $currentClass) {
-                            $result[$currentClass]['endLine'] = $line;
-
-                            $currentClass = false;
-                        }
-                    }
-                }
-
                 continue;
             }
 
             switch ($tokens[$i][0]) {
-                case T_HALT_COMPILER:
-                    return;
-                    break;
-
                 case T_NAMESPACE:
                     $currentNamespace = $tokens[$i + 2][1];
 
@@ -227,113 +146,22 @@ class ClassUtils
                             break;
                         }
                     }
-
-                    $components = explode('\\', $currentNamespace);
-                    if (count($components) > 0) {
-                        $currentProject = $components[0];
-
-                        if (count($components) > 1) {
-                            $currentLayer = $components[1];
-
-                            if (count($components) > 2) {
-                                $currentComponent = $components[2];
-                            }
-                        }
-                    }
-                    break;
-
-                case T_CURLY_OPEN:
-                    $currentBlock = T_CURLY_OPEN;
-                    array_push($blocks, $currentBlock);
-                    break;
-
-                case T_DOLLAR_OPEN_CURLY_BRACES:
-                    $currentBlock = T_DOLLAR_OPEN_CURLY_BRACES;
-                    array_push($blocks, $currentBlock);
                     break;
 
                 case T_CLASS:
-                    $currentBlock = T_CLASS;
-
-                    if ($currentNamespace === false) {
-                        $currentClass = $tokens[$i + 2][1];
-                    } else {
-                        $currentClass = $currentNamespace.'\\'.
-                            $tokens[$i + 2][1];
-                    }
-
-                    if ($currentDocComment !== false) {
-                        $docComment = $currentDocComment;
-                        $currentDocComment = false;
-                    } else {
-                        $docComment = '';
-                    }
-
-                    $result[$currentClass] = array(
-                        'projectName' => $currentProject,
-                        'layerName' => $currentLayer,
-                        'componentName' => $currentComponent,
-                        'namespace' => $currentNamespace,
-                        'methods' => array(),
-                        'docComment' => $docComment,
-                        'startLine' => $line,
-                    );
-                    break;
-
-                case T_FUNCTION:
-                    if (!((is_array($tokens[$i + 2]) &&
-                            $tokens[$i + 2][0] == T_STRING) ||
-                        (is_string($tokens[$i + 2]) &&
-                            $tokens[$i + 2] == '&' &&
-                            is_array($tokens[$i + 3]) &&
-                            $tokens[$i + 3][0] == T_STRING))) {
-                        continue;
-                    }
-
-                    $currentBlock = T_FUNCTION;
-                    $currentFunctionStartLine = $line;
-
-                    $done = false;
-                    $currentSignatureStartToken = $i - 1;
-
-                    do {
-                        switch ($tokens[$currentSignatureStartToken][0]) {
-                            case T_ABSTRACT:
-                            case T_FINAL:
-                            case T_PRIVATE:
-                            case T_PUBLIC:
-                            case T_PROTECTED:
-                            case T_STATIC:
-                            case T_WHITESPACE:
-                                $currentSignatureStartToken--;
-                                break;
-
-                            default:
-                                $currentSignatureStartToken++;
-                                $done = true;
-                        }
-                    } while (!$done);
-
                     if (isset($tokens[$i + 2][1])) {
-                        $functionName = $tokens[$i + 2][1];
-                    } elseif (isset($tokens[$i + 3][1])) {
-                        $functionName = $tokens[$i + 3][1];
+                        $currentClass = trim($tokens[$i + 2][1]);
+                        if (!empty($currentClass)) {
+                            if ($currentNamespace === false) {
+                                $result[] = $currentClass;
+                            } else {
+                                $result[] = $currentNamespace.'\\'.$currentClass;
+                            }
+                        }
                     }
 
-                    if ($currentNamespace === false) {
-                        $currentFunction = $functionName;
-                    } else {
-                        $currentFunction = $currentNamespace.'\\'.
-                            $functionName;
-                    }
-                    break;
-
-                case T_DOC_COMMENT:
-                    $currentDocComment = $tokens[$i][1];
                     break;
             }
-
-            $line += substr_count($tokens[$i][1], "\n");
         }
 
         return $result;
@@ -351,17 +179,40 @@ class ClassUtils
         $tokens = token_get_all(
             file_get_contents($sourceFile)
         );
-        $numTokens = count($tokens);
 
+        $currentNamespace = false;
+
+        $numTokens = count($tokens);
         for ($i = 0; $i < $numTokens; ++$i) {
             if (is_string($tokens[$i])) {
                 continue;
             }
 
             switch ($tokens[$i][0]) {
+                case T_NAMESPACE:
+                    $currentNamespace = $tokens[$i + 2][1];
+
+                    for ($j = $i + 3; $j < $numTokens; $j += 2) {
+                        if ($tokens[$j][0] == T_NS_SEPARATOR) {
+                            $currentNamespace .= '\\'.$tokens[$j + 1][1];
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+
                 case T_INTERFACE:
-                    $currentInterface = $tokens[$i + 2][1];
-                    $result[] = $currentInterface;
+                    if (isset($tokens[$i + 2][1])) {
+                        $currentInterface = trim($tokens[$i + 2][1]);
+                        if (!empty($currentInterface)) {
+                            if ($currentNamespace === false) {
+                                $result[] = $currentInterface;
+                            } else {
+                                $result[] = $currentNamespace.'\\'.$currentInterface;
+                            }
+                        }
+                    }
+
                     break;
             }
         }

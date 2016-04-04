@@ -45,6 +45,54 @@ class TestCaseGenerator extends TestGenerator
     }
 
     /**
+     * @param $sourceFile
+     * @param $className
+     *
+     * @return string
+     */
+    protected function calculateTargetSourceFile($sourceFile, $className)
+    {
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+
+        $projectName = '';
+        $layerName = '';
+        $componentName = '';
+
+        $components = explode('\\', $namespace);
+        if (count($components) > 0) {
+            $projectName = $components[0];
+
+            if (count($components) > 1) {
+                $layerName = $components[1];
+
+                if (count($components) > 2) {
+                    $componentName = $components[2];
+                }
+            }
+        }
+
+        // for example: RealTests
+        $components = explode('\\', $className);
+        $targetClassName = $this->getTestsClassName(array_pop($components));
+
+        // for example: Cubiche/Domain/Core
+        $componentPath = $projectName.DIRECTORY_SEPARATOR.
+            $layerName.DIRECTORY_SEPARATOR.$componentName
+        ;
+
+        // for example: src
+        $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
+
+        // for example: src/Cubiche/Domain/Core/Tests/Units/RealTests.php
+        return $begining.DIRECTORY_SEPARATOR.
+            $componentPath.DIRECTORY_SEPARATOR.
+            $this->testDirectoryName.
+            $targetClassName.'.php'
+        ;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getTestsClassTemplate()

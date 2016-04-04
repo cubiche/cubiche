@@ -237,11 +237,19 @@ class TestGenerator extends AbstractGenerator
 
         // for example: src
         $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
+        $path = $begining.DIRECTORY_SEPARATOR.$componentPath;
 
+        $end = explode(DIRECTORY_SEPARATOR, substr($sourceFile, strlen($path) + 1));
+        if (!empty($end)) {
+            array_pop($end);
+        }
+
+        $end = implode(DIRECTORY_SEPARATOR, $end);
         // for example: src/Cubiche/Domain/Core/Tests/Units/RealTests.php
         return $begining.DIRECTORY_SEPARATOR.
             $componentPath.DIRECTORY_SEPARATOR.
             $this->testDirectoryName.
+            $end.DIRECTORY_SEPARATOR.
             $targetClassName.'.php'
         ;
     }
