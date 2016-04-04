@@ -21,12 +21,18 @@ class ClassGenerator extends AbstractGenerator
      * ClassGenerator constructor.
      *
      * @param string $className
+     * @param string $testDirectoryName
      * @param string $sourceFile
      * @param string $targetClassName
      * @param string $targetSourceFile
      */
-    public function __construct($className, $sourceFile = '', $targetClassName = '', $targetSourceFile = '')
-    {
+    public function __construct(
+        $className,
+        $testDirectoryName,
+        $sourceFile = '',
+        $targetClassName = '',
+        $targetSourceFile = ''
+    ) {
         if (empty($sourceFile)) {
             $sourceFile = $className.'.php';
         }
@@ -50,6 +56,7 @@ class ClassGenerator extends AbstractGenerator
 
         parent::__construct(
             $className,
+            $testDirectoryName,
             $sourceFile,
             $targetClassName,
             $targetSourceFile

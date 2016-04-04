@@ -11,6 +11,7 @@
 namespace Cubiche\Domain\Tests\Cli;
 
 use Cubiche\Domain\Tests\Generator\ClassUtils;
+use Cubiche\Domain\Tests\Generator\TestCaseGenerator;
 use Cubiche\Domain\Tests\Generator\TestGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,29 +48,23 @@ class GenerateTestClassCommand extends BaseCommand
         $fileName = $input->getArgument('file');
         $classes = ClassUtils::getClassesInFile($fileName);
 
+        if (empty($classes)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Could not find class in "%s".',
+                    $fileName
+                )
+            );
+        }
+
         $generators = [];
         foreach ($classes as $className => $classMetadata) {
-            // for example: RealTests
-            $components = explode('\\', $className);
-            $targetClassName = array_pop($components).'Tests';
+            $testCaseGenerator = new TestCaseGenerator($className, $this->getTestsDirectoryName());
+            if (!is_file($testCaseGenerator->getTargetSourceFile())) {
+                $generators[] = $testCaseGenerator;
+            }
 
-            // for example: Cubiche/Domain/Core
-            $componentPath = $classMetadata['projectName'].DIRECTORY_SEPARATOR.
-                $classMetadata['layerName'].DIRECTORY_SEPARATOR.$classMetadata['componentName']
-            ;
-
-            // for example: src
-            $begining = substr($fileName, 0, strpos($fileName, $componentPath) - 1);
-
-            // for example: src/Cubiche/Domain/Core/Tests/Units/RealTests.php
-            $targetSourceFile = $begining.DIRECTORY_SEPARATOR.
-                $componentPath.DIRECTORY_SEPARATOR.
-                'Tests'.DIRECTORY_SEPARATOR.
-                'Units'.DIRECTORY_SEPARATOR.
-                $targetClassName.'.php'
-            ;
-
-            $generators[] = new TestGenerator($className, '', $targetClassName, $targetSourceFile);
+            $generators[] = new TestGenerator($className, $this->getTestsDirectoryName());
         }
 
         return $generators;

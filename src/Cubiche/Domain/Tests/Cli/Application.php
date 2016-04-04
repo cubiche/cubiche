@@ -27,5 +27,6 @@ class Application extends BaseApplication
         parent::__construct('Cubiche Test Generator');
 
         $this->add(new GenerateTestClassCommand());
+        $this->add(new GenerateTestDirectoryCommand());
     }
 }

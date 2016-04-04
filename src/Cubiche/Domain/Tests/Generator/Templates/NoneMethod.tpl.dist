@@ -6,6 +6,6 @@
     {
         $this
             ->testedClass
-                ->extends({className}::class)
+                ->{asserter}
         ;
     }

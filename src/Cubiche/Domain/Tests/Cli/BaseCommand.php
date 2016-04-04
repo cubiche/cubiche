@@ -92,4 +92,12 @@ abstract class BaseCommand extends Command
      * @return AbstractGenerator[]
      */
     abstract protected function getGenerators(InputInterface $input);
+
+    /**
+     * @return string
+     */
+    protected function getTestsDirectoryName()
+    {
+        return 'Tests'.DIRECTORY_SEPARATOR.'Units'.DIRECTORY_SEPARATOR;
+    }
 }

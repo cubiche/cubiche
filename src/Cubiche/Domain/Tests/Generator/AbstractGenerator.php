@@ -25,6 +25,11 @@ abstract class AbstractGenerator
     /**
      * @var string
      */
+    protected $testDirectoryName;
+
+    /**
+     * @var string
+     */
     protected $sourceFile;
 
     /**
@@ -41,12 +46,19 @@ abstract class AbstractGenerator
      * AbstractGenerator constructor.
      *
      * @param string $className
+     * @param string $testDirectoryName
      * @param string $sourceFile
      * @param string $targetClassName
      * @param string $targetSourceFile
      */
-    public function __construct($className, $sourceFile = '', $targetClassName = '', $targetSourceFile = '')
-    {
+    public function __construct(
+        $className,
+        $testDirectoryName,
+        $sourceFile = '',
+        $targetClassName = '',
+        $targetSourceFile = ''
+    ) {
+        $this->testDirectoryName = $testDirectoryName;
         $this->className = $this->extractClassNameInfo($className);
         $this->targetClassName = $this->extractClassNameInfo($targetClassName);
 
@@ -147,7 +159,11 @@ abstract class AbstractGenerator
             $result['namespace'] = $refClass->getNamespaceName();
         }
 
-        $result['namespace'] .= '\Tests\Unit';
+        $result['namespace'] .= substr(
+            '\\'.implode('\\', explode(DIRECTORY_SEPARATOR, $this->testDirectoryName)),
+            0,
+            -1
+        );
 
         $components = explode('\\', $result['namespace']);
         if (count($components) > 0) {

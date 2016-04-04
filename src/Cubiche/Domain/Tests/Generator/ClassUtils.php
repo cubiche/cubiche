@@ -340,6 +340,36 @@ class ClassUtils
     }
 
     /**
+     * @param string $sourceFile
+     *
+     * @return array
+     */
+    public static function getInterfacesInFile($sourceFile)
+    {
+        $result = array();
+
+        $tokens = token_get_all(
+            file_get_contents($sourceFile)
+        );
+        $numTokens = count($tokens);
+
+        for ($i = 0; $i < $numTokens; ++$i) {
+            if (is_string($tokens[$i])) {
+                continue;
+            }
+
+            switch ($tokens[$i][0]) {
+                case T_INTERFACE:
+                    $currentInterface = $tokens[$i + 2][1];
+                    $result[] = $currentInterface;
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns the variables used in test methods
      * that reference the class under test.
      *

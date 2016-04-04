@@ -21,12 +21,20 @@ class TestGenerator extends AbstractGenerator
      * ClassGenerator constructor.
      *
      * @param string $className
+     * @param string $testDirectoryName
      * @param string $sourceFile
      * @param string $targetClassName
      * @param string $targetSourceFile
      */
-    public function __construct($className, $sourceFile = '', $targetClassName = '', $targetSourceFile = '')
-    {
+    public function __construct(
+        $className,
+        $testDirectoryName,
+        $sourceFile = '',
+        $targetClassName = '',
+        $targetSourceFile = ''
+    ) {
+        $this->testDirectoryName = $testDirectoryName;
+
         if (class_exists($className)) {
             $reflector = new \ReflectionClass($className);
             $sourceFile = $reflector->getFileName();
@@ -89,19 +97,16 @@ class TestGenerator extends AbstractGenerator
 
         if (empty($targetClassName)) {
             $components = explode('\\', $className);
-            $targetClassName = array_pop($components).'Tests';
+            $targetClassName = $this->getTestsClassName(array_pop($components));
         }
 
         if (empty($targetSourceFile)) {
-            $targetSourceFile = dirname($sourceFile).DIRECTORY_SEPARATOR.
-                'Tests'.DIRECTORY_SEPARATOR.
-                'Units'.DIRECTORY_SEPARATOR.
-                $targetClassName.'.php'
-            ;
+            $targetSourceFile = $this->calculateTargetSourceFile($sourceFile, $className);
         }
 
         parent::__construct(
             $className,
+            $testDirectoryName,
             $sourceFile,
             $targetClassName,
             $targetSourceFile
@@ -149,10 +154,11 @@ class TestGenerator extends AbstractGenerator
 
         $classTemplate = new Template(
             sprintf(
-                '%s%sTemplates%sTestClass.tpl',
+                '%s%sTemplates%s%s',
                 __DIR__,
                 DIRECTORY_SEPARATOR,
-                DIRECTORY_SEPARATOR
+                DIRECTORY_SEPARATOR,
+                $this->getTestsClassTemplate()
             )
         );
 
@@ -162,30 +168,22 @@ class TestGenerator extends AbstractGenerator
             $namespace = '';
         }
 
+        if ($this->targetClassName['className'] !== 'TestCase') {
+            $testCaseUse = $this->getTestCaseNamespace();
+            if ($testCaseUse !== $this->targetClassName['namespace']) {
+                $use = 'use '.$testCaseUse."\\TestCase;\n";
+            }
+        }
+
         $methods = $methods.$incompleteMethods;
-        if (empty($methods)) {
-            $methodTemplate = new Template(
-                sprintf(
-                    '%s%sTemplates%sNoneMethod.tpl',
-                    __DIR__,
-                    DIRECTORY_SEPARATOR,
-                    DIRECTORY_SEPARATOR
-                )
-            );
-
-            $methodTemplate->setVar(
-                array(
-                    'className' => $this->className['className'],
-                )
-            );
-
-            $methods = $methodTemplate->render();
-            $use .= 'use '.$this->className['fullClassName'].";\n";
+        if (empty($methods) && $this->targetClassName['className'] !== 'TestCase') {
+            $methods = $this->renderNoneMethods($use);
         }
 
         $classTemplate->setVar(
             array(
                 'projectName' => $this->className['projectName'],
+                'layerName' => $this->className['layerName'],
                 'componentName' => $this->className['componentName'],
                 'namespace' => $namespace,
                 'use' => $use,
@@ -198,5 +196,137 @@ class TestGenerator extends AbstractGenerator
         );
 
         return $classTemplate->render();
+    }
+
+    /**
+     * @param $sourceFile
+     * @param $className
+     *
+     * @return string
+     */
+    protected function calculateTargetSourceFile($sourceFile, $className)
+    {
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+
+        $projectName = '';
+        $layerName = '';
+        $componentName = '';
+
+        $components = explode('\\', $namespace);
+        if (count($components) > 0) {
+            $projectName = $components[0];
+
+            if (count($components) > 1) {
+                $layerName = $components[1];
+
+                if (count($components) > 2) {
+                    $componentName = $components[2];
+                }
+            }
+        }
+
+        // for example: RealTests
+        $components = explode('\\', $className);
+        $targetClassName = $this->getTestsClassName(array_pop($components));
+
+        // for example: Cubiche/Domain/Core
+        $componentPath = $projectName.DIRECTORY_SEPARATOR.
+            $layerName.DIRECTORY_SEPARATOR.$componentName
+        ;
+
+        // for example: src
+        $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
+
+        // for example: src/Cubiche/Domain/Core/Tests/Units/RealTests.php
+        return $begining.DIRECTORY_SEPARATOR.
+            $componentPath.DIRECTORY_SEPARATOR.
+            $this->testDirectoryName.
+            $targetClassName.'.php'
+        ;
+    }
+
+    /**
+     * @param $use
+     *
+     * @return string
+     */
+    protected function renderNoneMethods(&$use)
+    {
+        $reflector = new \ReflectionClass($this->className['fullClassName']);
+
+        $methodTemplate = new Template(
+            sprintf(
+                '%s%sTemplates%sNoneMethod.tpl',
+                __DIR__,
+                DIRECTORY_SEPARATOR,
+                DIRECTORY_SEPARATOR
+            )
+        );
+
+        if ($reflector->isAbstract()) {
+            $methodTemplate->setVar(
+                array(
+                    'asserter' => 'isAbstract()',
+                    'className' => $this->className['className'],
+                )
+            );
+        } else {
+            $interfaces = $reflector->getInterfaceNames();
+            if (empty($interfaces)) {
+                if ($reflector->getParentClass()) {
+                    $use .= 'use '.$reflector->getParentClass()->getName().";\n";
+                    $methodTemplate->setVar(
+                        array(
+                            'asserter' => 'extends('.$reflector->getParentClass()->getName().'::class)',
+                            'className' => $this->className['className'],
+                        )
+                    );
+                }
+            } else {
+                $use .= 'use '.$interfaces[0].";\n";
+                $components = explode('\\', $interfaces[0]);
+                $methodTemplate->setVar(
+                    array(
+                        'asserter' => 'implements('.array_pop($components).'::class)',
+                        'className' => $this->className['className'],
+                    )
+                );
+            }
+        }
+
+        return $methodTemplate->render();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTestsClassTemplate()
+    {
+        return 'TestClass.tpl';
+    }
+
+    /**
+     * @param $className
+     *
+     * @return string
+     */
+    protected function getTestsClassName($className)
+    {
+        return $className.'Tests';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTestCaseNamespace()
+    {
+        $namespace = $this->className['projectName'].'\\'.
+            $this->className['layerName'].'\\'.
+            $this->className['componentName'].'\\'.
+            implode('\\', explode(DIRECTORY_SEPARATOR, $this->testDirectoryName))
+        ;
+
+        return substr($namespace, 0, -1);
     }
 }
