@@ -58,7 +58,7 @@ class GenerateTestClassCommand extends BaseCommand
         }
 
         $generators = [];
-        foreach ($classes as $className => $classMetadata) {
+        foreach ($classes as $className) {
             $testCaseGenerator = new TestCaseGenerator($className, $this->getTestsDirectoryName());
             if (!is_file($testCaseGenerator->getTargetSourceFile())) {
                 $generators[] = $testCaseGenerator;

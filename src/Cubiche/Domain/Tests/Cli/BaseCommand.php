@@ -67,15 +67,15 @@ abstract class BaseCommand extends Command
                     sprintf(
                         '<info>Generated test for "%s" in "%s".</info>',
                         $generator->getClassName(),
-                        $generator->getTargetSourceFile()
+                        $generator->getTargetClassName()
                     )
                 );
             } catch (\RuntimeException $e) {
                 $output->writeln(
                     sprintf(
-                        '<error>Failed test generation for "%s". The file "%s" exists.</error>',
+                        '<comment>Failed test generation for "%s". The file "%s" exists.</comment>',
                         $generator->getClassName(),
-                        $generator->getTargetSourceFile()
+                        $generator->getTargetClassName()
                     )
                 );
 

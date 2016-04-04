@@ -85,7 +85,7 @@ class GenerateTestDirectoryCommand extends BaseCommand
                     );
                 }
 
-                foreach ($classes as $className => $classMetadata) {
+                foreach ($classes as $className) {
                     $testCaseGenerator = new TestCaseGenerator($className, $this->getTestsDirectoryName());
                     if (!is_file($testCaseGenerator->getTargetSourceFile())) {
                         $generators[] = $testCaseGenerator;
@@ -106,6 +106,6 @@ class GenerateTestDirectoryCommand extends BaseCommand
      */
     protected function isTestFile($fileName)
     {
-        return strpos($fileName, $this->getTestsDirectoryName()) !== false;
+        return strpos($fileName, 'Tests') !== false;
     }
 }
