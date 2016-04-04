@@ -65,8 +65,12 @@ class GenerateTestDirectoryCommand extends BaseCommand
         $generators = [];
         foreach ($objects as $fileName => $object) {
             if (is_file($fileName) && !$this->isTestFile($fileName)) {
-                $classes = ClassUtils::getClassesInFile($fileName);
+                $info = pathinfo($fileName);
+                if ($info['extension'] !== 'php') {
+                    continue;
+                }
 
+                $classes = ClassUtils::getClassesInFile($fileName);
                 if (empty($classes)) {
                     $interfaces = ClassUtils::getInterfacesInFile($fileName);
                     if (!empty($interfaces)) {
