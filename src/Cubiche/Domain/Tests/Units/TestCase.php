@@ -39,8 +39,8 @@ abstract class TestCase extends Test
         Extractor $annotationExtractor = null,
         Generator $asserterGenerator = null,
         Manager $assertionManager = null,
-        \Closure $reflectionClassFactory = null,
-        \Closure $phpExtensionFactory = null,
+        Closure $reflectionClassFactory = null,
+        Closure $phpExtensionFactory = null,
         Analyzer $analyzer = null
     ) {
         parent::__construct(
@@ -67,5 +67,13 @@ abstract class TestCase extends Test
         $className = parent::getTestedClassName();
 
         return substr($className, 0, strrpos($className, 'Tests'));
+    }
+
+    /**
+     * @param string $message
+     */
+    public function markTestSkipped($message = null)
+    {
+        return $this->skip($message);
     }
 }

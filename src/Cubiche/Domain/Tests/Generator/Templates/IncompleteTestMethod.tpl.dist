@@ -1,0 +1,8 @@
+
+    /**
+     * Test {methodName} method.
+     */
+    public function test{methodName}()
+    {
+        // todo: Implement test{methodName}().
+    }

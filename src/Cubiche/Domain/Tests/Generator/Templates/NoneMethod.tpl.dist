@@ -1,0 +1,11 @@
+
+    /**
+     * Test class.
+     */
+    public function testClass()
+    {
+        $this
+            ->testedClass
+                ->{asserter}
+        ;
+    }
