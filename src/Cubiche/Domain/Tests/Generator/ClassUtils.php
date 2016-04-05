@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Generator;
 
 /**
@@ -18,100 +19,54 @@ namespace Cubiche\Domain\Tests\Generator;
 class ClassUtils
 {
     /**
-     * @param string $className
      * @param string $sourceFile
-     * @param string $targetClassName
+     * @param int    $tokenType
      *
      * @return array
      */
-    public static function getTestedMethods($className, $sourceFile, $targetClassName)
+    protected static function extractFromFile($sourceFile, $tokenType = T_CLASS)
     {
-        $setUpVariables = array();
-        $testedMethods = array();
-        $classes = self::getClassesInFile($sourceFile);
-        $testMethods = $classes[$className]['methods'];
-        unset($classes);
+        $result = array();
 
-        foreach ($testMethods as $name => $testMethod) {
-            if (strtolower($name) == 'setup') {
-                $setUpVariables = self::getVariablesThatReferenceClass(
-                    $testMethod['tokens'],
-                    $targetClassName
-                );
+        $tokens = token_get_all(file_get_contents($sourceFile));
+        $currentNamespace = false;
 
-                break;
-            }
-        }
-
-        foreach ($testMethods as $name => $testMethod) {
-            $argVariables = array();
-
-            if (strtolower($name) == 'setup') {
+        $numTokens = count($tokens);
+        for ($i = 0; $i < $numTokens; ++$i) {
+            if (is_string($tokens[$i])) {
                 continue;
             }
 
-            $start = strpos($testMethod['signature'], '(') + 1;
-            $end = strlen($testMethod['signature']) - $start - 1;
-            $args = substr($testMethod['signature'], $start, $end);
+            switch ($tokens[$i][0]) {
+                case T_NAMESPACE:
+                    $currentNamespace = $tokens[$i + 2][1];
 
-            foreach (explode(',', $args) as $arg) {
-                $arg = explode(' ', trim($arg));
+                    for ($j = $i + 3; $j < $numTokens; $j += 2) {
+                        if ($tokens[$j][0] == T_NS_SEPARATOR) {
+                            $currentNamespace .= '\\'.$tokens[$j + 1][1];
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
 
-                if (count($arg) == 2) {
-                    $type = $arg[0];
-                    $var = $arg[1];
-                } else {
-                    $type = null;
-                    $var = $arg[0];
-                }
+                case $tokenType:
+                    if (isset($tokens[$i + 2][1])) {
+                        $currentName = trim($tokens[$i + 2][1]);
+                        if (!empty($currentName)) {
+                            if ($currentNamespace === false) {
+                                $result[] = $currentName;
+                            } else {
+                                $result[] = $currentNamespace.'\\'.$currentName;
+                            }
+                        }
+                    }
 
-                if ($type == $targetClassName) {
-                    $argVariables[] = $var;
-                }
-            }
-
-            $variables = array_unique(
-                array_merge(
-                    $setUpVariables,
-                    $argVariables,
-                    self::getVariablesThatReferenceClass($testMethod['tokens'], $targetClassName)
-                )
-            );
-
-            foreach ($testMethod['tokens'] as $i => $token) {
-                if (is_array($token) && $token[0] == T_DOUBLE_COLON &&
-                    is_array($testMethod['tokens'][$i - 1]) &&
-                    $testMethod['tokens'][$i - 1][0] == T_STRING &&
-                    $testMethod['tokens'][$i - 1][1] == $targetClassName &&
-                    is_array($testMethod['tokens'][$i + 1]) &&
-                    $testMethod['tokens'][$i + 1][0] == T_STRING &&
-                    $testMethod['tokens'][$i + 2] == '(') {
-                    // Class::method()
-                    $testedMethods[] = $testMethod['tokens'][$i + 1][1];
-                } elseif (is_array($token) && $token[0] == T_OBJECT_OPERATOR &&
-                    in_array(self::getVariableName($testMethod['tokens'], $i), $variables) &&
-                    is_array($testMethod['tokens'][$i + 2]) &&
-                    $testMethod['tokens'][$i + 2][0] == T_OBJECT_OPERATOR &&
-                    is_array($testMethod['tokens'][$i + 3]) &&
-                    $testMethod['tokens'][$i + 3][0] == T_STRING &&
-                    $testMethod['tokens'][$i + 4] == '(') {
-                    // $this->object->method()
-                    $testedMethods[] = $testMethod['tokens'][$i + 3][1];
-                } elseif (is_array($token) && $token[0] == T_OBJECT_OPERATOR &&
-                    in_array(self::getVariableName($testMethod['tokens'], $i), $variables) &&
-                    is_array($testMethod['tokens'][$i + 1]) &&
-                    $testMethod['tokens'][$i + 1][0] == T_STRING &&
-                    $testMethod['tokens'][$i + 2] == '(') {
-                    // $object->method()
-                    $testedMethods[] = $testMethod['tokens'][$i + 1][1];
-                }
+                    break;
             }
         }
 
-        $testedMethods = array_unique($testedMethods);
-        sort($testedMethods);
-
-        return $testedMethods;
+        return $result;
     }
 
     /**
@@ -121,50 +76,7 @@ class ClassUtils
      */
     public static function getClassesInFile($sourceFile)
     {
-        $result = array();
-
-        $tokens = token_get_all(
-            file_get_contents($sourceFile)
-        );
-
-        $currentNamespace = false;
-
-        $numTokens = count($tokens);
-        for ($i = 0; $i < $numTokens; ++$i) {
-            if (is_string($tokens[$i])) {
-                continue;
-            }
-
-            switch ($tokens[$i][0]) {
-                case T_NAMESPACE:
-                    $currentNamespace = $tokens[$i + 2][1];
-
-                    for ($j = $i + 3; $j < $numTokens; $j += 2) {
-                        if ($tokens[$j][0] == T_NS_SEPARATOR) {
-                            $currentNamespace .= '\\'.$tokens[$j + 1][1];
-                        } else {
-                            break;
-                        }
-                    }
-                    break;
-
-                case T_CLASS:
-                    if (isset($tokens[$i + 2][1])) {
-                        $currentClass = trim($tokens[$i + 2][1]);
-                        if (!empty($currentClass)) {
-                            if ($currentNamespace === false) {
-                                $result[] = $currentClass;
-                            } else {
-                                $result[] = $currentNamespace.'\\'.$currentClass;
-                            }
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        return $result;
+        return self::extractFromFile($sourceFile, T_CLASS);
     }
 
     /**
@@ -174,122 +86,367 @@ class ClassUtils
      */
     public static function getInterfacesInFile($sourceFile)
     {
-        $result = array();
+        return self::extractFromFile($sourceFile, T_INTERFACE);
+    }
 
-        $tokens = token_get_all(
-            file_get_contents($sourceFile)
+    /**
+     * @param $className
+     *
+     * @return array
+     */
+    public static function extractClassNameInfo($className)
+    {
+        $result = array(
+            'projectName' => '',
+            'layerName' => '',
+            'componentName' => '',
+            'namespace' => '',
+            'className' => $className,
+            'fullClassName' => $className,
         );
 
-        $currentNamespace = false;
+        if (strpos($className, '\\') !== false) {
+            $tmp = explode('\\', $className);
+            $result['className'] = $tmp[count($tmp) - 1];
+            $result['namespace'] = self::mergeClassName($tmp);
+        } else {
+            $reflector = new \ReflectionClass($className);
 
-        $numTokens = count($tokens);
-        for ($i = 0; $i < $numTokens; ++$i) {
-            if (is_string($tokens[$i])) {
-                continue;
+            $result['namespace'] = $reflector->getNamespaceName();
+        }
+
+        list($result['projectName'], $result['layerName'], $result['componentName']) = self::extractProjectInfo(
+            $result['namespace']
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param $className
+     *
+     * @return array
+     */
+    public static function extractTestCaseNamespace($className)
+    {
+        $result = array(
+            'projectName' => '',
+            'layerName' => '',
+            'componentName' => '',
+            'namespace' => '',
+            'className' => $className,
+            'fullClassName' => $className,
+        );
+
+        if (strpos($className, '\\') !== false) {
+            $tmp = explode('\\', $className);
+            $result['className'] = $tmp[count($tmp) - 1];
+            $result['namespace'] = self::mergeClassName($tmp);
+        } else {
+            $reflector = new \ReflectionClass($className);
+
+            $result['namespace'] = $reflector->getNamespaceName();
+        }
+
+        list($result['projectName'], $result['layerName'], $result['componentName']) = self::extractProjectInfo(
+            $result['namespace']
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param $namespace
+     *
+     * @return array
+     */
+    protected static function extractProjectInfo($namespace)
+    {
+        $projectName = '';
+        $layerName = '';
+        $componentName = '';
+
+        $components = explode('\\', $namespace);
+        if (count($components) > 0) {
+            $projectName = $components[0];
+
+            if (count($components) > 1) {
+                $layerName = $components[1];
+
+                if (count($components) > 2) {
+                    $componentName = $components[2];
+                }
             }
+        }
 
-            switch ($tokens[$i][0]) {
-                case T_NAMESPACE:
-                    $currentNamespace = $tokens[$i + 2][1];
+        return [$projectName, $layerName, $componentName];
+    }
 
-                    for ($j = $i + 3; $j < $numTokens; $j += 2) {
-                        if ($tokens[$j][0] == T_NS_SEPARATOR) {
-                            $currentNamespace .= '\\'.$tokens[$j + 1][1];
-                        } else {
-                            break;
-                        }
-                    }
-                    break;
-
-                case T_INTERFACE:
-                    if (isset($tokens[$i + 2][1])) {
-                        $currentInterface = trim($tokens[$i + 2][1]);
-                        if (!empty($currentInterface)) {
-                            if ($currentNamespace === false) {
-                                $result[] = $currentInterface;
-                            } else {
-                                $result[] = $currentNamespace.'\\'.$currentInterface;
-                            }
-                        }
-                    }
-
-                    break;
-            }
+    /**
+     * @param array $parts
+     *
+     * @return string
+     */
+    protected function mergeClassName(array $parts)
+    {
+        $result = '';
+        if (count($parts) > 1) {
+            array_pop($parts);
+            $result = implode('\\', $parts);
         }
 
         return $result;
     }
 
     /**
-     * Returns the variables used in test methods
-     * that reference the class under test.
+     * @param $className
      *
-     * @param array $tokens
-     *
-     * @return array
+     * @return string
      */
-    protected static function getVariablesThatReferenceClass(array $tokens, $targetClassName)
+    public static function resolveSourceFile($className)
     {
-        $inNew = false;
-        $variables = array();
+        $sourceFile = '';
+        if (class_exists($className)) {
+            $reflector = new \ReflectionClass($className);
+            $sourceFile = $reflector->getFileName();
 
-        foreach ($tokens as $i => $token) {
-            if (is_string($token)) {
-                if (trim($token) == ';') {
-                    $inNew = false;
+            if ($sourceFile === false) {
+                $sourceFile = '<internal>';
+            }
+        } else {
+            $possibleFilenames = array(
+                $className.'.php',
+                str_replace(
+                    array('_', '\\'),
+                    DIRECTORY_SEPARATOR,
+                    $className
+                ).'.php',
+            );
+
+            foreach ($possibleFilenames as $possibleFilename) {
+                if (is_file($possibleFilename)) {
+                    $sourceFile = $possibleFilename;
                 }
-
-                continue;
             }
 
-            list($token, $value) = $token;
+            if (empty($sourceFile)) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Neither "%s" nor "%s" could be opened.',
+                        $possibleFilenames[0],
+                        $possibleFilenames[1]
+                    )
+                );
+            }
 
-            switch ($token) {
-                case T_NEW:
-                    $inNew = true;
-                    break;
-
-                case T_STRING:
-                    if ($inNew) {
-                        if ($value == $targetClassName) {
-                            $variables[] = self::getVariableName($tokens, $i);
-                        }
-                    }
-
-                    $inNew = false;
-                    break;
+            if (!is_file($sourceFile)) {
+                throw new \RuntimeException(
+                    sprintf(
+                        '"%s" could not be opened.',
+                        $sourceFile
+                    )
+                );
             }
         }
 
-        return $variables;
+        return realpath($sourceFile);
     }
 
     /**
-     * Finds the variable name of the object for the method call
-     * that is currently being processed.
+     * @param string $className
+     * @param string $sourceFile
+     * @param string $testDirectoryName
+     * @param bool   $isRoot
      *
-     * @param array $tokens
-     * @param int   $start
-     *
-     * @return mixed
+     * @return string
      */
-    protected static function getVariableName(array $tokens, $start)
+    public static function resolveTargetClassName($className, $sourceFile, $testDirectoryName, $isRoot = false)
     {
-        for ($i = $start - 1; $i >= 0; --$i) {
-            if (is_array($tokens[$i]) && $tokens[$i][0] == T_VARIABLE) {
-                $variable = $tokens[$i][1];
+        $components = explode('\\', $className);
+        $targetClassName = array_pop($components).'Tests';
 
-                if (is_array($tokens[$i + 1]) &&
-                    $tokens[$i + 1][0] == T_OBJECT_OPERATOR &&
-                    $tokens[$i + 2] != '(' &&
-                    $tokens[$i + 3] != '(') {
-                    $variable .= '->'.$tokens[$i + 2][1];
+        // Source file test case: src/Cubiche/Domain/Command/Middlewares/Handler/HandlertMiddleware.php
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+
+        list($projectName, $layerName, $componentName) = self::extractProjectInfo(
+            $namespace
+        );
+
+        // $componentPath = Cubiche/Domain/Command
+        $componentPath = $projectName.DIRECTORY_SEPARATOR.
+            $layerName.DIRECTORY_SEPARATOR.$componentName
+        ;
+
+        // $begining = src
+        $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
+
+        $path = $begining.DIRECTORY_SEPARATOR.$componentPath;
+        $path = explode(DIRECTORY_SEPARATOR, substr($sourceFile, strlen($path) + 1));
+        if (!empty($path)) {
+            array_pop($path);
+        }
+
+        // $end = Middlewares/Handler/
+        $end = implode(DIRECTORY_SEPARATOR, $path);
+
+        if ($isRoot) {
+            // Cubiche\\Domain\\Command\\Tests\\Units\\TestCase.php
+            return implode('\\', explode('/', $componentPath.DIRECTORY_SEPARATOR)).
+                implode('\\', explode('/', $testDirectoryName)).
+                $targetClassName
+            ;
+        }
+
+        // Cubiche\\Domain\\Command\\Tests\\Units\\Middlewares\\Handler\\HandlertMiddlewareTests.php
+        return implode('\\', explode('/', $componentPath.DIRECTORY_SEPARATOR)).
+            implode('\\', explode('/', $testDirectoryName)).
+            implode('\\', explode('/', empty($end) ? '' : $end.DIRECTORY_SEPARATOR)).
+            $targetClassName
+        ;
+    }
+
+    /**
+     * @param string $className
+     * @param string $testCaseClassName
+     * @param string $testDirectoryName
+     *
+     * @return string
+     */
+    public static function resolveTestCaseClassName($className, $testCaseClassName, $testDirectoryName)
+    {
+        // Source file test case: src/Cubiche/Domain/Command/Middlewares/Handler/HandlertMiddleware.php
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+
+        list($projectName, $layerName, $componentName) = self::extractProjectInfo(
+            $namespace
+        );
+
+        // $componentPath = Cubiche/Domain/Command
+        $componentPath = $projectName.DIRECTORY_SEPARATOR.
+            $layerName.DIRECTORY_SEPARATOR.$componentName
+        ;
+
+        // Cubiche\\Domain\\Command\\Tests\\Units\\TestCase.php
+        return implode('\\', explode('/', $componentPath.DIRECTORY_SEPARATOR)).
+            implode('\\', explode('/', $testDirectoryName)).
+            $testCaseClassName
+        ;
+    }
+
+    /**
+     * @param string $className
+     * @param string $sourceFile
+     * @param string $targetClassName
+     * @param string $testDirectoryName
+     * @param bool   $isRoot
+     *
+     * @return string
+     */
+    public static function resolveTargetSourceFile(
+        $className,
+        $sourceFile,
+        $targetClassName,
+        $testDirectoryName,
+        $isRoot = false
+    ) {
+        $components = explode('\\', $targetClassName);
+        $targetClassName = array_pop($components);
+
+        // Source file test case: src/Cubiche/Domain/Command/Middlewares/Handler/HandlertMiddleware.php
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+
+        list($projectName, $layerName, $componentName) = self::extractProjectInfo(
+            $namespace
+        );
+
+        // $componentPath = Cubiche/Domain/Command
+        $componentPath = $projectName.DIRECTORY_SEPARATOR.
+            $layerName.DIRECTORY_SEPARATOR.$componentName
+        ;
+
+        // $begining = src
+        $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
+
+        $path = $begining.DIRECTORY_SEPARATOR.$componentPath;
+        $path = explode(DIRECTORY_SEPARATOR, substr($sourceFile, strlen($path) + 1));
+        if (!empty($path)) {
+            array_pop($path);
+        }
+
+        // $end = Middlewares/Handler/
+        $end = implode(DIRECTORY_SEPARATOR, $path);
+
+        if ($isRoot) {
+            // src/Cubiche/Domain/Command/Tests/Units/TestCase.php
+            return $begining.DIRECTORY_SEPARATOR.
+                $componentPath.DIRECTORY_SEPARATOR.
+                $testDirectoryName.
+                $targetClassName.'.php'
+            ;
+        }
+
+        // src/Cubiche/Domain/Command/Tests/Units/Middlewares/Handler/HandlertMiddlewareTests.php
+        return $begining.DIRECTORY_SEPARATOR.
+            $componentPath.DIRECTORY_SEPARATOR.
+            $testDirectoryName.
+            (empty($end) ? '' : $end.DIRECTORY_SEPARATOR).
+            $targetClassName.'.php'
+        ;
+    }
+
+    /**
+     * @param string $directory
+     * @param string $testDirectoryName
+     * @param string $extension
+     *
+     * @return array
+     */
+    public static function getFilesInDirectory($directory, $testDirectoryName, $extension)
+    {
+        $objects = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        $files = [];
+        foreach ($objects as $fileName => $object) {
+            if (is_file($fileName) && !self::isTestFile($fileName, $testDirectoryName)) {
+                $info = pathinfo($fileName);
+                if (!isset($info['extension'])) {
+                    continue;
                 }
 
-                return $variable;
+                if ($info['extension'] !== $extension) {
+                    continue;
+                }
+
+                $files[] = $fileName;
             }
         }
 
-        return false;
+        return $files;
+    }
+
+    /**
+     * @param string $fileName
+     * @param string $testDirectoryName
+     *
+     * @return bool
+     */
+    protected static function isTestFile($fileName, $testDirectoryName)
+    {
+        $isTestFile = true;
+
+        $names = explode('/', $testDirectoryName);
+        foreach ($names as $name) {
+            if (!empty(trim($name))) {
+                $isTestFile = $isTestFile && strpos($fileName, $name) !== false;
+            }
+        }
+
+        return $isTestFile;
     }
 }

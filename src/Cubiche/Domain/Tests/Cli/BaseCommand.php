@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Cli;
 
 use Cubiche\Domain\Tests\Generator\AbstractGenerator;
@@ -92,6 +93,14 @@ abstract class BaseCommand extends Command
      * @return AbstractGenerator[]
      */
     abstract protected function getGenerators(InputInterface $input);
+
+    /**
+     * @return string
+     */
+    protected function getTestsCaseClassName()
+    {
+        return 'TestCase';
+    }
 
     /**
      * @return string

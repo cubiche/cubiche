@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Cli;
 
 use Cubiche\Domain\Tests\Generator\ClassUtils;
@@ -57,55 +58,44 @@ class GenerateTestDirectoryCommand extends BaseCommand
             );
         }
 
-        $objects = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory),
-            \RecursiveIteratorIterator::SELF_FIRST
-        );
-
         $generators = [];
-        foreach ($objects as $fileName => $object) {
-            if (is_file($fileName) && !$this->isTestFile($fileName)) {
-                $info = pathinfo($fileName);
-                if ($info['extension'] !== 'php') {
+        foreach (ClassUtils::getFilesInDirectory($directory, $this->getTestsDirectoryName(), 'php') as $fileName) {
+            $classes = ClassUtils::getClassesInFile($fileName);
+            if (empty($classes)) {
+                $interfaces = ClassUtils::getInterfacesInFile($fileName);
+                if (!empty($interfaces)) {
                     continue;
                 }
 
-                $classes = ClassUtils::getClassesInFile($fileName);
-                if (empty($classes)) {
-                    $interfaces = ClassUtils::getInterfacesInFile($fileName);
-                    if (!empty($interfaces)) {
-                        continue;
-                    }
+                throw new \RuntimeException(
+                    sprintf(
+                        'Could not find class in "%s".',
+                        $fileName
+                    )
+                );
+            }
 
-                    throw new \RuntimeException(
-                        sprintf(
-                            'Could not find class in "%s".',
-                            $fileName
-                        )
-                    );
-                }
+            foreach ($classes as $className) {
+                $generators[] = new TestGenerator(
+                    $className,
+                    $this->getTestsCaseClassName(),
+                    $this->getTestsDirectoryName()
+                );
+            }
+        }
 
-                foreach ($classes as $className) {
-                    $testCaseGenerator = new TestCaseGenerator($className, $this->getTestsDirectoryName());
-                    if (!is_file($testCaseGenerator->getTargetSourceFile())) {
-                        $generators[] = $testCaseGenerator;
-                    }
+        if (!empty($generators)) {
+            $testCaseGenerator = new TestCaseGenerator(
+                $generators[0]->getFullClassName(),
+                $this->getTestsCaseClassName(),
+                $this->getTestsDirectoryName()
+            );
 
-                    $generators[] = new TestGenerator($className, $this->getTestsDirectoryName());
-                }
+            if (!is_file($testCaseGenerator->getTargetSourceFile())) {
+                $generators[] = $testCaseGenerator;
             }
         }
 
         return $generators;
-    }
-
-    /**
-     * @param $fileName
-     *
-     * @return bool
-     */
-    protected function isTestFile($fileName)
-    {
-        return strpos($fileName, 'Tests') !== false;
     }
 }

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Generator;
 
 /**
@@ -59,19 +60,59 @@ abstract class AbstractGenerator
         $targetSourceFile = ''
     ) {
         $this->testDirectoryName = $testDirectoryName;
-        $this->className = $this->extractClassNameInfo($className);
-        $this->targetClassName = $this->extractClassNameInfo($targetClassName);
 
-        $this->sourceFile = str_replace(
-            $this->className['fullClassName'],
-            $this->className['className'],
-            $sourceFile
-        );
+        if (empty($sourceFile)) {
+            $sourceFile = ClassUtils::resolveSourceFile($className);
+        }
 
-        $this->targetSourceFile = str_replace(
-            $this->targetClassName['fullClassName'],
-            $this->targetClassName['className'],
-            $targetSourceFile
+        $sourceFile = realpath($sourceFile);
+        include_once $sourceFile;
+
+        if (!class_exists($className)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Could not find class "%s" in "%s".',
+                    $className,
+                    $sourceFile
+                )
+            );
+        }
+
+        if (empty($targetClassName)) {
+            $targetClassName = $this->resolveTargetClassName($className, $sourceFile, $testDirectoryName);
+        }
+
+        if (empty($targetSourceFile)) {
+            $targetSourceFile = ClassUtils::resolveTargetSourceFile(
+                $className,
+                $sourceFile,
+                $targetClassName,
+                $testDirectoryName,
+                $this->isTestCaseClass()
+            );
+        }
+
+        $this->className = ClassUtils::extractClassNameInfo($className);
+        $this->targetClassName = ClassUtils::extractClassNameInfo($targetClassName);
+
+        $this->sourceFile = $sourceFile;
+        $this->targetSourceFile = $targetSourceFile;
+    }
+
+    /**
+     * @param string $className
+     * @param string $sourceFile
+     * @param string $testDirectoryName
+     *
+     * @return string
+     */
+    public function resolveTargetClassName($className, $sourceFile, $testDirectoryName)
+    {
+        return ClassUtils::resolveTargetClassName(
+            $className,
+            $sourceFile,
+            $testDirectoryName,
+            $this->isTestCaseClass()
         );
     }
 
@@ -81,6 +122,14 @@ abstract class AbstractGenerator
     public function getClassName()
     {
         return $this->className['className'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullClassName()
+    {
+        return $this->className['fullClassName'];
     }
 
     /**
@@ -132,70 +181,9 @@ abstract class AbstractGenerator
     }
 
     /**
-     * @param $className
-     *
-     * @return array
+     * @return bool
      */
-    protected function extractClassNameInfo($className)
-    {
-        $result = array(
-            'projectName' => '',
-            'layerName' => '',
-            'componentName' => '',
-            'namespace' => '',
-            'className' => $className,
-            'fullClassName' => $className,
-        );
-
-        if (strpos($className, '\\') !== false) {
-            $tmp = explode('\\', $className);
-            $result['className'] = $tmp[count($tmp) - 1];
-            $result['namespace'] = $this->mergeClassName($tmp);
-        } else {
-            $refClass = new \ReflectionClass(
-                $this->className['fullClassName']
-            );
-
-            $result['namespace'] = $refClass->getNamespaceName();
-        }
-
-        $result['namespace'] .= substr(
-            '\\'.implode('\\', explode(DIRECTORY_SEPARATOR, $this->testDirectoryName)),
-            0,
-            -1
-        );
-
-        $components = explode('\\', $result['namespace']);
-        if (count($components) > 0) {
-            $result['projectName'] = $components[0];
-
-            if (count($components) > 1) {
-                $result['layerName'] = $components[1];
-
-                if (count($components) > 2) {
-                    $result['componentName'] = $components[2];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $parts
-     *
-     * @return string
-     */
-    protected function mergeClassName(array $parts)
-    {
-        $result = '';
-        if (count($parts) > 1) {
-            array_pop($parts);
-            $result = implode('\\', $parts);
-        }
-
-        return $result;
-    }
+    abstract protected function isTestCaseClass();
 
     /**
      * @return string
