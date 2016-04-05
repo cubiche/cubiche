@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Generator;
 
 /**
@@ -18,9 +19,15 @@ namespace Cubiche\Domain\Tests\Generator;
 class TestGenerator extends AbstractGenerator
 {
     /**
+     * @var string
+     */
+    protected $testCaseClassName;
+
+    /**
      * ClassGenerator constructor.
      *
      * @param string $className
+     * @param string $testCaseClassName
      * @param string $testDirectoryName
      * @param string $sourceFile
      * @param string $targetClassName
@@ -28,81 +35,13 @@ class TestGenerator extends AbstractGenerator
      */
     public function __construct(
         $className,
+        $testCaseClassName,
         $testDirectoryName,
         $sourceFile = '',
         $targetClassName = '',
         $targetSourceFile = ''
     ) {
-        $this->testDirectoryName = $testDirectoryName;
-
-        if (class_exists($className)) {
-            $reflector = new \ReflectionClass($className);
-            $sourceFile = $reflector->getFileName();
-
-            if ($sourceFile === false) {
-                $sourceFile = '<internal>';
-            }
-
-            unset($reflector);
-        } else {
-            if (empty($sourceFile)) {
-                $possibleFilenames = array(
-                    $className.'.php',
-                    str_replace(
-                        array('_', '\\'),
-                        DIRECTORY_SEPARATOR,
-                        $className
-                    ).'.php',
-                );
-
-                foreach ($possibleFilenames as $possibleFilename) {
-                    if (is_file($possibleFilename)) {
-                        $sourceFile = $possibleFilename;
-                    }
-                }
-            }
-
-            if (empty($sourceFile)) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Neither "%s" nor "%s" could be opened.',
-                        $possibleFilenames[0],
-                        $possibleFilenames[1]
-                    )
-                );
-            }
-
-            if (!is_file($sourceFile)) {
-                throw new \RuntimeException(
-                    sprintf(
-                        '"%s" could not be opened.',
-                        $sourceFile
-                    )
-                );
-            }
-
-            $sourceFile = realpath($sourceFile);
-            include_once $sourceFile;
-
-            if (!class_exists($className)) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Could not find class "%s" in "%s".',
-                        $className,
-                        $sourceFile
-                    )
-                );
-            }
-        }
-
-        if (empty($targetClassName)) {
-            $components = explode('\\', $className);
-            $targetClassName = $this->getTestsClassName(array_pop($components));
-        }
-
-        if (empty($targetSourceFile)) {
-            $targetSourceFile = $this->calculateTargetSourceFile($sourceFile, $className);
-        }
+        $this->testCaseClassName = $testCaseClassName;
 
         parent::__construct(
             $className,
@@ -116,17 +55,23 @@ class TestGenerator extends AbstractGenerator
     /**
      * {@inheritdoc}
      */
+    protected function isTestCaseClass()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function generate()
     {
-        $class = new \ReflectionClass(
-            $this->className['fullClassName']
-        );
+        $reflector = new \ReflectionClass($this->className['fullClassName']);
 
         $use = '';
         $methods = '';
         $incompleteMethods = '';
 
-        foreach ($class->getMethods() as $method) {
+        foreach ($reflector->getMethods() as $method) {
             if (!$method->isConstructor() &&
                 !$method->isAbstract() &&
                 $method->isPublic() &&
@@ -168,8 +113,9 @@ class TestGenerator extends AbstractGenerator
             $namespace = '';
         }
 
-        if ($this->targetClassName['className'] !== 'TestCase') {
-            $testCaseUse = $this->getTestCaseNamespace();
+        if (!$this->isTestCaseClass()) {
+            $testCaseUse = $this->getTestCaseNamespace($this->className['fullClassName']);
+
             if ($testCaseUse !== $this->targetClassName['namespace']) {
                 $use = 'use '.$testCaseUse."\\TestCase;\n";
             }
@@ -196,62 +142,6 @@ class TestGenerator extends AbstractGenerator
         );
 
         return $classTemplate->render();
-    }
-
-    /**
-     * @param $sourceFile
-     * @param $className
-     *
-     * @return string
-     */
-    protected function calculateTargetSourceFile($sourceFile, $className)
-    {
-        $reflector = new \ReflectionClass($className);
-        $namespace = $reflector->getNamespaceName();
-
-        $projectName = '';
-        $layerName = '';
-        $componentName = '';
-
-        $components = explode('\\', $namespace);
-        if (count($components) > 0) {
-            $projectName = $components[0];
-
-            if (count($components) > 1) {
-                $layerName = $components[1];
-
-                if (count($components) > 2) {
-                    $componentName = $components[2];
-                }
-            }
-        }
-
-        // for example: RealTests
-        $components = explode('\\', $className);
-        $targetClassName = $this->getTestsClassName(array_pop($components));
-
-        // for example: Cubiche/Domain/Core
-        $componentPath = $projectName.DIRECTORY_SEPARATOR.
-            $layerName.DIRECTORY_SEPARATOR.$componentName
-        ;
-
-        // for example: src
-        $begining = substr($sourceFile, 0, strpos($sourceFile, $componentPath) - 1);
-        $path = $begining.DIRECTORY_SEPARATOR.$componentPath;
-
-        $end = explode(DIRECTORY_SEPARATOR, substr($sourceFile, strlen($path) + 1));
-        if (!empty($end)) {
-            array_pop($end);
-        }
-
-        $end = implode(DIRECTORY_SEPARATOR, $end);
-        // for example: src/Cubiche/Domain/Core/Tests/Units/RealTests.php
-        return $begining.DIRECTORY_SEPARATOR.
-            $componentPath.DIRECTORY_SEPARATOR.
-            $this->testDirectoryName.
-            $end.DIRECTORY_SEPARATOR.
-            $targetClassName.'.php'
-        ;
     }
 
     /**
@@ -315,26 +205,21 @@ class TestGenerator extends AbstractGenerator
     }
 
     /**
-     * @param $className
+     * @param string $className
      *
      * @return string
      */
-    protected function getTestsClassName($className)
+    protected function getTestCaseNamespace($className)
     {
-        return $className.'Tests';
-    }
+        $testCaseFullClassName = ClassUtils::resolveTestCaseClassName(
+            $className,
+            $this->testCaseClassName,
+            $this->testDirectoryName
+        );
 
-    /**
-     * @return string
-     */
-    protected function getTestCaseNamespace()
-    {
-        $namespace = $this->className['projectName'].'\\'.
-            $this->className['layerName'].'\\'.
-            $this->className['componentName'].'\\'.
-            implode('\\', explode(DIRECTORY_SEPARATOR, $this->testDirectoryName))
-        ;
+        $components = explode('\\', $testCaseFullClassName);
+        array_pop($components);
 
-        return substr($namespace, 0, -1);
+        return implode('\\', $components);
     }
 }

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Tests\Cli;
 
 use Cubiche\Domain\Tests\Generator\ClassUtils;
@@ -59,12 +60,23 @@ class GenerateTestClassCommand extends BaseCommand
 
         $generators = [];
         foreach ($classes as $className) {
-            $testCaseGenerator = new TestCaseGenerator($className, $this->getTestsDirectoryName());
+            $generators[] = new TestGenerator(
+                $className,
+                $this->getTestsCaseClassName(),
+                $this->getTestsDirectoryName()
+            );
+        }
+
+        if (!empty($generators)) {
+            $testCaseGenerator = new TestCaseGenerator(
+                $generators[0]->getFullClassName(),
+                $this->getTestsCaseClassName(),
+                $this->getTestsDirectoryName()
+            );
+
             if (!is_file($testCaseGenerator->getTargetSourceFile())) {
                 $generators[] = $testCaseGenerator;
             }
-
-            $generators[] = new TestGenerator($className, $this->getTestsDirectoryName());
         }
 
         return $generators;
