@@ -12,7 +12,7 @@ namespace Cubiche\Domain\Storage\Tests\Units;
 
 use Cubiche\Domain\Storage\Exception\InvalidKeyException;
 use Cubiche\Domain\Storage\StorageInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * AbstractStorageTests class.

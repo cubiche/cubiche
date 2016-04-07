@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\Storage\Tests\Units\Exception;
 
 use Cubiche\Domain\Storage\Exception\InvalidKeyException;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * InvalidKeyExceptionTests class.

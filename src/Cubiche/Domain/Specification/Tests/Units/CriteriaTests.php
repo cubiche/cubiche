@@ -27,7 +27,7 @@ use Cubiche\Domain\Specification\Selector\Method;
 use Cubiche\Domain\Specification\Selector\Property;
 use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * CriteriaTests class.

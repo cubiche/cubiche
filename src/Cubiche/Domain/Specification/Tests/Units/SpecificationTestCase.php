@@ -13,7 +13,7 @@ use Cubiche\Domain\Specification\AndSpecification;
 use Cubiche\Domain\Specification\NotSpecification;
 use Cubiche\Domain\Specification\OrSpecification;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

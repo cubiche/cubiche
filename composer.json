@@ -18,18 +18,16 @@
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "myclabs/php-enum": "^1.4",
-        "doctrine/mongodb-odm": "^1.0.5",
-        "ramsey/uuid": "^3.2",
-        "symfony/property-access": "^3.0"
+        "php":                          "^5.5.9|^7.0",
+        "myclabs/php-enum":             "^1.4",
+        "doctrine/mongodb-odm":         "^1.0.5",
+        "ramsey/uuid":                  "^3.2",
+        "symfony/property-access":      "^3.0"
     },
     "require-dev": {
-        "atoum/atoum": "~2.5",
-        "atoum/stubs": "~2.5",
-        "atoum/visibility-extension": "~1.0",
-        "phpunit/phpunit": "~4.2",
-        "cubiche/cqt": "dev-master"
+        "atoum/visibility-extension":   "~1.0",
+        "cubiche/tests":                "dev-master",
+        "cubiche/cqt":                  "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -42,6 +40,7 @@
     "config": {
         "bin-dir": "bin"
     },
+    "minimum-stability": "dev",
     "scripts": {
         "post-install-cmd": [
             "Cubiche\\Tools\\CodeQualityTool::checkHooks"

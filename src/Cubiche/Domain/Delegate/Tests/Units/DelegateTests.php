@@ -10,7 +10,7 @@
 namespace Cubiche\Domain\Delegate\Tests\Units;
 
 use Cubiche\Domain\Delegate\Delegate;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * DelegateTests class.

@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\Async\Tests\Units;
 
+use Cubiche\Tests\TestCase;
 use Cubiche\Domain\Async\PromiseInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
