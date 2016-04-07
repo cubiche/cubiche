@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Identity\Tests\Units;
 use Cubiche\Domain\Identity\AutoIncrementId;
 use Cubiche\Domain\Identity\Id;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * AutoIncrementIdTests class.

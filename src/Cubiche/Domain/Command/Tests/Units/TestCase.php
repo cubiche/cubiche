@@ -7,10 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Command\Tests\Units;
 
-use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
+use Cubiche\Tests\TestCase as BaseTestCase;
 
 /**
  * Abstract Test Case class.

@@ -25,7 +25,7 @@ use Cubiche\Domain\Specification\Selector\Property;
 use Cubiche\Domain\Specification\Selector\This;
 use Cubiche\Domain\Specification\Selector\Value;
 use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * EvaluatorBuilderTests class.
