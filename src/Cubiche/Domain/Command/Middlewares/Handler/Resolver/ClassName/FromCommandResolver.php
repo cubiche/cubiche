@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Command\Middlewares\Handler\Resolver\ClassName;
 
-use Cubiche\Domain\Command\HandlerNameInterface;
+use Cubiche\Domain\Command\CommandNameInterface;
 
 /**
  * FromCommandResolver class.
@@ -24,14 +24,14 @@ class FromCommandResolver implements ResolverInterface
      */
     public function resolve($command)
     {
-        if ($command instanceof HandlerNameInterface) {
-            return $command->handlerName();
+        if ($command instanceof CommandNameInterface) {
+            return $command->commandName();
         }
 
         throw new \InvalidArgumentException(sprintf(
             'The command of type %s should implement the %s interface',
             is_object($command) ? get_class($command) : gettype($command),
-            HandlerNameInterface::class
+            CommandNameInterface::class
         ));
     }
 }

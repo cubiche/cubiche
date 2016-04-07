@@ -10,21 +10,19 @@
 namespace Cubiche\Domain\Command\Tests\Fixtures;
 
 /**
- * LoginUserCommandHandler class.
+ * LogoutUserCommandHandler class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserCommandHandler
+class LogoutUserCommandHandler
 {
     /**
-     * @param LoginUserCommand $command
+     * @param LogoutUserCommand $command
      *
      * @return bool
      */
-    public function handle(LoginUserCommand $command)
+    public function handle(LogoutUserCommand $command)
     {
-        $command->setLogin(!$command->isLogin());
-
         return $command->isLogin();
     }
 }

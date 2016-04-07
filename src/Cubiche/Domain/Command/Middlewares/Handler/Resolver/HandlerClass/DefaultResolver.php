@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Command\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Domain\Collections\ArrayCollection;
@@ -93,7 +92,10 @@ class DefaultResolver implements ResolverInterface
         foreach ($this->locators as $locator) {
             try {
                 /* @var LocatorInterface $locator */
-                return $locator->locate($commandName);
+                $handler = $locator->locate($commandName);
+                if ($handler !== null) {
+                    return $handler;
+                }
             } catch (\Exception $exception) {
             }
         }

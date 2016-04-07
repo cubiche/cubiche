@@ -11,16 +11,16 @@
 namespace Cubiche\Domain\Command;
 
 /**
- * HandlerName interface.
+ * CommandName interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface HandlerNameInterface
+interface CommandNameInterface
 {
     /**
-     * Return the command handler name.
+     * Return the command name.
      *
      * @return string
      */
-    public function handlerName();
+    public function commandName();
 }

@@ -10,12 +10,14 @@
  */
 namespace Cubiche\Domain\Command\Tests\Fixtures;
 
+use Cubiche\Domain\Command\CommandNameInterface;
+
 /**
- * LoginUserCommand class.
+ * LogoutUserCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserCommand
+class LogoutUserCommand implements CommandNameInterface
 {
     /**
      * @var string
@@ -23,25 +25,13 @@ class LoginUserCommand
     protected $email;
 
     /**
-     * @var string
-     */
-    protected $password;
-
-    /**
-     * @var bool
-     */
-    protected $login = false;
-
-    /**
-     * LoginUserCommand constructor.
+     * LogoutUserCommand constructor.
      *
      * @param $email
-     * @param $password
      */
-    public function __construct($email, $password)
+    public function __construct($email)
     {
         $this->setEmail($email);
-        $this->setPassword($password);
     }
 
     /**
@@ -61,34 +51,18 @@ class LoginUserCommand
     }
 
     /**
-     * @return string
-     */
-    public function password()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-
-    /**
      * @return bool
      */
     public function isLogin()
     {
-        return $this->login;
+        return false;
     }
 
     /**
-     * @param bool $login
+     * {@inheritdoc}
      */
-    public function setLogin($login)
+    public function commandName()
     {
-        $this->login = $login;
+        return 'logout_user';
     }
 }

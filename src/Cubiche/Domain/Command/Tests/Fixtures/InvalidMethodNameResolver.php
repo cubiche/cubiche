@@ -9,22 +9,20 @@
  */
 namespace Cubiche\Domain\Command\Tests\Fixtures;
 
+use Cubiche\Domain\Command\Middlewares\Handler\Resolver\MethodName\ResolverInterface;
+
 /**
- * LoginUserCommandHandler class.
+ * InvalidMethodNameResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserCommandHandler
+class InvalidMethodNameResolver implements ResolverInterface
 {
     /**
-     * @param LoginUserCommand $command
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function handle(LoginUserCommand $command)
+    public function resolve($command)
     {
-        $command->setLogin(!$command->isLogin());
-
-        return $command->isLogin();
+        throw new \Exception('Method name not found');
     }
 }
