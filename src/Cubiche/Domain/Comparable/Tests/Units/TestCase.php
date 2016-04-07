@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Comparable\Tests\Units;
 
-use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
+use Cubiche\Tests\TestCase as BaseTestCase;
 
 /**
  * Abstract Test Case class.

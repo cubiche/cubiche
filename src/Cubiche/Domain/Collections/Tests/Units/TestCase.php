@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Collections\Tests\Units;
 use Cubiche\Domain\Collections\Tests\Asserters\Asserters;
 use Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter;
 use Cubiche\Domain\Collections\Tests\Asserters\DataSourceAsserter;
-use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
+use Cubiche\Tests\TestCase as BaseTestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

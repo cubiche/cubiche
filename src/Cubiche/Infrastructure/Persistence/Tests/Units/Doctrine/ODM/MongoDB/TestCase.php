@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Tests\Units\TestCase as BaseTestCase;
+use Cubiche\Tests\TestCase as BaseTestCase;
 
 /**
  * Abstract Test Case Class.

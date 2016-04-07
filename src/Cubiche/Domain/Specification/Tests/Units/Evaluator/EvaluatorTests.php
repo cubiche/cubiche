@@ -10,7 +10,7 @@
 namespace Cubiche\Domain\Specification\Tests\Units\Evaluator;
 
 use Cubiche\Domain\Specification\Evaluator\Evaluator;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 /**
  * EvaluatorTests class.

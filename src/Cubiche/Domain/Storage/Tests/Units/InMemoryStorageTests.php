@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Storage\Tests\Units;
 use Cubiche\Domain\Storage\AbstractStorage;
 use Cubiche\Domain\Storage\Exception\KeyNotFoundException;
 use Cubiche\Domain\Storage\StorageInterface;
-use Cubiche\Domain\Tests\Units\TestCase;
+use Cubiche\Tests\TestCase;
 
 class InMemoryStorageTests extends TestCase
 {
