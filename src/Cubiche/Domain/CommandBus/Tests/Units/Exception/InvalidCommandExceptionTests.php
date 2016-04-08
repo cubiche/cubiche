@@ -1,24 +1,24 @@
 <?php
 
 /**
- * This file is part of the Cubiche package.
+ * This file is part of the Cubiche/CommandBus package.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Storage\Tests\Units\Exception;
+namespace Cubiche\Domain\CommandBus\Tests\Units\Exception;
 
-use Cubiche\Domain\Storage\Exception\InvalidKeyException;
-use Cubiche\Tests\TestCase;
+use Cubiche\Domain\CommandBus\Exception\InvalidCommandException;
+use Cubiche\Domain\CommandBus\Tests\Units\TestCase;
 
 /**
- * InvalidKeyExceptionTests class.
+ * InvalidCommandExceptionTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidKeyExceptionTests extends TestCase
+class InvalidCommandExceptionTests extends TestCase
 {
     /**
      * Test class.
@@ -32,16 +32,16 @@ class InvalidKeyExceptionTests extends TestCase
     }
 
     /*
-     * Test forKey method.
+     * Test forUnknownValue method.
      */
-    public function testForKey()
+    public function testForUnknownValue()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidKeyException::forKey('foo', $cause))
+            ->when($exception = InvalidCommandException::forUnknownValue('foo', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf(InvalidKeyException::class)
+                    ->isInstanceOf(InvalidCommandException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
@@ -49,7 +49,7 @@ class InvalidKeyExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = InvalidKeyException::forKey('bar'))
+            ->given($exception = InvalidCommandException::forUnknownValue('bar'))
             ->then
                 ->variable($exception->getPrevious())->isNull()
         ;

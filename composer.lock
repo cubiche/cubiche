@@ -1206,12 +1206,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "b2ec88de3faaf7bfe7b069947f6e9353287d4eb6"
+                "reference": "157919b7abbc277ab25d5137882cb800715cf125"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/b2ec88de3faaf7bfe7b069947f6e9353287d4eb6",
-                "reference": "b2ec88de3faaf7bfe7b069947f6e9353287d4eb6",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/157919b7abbc277ab25d5137882cb800715cf125",
+                "reference": "157919b7abbc277ab25d5137882cb800715cf125",
                 "shasum": ""
             },
             "require": {

@@ -1,24 +1,23 @@
 <?php
-
 /**
- * This file is part of the Cubiche package.
+ * This file is part of the Cubiche/CommandBus package.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Storage\Tests\Units\Exception;
+namespace Cubiche\Domain\CommandBus\Tests\Units\Exception;
 
-use Cubiche\Domain\Storage\Exception\InvalidKeyException;
-use Cubiche\Tests\TestCase;
+use Cubiche\Domain\CommandBus\Exception\InvalidMiddlewareException;
+use Cubiche\Domain\CommandBus\Tests\Units\TestCase;
 
 /**
- * InvalidKeyExceptionTests class.
+ * InvalidMiddlewareExceptionTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidKeyExceptionTests extends TestCase
+class InvalidMiddlewareExceptionTests extends TestCase
 {
     /**
      * Test class.
@@ -32,16 +31,16 @@ class InvalidKeyExceptionTests extends TestCase
     }
 
     /*
-     * Test forKey method.
+     * Test forMiddleware method.
      */
-    public function testForKey()
+    public function testForMiddleware()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidKeyException::forKey('foo', $cause))
+            ->when($exception = InvalidMiddlewareException::forMiddleware('foo', $cause))
             ->then
                 ->object($exception)
-                    ->isInstanceOf(InvalidKeyException::class)
+                    ->isInstanceOf(InvalidMiddlewareException::class)
                 ->integer($exception->getCode())
                     ->isEqualTo(0)
                 ->object($exception->getPrevious())
@@ -49,7 +48,7 @@ class InvalidKeyExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = InvalidKeyException::forKey('bar'))
+            ->given($exception = InvalidMiddlewareException::forMiddleware('bar'))
             ->then
                 ->variable($exception->getPrevious())->isNull()
         ;

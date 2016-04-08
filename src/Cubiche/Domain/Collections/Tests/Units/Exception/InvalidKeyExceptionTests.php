@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Storage\Tests\Units\Exception;
+namespace Cubiche\Domain\Collections\Tests\Units\Exception;
 
-use Cubiche\Domain\Storage\Exception\InvalidKeyException;
+use Cubiche\Domain\Collections\Exception\InvalidKeyException;
 use Cubiche\Tests\TestCase;
 
 /**
