@@ -12,6 +12,8 @@ namespace Cubiche\Domain\EventBus;
 
 use Cubiche\Domain\EventBus\Exception\InvalidMiddlewareException;
 use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Domain\EventBus\Exception\NotFoundException;
+use Cubiche\Domain\EventBus\Middlewares\Handler\EmitterMiddleware;
 
 /**
  * EventBus class.
@@ -20,6 +22,11 @@ use Cubiche\Domain\Delegate\Delegate;
  */
 class EventBus
 {
+    /**
+     * @var EmitterMiddleware
+     */
+    protected $emitterMiddleware;
+
     /**
      * @var Delegate
      */
@@ -32,21 +39,45 @@ class EventBus
      */
     public function __construct(array $middlewares)
     {
+        $this->ensureEmitterMiddleware($middlewares);
         $this->chainedMiddleware = $this->chainedExecution($middlewares);
     }
 
     /**
      * Executes the given event and optionally returns a value.
      *
-     * @param EventInterface $event
+     * @param $event
      *
-     * @return mixed
+     * @return EventInterface
      */
-    public function emit(EventInterface $event)
+    public function emit($event)
     {
+        $event = $this->emitterMiddleware->emitter()->ensureEvent($event);
         $chainedMiddleware = $this->chainedMiddleware;
 
-        return $chainedMiddleware($event);
+        $chainedMiddleware($event);
+
+        return $event;
+    }
+
+    /**
+     * Ensure that exists an emitter middleware.
+     *
+     * @param array $middlewares
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function ensureEmitterMiddleware(array $middlewares)
+    {
+        foreach ($middlewares as $middleware) {
+            if ($middleware instanceof EmitterMiddleware) {
+                $this->emitterMiddleware = $middleware;
+
+                return;
+            }
+        }
+
+        throw NotFoundException::middleware(EmitterMiddleware::class);
     }
 
     /**
@@ -63,14 +94,106 @@ class EventBus
         // reverse iteration over middlewares
         while ($middleware = array_pop($middlewares)) {
             if (!$middleware instanceof MiddlewareInterface) {
-                throw InvalidMiddlewareException::forMiddleware($middleware);
+                throw InvalidMiddlewareException::forMiddleware($middleware, MiddlewareInterface::class);
             }
 
             $next = Delegate::fromClosure(function (EventInterface $event) use ($middleware, $next) {
-                return $middleware->notify($event, $next);
+                return $middleware->handle($event, $next);
             });
         }
 
         return $next;
+    }
+
+    /**
+     * Adds an event listener that listens on the specified events. The higher priority value, the earlier an event
+     * listener will be triggered in the chain (defaults to 0).
+     *
+     * @param string   $eventName
+     * @param callable $listener
+     * @param int      $priority
+     *
+     * @return $this
+     */
+    public function addListener($eventName, callable $listener, $priority = 0)
+    {
+        $this->emitterMiddleware->emitter()->addListener($eventName, $listener, $priority);
+    }
+
+    /**
+     * Removes an event listener from the specified events.
+     *
+     * @param string   $eventName
+     * @param callable $listener
+     *
+     * @return $this
+     */
+    public function removeListener($eventName, callable $listener)
+    {
+        $this->emitterMiddleware->emitter()->removeListener($eventName, $listener);
+    }
+
+    /**
+     * Adds an event subscriber. The subscriber is asked for all the events he is
+     * interested in and added as a listener for these events.
+     *
+     * @param EventSubscriberInterface $subscriber
+     *
+     * @return $this
+     */
+    public function addSubscriber(EventSubscriberInterface $subscriber)
+    {
+        $this->emitterMiddleware->emitter()->addSubscriber($subscriber);
+    }
+
+    /**
+     * Removes an event subscriber.
+     *
+     * @param EventSubscriberInterface $subscriber
+     *
+     * @return $this
+     */
+    public function removeSubscriber(EventSubscriberInterface $subscriber)
+    {
+        $this->emitterMiddleware->emitter()->removeSubscriber($subscriber);
+    }
+
+    /**
+     * Gets the listeners of a specific event or all listeners sorted by descending priority.
+     *
+     * @param string $eventName
+     *
+     * @return array
+     */
+    public function getListeners($eventName = null)
+    {
+        $this->emitterMiddleware->emitter()->getListeners($eventName);
+    }
+
+    /**
+     * Gets the listener priority for a specific event.
+     *
+     * Returns null if the event or the listener does not exist.
+     *
+     * @param string   $eventName
+     * @param callable $listener
+     *
+     * @return int
+     */
+    public function getListenerPriority($eventName, callable $listener)
+    {
+        $this->emitterMiddleware->emitter()->getListenerPriority($eventName, $listener);
+    }
+
+    /**
+     * Checks whether an event has any registered listeners.
+     *
+     * @param string $eventName
+     *
+     * @return bool
+     */
+    public function hasListeners($eventName = null)
+    {
+        $this->emitterMiddleware->emitter()->hasListeners($eventName);
     }
 }

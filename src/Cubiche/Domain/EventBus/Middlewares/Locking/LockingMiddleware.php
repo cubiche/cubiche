@@ -38,10 +38,8 @@ class LockingMiddleware implements MiddlewareInterface
      * @param callable       $next
      *
      * @throws \Exception
-     *
-     * @return mixed|void
      */
-    public function notify(EventInterface $event, callable $next)
+    public function handle(EventInterface $event, callable $next)
     {
         $this->queue[] = Delegate::fromClosure(function () use ($event, $next) {
             return $next($event);
@@ -53,7 +51,7 @@ class LockingMiddleware implements MiddlewareInterface
 
         $this->isRunning = true;
         try {
-            $returnValue = $this->runQueuedJobs();
+            $this->runQueuedJobs();
         } catch (\Exception $e) {
             $this->isRunning = false;
             $this->queue = [];
@@ -61,8 +59,6 @@ class LockingMiddleware implements MiddlewareInterface
         }
 
         $this->isRunning = false;
-
-        return $returnValue;
     }
 
     /**

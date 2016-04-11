@@ -36,7 +36,7 @@ class Event implements EventInterface
      *
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct($name = null)
     {
         $this->name = $name;
     }
@@ -46,7 +46,7 @@ class Event implements EventInterface
      */
     public function name()
     {
-        return $this->name;
+        return $this->name ? $this->name : get_class($this);
     }
 
     /**

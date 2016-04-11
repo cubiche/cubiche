@@ -20,8 +20,6 @@ interface MiddlewareInterface
     /**
      * @param EventInterface $event
      * @param callable       $next
-     *
-     * @return mixed
      */
-    public function notify(EventInterface $event, callable $next);
+    public function handle(EventInterface $event, callable $next);
 }

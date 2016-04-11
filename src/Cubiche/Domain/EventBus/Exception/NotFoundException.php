@@ -10,31 +10,29 @@
  */
 namespace Cubiche\Domain\EventBus\Exception;
 
-use InvalidArgumentException;
 use Exception;
+use RuntimeException;
 
 /**
- * InvalidMiddlewareException class.
+ * NotFoundException class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidMiddlewareException extends InvalidArgumentException
+class NotFoundException extends RuntimeException
 {
     /**
-     * Creates an exception for an invalid middleware.
+     * Creates an exception for a not found middleware.
      *
-     * @param mixed          $middleware
      * @param string         $type
      * @param Exception|null $cause
      *
-     * @return InvalidMiddlewareException
+     * @return NotFoundException
      */
-    public static function forMiddleware($middleware, $type, Exception $cause = null)
+    public static function middleware($type, Exception $cause = null)
     {
         return new static(sprintf(
-            'Expected a middleware that implement %s. Got: %s',
-            $type,
-            is_object($middleware) ? get_class($middleware) : gettype($middleware)
+            'Not found a middleware of class %s',
+            $type
         ), 0, $cause);
     }
 }
