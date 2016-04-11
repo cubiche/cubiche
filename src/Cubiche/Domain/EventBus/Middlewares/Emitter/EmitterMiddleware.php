@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\EventBus\Middlewares\Handler;
+namespace Cubiche\Domain\EventBus\Middlewares\Emitter;
 
 use Cubiche\Domain\EventBus\Emitter;
 use Cubiche\Domain\EventBus\EventInterface;
