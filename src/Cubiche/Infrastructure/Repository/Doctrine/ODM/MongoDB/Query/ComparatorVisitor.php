@@ -10,11 +10,11 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
-use Cubiche\Core\Comparable\ComparatorVisitor as BaseComparatorVisitor;
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\ReverseComparator;
+use Cubiche\Core\Comparable\ComparatorVisitor as BaseComparatorVisitor;
 use Cubiche\Core\Comparable\Custom;
 use Cubiche\Core\Comparable\MultiComparator;
+use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Comparable\SelectorComparator;
 
 /**

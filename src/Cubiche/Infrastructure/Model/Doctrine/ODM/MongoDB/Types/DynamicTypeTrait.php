@@ -8,23 +8,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types;
-
-use Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
+namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types;
 
 /**
- * Phonenumber Type Class.
+ * Dynamic Type Trait.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class PhonenumberType extends NativeValueObjectType
+trait DynamicTypeTrait
 {
+    /**
+     * @var string
+     */
+    protected $targetClass = '';
+
     /**
      * @return string
      */
     public function targetClass()
     {
-        return Phonenumber::class;
+        return $this->targetClass;
+    }
+
+    /**
+     * @param string $targetClass
+     */
+    public function setTargetClass($targetClass)
+    {
+        $this->targetClass = $targetClass;
     }
 }

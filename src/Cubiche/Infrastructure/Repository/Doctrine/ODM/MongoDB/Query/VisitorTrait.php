@@ -16,9 +16,9 @@ use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\SelectorInterface;
 use Cubiche\Core\Selector\This;
 use Cubiche\Core\Selector\Value;
+use Cubiche\Core\Specification\Selector;
 use Cubiche\Domain\Model\EntityInterface;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
-use Cubiche\Core\Specification\Selector;
 
 /**
  * Visitor Class Trait.

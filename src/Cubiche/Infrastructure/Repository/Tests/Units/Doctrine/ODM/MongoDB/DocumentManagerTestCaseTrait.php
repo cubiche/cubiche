@@ -10,10 +10,10 @@
  */
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Infrastructure\Collections\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as CollectionsEventSubscriber;
-use Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
-use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
-use Cubiche\Infrastructure\Model\Persistence\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventSubscriber as CollectionsEventSubscriber;
+use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
+use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
+use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types\UUIDType;
+use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types\UUIDType;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 
 /**
@@ -23,7 +23,7 @@ class UserIdType extends UUIDType
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Infrastructure\Identity\Persistence\Doctrine\ODM\MongoDB\Types\UUIDType::nativeValueObjectClass()
+     * @see \Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types\UUIDType::nativeValueObjectClass()
      */
     protected function nativeValueObjectClass()
     {
