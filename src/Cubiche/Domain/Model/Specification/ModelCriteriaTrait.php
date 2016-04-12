@@ -10,15 +10,14 @@
  */
 namespace Cubiche\Domain\Model\Specification;
 
-use Cubiche\Core\Specification\Criteria as BaseCriteria;
 use Cubiche\Domain\Model\Selector\Entity;
 
 /**
- * Criteria Class.
+ * Model Criteria Trait.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Criteria extends BaseCriteria
+trait ModelCriteriaTrait
 {
     /**
      * @var Entity
@@ -28,7 +27,7 @@ class Criteria extends BaseCriteria
     /**
      * @return \Cubiche\Domain\Model\Specification\Selector\Entity
      */
-    public static function entity()
+    public static function asEntity()
     {
         if (self::$entity === null) {
             self::$entity = new Entity();

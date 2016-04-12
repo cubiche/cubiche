@@ -8,19 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Model\Selector;
+namespace Cubiche\Domain\Model\Specification;
 
-use Cubiche\Core\Selector\Property;
+use Cubiche\Core\Specification\Criteria;
 
 /**
- * Id Selector Class.
+ * Criteria Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Id extends Property
+class ModelCriteria extends Criteria
 {
-    public function __construct()
-    {
-        parent::__construct('id');
-    }
+    use ModelCriteriaTrait;
 }

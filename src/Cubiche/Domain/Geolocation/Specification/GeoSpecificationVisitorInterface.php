@@ -21,9 +21,9 @@ use Cubiche\Core\Specification\SpecificationVisitorInterface;
 interface GeoSpecificationVisitorInterface extends SpecificationVisitorInterface
 {
     /**
-     * @param Near $specification
+     * @param Near $near
      *
      * @return mixed
      */
-    public function visitNear(Near $specification);
+    public function visitNear(Near $near);
 }

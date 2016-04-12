@@ -49,7 +49,7 @@ class Near extends Specification
      * @param Coordinate        $coordinate
      * @param Distance          $radius
      */
-    public function __construct(SelectorInterface $selector, Coordinate $coordinate, Distance $radius)
+    public function __construct(SelectorInterface $selector, Coordinate $coordinate, Distance $radius = null)
     {
         $this->selector = $selector;
         $this->coordinate = $coordinate;
