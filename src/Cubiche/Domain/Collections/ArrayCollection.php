@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\Criteria;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Array Collection Class.

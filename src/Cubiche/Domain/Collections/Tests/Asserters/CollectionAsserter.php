@@ -11,10 +11,10 @@
 namespace Cubiche\Domain\Collections\Tests\Asserters;
 
 use Cubiche\Domain\Collections\CollectionInterface;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\Criteria;
+use Cubiche\Core\Specification\SpecificationInterface;
 use mageekguy\atoum\asserters\object as ObjectAsserter;
 use mageekguy\atoum\exceptions\logic as LogicException;
 

@@ -10,10 +10,10 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
 
 /**
- * ArrayCollection Interface.
+ * Array Collection Interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>

@@ -9,13 +9,13 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Comparable\Custom;
+use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Specification\Criteria;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Comparable\Custom;
-use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Iterator Data Source Tests Class.

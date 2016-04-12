@@ -9,10 +9,10 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
-use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * ArrayDataSourceTests class.

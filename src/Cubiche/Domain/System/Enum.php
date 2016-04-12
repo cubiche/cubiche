@@ -11,11 +11,11 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Enum\Enum as BaseEnum;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
-use MyCLabs\Enum\Enum as BaseEnum;
 
 /**
- * Enum class.
+ * Enum Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -36,16 +36,6 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function is($value)
-    {
-        return $this->value === $value;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
@@ -53,15 +43,5 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
     public function toNative()
     {
         return $this->value;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
-     */
-    public function equals($other)
-    {
-        return \get_class($this) === \get_class($other) && $this->getValue() === $other->getValue();
     }
 }

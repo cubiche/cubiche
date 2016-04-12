@@ -9,10 +9,10 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units;
 
+use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\Exception\InvalidKeyException;
-use Cubiche\Domain\Equatable\Tests\Fixtures\EquatableObject;
 
 /**
  * ArrayCollectionTests class.

@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Collections\DataSource;
 
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * Array Data Source Class.

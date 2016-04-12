@@ -10,9 +10,9 @@
  */
 namespace Cubiche\Domain\Collections;
 
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Data Source Collection.
