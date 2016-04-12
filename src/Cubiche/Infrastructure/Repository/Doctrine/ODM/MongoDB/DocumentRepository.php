@@ -30,13 +30,27 @@ class DocumentRepository extends Repository
     protected $repository;
 
     /**
-     * @param MongoDBDocumentRepository $repository
+     * @var DocumentDataSourceFactoryInterface
      */
-    public function __construct(MongoDBDocumentRepository $repository)
-    {
+    protected $documentDataSourceFactory;
+
+    /**
+     * @var DocumentDataSource
+     */
+    private $documentDataSource = null;
+
+    /**
+     * @param MongoDBDocumentRepository          $repository
+     * @param DocumentDataSourceFactoryInterface $documentDataSourceFactory
+     */
+    public function __construct(
+        MongoDBDocumentRepository $repository,
+        DocumentDataSourceFactoryInterface $documentDataSourceFactory
+    ) {
         parent::__construct($repository->getDocumentName());
 
         $this->repository = $repository;
+        $this->documentDataSourceFactory = $documentDataSourceFactory;
     }
 
     /**
@@ -152,7 +166,7 @@ class DocumentRepository extends Repository
      */
     public function find(SpecificationInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, $criteria));
+        return new DataSourceCollection($this->documentDataSource()->filteredDataSource($criteria));
     }
 
     /**
@@ -162,7 +176,7 @@ class DocumentRepository extends Repository
      */
     public function findOne(SpecificationInterface $criteria)
     {
-        return (new DocumentDataSource($this->repository, $criteria))->findOne();
+        return $this->documentDataSource()->filteredDataSource($criteria)->findOne();
     }
 
     /**
@@ -182,7 +196,7 @@ class DocumentRepository extends Repository
      */
     public function sorted(ComparatorInterface $criteria)
     {
-        return new DataSourceCollection(new DocumentDataSource($this->repository, null, $criteria));
+        return new DataSourceCollection($this->documentDataSource()->sortedDataSource($criteria));
     }
 
     /**
@@ -200,5 +214,17 @@ class DocumentRepository extends Repository
     protected function dm()
     {
         return $this->repository->getDocumentManager();
+    }
+
+    /**
+     * @return \Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSource
+     */
+    protected function documentDataSource()
+    {
+        if ($this->documentDataSource === null) {
+            $this->documentDataSource = $this->documentDataSourceFactory->create($this->repository->getDocumentName());
+        }
+
+        return $this->documentDataSource;
     }
 }

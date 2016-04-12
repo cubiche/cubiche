@@ -14,7 +14,9 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\DataSource;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\QueryBuilder;
-use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactoryInterface;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactoryInterface;
 
 /**
  * Document Data Source Class.
@@ -24,24 +26,45 @@ use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 class DocumentDataSource extends DataSource
 {
     /**
-     * @var MongoDBDocumentRepository
+     * @var string
      */
-    protected $repository;
+    protected $documentName;
+
+    /**
+     * @var DocumentManager
+     */
+    protected $dm;
+
+    /**
+     * @var SpecificationVisitorFactoryInterface
+     */
+    protected $specificationVisitorFactory;
+
+    /**
+     * @var ComparatorVisitorFactoryInterface
+     */
+    protected $comparatorVisitorFactory;
 
     /**
      * @var QueryBuilder
      */
-    protected $queryBuilder;
+    private $queryBuilder;
 
     /**
-     * @param MongoDBDocumentRepository $repository
-     * @param SpecificationInterface    $searchCriteria
-     * @param ComparatorInterface       $sortCriteria
-     * @param int                       $offset
-     * @param int                       $length
+     * @param DocumentManager                      $dm
+     * @param SpecificationVisitorFactoryInterface $specificationVisitorFactory
+     * @param ComparatorVisitorFactoryInterface    $comparatorVisitorFactory
+     * @param string                               $documentName
+     * @param SpecificationInterface               $searchCriteria
+     * @param ComparatorInterface                  $sortCriteria
+     * @param string                               $offset
+     * @param string                               $length
      */
     public function __construct(
-        MongoDBDocumentRepository $repository,
+        DocumentManager $dm,
+        SpecificationVisitorFactoryInterface $specificationVisitorFactory,
+        ComparatorVisitorFactoryInterface $comparatorVisitorFactory,
+        $documentName = null,
         SpecificationInterface $searchCriteria = null,
         ComparatorInterface $sortCriteria = null,
         $offset = null,
@@ -49,7 +72,10 @@ class DocumentDataSource extends DataSource
     ) {
         parent::__construct($searchCriteria, $sortCriteria, $offset, $length);
 
-        $this->repository = $repository;
+        $this->dm = $dm;
+        $this->specificationVisitorFactory = $specificationVisitorFactory;
+        $this->comparatorVisitorFactory = $comparatorVisitorFactory;
+        $this->documentName = $documentName;
     }
 
     /**
@@ -83,8 +109,7 @@ class DocumentDataSource extends DataSource
             $criteria = $this->searchCriteria()->andX($criteria);
         }
 
-        return new self(
-            $this->repository,
+        return $this->createDocumentDataSource(
             $criteria,
             $this->sortCriteria(),
             $this->offset(),
@@ -99,8 +124,7 @@ class DocumentDataSource extends DataSource
      */
     public function slicedDataSource($offset, $length = null)
     {
-        return new self(
-            $this->repository,
+        return $this->createDocumentDataSource(
             $this->searchCriteria(),
             $this->sortCriteria(),
             $this->actualOffset($offset),
@@ -115,8 +139,7 @@ class DocumentDataSource extends DataSource
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
-        return new self(
-            $this->repository,
+        return $this->createDocumentDataSource(
             $this->searchCriteria(),
             $sortCriteria,
             $this->offset(),
@@ -141,8 +164,10 @@ class DocumentDataSource extends DataSource
     {
         if ($this->queryBuilder === null) {
             $this->queryBuilder = new QueryBuilder(
-                $this->repository->getDocumentManager(),
-                $this->repository->getDocumentName()
+                $this->dm,
+                $this->documentName,
+                $this->specificationVisitorFactory,
+                $this->comparatorVisitorFactory
             );
             if ($this->isFiltered()) {
                 $this->queryBuilder->addSearchCriteria($this->searchCriteria());
@@ -159,5 +184,31 @@ class DocumentDataSource extends DataSource
         }
 
         return $this->queryBuilder;
+    }
+
+    /**
+     * @param SpecificationInterface $searchCriteria
+     * @param ComparatorInterface    $sortCriteria
+     * @param string                 $offset
+     * @param string                 $length
+     *
+     * @return DocumentDataSource
+     */
+    protected function createDocumentDataSource(
+        SpecificationInterface $searchCriteria = null,
+        ComparatorInterface $sortCriteria = null,
+        $offset = null,
+        $length = null
+    ) {
+        return new self(
+            $this->dm,
+            $this->specificationVisitorFactory,
+            $this->comparatorVisitorFactory,
+            $this->documentName,
+            $searchCriteria,
+            $sortCriteria,
+            $offset,
+            $length
+        );
     }
 }

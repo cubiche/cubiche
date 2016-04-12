@@ -35,7 +35,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
      */
     protected function emptyRepository()
     {
-        return new DocumentRepository($this->dm()->getRepository(User::class));
+        return new DocumentRepository($this->dm()->getRepository(User::class), $this->documentDataSourceFactory());
     }
 
     /**

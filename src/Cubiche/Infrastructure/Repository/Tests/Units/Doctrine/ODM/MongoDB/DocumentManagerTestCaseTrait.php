@@ -14,6 +14,10 @@ use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventSubscriber as C
 use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactory;
 use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
@@ -33,12 +37,17 @@ trait DocumentManagerTestCaseTrait
     /**
      * @var DocumentManager
      */
-    protected $dm;
+    private $dm;
 
     /**
      * @var UnitOfWork
      */
-    protected $uow;
+    private $uow;
+
+    /**
+     * @var DocumentDataSourceFactoryInterface
+     */
+    private $documentDataSourceFactory;
 
     /**
      * @return \Doctrine\ODM\MongoDB\DocumentManager
@@ -57,6 +66,22 @@ trait DocumentManagerTestCaseTrait
         }
 
         return $this->dm;
+    }
+
+    /**
+     * @return \Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface
+     */
+    public function documentDataSourceFactory()
+    {
+        if ($this->documentDataSourceFactory === null) {
+            $this->documentDataSourceFactory = new DocumentDataSourceFactory(
+                $this->dm(),
+                new SpecificationVisitorFactory(),
+                new ComparatorVisitorFactory()
+            );
+        }
+
+        return $this->documentDataSourceFactory;
     }
 
     /**
