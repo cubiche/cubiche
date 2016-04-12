@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\MethodName;
 
 use Cubiche\Domain\CommandBus\Exception\InvalidResolverException;
@@ -52,7 +53,7 @@ class ChainResolverTests extends TestCase
             ->and($resolver2 = new MethodWithShortCommandNameResolver())
             ->and($resolver3 = new DefaultResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3]))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@timeout.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
             ->then()
                 ->string($result)
                     ->isEqualTo('handleLoginUser')
@@ -62,7 +63,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver = new ChainResolver([]))
             ->then()
             ->exception(function () use ($resolver) {
-                $resolver->resolve(new LogoutUserCommand('ivan@timeout.com'));
+                $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
             })
             ->isInstanceOf(NotFoundException::class)
         ;

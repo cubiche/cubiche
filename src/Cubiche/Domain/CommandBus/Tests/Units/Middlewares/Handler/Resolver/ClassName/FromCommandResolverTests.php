@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\ClassName;
 
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\FromCommandResolver;
@@ -29,7 +30,7 @@ class FromCommandResolverTests extends TestCase
     {
         $this
             ->given($resolver = new FromCommandResolver())
-            ->when($result = $resolver->resolve(new LogoutUserCommand('ivan@timeout.com')))
+            ->when($result = $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com')))
             ->then()
                 ->string($result)
                     ->isEqualTo('logout_user')
@@ -39,7 +40,7 @@ class FromCommandResolverTests extends TestCase
             ->given($resolver = new FromCommandResolver())
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LoginUserCommand('ivan@timeout.com', 'plainpassword'));
+                    $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword'));
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
         ;

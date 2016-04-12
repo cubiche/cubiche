@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventBus;
 
 use Cubiche\Domain\EventBus\Exception\InvalidMiddlewareException;
@@ -165,9 +166,9 @@ class EventBus
      *
      * @return array
      */
-    public function getListeners($eventName = null)
+    public function listeners($eventName = null)
     {
-        $this->emitterMiddleware->emitter()->getListeners($eventName);
+        $this->emitterMiddleware->emitter()->listeners($eventName);
     }
 
     /**
@@ -180,9 +181,9 @@ class EventBus
      *
      * @return int
      */
-    public function getListenerPriority($eventName, callable $listener)
+    public function listenerPriority($eventName, callable $listener)
     {
-        $this->emitterMiddleware->emitter()->getListenerPriority($eventName, $listener);
+        $this->emitterMiddleware->emitter()->listenerPriority($eventName, $listener);
     }
 
     /**

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler;
 
 use Cubiche\Domain\CommandBus\Middlewares\Handler\HandlerMiddleware;
@@ -40,7 +41,7 @@ class HandlerMiddlewareTests extends TestCase
                 )
             )
             ->and($middleware = new HandlerMiddleware($resolver))
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
             })

@@ -8,7 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventBus\Tests\Units;
+
+use Cubiche\Domain\EventBus\Event;
 
 /**
  * Event class.
@@ -22,7 +25,21 @@ class EventTests extends TestCase
      */
     public function testName()
     {
-        // todo: Implement testName().
+        $this
+            ->given($event = new Event())
+            ->when($name = $event->name())
+            ->then()
+                ->string($name)
+                    ->isEqualTo(Event::class)
+        ;
+
+        $this
+            ->given($event = new Event('foo.event'))
+            ->when($name = $event->name())
+            ->then()
+                ->string($name)
+                    ->isEqualTo('foo.event')
+        ;
     }
 
     /**
@@ -30,7 +47,13 @@ class EventTests extends TestCase
      */
     public function testNamed()
     {
-        // todo: Implement testNamed().
+        $this
+            ->given($event = Event::named('foo.event'))
+            ->when($name = $event->name())
+            ->then()
+                ->string($name)
+                    ->isEqualTo('foo.event')
+        ;
     }
 
     /**
@@ -38,14 +61,16 @@ class EventTests extends TestCase
      */
     public function testStopPropagation()
     {
-        // todo: Implement testStopPropagation().
-    }
-
-    /**
-     * Test IsPropagationStopped method.
-     */
-    public function testIsPropagationStopped()
-    {
-        // todo: Implement testIsPropagationStopped().
+        $this
+            ->given($event = new Event())
+            ->then()
+                ->boolean($event->isPropagationStopped())
+                    ->isFalse()
+            ->and()
+            ->when($event->stopPropagation())
+            ->then()
+                ->boolean($event->isPropagationStopped())
+                    ->isTrue()
+        ;
     }
 }

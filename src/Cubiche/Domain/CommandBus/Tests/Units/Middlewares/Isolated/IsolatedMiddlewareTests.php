@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Isolated;
 
 use Cubiche\Domain\CommandBus\Middlewares\Isolated\IsolatedMiddleware;
@@ -28,7 +29,7 @@ class IsolatedMiddlewareTests extends TestCase
     {
         $this
             ->given($middleware = new IsolatedMiddleware())
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
 
@@ -44,7 +45,7 @@ class IsolatedMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new IsolatedMiddleware())
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
 
@@ -59,7 +60,7 @@ class IsolatedMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new IsolatedMiddleware())
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($counter = 0)
             ->and($callable = function (LoginUserCommand $command) use (&$counter) {
                 ++$counter;

@@ -8,8 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventBus\Tests\Units\Middlewares\Locking;
 
+use Cubiche\Domain\EventBus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Domain\EventBus\Tests\Fixtures\LoginUserEvent;
 use Cubiche\Domain\EventBus\Tests\Units\TestCase;
 
 /**
@@ -20,10 +23,52 @@ use Cubiche\Domain\EventBus\Tests\Units\TestCase;
 class LockingMiddlewareTests extends TestCase
 {
     /**
-     * Test Handle method.
+     * Test handle method.
      */
     public function testHandle()
     {
-        // todo: Implement testHandle().
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($callable = function (LoginUserEvent $event) {
+                $event->setEmail('info@cubiche.org');
+            })
+            ->when($middleware->handle($event, $callable))
+            ->then()
+                ->string($event->email())
+                    ->isEqualTo('info@cubiche.org')
+        ;
+
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($callable = function (LoginUserEvent $event) {
+                $event->setEmail('info@cubiche.org');
+
+                throw new \InvalidArgumentException();
+            })
+            ->then()
+                ->exception(function () use ($middleware, $event, $callable) {
+                    $middleware->handle($event, $callable);
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($counter = 0)
+            ->and($callable = function (LoginUserEvent $event) use (&$counter) {
+                ++$counter;
+            })
+            ->when($middleware->handle($event, $callable))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(1)
+            ->when($middleware->handle($event, $callable))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(2)
+        ;
     }
 }

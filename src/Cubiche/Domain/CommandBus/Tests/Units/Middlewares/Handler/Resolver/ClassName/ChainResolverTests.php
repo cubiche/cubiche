@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\ClassName;
 
 use Cubiche\Domain\CommandBus\Exception\InvalidResolverException;
@@ -50,12 +51,12 @@ class ChainResolverTests extends TestCase
             ->given($resolver1 = new FromCommandResolver())
             ->and($resolver2 = new DefaultResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2]))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@timeout.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
             ->then()
                 ->string($result)
                     ->isEqualTo(LoginUserCommand::class)
             ->and()
-            ->when($result = $resolver->resolve(new LogoutUserCommand('ivan@timeout.com')))
+            ->when($result = $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com')))
             ->then()
                 ->string($result)
                     ->isEqualTo('logout_user')
@@ -65,7 +66,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver = new ChainResolver([]))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserCommand('ivan@timeout.com'));
+                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

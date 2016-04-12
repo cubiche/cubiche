@@ -8,9 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\EventBus;
 
-use Cubiche\Domain\Delegate\Delegate;
+namespace Cubiche\Domain\EventBus;
 
 /**
  * Emitter class.
@@ -41,7 +40,7 @@ class Emitter
         $event = $this->ensureEvent($event);
 
         $eventName = $event->name();
-        if ($listeners = $this->getListeners($eventName)) {
+        if ($listeners = $this->listeners($eventName)) {
             $this->doDispatch($listeners, $event);
         }
 
@@ -64,7 +63,7 @@ class Emitter
         }
 
         if (!$event instanceof EventInterface) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Events should be provides as Event instances or string, received type: '.gettype($event)
             );
         }
@@ -79,7 +78,7 @@ class Emitter
      *
      * @return array
      */
-    public function getListeners($eventName = null)
+    public function listeners($eventName = null)
     {
         if (null !== $eventName) {
             if (!isset($this->listeners[$eventName])) {
@@ -112,15 +111,18 @@ class Emitter
      *
      * @return int
      */
-    public function getListenerPriority($eventName, callable $listener)
+    public function listenerPriority($eventName, callable $listener)
     {
         if (!isset($this->listeners[$eventName])) {
             return;
         }
 
         foreach ($this->listeners[$eventName] as $priority => $listeners) {
-            if (false !== ($key = array_search($listener, $listeners, true))) {
-                return $priority;
+            foreach ($listeners as $registered) {
+                /** @var DelegateListener $registered */
+                if ($registered->equals($listener)) {
+                    return $priority;
+                }
             }
         }
     }
@@ -134,7 +136,7 @@ class Emitter
      */
     public function hasListeners($eventName = null)
     {
-        return (bool) count($this->getListeners($eventName));
+        return (bool) count($this->listeners($eventName));
     }
 
     /**
@@ -149,7 +151,7 @@ class Emitter
      */
     public function addListener($eventName, callable $listener, $priority = 0)
     {
-        $this->listeners[$eventName][$priority][] = new Delegate($listener);
+        $this->listeners[$eventName][$priority][] = new DelegateListener($listener);
         unset($this->sorted[$eventName]);
     }
 
@@ -163,14 +165,18 @@ class Emitter
      */
     public function removeListener($eventName, callable $listener)
     {
-        $listener = new Delegate($listener);
         if (!isset($this->listeners[$eventName])) {
             return;
         }
 
         foreach ($this->listeners[$eventName] as $priority => $listeners) {
-            if (false !== ($key = array_search($listener, $listeners, true))) {
-                unset($this->listeners[$eventName][$priority][$key], $this->sorted[$eventName]);
+            $index = 0;
+            foreach ($listeners as $registered) {
+                /** @var DelegateListener $registered */
+                if ($registered->equals($listener)) {
+                    unset($this->listeners[$eventName][$priority][$index], $this->sorted[$eventName]);
+                }
+                ++$index;
             }
         }
     }

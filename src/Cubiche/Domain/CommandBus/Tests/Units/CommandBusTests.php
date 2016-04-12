@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units;
 
 use Cubiche\Domain\CommandBus\CommandBus;
@@ -57,7 +58,7 @@ class CommandBusTests extends TestCase
     {
         $this
             ->let($middleware = new EncoderMiddleware('md5'))
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($commandBus = new CommandBus([$middleware]))
             ->when($commandBus->handle($command))
             ->then()
@@ -67,7 +68,7 @@ class CommandBusTests extends TestCase
 
         $this
             ->let($middleware = new EncoderMiddleware('sha1'))
-            ->and($command = new LoginUserCommand('ivan@timeout.com', 'plainpassword'))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($commandBus = new CommandBus([$middleware, $middleware]))
             ->when($commandBus->handle($command))
             ->then()

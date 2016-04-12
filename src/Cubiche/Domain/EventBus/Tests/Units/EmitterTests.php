@@ -8,7 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventBus\Tests\Units;
+
+use Cubiche\Domain\EventBus\Emitter;
+use Cubiche\Domain\EventBus\Event;
+use Cubiche\Domain\EventBus\EventInterface;
+use Cubiche\Domain\EventBus\Tests\Fixtures\InvalidEvent;
+use Cubiche\Domain\EventBus\Tests\Fixtures\LoginUserEvent;
+use Cubiche\Domain\EventBus\Tests\Fixtures\LoginUserEventListener;
 
 /**
  * Emitter class.
@@ -18,35 +26,191 @@ namespace Cubiche\Domain\EventBus\Tests\Units;
 class EmitterTests extends TestCase
 {
     /**
+     * @return Emitter
+     */
+    public function createEmitter()
+    {
+        return new Emitter();
+    }
+
+    /**
      * Test Emit method.
      */
     public function testEmit()
     {
-        // todo: Implement testEmit().
+        // emit event name
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->when($event = $emitter->emit('foo.event'))
+            ->then()
+                ->object($event)
+                    ->isInstanceOf(Event::class)
+        ;
+
+        // emit event named
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->when($event = $emitter->emit(Event::named('foo.event')))
+            ->then()
+                ->object($event)
+                    ->isInstanceOf(Event::class)
+        ;
+
+        // emit event class
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->when($event = $emitter->emit(new LoginUserEvent('ivan@cubiche.com')))
+            ->then()
+                ->object($event)
+                    ->isInstanceOf(EventInterface::class)
+        ;
+
+        // emit invalid event
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->then()
+                ->exception(function () use ($emitter) {
+                    $emitter->emit(new InvalidEvent());
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        // emit with one callable listener
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($counter = 0)
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                ++$counter;
+            }))
+            ->when($emitter->emit('foo.event'))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(1)
+        ;
+
+        // emit with many callable listener
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($counter = 0)
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                ++$counter;
+            }))
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                ++$counter;
+            }))
+            ->when($emitter->emit('foo.event'))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(2)
+        ;
+
+        // emit with many callable listener but stopped the event propagation
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($counter = 0)
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                ++$counter;
+                $event->stopPropagation();
+            }))
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                ++$counter;
+            }))
+            ->when($emitter->emit('foo.event'))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(1)
+        ;
+
+        // emit with many callable listener and priority
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($counter = 3)
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                $counter = $counter * 5;
+            }, 50))
+            ->and($emitter->addListener('foo.event', function (Event $event) use (&$counter) {
+                $counter = $counter + 2;
+            }, 100))
+            ->when($emitter->emit('foo.event'))
+            ->then()
+                ->integer($counter)
+                    ->isEqualTo(25)
+        ;
+
+        // emit with many listener class or callable
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($emitter->addListener($event->name(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($emitter->addListener($event->name(), function (LoginUserEvent $event) {
+                $this
+                    ->string($event->email())
+                        ->isEqualTo('info@cubiche.org')
+                ;
+
+                $event->setEmail('fake@email.com');
+            }))
+            ->when($emitter->emit($event))
+            ->then()
+                ->string($event->email())
+                    ->isEqualTo('fake@email.com')
+        ;
     }
 
     /**
-     * Test EnsureEvent method.
+     * Test listeners method.
      */
-    public function testEnsureEvent()
+    public function testListeners()
     {
-        // todo: Implement testEnsureEvent().
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($emitter->addListener('event.foo', array(new LoginUserEventListener(), 'onLogin')))
+            ->and($emitter->addListener('event.foo', function (Event $event) {
+
+            }))
+            ->and($emitter->addListener('event.bar', function (Event $event) {
+
+            }))
+            ->when($listeners = $emitter->listeners())
+                ->then()
+                    ->array($listeners)
+                        ->hasKey('event.foo')
+                        ->hasKey('event.bar')
+                    ->array($listeners)
+                        ->hasSize(2)
+                    ->array($listeners)
+                        ->array['event.foo']
+                            ->hasSize(2)
+        ;
     }
 
     /**
-     * Test GetListeners method.
+     * Test listenerPriority method.
      */
-    public function testGetListeners()
+    public function testListenerPriority()
     {
-        // todo: Implement testGetListeners().
-    }
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
 
-    /**
-     * Test GetListenerPriority method.
-     */
-    public function testGetListenerPriority()
-    {
-        // todo: Implement testGetListenerPriority().
+            })
+            ->and($emitter->addListener('event.foo', $listener1, 100))
+            ->and($emitter->addListener('event.foo', $listener2, 50))
+            ->and($emitter->addListener('event.bar', $listener3))
+            ->then()
+                ->variable($emitter->listenerPriority('event.unknow', $listener1))
+                    ->isNull()
+                ->variable($emitter->listenerPriority('event.foo', $listener3))
+                    ->isNull()
+                ->integer($emitter->listenerPriority('event.foo', $listener1))
+                    ->isEqualTo(100)
+                ->integer($emitter->listenerPriority('event.foo', $listener2))
+                    ->isEqualTo(50)
+        ;
     }
 
     /**
@@ -54,15 +218,26 @@ class EmitterTests extends TestCase
      */
     public function testHasListeners()
     {
-        // todo: Implement testHasListeners().
-    }
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
 
-    /**
-     * Test AddListener method.
-     */
-    public function testAddListener()
-    {
-        // todo: Implement testAddListener().
+            })
+            ->and($emitter->addListener('event.foo', $listener1, 100))
+            ->and($emitter->addListener('event.foo', $listener2, 50))
+            ->and($emitter->addListener('event.bar', $listener3))
+            ->then()
+                ->boolean($emitter->hasListeners('event.unknow'))
+                    ->isFalse()
+                ->boolean($emitter->hasListeners('event.foo'))
+                    ->isTrue()
+                ->boolean($emitter->hasListeners())
+                    ->isTrue()
+        ;
     }
 
     /**
@@ -70,7 +245,33 @@ class EmitterTests extends TestCase
      */
     public function testRemoveListener()
     {
-        // todo: Implement testRemoveListener().
+        $this
+            ->given($emitter = $this->createEmitter())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
+
+            })
+            ->and($emitter->addListener('event.foo', $listener1, 100))
+            ->and($emitter->addListener('event.foo', $listener2, 50))
+            ->and($emitter->addListener('event.bar', $listener3))
+            ->then()
+                ->boolean($emitter->hasListeners('event.foo'))
+                    ->isTrue()
+                ->and()
+                ->when($emitter->removeListener('event.foo', $listener1))
+                ->then()
+                    ->boolean($emitter->hasListeners('event.foo'))
+                        ->isTrue()
+                ->and()
+                ->when($emitter->removeListener('event.unknow', $listener2))
+                ->when($emitter->removeListener('event.foo', $listener2))
+                ->then()
+                    ->boolean($emitter->hasListeners('event.foo'))
+                        ->isFalse()
+        ;
     }
 
     /**

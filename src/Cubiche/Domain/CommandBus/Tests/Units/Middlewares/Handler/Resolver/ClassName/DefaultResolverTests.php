@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\ClassName;
 
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\DefaultResolver;
@@ -28,7 +29,7 @@ class DefaultResolverTests extends TestCase
     {
         $this
             ->given($resolver = new DefaultResolver())
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@timeout.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
             ->then()
                 ->string($result)
                     ->isEqualTo(LoginUserCommand::class)
