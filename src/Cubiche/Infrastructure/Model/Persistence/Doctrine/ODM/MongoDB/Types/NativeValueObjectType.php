@@ -60,4 +60,9 @@ abstract class NativeValueObjectType extends ValueObjectType
 
         return 'return $value !== null ? '.$class.'::fromNative($value) : null;';
     }
+
+    /**
+     * @return string
+     */
+    abstract public function targetClass();
 }

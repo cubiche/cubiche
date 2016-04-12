@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\Collections;
 
-use Cubiche\Domain\Specification\SpecificationInterface;
-use Cubiche\Domain\Comparable\ComparatorInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * Collection Interface.

@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Comparable\ComparableInterface;
+use Cubiche\Core\Comparable\ComparableInterface;
 use Cubiche\Domain\Model\NativeValueObject;
 
 /**

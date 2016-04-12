@@ -10,13 +10,13 @@
  */
 namespace Cubiche\Infrastructure\Collections\Persistence\Doctrine\Common\Collections;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\ArrayCollection;
 use Cubiche\Domain\Collections\ArrayCollectionInterface;
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
 use Cubiche\Domain\Collections\DataSourceCollection;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\SpecificationInterface;
 
 /**
  * Persistent Array Collection Class.

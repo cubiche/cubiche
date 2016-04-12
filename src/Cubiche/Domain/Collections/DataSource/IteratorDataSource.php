@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\Collections\DataSource;
 
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * Iterator Data Source Class.

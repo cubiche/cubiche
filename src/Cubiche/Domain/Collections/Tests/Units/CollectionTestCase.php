@@ -10,9 +10,9 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Collections\CollectionInterface;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Specification\Criteria;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

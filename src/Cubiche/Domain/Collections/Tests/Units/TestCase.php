@@ -58,7 +58,7 @@ abstract class TestCase extends BaseTestCase
             $analyzer
         );
 
-        $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Equatable\Tests\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Core\Equatable\Tests\Asserters');
         $this->getAsserterGenerator()->addNamespace('Cubiche\Domain\Collections\Tests\Asserters');
 
         $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');

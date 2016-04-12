@@ -9,10 +9,10 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units;
 
+use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
 use Cubiche\Domain\Collections\DataSourceCollection;
 use Cubiche\Domain\Collections\LazyCollection;
-use Cubiche\Domain\Comparable\Comparator;
 
 /**
  * DataSourceCollectionTests class.

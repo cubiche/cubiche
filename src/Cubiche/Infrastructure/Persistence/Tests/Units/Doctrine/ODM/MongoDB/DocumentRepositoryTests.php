@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Collections\Comparator\Order;
-use Cubiche\Domain\Collections\Comparator\Sort;
+use Cubiche\Core\Comparable\Sort;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Persistence\Tests\Fixtures\User;
 use Cubiche\Domain\Persistence\Tests\Units\RepositoryTestCase;
-use Cubiche\Domain\Specification\Criteria;
 use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\DocumentRepository;
+use Cubiche\Core\Comparable\Order;
 
 /**
  * Abstract Test Case Class.

@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\Criteria;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
 use Cubiche\Domain\Collections\Tests\Units\TestCase;
-use Cubiche\Domain\Comparable\Comparator;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SpecificationInterface;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Domain\Persistence\Tests\Units;
 
-use Cubiche\Domain\Collections\Comparator\Sort;
+use Cubiche\Core\Comparable\Sort;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Collections\Tests\Units\CollectionTestCase;
 use Cubiche\Domain\Persistence\RepositoryInterface;
 use Cubiche\Domain\Persistence\Tests\Fixtures\User;
 use Cubiche\Domain\Persistence\Tests\Fixtures\UserId;
-use Cubiche\Domain\Specification\Criteria;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

@@ -11,9 +11,9 @@
 namespace Cubiche\Domain\Persistence;
 
 use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\Criteria;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\Criteria;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * In Memory Repository Class.

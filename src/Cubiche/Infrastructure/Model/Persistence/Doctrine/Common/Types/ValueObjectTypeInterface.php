@@ -32,9 +32,4 @@ interface ValueObjectTypeInterface
      * @return Cubiche\Domain\Model\ValueObjectInterface
      */
     public function fromDatabaseValue($value);
-
-    /**
-     * @return string
-     */
-    public function targetClass();
 }

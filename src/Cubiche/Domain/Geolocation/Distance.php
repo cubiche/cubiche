@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Geolocation;
 
-use Cubiche\Domain\Comparable\ComparableInterface;
+use Cubiche\Core\Comparable\ComparableInterface;
 use Cubiche\Domain\Model\ValueObjectInterface;
 use Cubiche\Domain\System\Real;
 

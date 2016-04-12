@@ -10,9 +10,10 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\DataSource;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Specification\SpecificationInterface;
+use Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB\Query\QueryBuilder;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
 /**

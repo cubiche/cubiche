@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Infrastructure\Persistence\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Collections\DataSourceCollection;
-use Cubiche\Domain\Comparable\ComparatorInterface;
-use Cubiche\Domain\Persistence\Repository;
-use Cubiche\Domain\Specification\SpecificationInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
+use Cubiche\Domain\Collections\DataSourceCollection;
+use Cubiche\Domain\Persistence\Repository;
+use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
 /**
  * Document Repository Class.

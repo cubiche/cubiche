@@ -1153,7 +1153,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/cqt/zipball/114a002449d3f19a59962fa25d1fd7d4877a6f9b",
+                "url": "https://api.github.com/repos/cubiche/cqt/zipball/7c775b50eb141b689805a48d25354829088fca6a",
                 "reference": "114a002449d3f19a59962fa25d1fd7d4877a6f9b",
                 "shasum": ""
             },
@@ -1206,12 +1206,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "157919b7abbc277ab25d5137882cb800715cf125"
+                "reference": "f43470b6d428fa5186cf71393e1063ff5cbd7541"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/157919b7abbc277ab25d5137882cb800715cf125",
-                "reference": "157919b7abbc277ab25d5137882cb800715cf125",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/f43470b6d428fa5186cf71393e1063ff5cbd7541",
+                "reference": "f43470b6d428fa5186cf71393e1063ff5cbd7541",
                 "shasum": ""
             },
             "require": {
@@ -1253,7 +1253,7 @@
                 "test",
                 "test generator"
             ],
-            "time": "2016-04-07 14:05:34"
+            "time": "2016-04-09 10:43:49"
         },
         {
             "name": "fabpot/php-cs-fixer",
