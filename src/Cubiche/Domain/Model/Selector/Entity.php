@@ -17,25 +17,13 @@ use Cubiche\Core\Selector\This;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Entity extends This implements ModelSelectorInterface
+class Entity extends This
 {
-    use ModelSelectorTrait;
-
     /**
      * @return \Cubiche\Core\Selector\SelectorInterface
      */
     public function id()
     {
         return $this->select(new Id());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\Selector\ModelSelectorInterface::acceptModelSelectorVisitor()
-     */
-    public function acceptModelSelectorVisitor(ModelSelectorVisitorInterface $visitor)
-    {
-        return $visitor->visitEntity($this);
     }
 }

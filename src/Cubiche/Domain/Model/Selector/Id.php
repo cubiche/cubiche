@@ -17,22 +17,10 @@ use Cubiche\Core\Selector\Method;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Id extends Method implements ModelSelectorInterface
+class Id extends Method
 {
-    use ModelSelectorTrait;
-
     public function __construct()
     {
         parent::__construct('id');
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\Selector\ModelSelectorInterface::acceptModelSelectorVisitor()
-     */
-    public function acceptModelSelectorVisitor(ModelSelectorVisitorInterface $visitor)
-    {
-        return $visitor->visitId($this);
     }
 }
