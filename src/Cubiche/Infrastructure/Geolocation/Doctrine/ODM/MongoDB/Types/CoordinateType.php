@@ -34,7 +34,7 @@ class CoordinateType extends ValueObjectType
         if (!$value instanceof Coordinate) {
             throw new \InvalidArgumentException(\sprintf(
                 'Expected %s instance, instance of %s given',
-                $this->entityReflectionClass->name,
+                Coordinate::class,
                 \is_object($value) ? \gettype($value) : \get_class($value)
             ));
         }

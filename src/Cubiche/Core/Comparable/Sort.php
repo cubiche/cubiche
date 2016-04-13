@@ -37,7 +37,7 @@ class Sort
     }
 
     /**
-     * @param $callable $callable
+     * @param callable $callable
      *
      * @return \Cubiche\Core\Comparable\Custom
      */

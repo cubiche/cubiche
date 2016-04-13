@@ -83,7 +83,7 @@ class Distance implements ValueObjectInterface, ComparableInterface
             return $this;
         }
 
-        return new self($this->value()->mult(Real::fromNative($this->unit()->conversionRate($unit))), $unit);
+        return new self($this->value()->multReal(Real::fromNative($this->unit()->conversionRate($unit))), $unit);
     }
 
     /**
