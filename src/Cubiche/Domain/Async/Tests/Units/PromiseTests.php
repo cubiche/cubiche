@@ -8,12 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Async\Tests\Units;
 
 use Cubiche\Domain\Async\Promise;
 use Cubiche\Domain\Async\PromiseInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * PromiseTests class.

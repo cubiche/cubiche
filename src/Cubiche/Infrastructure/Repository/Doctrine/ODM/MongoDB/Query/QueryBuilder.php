@@ -12,7 +12,7 @@ namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Query\Builder;
 

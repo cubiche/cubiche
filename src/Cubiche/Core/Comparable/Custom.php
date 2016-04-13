@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Core\Comparable;
 
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * Custom Comparator Class.

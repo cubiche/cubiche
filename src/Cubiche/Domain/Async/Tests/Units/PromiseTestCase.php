@@ -448,11 +448,11 @@ abstract class PromiseTestCase extends TestCase
     }
 
     /**
-     * @return \Cubiche\Domain\Delegate\Delegate
+     * @return \Cubiche\Core\Delegate\Delegate
      */
     protected function delegateMock($return = null)
     {
-        $mockName = '\mock\Cubiche\Domain\Delegate\Delegate';
+        $mockName = '\mock\Cubiche\Core\Delegate\Delegate';
 
         return new $mockName(function ($value = null) use ($return) {
             return $return === null ? $value : $return;
@@ -462,7 +462,7 @@ abstract class PromiseTestCase extends TestCase
     /**
      * @param mixed $return
      *
-     * @return \Cubiche\Domain\Delegate\Delegate
+     * @return \Cubiche\Core\Delegate\Delegate
      */
     protected function delegateMockWithReturn($return)
     {

@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\CommandBus\Middlewares\Isolated;
 
 use Cubiche\Domain\CommandBus\MiddlewareInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * IsolatedMiddleware class.

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Core\Selector;
 
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * Custom Selector Class.

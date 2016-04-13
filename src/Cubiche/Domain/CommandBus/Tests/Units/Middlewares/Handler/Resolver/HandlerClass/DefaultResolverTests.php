@@ -20,7 +20,7 @@ use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommandHandler;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LogoutUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Units\TestCase;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * DefaultResolver class.

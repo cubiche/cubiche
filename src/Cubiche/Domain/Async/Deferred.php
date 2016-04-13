@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Async;
 
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * Deferred.

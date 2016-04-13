@@ -16,7 +16,7 @@ use Cubiche\Domain\CommandBus\Exception\NotFoundException;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Locator\LocatorInterface;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\ResolverInterface as ClassNameResolverInterface;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\MethodName\ResolverInterface as MethodNameResolverInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * DefaultResolver.

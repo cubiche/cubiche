@@ -41,7 +41,7 @@ use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Core\Specification\SpecificationVisitor as BaseSpecificationVisitor;
 use Cubiche\Core\Visitor\VisiteeInterface;
 use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
