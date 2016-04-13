@@ -31,7 +31,7 @@
             "/Tests/"
         ],
         "psr-0": {
-            "Cubiche\\Core\\Delegate\\": "src/"
+            "Cubiche\\Core\\Delegate\\": ""
         }
     }
 }
