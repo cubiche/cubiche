@@ -1,0 +1,37 @@
+{
+    "name": "cubiche/delegate",
+    "type": "library",
+    "description": "Delegate library",
+    "keywords": [
+        "delegate",
+        "closure",
+        "callable",
+        "ddd",
+        "php"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9|^7.0"
+    },
+    "require-dev": {
+        "cubiche/tests": "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-0": {
+            "Cubiche\\Core\\Delegate\\": "src/"
+        }
+    }
+}

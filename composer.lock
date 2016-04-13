@@ -1206,12 +1206,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "5b3d36ccc4d822ba992db5cb1b11d14783f19ee2"
+                "reference": "ca6d4039e78fc1846d6a9e2b280a813937c7e55d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/5b3d36ccc4d822ba992db5cb1b11d14783f19ee2",
-                "reference": "5b3d36ccc4d822ba992db5cb1b11d14783f19ee2",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/ca6d4039e78fc1846d6a9e2b280a813937c7e55d",
+                "reference": "ca6d4039e78fc1846d6a9e2b280a813937c7e55d",
                 "shasum": ""
             },
             "require": {
@@ -1253,7 +1253,7 @@
                 "test",
                 "test generator"
             ],
-            "time": "2016-04-10 10:45:04"
+            "time": "2016-04-13 16:19:25"
         },
         {
             "name": "fabpot/php-cs-fixer",

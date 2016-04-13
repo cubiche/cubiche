@@ -13,7 +13,7 @@ use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Tests\TestCase;
 
 /**
- * DelegateTests class.
+ * Delegate Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
@@ -86,15 +86,15 @@ class DelegateTests extends TestCase
                 return $value;
             })
             ->when($delegate = Delegate::fromClosure($closure))
-            ->then
+            ->then()
                 ->variable($delegate(5))
                     ->isEqualTo(5)
             ->given($delegate = Delegate::fromMethod($this, 'sampleMethod'))
-            ->then
+            ->then()
                 ->variable($delegate('text'))
                     ->isEqualTo('text-sufix')
             ->given($delegate = Delegate::fromFunction('array_filter'))
-            ->then
+            ->then()
                 ->array($delegate(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], function ($value) {
                     return $value % 2 === 0;
                 }))
