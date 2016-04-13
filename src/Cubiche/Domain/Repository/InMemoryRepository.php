@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Repository;
 
-use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\SpecificationInterface;
@@ -40,7 +40,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::add()
+     * @see \Cubiche\Core\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -51,7 +51,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -73,7 +73,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
+     * @see \Cubiche\Core\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -84,7 +84,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::clear()
+     * @see \Cubiche\Core\Collections\CollectionInterface::clear()
      */
     public function clear()
     {
@@ -124,7 +124,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::slice()
+     * @see \Cubiche\Core\Collections\CollectionInterface::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -134,7 +134,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::find()
+     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -144,7 +144,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -154,7 +154,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::toArray()
+     * @see \Cubiche\Core\Collections\CollectionInterface::toArray()
      */
     public function toArray()
     {
@@ -164,7 +164,7 @@ class InMemoryRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {

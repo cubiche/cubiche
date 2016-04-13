@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Core\Comparable\ComparatorInterface;
@@ -33,7 +33,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::add()
+     * @see \Cubiche\Core\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -45,7 +45,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -57,7 +57,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
+     * @see \Cubiche\Core\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -69,7 +69,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::clear()
+     * @see \Cubiche\Core\Collections\CollectionInterface::clear()
      */
     public function clear()
     {
@@ -105,7 +105,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::slice()
+     * @see \Cubiche\Core\Collections\CollectionInterface::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -117,7 +117,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::find()
+     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -129,7 +129,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -141,7 +141,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::toArray()
+     * @see \Cubiche\Core\Collections\CollectionInterface::toArray()
      */
     public function toArray()
     {
@@ -153,7 +153,7 @@ abstract class LazyCollection implements CollectionInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {

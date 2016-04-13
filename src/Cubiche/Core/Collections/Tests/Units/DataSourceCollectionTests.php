@@ -7,12 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Units;
+namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Domain\Collections\DataSource\ArrayDataSource;
-use Cubiche\Domain\Collections\DataSourceCollection;
-use Cubiche\Domain\Collections\LazyCollection;
+use Cubiche\Core\Collections\DataSource\ArrayDataSource;
+use Cubiche\Core\Collections\DataSourceCollection;
+use Cubiche\Core\Collections\LazyCollection;
 
 /**
  * DataSourceCollectionTests class.
@@ -24,7 +24,7 @@ class DataSourceCollectionTests extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomCollection()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -42,7 +42,7 @@ class DataSourceCollectionTests extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomValue()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {

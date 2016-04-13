@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
@@ -52,7 +52,7 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      *
      * @param SpecificationInterface $criteria
      *
-     * @return \Cubiche\Domain\Collections\CollectionInterface
+     * @return \Cubiche\Core\Collections\CollectionInterface
      */
     public function find(SpecificationInterface $criteria);
 
@@ -78,14 +78,14 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @param int $offset
      * @param int $length
      *
-     * @return \Cubiche\Domain\Collections\CollectionInterface
+     * @return \Cubiche\Core\Collections\CollectionInterface
      */
     public function slice($offset, $length = null);
 
     /**
      * @param ComparatorInterface $criteria
      *
-     * @return \Cubiche\Domain\Collections\CollectionInterface
+     * @return \Cubiche\Core\Collections\CollectionInterface
      */
     public function sorted(ComparatorInterface $criteria);
 }

@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Asserters;
+namespace Cubiche\Core\Collections\Tests\Asserters;
 
 /**
  * Asserters trait.
@@ -18,7 +18,7 @@ namespace Cubiche\Domain\Collections\Tests\Asserters;
 trait Asserters
 {
     /**
-     * @return \Cubiche\Domain\Collections\Tests\Asserters\CollectionAsserter
+     * @return \Cubiche\Core\Collections\Tests\Asserters\CollectionAsserter
      */
     public function collection()
     {
@@ -26,7 +26,7 @@ trait Asserters
     }
 
     /**
-     * @return \Cubiche\Domain\Collections\Tests\Asserters\DataSourceAsserter
+     * @return \Cubiche\Core\Collections\Tests\Asserters\DataSourceAsserter
      */
     public function datasource()
     {

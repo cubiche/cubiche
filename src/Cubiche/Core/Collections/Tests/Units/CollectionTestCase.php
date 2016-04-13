@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Units;
+namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
@@ -90,7 +90,7 @@ abstract class CollectionTestCase extends TestCase
     }
 
     /**
-     * @return \Cubiche\Domain\Collections\CollectionInterface
+     * @return \Cubiche\Core\Collections\CollectionInterface
      */
     protected function randomCollection($size = null)
     {

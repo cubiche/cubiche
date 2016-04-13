@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Asserters;
+namespace Cubiche\Core\Collections\Tests\Asserters;
 
-use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
+use Cubiche\Core\Collections\DataSource\DataSourceInterface;
 use mageekguy\atoum\asserters\object as ObjectAsserter;
 
 /**

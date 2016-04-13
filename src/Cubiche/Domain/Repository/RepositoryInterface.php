@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Repository;
 
-use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 
 /**
  * Repository Interface.

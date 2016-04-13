@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Units\DataSource;
+namespace Cubiche\Core\Collections\Tests\Units\DataSource;
 
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
@@ -15,7 +15,7 @@ use Cubiche\Core\Comparable\Custom;
 use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
 
 /**
  * Iterator Data Source Tests Class.

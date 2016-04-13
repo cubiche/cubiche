@@ -13,10 +13,10 @@ namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\ArrayCollectionInterface;
-use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
-use Cubiche\Domain\Collections\DataSourceCollection;
+use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollectionInterface;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSourceCollection;
 
 /**
  * Persistent Array Collection Class.
@@ -28,7 +28,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -40,7 +40,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::find()
+     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -50,7 +50,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -60,7 +60,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {
@@ -70,7 +70,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::sort()
+     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::sort()
      */
     public function sort(ComparatorInterface $criteria = null)
     {
@@ -92,7 +92,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::removeAt()
+     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::removeAt()
      */
     public function removeAt($key)
     {
@@ -102,7 +102,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::keys()
+     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::keys()
      */
     public function keys()
     {
@@ -112,7 +112,7 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::values()
+     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::values()
      */
     public function values()
     {

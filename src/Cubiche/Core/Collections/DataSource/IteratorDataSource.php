@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\DataSource;
+namespace Cubiche\Core\Collections\DataSource;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
@@ -79,7 +79,7 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::findOne()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::findOne()
      */
     public function findOne()
     {
@@ -93,7 +93,7 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::filteredDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::filteredDataSource()
      */
     public function filteredDataSource(SpecificationInterface $criteria)
     {
@@ -113,7 +113,7 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::slicedDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
     public function slicedDataSource($offset, $length = null)
     {
@@ -129,7 +129,7 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortedDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
@@ -145,7 +145,7 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSource::calculateCount()
+     * @see \Cubiche\Core\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {

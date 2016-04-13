@@ -41,7 +41,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::comparator()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

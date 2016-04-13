@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\DataSource;
+namespace Cubiche\Core\Collections\DataSource;
 
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Core\Comparable\ComparatorInterface;
@@ -80,7 +80,7 @@ abstract class DataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::length()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::length()
      */
     public function length()
     {
@@ -90,7 +90,7 @@ abstract class DataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::offset()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::offset()
      */
     public function offset()
     {
@@ -100,7 +100,7 @@ abstract class DataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::searchCriteria()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::searchCriteria()
      */
     public function searchCriteria()
     {
@@ -110,7 +110,7 @@ abstract class DataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortCriteria()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortCriteria()
      */
     public function sortCriteria()
     {

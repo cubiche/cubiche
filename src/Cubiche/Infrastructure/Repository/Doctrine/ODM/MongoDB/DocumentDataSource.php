@@ -12,7 +12,7 @@ namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\DataSource\DataSource;
+use Cubiche\Core\Collections\DataSource\DataSource;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\QueryBuilder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactoryInterface;
@@ -91,7 +91,7 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::findOne()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::findOne()
      */
     public function findOne()
     {
@@ -101,7 +101,7 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::filteredDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::filteredDataSource()
      */
     public function filteredDataSource(SpecificationInterface $criteria)
     {
@@ -120,7 +120,7 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::slicedDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
     public function slicedDataSource($offset, $length = null)
     {
@@ -135,7 +135,7 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSourceInterface::sortedDataSource()
+     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
@@ -150,7 +150,7 @@ class DocumentDataSource extends DataSource
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\DataSource\DataSource::calculateCount()
+     * @see \Cubiche\Core\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {

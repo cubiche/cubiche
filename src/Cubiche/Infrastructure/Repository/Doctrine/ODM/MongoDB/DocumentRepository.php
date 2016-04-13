@@ -12,8 +12,8 @@ namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\DataSource\IteratorDataSource;
-use Cubiche\Domain\Collections\DataSourceCollection;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSourceCollection;
 use Cubiche\Domain\Repository\Repository;
 use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
@@ -56,7 +56,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::add()
+     * @see \Cubiche\Core\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -67,7 +67,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
+     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -90,7 +90,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
+     * @see \Cubiche\Core\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -101,7 +101,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::clear()
+     * @see \Cubiche\Core\Collections\CollectionInterface::clear()
      */
     public function clear()
     {
@@ -146,7 +146,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::slice()
+     * @see \Cubiche\Core\Collections\CollectionInterface::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -162,7 +162,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::find()
+     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -172,7 +172,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -182,7 +182,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::toArray()
+     * @see \Cubiche\Core\Collections\CollectionInterface::toArray()
      */
     public function toArray()
     {
@@ -192,7 +192,7 @@ class DocumentRepository extends Repository
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::sorted()
+     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {

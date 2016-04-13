@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\HandlerClass;
 
-use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Domain\CommandBus\Exception\InvalidLocatorException;
 use Cubiche\Domain\CommandBus\Exception\NotFoundException;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Locator\LocatorInterface;

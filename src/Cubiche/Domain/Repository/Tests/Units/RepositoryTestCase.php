@@ -12,7 +12,7 @@ namespace Cubiche\Domain\Repository\Tests\Units;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Domain\Collections\Tests\Units\CollectionTestCase;
+use Cubiche\Core\Collections\Tests\Units\CollectionTestCase;
 use Cubiche\Domain\Repository\RepositoryInterface;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
@@ -76,7 +76,7 @@ abstract class RepositoryTestCase extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomCollection()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -99,7 +99,7 @@ abstract class RepositoryTestCase extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::emptyCollection()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {
@@ -114,7 +114,7 @@ abstract class RepositoryTestCase extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::randomValue()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {
@@ -124,7 +124,7 @@ abstract class RepositoryTestCase extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::uniqueValue()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {
@@ -134,7 +134,7 @@ abstract class RepositoryTestCase extends CollectionTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\Tests\Units\CollectionTestCase::comparator()
+     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

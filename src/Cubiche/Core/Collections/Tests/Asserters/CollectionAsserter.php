@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections\Tests\Asserters;
+namespace Cubiche\Core\Collections\Tests\Asserters;
 
-use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
@@ -307,7 +307,7 @@ class CollectionAsserter extends ObjectAsserter
     /**
      * @throws LogicException
      *
-     * @return \Cubiche\Domain\Collections\CollectionInterface
+     * @return \Cubiche\Core\Collections\CollectionInterface
      */
     protected function valueAsCollection()
     {

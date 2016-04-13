@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\ArrayCollectionInterface;
+use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollectionInterface;
 use Doctrine\ODM\MongoDB\Types\CollectionType;
 use Doctrine\ODM\MongoDB\Types\Type;
 

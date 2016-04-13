@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Collections;
+namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Domain\Collections\DataSource\DataSourceInterface;
+use Cubiche\Core\Collections\DataSource\DataSourceInterface;
 
 /**
  * Data Source Collection.
@@ -37,7 +37,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::count()
+     * @see \Cubiche\Core\Collections\LazyCollection::count()
      */
     public function count()
     {
@@ -51,7 +51,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::getIterator()
+     * @see \Cubiche\Core\Collections\LazyCollection::getIterator()
      */
     public function getIterator()
     {
@@ -65,7 +65,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::find()
+     * @see \Cubiche\Core\Collections\LazyCollection::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -79,7 +79,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::findOne()
+     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -93,7 +93,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::slice()
+     * @see \Cubiche\Core\Collections\LazyCollection::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -107,7 +107,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::sorted()
+     * @see \Cubiche\Core\Collections\LazyCollection::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {
@@ -121,7 +121,7 @@ class DataSourceCollection extends LazyCollection
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Collections\LazyCollection::initialize()
+     * @see \Cubiche\Core\Collections\LazyCollection::initialize()
      */
     protected function initialize()
     {

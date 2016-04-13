@@ -11,8 +11,8 @@
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
 use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Collections\ArrayCollectionInterface;
-use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollectionInterface;
+use Cubiche\Core\Collections\ArrayCollection;
 
 /**
  * User Class.

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB;
 
-use Cubiche\Domain\Collections\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Infrastructure\Collections\Doctrine\Common\Collections\PersistentArrayCollection;
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayCollectionType;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
