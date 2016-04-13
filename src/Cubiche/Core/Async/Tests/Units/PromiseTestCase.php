@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Async\Tests\Units;
+namespace Cubiche\Core\Async\Tests\Units;
 
 use Cubiche\Tests\TestCase;
-use Cubiche\Domain\Async\PromiseInterface;
+use Cubiche\Core\Async\PromiseInterface;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;

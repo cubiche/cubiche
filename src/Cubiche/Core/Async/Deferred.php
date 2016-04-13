@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Async;
+namespace Cubiche\Core\Async;
 
 use Cubiche\Core\Delegate\Delegate;
 
@@ -46,7 +46,7 @@ class Deferred implements DeferredInterface
     protected $cancelDelegate;
 
     /**
-     * @return \Cubiche\Domain\Async\Deferred
+     * @return \Cubiche\Core\Async\Deferred
      */
     public static function defer()
     {
@@ -61,7 +61,7 @@ class Deferred implements DeferredInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\DeferredInterface::promise()
+     * @see \Cubiche\Core\Async\DeferredInterface::promise()
      */
     public function promise()
     {
@@ -88,7 +88,7 @@ class Deferred implements DeferredInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\DeferredInterface::resolve()
+     * @see \Cubiche\Core\Async\DeferredInterface::resolve()
      */
     public function resolve($value = null)
     {
@@ -100,7 +100,7 @@ class Deferred implements DeferredInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\DeferredInterface::reject()
+     * @see \Cubiche\Core\Async\DeferredInterface::reject()
      */
     public function reject($reason = null)
     {
@@ -112,7 +112,7 @@ class Deferred implements DeferredInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\DeferredInterface::notify()
+     * @see \Cubiche\Core\Async\DeferredInterface::notify()
      */
     public function notify($state = null)
     {
@@ -124,7 +124,7 @@ class Deferred implements DeferredInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\DeferredInterface::cancel()
+     * @see \Cubiche\Core\Async\DeferredInterface::cancel()
      */
     public function cancel()
     {

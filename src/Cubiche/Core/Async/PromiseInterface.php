@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Async;
+namespace Cubiche\Core\Async;
 
 use Cubiche\Core\Delegate\Delegate;
 

@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Cubiche\Core\Async\Tests\Units;
 
-namespace Cubiche\Domain\Async\Tests\Units;
-
-use Cubiche\Domain\Async\Deferred;
-use Cubiche\Domain\Async\DeferredInterface;
+use Cubiche\Core\Async\Deferred;
+use Cubiche\Core\Async\DeferredInterface;
 
 /**
  * DeferredTests class.
@@ -29,7 +28,7 @@ class DeferredTests extends PromiseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::promise()
+     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::promise()
      */
     protected function promise()
     {
@@ -41,7 +40,7 @@ class DeferredTests extends PromiseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::resolve()
+     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::resolve()
      */
     protected function resolve($value = null)
     {
@@ -51,7 +50,7 @@ class DeferredTests extends PromiseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::reject()
+     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::reject()
      */
     protected function reject($reason = null)
     {
@@ -61,7 +60,7 @@ class DeferredTests extends PromiseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::notify()
+     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::notify()
      */
     protected function notify($state = null)
     {
@@ -71,7 +70,7 @@ class DeferredTests extends PromiseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\Tests\PromiseTestCase::cancel()
+     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::cancel()
      */
     protected function cancel()
     {

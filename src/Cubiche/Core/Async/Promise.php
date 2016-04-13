@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Async;
+namespace Cubiche\Core\Async;
 
 use Cubiche\Core\Delegate\Delegate;
 
@@ -83,7 +83,7 @@ class Promise implements PromiseInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\PromiseInterface::then()
+     * @see \Cubiche\Core\Async\PromiseInterface::then()
      */
     public function then(Delegate $succeed = null, Delegate $rejected = null, Delegate $notify = null)
     {
@@ -146,7 +146,7 @@ class Promise implements PromiseInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\PromiseInterface::otherwise()
+     * @see \Cubiche\Core\Async\PromiseInterface::otherwise()
      */
     public function otherwise(Delegate $catch)
     {
@@ -156,7 +156,7 @@ class Promise implements PromiseInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Async\PromiseInterface::always()
+     * @see \Cubiche\Core\Async\PromiseInterface::always()
      */
     public function always(Delegate $finally, Delegate $notify = null)
     {
