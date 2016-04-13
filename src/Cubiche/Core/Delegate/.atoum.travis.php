@@ -33,4 +33,5 @@ if ($token = getenv('COVERALLS_REPO_TOKEN')) {
     /* @var \mageekguy\atoum\runner $runner */
     $runner->addReport($coverallsReport);
     $runner->addExtension(new Extension($script));
+    $runner->addTestsFromDirectory(__DIR__.'/Tests');
 }
