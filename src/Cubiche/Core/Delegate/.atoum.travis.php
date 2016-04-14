@@ -9,13 +9,9 @@
  * file that was distributed with this source code.
  */
 use Cubiche\Tests\Report\Coverage\Coveralls;
-use mageekguy\atoum\visibility\extension as Extension;
 
 /* @var \mageekguy\atoum\configurator $script */
 $script->addDefaultReport();
-/* @var \mageekguy\atoum\runner $runner */
-$runner->addTestsFromDirectory(__DIR__.'/Tests');
-$runner->addExtension(new Extension($script));
 
 if ($token = getenv('COVERALLS_REPO_TOKEN')) {
     $coverallsReport = new Coveralls(__DIR__, $token);
@@ -34,5 +30,6 @@ if ($token = getenv('COVERALLS_REPO_TOKEN')) {
         ->addDefaultWriter()
     ;
 
+    /* @var \mageekguy\atoum\runner $runner */
     $runner->addReport($coverallsReport);
 }
