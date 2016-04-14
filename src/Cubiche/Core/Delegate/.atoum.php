@@ -18,13 +18,3 @@ $script->excludeDirectoriesFromCoverage(array(__DIR__.'/vendor'));
 /* @var \mageekguy\atoum\runner $runner */
 $runner->addTestsFromDirectory(__DIR__.'/Tests');
 $runner->addExtension(new Extension($script));
-
-$testGenerator = new mageekguy\atoum\test\generator();
-$testGenerator
-    ->setTestClassesDirectory(__DIR__.'/Tests')
-    ->setTestClassNamespace('Cubiche\Core\Delegate\Tests\Units')
-    ->setTestedClassesDirectory(__DIR__)
-    ->setTestedClassNamespace('Cubiche\Core\Delegate')
-;
-
-$runner->setTestGenerator($testGenerator);

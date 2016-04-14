@@ -30,7 +30,7 @@
         "exclude-from-classmap": [
             "/Tests/"
         ],
-        "psr-0": {
+        "psr-4": {
             "Cubiche\\Core\\Delegate\\": ""
         }
     }
