@@ -16,5 +16,5 @@ use mageekguy\atoum\visibility\extension as Extension;
 $script->excludeDirectoriesFromCoverage(array(__DIR__.'/vendor'));
 
 /* @var \mageekguy\atoum\runner $runner */
-$runner->addTestsFromDirectory(__DIR__.'/Tests');
+$runner->addTestsFromDirectory(__DIR__);
 $runner->addExtension(new Extension($script));
