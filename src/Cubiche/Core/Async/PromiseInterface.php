@@ -11,8 +11,6 @@
 
 namespace Cubiche\Core\Async;
 
-use Cubiche\Core\Delegate\Delegate;
-
 /**
  * Promise Interface.
  *
@@ -21,25 +19,25 @@ use Cubiche\Core\Delegate\Delegate;
 interface PromiseInterface
 {
     /**
-     * @param Delegate $succeed
-     * @param Delegate $rejected
-     * @param Delegate $notify
+     * @param callable $succeed
+     * @param callable $rejected
+     * @param callable $notify
      *
      * @return PromiseInterface
      */
-    public function then(Delegate $succeed = null, Delegate $rejected = null, Delegate $notify = null);
+    public function then(callable $succeed = null, callable $rejected = null, callable $notify = null);
 
     /**
-     * @param Delegate $catch
+     * @param callable $catch
      *
      * @return PromiseInterface
      */
-    public function otherwise(Delegate $catch);
+    public function otherwise(callable $catch);
 
     /**
-     * @param Delegate $finally
+     * @param callable $finally
      *
      * @return PromiseInterface
      */
-    public function always(Delegate $finally, Delegate $notify = null);
+    public function always(callable $finally, callable $notify = null);
 }

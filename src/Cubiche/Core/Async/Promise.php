@@ -50,34 +50,34 @@ class Promise implements PromiseInterface
     private $result;
 
     /**
-     * @param Delegate $resolveDeferred
-     * @param Delegate $rejectDeferred
-     * @param Delegate $notifyDeferred
-     * @param Delegate $cancelDeferred
+     * @param callable $exportResolve
+     * @param callable $exportReject
+     * @param callable $exportNotify
+     * @param callable $exportCancel
      */
     public function __construct(
-        Delegate $resolveDeferred,
-        Delegate $rejectDeferred,
-        Delegate $notifyDeferred,
-        Delegate $cancelDeferred
+        callable $exportResolve,
+        callable $exportReject,
+        callable $exportNotify,
+        callable $exportCancel
     ) {
         $this->state = self::WAITING;
         $this->succeedDelegates = array();
         $this->rejectedDelegates = array();
         $this->notifyDelegates = array();
 
-        $resolveDeferred(new Delegate(function ($value = null) {
-            $this->resolve($value);
-        }));
-        $rejectDeferred(new Delegate(function ($reason = null) {
-            $this->reject($reason);
-        }));
-        $notifyDeferred(new Delegate(function ($state = null) {
-            $this->notify($state);
-        }));
-        $cancelDeferred(new Delegate(function () {
+        $exportResolve(function ($value = null) {
+            return $this->resolve($value);
+        });
+        $exportReject(function ($reason = null) {
+            return $this->reject($reason);
+        });
+        $exportNotify(function ($state = null) {
+            return $this->notify($state);
+        });
+        $exportCancel(function () {
             return $this->cancel();
-        }));
+        });
     }
 
     /**
@@ -85,7 +85,7 @@ class Promise implements PromiseInterface
      *
      * @see \Cubiche\Core\Async\PromiseInterface::then()
      */
-    public function then(Delegate $succeed = null, Delegate $rejected = null, Delegate $notify = null)
+    public function then(callable $succeed = null, callable $rejected = null, callable $notify = null)
     {
         $deferred = Deferred::defer();
 
@@ -100,9 +100,9 @@ class Promise implements PromiseInterface
 
     /**
      * @param DeferredInterface $deferred
-     * @param Delegate          $succeed
+     * @param callable          $succeed
      */
-    private function addSucceedDelegate(DeferredInterface $deferred, Delegate $succeed = null)
+    private function addSucceedDelegate(DeferredInterface $deferred, callable $succeed = null)
     {
         if ($this->state === self::WAITING || $this->state === self::COMPLETED) {
             $this->succeedDelegates[] = new Delegate(function ($value = null) use ($succeed, $deferred) {
@@ -118,9 +118,9 @@ class Promise implements PromiseInterface
 
     /**
      * @param DeferredInterface $deferred
-     * @param Delegate          $rejected
+     * @param callable          $rejected
      */
-    private function addRejectedDelegate(DeferredInterface $deferred, Delegate $rejected = null)
+    private function addRejectedDelegate(DeferredInterface $deferred, callable $rejected = null)
     {
         if ($this->state === self::WAITING || $this->state === self::REJECTED) {
             $this->rejectedDelegates[] = new Delegate(function ($reason = null) use ($rejected, $deferred) {
@@ -134,12 +134,12 @@ class Promise implements PromiseInterface
     }
 
     /**
-     * @param Delegate $notify
+     * @param callable $notify
      */
-    private function addNotifyDelegate(Delegate $notify = null)
+    private function addNotifyDelegate(callable $notify = null)
     {
         if ($this->state === self::WAITING && $notify !== null) {
-            $this->notifyDelegates[] = $notify;
+            $this->notifyDelegates[] = new Delegate($notify);
         }
     }
 
@@ -148,7 +148,7 @@ class Promise implements PromiseInterface
      *
      * @see \Cubiche\Core\Async\PromiseInterface::otherwise()
      */
-    public function otherwise(Delegate $catch)
+    public function otherwise(callable $catch)
     {
         return $this->then(null, $catch);
     }
@@ -158,15 +158,15 @@ class Promise implements PromiseInterface
      *
      * @see \Cubiche\Core\Async\PromiseInterface::always()
      */
-    public function always(Delegate $finally, Delegate $notify = null)
+    public function always(callable $finally, callable $notify = null)
     {
-        return $this->then(new Delegate(function ($value) use ($finally) {
+        return $this->then(function ($value) use ($finally) {
             $finally($value, null);
 
             return $value;
-        }), new Delegate(function ($reason) use ($finally) {
+        }, function ($reason) use ($finally) {
             $finally(null, $reason);
-        }), $notify);
+        }, $notify);
     }
 
     /**

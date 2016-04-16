@@ -67,17 +67,17 @@ class Deferred implements DeferredInterface
     {
         if ($this->promise === null) {
             $this->promise = new Promise(
-                new Delegate(function (Delegate $delegate) {
-                    $this->resolveDelegate = $delegate;
+                new Delegate(function (callable $callable) {
+                    $this->resolveDelegate = new Delegate($callable);
                 }),
-                new Delegate(function (Delegate $delegate) {
-                    $this->rejectDelegate = $delegate;
+                new Delegate(function (callable $callable) {
+                    $this->rejectDelegate = new Delegate($callable);
                 }),
-                new Delegate(function (Delegate $delegate) {
-                    $this->notifyDelegate = $delegate;
+                new Delegate(function (callable $callable) {
+                    $this->notifyDelegate = new Delegate($callable);
                 }),
-                new Delegate(function (Delegate $delegate) {
-                    $this->cancelDelegate = $delegate;
+                new Delegate(function (callable $callable) {
+                    $this->cancelDelegate = new Delegate($callable);
                 })
             );
         }

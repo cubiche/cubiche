@@ -14,91 +14,23 @@ use Cubiche\Core\Async\Deferred;
 use Cubiche\Core\Async\DeferredInterface;
 
 /**
- * DeferredTests class.
+ * Deferred Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DeferredTests extends PromiseTestCase
+class DeferredTests extends DeferredInterfaceTestCase
 {
     /**
-     * @var DeferredInterface
-     */
-    protected $deferred;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::promise()
-     */
-    protected function promise()
-    {
-        $this->deferred = Deferred::defer();
-
-        return $this->deferred->promise();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::resolve()
-     */
-    protected function resolve($value = null)
-    {
-        $this->deferred->resolve($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::reject()
-     */
-    protected function reject($reason = null)
-    {
-        $this->deferred->reject($reason);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::notify()
-     */
-    protected function notify($state = null)
-    {
-        $this->deferred->notify($state);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\PromiseTestCase::cancel()
-     */
-    protected function cancel()
-    {
-        return $this->deferred->cancel();
-    }
-
-    /**
-     * Test class.
-     */
-    public function testClass()
-    {
-        $this
-            ->testedClass
-            ->implements(DeferredInterface::class)
-        ;
-    }
-
-    /*
      * Test defer method.
      */
     public function testDefer()
     {
         $this
             ->given($deferred = Deferred::defer())
-            ->then
+            ->then()
                 ->object($deferred)
-                ->isInstanceOf(DeferredInterface::class)
-                ->isNotIdenticalTo(Deferred::defer())
+                    ->isInstanceOf(DeferredInterface::class)
+                    ->isNotIdenticalTo(Deferred::defer())
         ;
     }
 }
