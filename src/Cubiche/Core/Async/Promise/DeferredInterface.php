@@ -9,24 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Async;
+namespace Cubiche\Core\Async\Promise;
 
 /**
  * Deferred Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DeferredInterface
+interface DeferredInterface extends PromisorInterface
 {
     /**
      * @return DeferredInterface
      */
     public static function defer();
-
-    /**
-     * @return PromiseInterface
-     */
-    public function promise();
 
     /**
      * @param mixed $value

@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Async\Tests\Units;
+namespace Cubiche\Core\Async\Tests\Units\Promise;
 
-use Cubiche\Core\Async\PromiseInterface;
+use Cubiche\Core\Async\Promise\PromiseInterface;
 use Cubiche\Tests\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
@@ -18,6 +18,7 @@ use mageekguy\atoum\asserter\generator as Generator;
 use mageekguy\atoum\mock\aggregator as MockAggregator;
 use mageekguy\atoum\test\assertion\manager as Manager;
 use mageekguy\atoum\tools\variable\analyzer as Analyzer;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * Promise Interface Test Case Class.
@@ -372,7 +373,7 @@ abstract class PromiseInterfaceTestCase extends TestCase
      */
     protected function delegateMock($return = null)
     {
-        $mockName = '\mock\Cubiche\Core\Delegate\Delegate';
+        $mockName = '\mock\\'.Delegate::class;
 
         return new $mockName(function ($value = null) use ($return) {
             return $return === null ? $value : $return;

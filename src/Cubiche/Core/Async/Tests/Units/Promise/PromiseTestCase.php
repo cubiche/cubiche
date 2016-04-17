@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Async\Tests\Units;
+namespace Cubiche\Core\Async\Tests\Units\Promise;
 
+use Cubiche\Core\Async\Promise\Promise;
 use Cubiche\Core\Delegate\Delegate;
-use Cubiche\Core\Async\Promise;
 
 /**
  * Promise Test Case class.
@@ -43,8 +43,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     protected function defaultConstructorArguments()
     {
@@ -66,8 +64,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\Units\PromiseInterfaceTestCase::promise()
      */
     protected function promise()
     {
@@ -76,8 +72,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\Units\PromiseInterfaceTestCase::resolve()
      */
     protected function resolve($value = null)
     {
@@ -86,8 +80,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\Units\PromiseInterfaceTestCase::reject()
      */
     protected function reject($reason = null)
     {
@@ -96,8 +88,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\Units\PromiseInterfaceTestCase::notify()
      */
     protected function notify($state = null)
     {
@@ -106,8 +96,6 @@ abstract class PromiseTestCase extends PromiseInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\Tests\Units\PromiseInterfaceTestCase::cancel()
      */
     protected function cancel()
     {

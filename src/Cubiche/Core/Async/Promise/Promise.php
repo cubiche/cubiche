@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Async;
+namespace Cubiche\Core\Async\Promise;
 
 use Cubiche\Core\Delegate\Delegate;
 
@@ -82,8 +82,6 @@ class Promise implements PromiseInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\PromiseInterface::then()
      */
     public function then(callable $succeed = null, callable $rejected = null, callable $notify = null)
     {
@@ -96,6 +94,71 @@ class Promise implements PromiseInterface
         $this->resolver();
 
         return $deferred->promise();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function otherwise(callable $catch)
+    {
+        return $this->then(null, $catch);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function always(callable $finally, callable $notify = null)
+    {
+        return $this->then(function ($value) use ($finally) {
+            $finally($value, null);
+
+            return $value;
+        }, function ($reason) use ($finally) {
+            $finally(null, $reason);
+        }, $notify);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    protected function resolve($value = null)
+    {
+        $this->result(self::COMPLETED, $value);
+    }
+
+    /**
+     * @param mixed $reason
+     */
+    protected function reject($reason = null)
+    {
+        $this->result(self::REJECTED, $reason);
+    }
+
+    /**
+     * @param mixed $state
+     */
+    protected function notify($state = null)
+    {
+        if ($this->state === self::WAITING) {
+            foreach ($this->notifyDelegates as $delegate) {
+                $delegate($state);
+            }
+        } else {
+            throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state));
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function cancel()
+    {
+        if ($this->state !== self::WAITING) {
+            return false;
+        }
+        $this->reject(new \RuntimeException('Promise has been cancelled'));
+
+        return true;
     }
 
     /**
@@ -144,48 +207,6 @@ class Promise implements PromiseInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\PromiseInterface::otherwise()
-     */
-    public function otherwise(callable $catch)
-    {
-        return $this->then(null, $catch);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\PromiseInterface::always()
-     */
-    public function always(callable $finally, callable $notify = null)
-    {
-        return $this->then(function ($value) use ($finally) {
-            $finally($value, null);
-
-            return $value;
-        }, function ($reason) use ($finally) {
-            $finally(null, $reason);
-        }, $notify);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    protected function resolve($value = null)
-    {
-        $this->result(self::COMPLETED, $value);
-    }
-
-    /**
-     * @param mixed $reason
-     */
-    protected function reject($reason = null)
-    {
-        $this->result(self::REJECTED, $reason);
-    }
-
-    /**
      * @param string $state
      * @param mixed  $result
      *
@@ -201,33 +222,6 @@ class Promise implements PromiseInterface
         } else {
             throw new \LogicException(\sprintf('A %s promise cannot be resolved or rejected', $this->state));
         }
-    }
-
-    /**
-     * @param mixed $state
-     */
-    protected function notify($state = null)
-    {
-        if ($this->state === self::WAITING) {
-            foreach ($this->notifyDelegates as $delegate) {
-                $delegate($state);
-            }
-        } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state));
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function cancel()
-    {
-        if ($this->state !== self::WAITING) {
-            return false;
-        }
-        $this->reject(new \RuntimeException('Promise has been cancelled'));
-
-        return true;
     }
 
     private function resolver()

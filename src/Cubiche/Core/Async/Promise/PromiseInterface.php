@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Async;
+namespace Cubiche\Core\Async\Promise;
 
 /**
  * Promise Interface.
