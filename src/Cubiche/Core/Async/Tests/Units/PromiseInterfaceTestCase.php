@@ -331,47 +331,9 @@ abstract class PromiseInterfaceTestCase extends TestCase
      */
     public function testResolvedPromise()
     {
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->resolve())
-            ->exception(
-                function () {
-                    $this->resolve();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
-
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->resolve())
-            ->exception(
-                function () {
-                    $this->reject();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
-
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->resolve())
-            ->exception(
-                function () {
-                    $this->notify();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
+        $this->resolvedRejectedPromiseTest(function () {
+            $this->resolve();
+        });
     }
 
     /**
@@ -379,47 +341,30 @@ abstract class PromiseInterfaceTestCase extends TestCase
      */
     public function testRejectedPromise()
     {
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->reject())
-            ->exception(
-                function () {
-                    $this->resolve();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
+        $this->resolvedRejectedPromiseTest(function () {
+            $this->reject(new \Exception());
+        });
+    }
 
+    /**
+     * @param callable $when
+     */
+    protected function resolvedRejectedPromiseTest(callable $when)
+    {
         $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->reject())
-            ->exception(
-                function () {
-                    $this->reject();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
-
-        $this
-            ->given(
-                $promise = $this->promise(),
-                $succeed = $this->delegateMock()
-            )
-            ->if($promise->then($succeed))
-            ->when($this->reject())
-            ->exception(
-                function () {
-                    $this->notify();
-                }
-            )->isInstanceOf(\LogicException::class)
-        ;
+        ->if($this->promise())
+            ->when($when)
+            ->then()
+            ->exception(function () {
+                $this->resolve();
+            })->isInstanceOf(\LogicException::class)
+            ->exception(function () {
+                $this->reject();
+            })->isInstanceOf(\LogicException::class)
+            ->exception(function () {
+                $this->notify();
+            })->isInstanceOf(\LogicException::class)
+            ;
     }
 
     /**
