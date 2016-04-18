@@ -8,9 +8,9 @@ build/
 .atoum.config.php
 phpunit.xml
 
-src/Cubiche/Infrastructure/Persistence/Tests/Units/Doctrine/ODM/MongoDB/Proxies/
-src/Cubiche/Infrastructure/Persistence/Tests/Units/Doctrine/ODM/MongoDB/Hydrators/
-src/Cubiche/Infrastructure/Persistence/Tests/Units/Doctrine/ODM/MongoDB/Cache/
+src/Cubiche/Infrastructure/Repository/Tests/Units/Doctrine/ODM/MongoDB/Proxies/
+src/Cubiche/Infrastructure/Repository/Tests/Units/Doctrine/ODM/MongoDB/Hydrators/
+src/Cubiche/Infrastructure/Repository/Tests/Units/Doctrine/ODM/MongoDB/Cache/
 
 .buildpath
 .project

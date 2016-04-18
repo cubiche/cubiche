@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Model;
 
-use Cubiche\Domain\Equatable\EquatableInterface;
+use Cubiche\Core\Equatable\EquatableInterface;
 
 /**
  * Domain Object Interface.

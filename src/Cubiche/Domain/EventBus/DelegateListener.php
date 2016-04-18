@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventBus;
 
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * DelegateListener class.

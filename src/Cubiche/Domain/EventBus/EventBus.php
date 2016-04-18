@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventBus;
 
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Domain\EventBus\Exception\InvalidMiddlewareException;
 use Cubiche\Domain\EventBus\Exception\NotFoundException;
 use Cubiche\Domain\EventBus\Middlewares\Notifier\NotifierMiddleware;

@@ -10,9 +10,9 @@
  */
 namespace Cubiche\Domain\EventBus;
 
-use Cubiche\Domain\Collections\ArrayCollection;
-use Cubiche\Domain\Collections\SortedArrayCollection;
-use Cubiche\Domain\Comparable\Comparator;
+use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Comparable\Comparator;
 
 /**
  * Notifier class.

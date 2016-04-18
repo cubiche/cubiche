@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\CommandBus\Middlewares\Locking;
 
 use Cubiche\Domain\CommandBus\MiddlewareInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * LockingMiddleware class.

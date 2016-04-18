@@ -12,7 +12,7 @@ namespace Cubiche\Domain\EventBus\Middlewares\Locking;
 
 use Cubiche\Domain\EventBus\EventInterface;
 use Cubiche\Domain\EventBus\MiddlewareInterface;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * LockingMiddleware class.

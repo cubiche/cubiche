@@ -12,7 +12,7 @@ namespace Cubiche\Domain\CommandBus;
 
 use Cubiche\Domain\CommandBus\Exception\InvalidCommandException;
 use Cubiche\Domain\CommandBus\Exception\InvalidMiddlewareException;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * CommandBus class.

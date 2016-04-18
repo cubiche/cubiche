@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Domain\CommandBus\Exception\InvalidLocatorException;
@@ -21,7 +20,7 @@ use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommandHandler;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LogoutUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Units\TestCase;
-use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
  * DefaultResolver class.

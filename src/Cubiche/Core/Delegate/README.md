@@ -1,0 +1,2 @@
+# Cubiche - Delegate
+[![Build Status](https://travis-ci.org/cubiche/delegate.svg?branch=master)](https://travis-ci.org/cubiche/delegate) [![Coverage Status](https://coveralls.io/repos/github/cubiche/delegate/badge.svg?branch=master)](https://coveralls.io/github/cubiche/delegate?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/delegate/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/delegate/?branch=master) 
