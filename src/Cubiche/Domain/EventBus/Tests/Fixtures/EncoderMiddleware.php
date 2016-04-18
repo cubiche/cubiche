@@ -1,15 +1,16 @@
 <?php
 /**
- * This file is part of the Cubiche/CommandBus package.
+ * This file is part of the Cubiche/EventBus package.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\CommandBus\Tests\Fixtures;
+namespace Cubiche\Domain\EventBus\Tests\Fixtures;
 
-use Cubiche\Domain\CommandBus\MiddlewareInterface;
+use Cubiche\Domain\EventBus\EventInterface;
+use Cubiche\Domain\EventBus\MiddlewareInterface;
 
 /**
  * EncoderMiddleware class.
@@ -36,12 +37,12 @@ class EncoderMiddleware implements MiddlewareInterface
     /**
      * {@inheritdoc}
      */
-    public function execute($command, callable $next)
+    public function handle(EventInterface $event, callable $next)
     {
-        if ($command instanceof LoginUserCommand) {
-            $command->setPassword(call_user_func($this->algorithm, $command->password()));
+        if ($event instanceof LoginUserEvent) {
+            $event->setEmail(call_user_func($this->algorithm, $event->email()));
         }
 
-        $next($command);
+        $next($event);
     }
 }

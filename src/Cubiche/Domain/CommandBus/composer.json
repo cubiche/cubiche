@@ -1,5 +1,6 @@
 {
     "name": "cubiche/command-bus",
+    "type": "library",
     "description": "A small, flexible command bus. Handy for building service layers.",
     "keywords": [
         "command",
@@ -18,29 +19,19 @@
         }
     ],
     "require": {
-        "php":                ">=5.5.0",
-        "cubiche/collection": "dev-master",
-        "cubiche/delegate":   "dev-master"
+        "php":                  "^5.5.9|^7.0",
+        "cubiche/collection":   "dev-master",
+        "cubiche/delegate":     "dev-master"
     },
     "require-dev": {
-        "atoum/atoum":      "~2.5",
-        "cubiche/cqt":      "dev-master",
-        "cubiche/tests":    "dev-master"
+        "cubiche/tests":        "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [
             "/Tests/"
         ],
-        "psr-0": {
-            "Cubiche\\Domain\\Command\\": ""
+        "psr-4": {
+            "Cubiche\\Domain\\CommandBus\\": ""
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "Cubiche\\Tools\\CodeQualityTool::checkHooks"
-        ],
-        "post-update-cmd": [
-            "Cubiche\\Tools\\CodeQualityTool::checkHooks"
-        ]
     }
 }

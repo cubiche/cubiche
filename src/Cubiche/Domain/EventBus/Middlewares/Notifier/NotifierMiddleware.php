@@ -8,32 +8,32 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\EventBus\Middlewares\Emitter;
+namespace Cubiche\Domain\EventBus\Middlewares\Notifier;
 
-use Cubiche\Domain\EventBus\Emitter;
+use Cubiche\Domain\EventBus\Notifier;
 use Cubiche\Domain\EventBus\EventInterface;
 use Cubiche\Domain\EventBus\MiddlewareInterface;
 
 /**
- * EmitterMiddleware class.
+ * NotifierMiddleware class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EmitterMiddleware implements MiddlewareInterface
+class NotifierMiddleware implements MiddlewareInterface
 {
     /**
-     * @var Emitter
+     * @var Notifier
      */
-    protected $emitter;
+    protected $notifier;
 
     /**
-     * EmitterMiddleware constructor.
+     * NotifierMiddleware constructor.
      *
-     * @param Emitter $emitter
+     * @param Notifier $notifier
      */
-    public function __construct(Emitter $emitter)
+    public function __construct(Notifier $notifier)
     {
-        $this->emitter = $emitter;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -41,16 +41,16 @@ class EmitterMiddleware implements MiddlewareInterface
      */
     public function handle(EventInterface $event, callable $next)
     {
-        $this->emitter->emit($event);
+        $this->notifier->notify($event);
 
         $next($event);
     }
 
     /**
-     * @return Emitter
+     * @return Notifier
      */
-    public function emitter()
+    public function notifier()
     {
-        return $this->emitter;
+        return $this->notifier;
     }
 }

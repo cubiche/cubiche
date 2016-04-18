@@ -8,13 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\EventBus;
 
-use Cubiche\Domain\EventBus\Exception\InvalidMiddlewareException;
 use Cubiche\Domain\Delegate\Delegate;
+use Cubiche\Domain\EventBus\Exception\InvalidMiddlewareException;
 use Cubiche\Domain\EventBus\Exception\NotFoundException;
-use Cubiche\Domain\EventBus\Middlewares\Emitter\EmitterMiddleware;
+use Cubiche\Domain\EventBus\Middlewares\Notifier\NotifierMiddleware;
 
 /**
  * EventBus class.
@@ -24,9 +23,9 @@ use Cubiche\Domain\EventBus\Middlewares\Emitter\EmitterMiddleware;
 class EventBus
 {
     /**
-     * @var EmitterMiddleware
+     * @var NotifierMiddleware
      */
-    protected $emitterMiddleware;
+    protected $notifierMiddleware;
 
     /**
      * @var Delegate
@@ -40,7 +39,7 @@ class EventBus
      */
     public function __construct(array $middlewares)
     {
-        $this->ensureEmitterMiddleware($middlewares);
+        $this->ensureNotifierMiddleware($middlewares);
         $this->chainedMiddleware = $this->chainedExecution($middlewares);
     }
 
@@ -51,9 +50,9 @@ class EventBus
      *
      * @return EventInterface
      */
-    public function emit($event)
+    public function notify($event)
     {
-        $event = $this->emitterMiddleware->emitter()->ensureEvent($event);
+        $event = $this->notifierMiddleware->notifier()->ensureEvent($event);
         $chainedMiddleware = $this->chainedMiddleware;
 
         $chainedMiddleware($event);
@@ -62,23 +61,23 @@ class EventBus
     }
 
     /**
-     * Ensure that exists an emitter middleware.
+     * Ensure that exists an notifier middleware.
      *
      * @param array $middlewares
      *
      * @throws InvalidArgumentException
      */
-    protected function ensureEmitterMiddleware(array $middlewares)
+    protected function ensureNotifierMiddleware(array $middlewares)
     {
         foreach ($middlewares as $middleware) {
-            if ($middleware instanceof EmitterMiddleware) {
-                $this->emitterMiddleware = $middleware;
+            if ($middleware instanceof NotifierMiddleware) {
+                $this->notifierMiddleware = $middleware;
 
                 return;
             }
         }
 
-        throw NotFoundException::middleware(EmitterMiddleware::class);
+        throw NotFoundException::middleware(NotifierMiddleware::class);
     }
 
     /**
@@ -118,7 +117,7 @@ class EventBus
      */
     public function addListener($eventName, callable $listener, $priority = 0)
     {
-        $this->emitterMiddleware->emitter()->addListener($eventName, $listener, $priority);
+        $this->notifierMiddleware->notifier()->addListener($eventName, $listener, $priority);
     }
 
     /**
@@ -131,7 +130,7 @@ class EventBus
      */
     public function removeListener($eventName, callable $listener)
     {
-        $this->emitterMiddleware->emitter()->removeListener($eventName, $listener);
+        $this->notifierMiddleware->notifier()->removeListener($eventName, $listener);
     }
 
     /**
@@ -144,7 +143,7 @@ class EventBus
      */
     public function addSubscriber(EventSubscriberInterface $subscriber)
     {
-        $this->emitterMiddleware->emitter()->addSubscriber($subscriber);
+        $this->notifierMiddleware->notifier()->addSubscriber($subscriber);
     }
 
     /**
@@ -156,7 +155,7 @@ class EventBus
      */
     public function removeSubscriber(EventSubscriberInterface $subscriber)
     {
-        $this->emitterMiddleware->emitter()->removeSubscriber($subscriber);
+        $this->notifierMiddleware->notifier()->removeSubscriber($subscriber);
     }
 
     /**
@@ -168,7 +167,7 @@ class EventBus
      */
     public function listeners($eventName = null)
     {
-        $this->emitterMiddleware->emitter()->listeners($eventName);
+        return $this->notifierMiddleware->notifier()->listeners($eventName);
     }
 
     /**
@@ -183,7 +182,7 @@ class EventBus
      */
     public function listenerPriority($eventName, callable $listener)
     {
-        $this->emitterMiddleware->emitter()->listenerPriority($eventName, $listener);
+        return $this->notifierMiddleware->notifier()->listenerPriority($eventName, $listener);
     }
 
     /**
@@ -195,6 +194,6 @@ class EventBus
      */
     public function hasListeners($eventName = null)
     {
-        $this->emitterMiddleware->emitter()->hasListeners($eventName);
+        return $this->notifierMiddleware->notifier()->hasListeners($eventName);
     }
 }

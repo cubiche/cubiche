@@ -8,15 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\EventBus;
 
+use Cubiche\Domain\Collections\ArrayCollection;
+use Cubiche\Domain\Collections\SortedArrayCollection;
+use Cubiche\Domain\Comparable\Comparator;
+
 /**
- * Emitter class.
+ * Notifier class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Emitter
+class Notifier
 {
     /**
      * @var array
@@ -29,13 +32,21 @@ class Emitter
     protected $sorted = array();
 
     /**
+     * Notifier constructor.
+     */
+    public function __construct()
+    {
+        $this->listeners = new ArrayCollection();
+    }
+
+    /**
      * Emit an event to all registered listeners.
      *
      * @param $event
      *
      * @return EventInterface
      */
-    public function emit($event)
+    public function notify($event)
     {
         $event = $this->ensureEvent($event);
 
@@ -81,24 +92,14 @@ class Emitter
     public function listeners($eventName = null)
     {
         if (null !== $eventName) {
-            if (!isset($this->listeners[$eventName])) {
+            if (!$this->listeners->containsKey($eventName)) {
                 return array();
             }
 
-            if (!isset($this->sorted[$eventName])) {
-                $this->sortListeners($eventName);
-            }
-
-            return $this->sorted[$eventName];
+            return $this->listeners->get($eventName);
         }
 
-        foreach ($this->listeners as $eventName => $eventListeners) {
-            if (!isset($this->sorted[$eventName])) {
-                $this->sortListeners($eventName);
-            }
-        }
-
-        return array_filter($this->sorted);
+        return $this->listeners;
     }
 
     /**
@@ -113,11 +114,15 @@ class Emitter
      */
     public function listenerPriority($eventName, callable $listener)
     {
-        if (!isset($this->listeners[$eventName])) {
+        if (!$this->listeners->containsKey($eventName)) {
             return;
         }
 
-        foreach ($this->listeners[$eventName] as $priority => $listeners) {
+        /** @var SortedArrayCollection $sortedListeners */
+        $sortedListeners = $this->listeners->get($eventName);
+
+        /** @var ArrayCollection $listeners */
+        foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $registered) {
                 /** @var DelegateListener $registered */
                 if ($registered->equals($listener)) {
@@ -136,7 +141,11 @@ class Emitter
      */
     public function hasListeners($eventName = null)
     {
-        return (bool) count($this->listeners($eventName));
+        if ($eventName === null) {
+            return $this->listeners->count() > 0;
+        }
+
+        return $this->listeners->containsKey($eventName);
     }
 
     /**
@@ -151,8 +160,17 @@ class Emitter
      */
     public function addListener($eventName, callable $listener, $priority = 0)
     {
-        $this->listeners[$eventName][$priority][] = new DelegateListener($listener);
-        unset($this->sorted[$eventName]);
+        if (!$this->listeners->containsKey($eventName)) {
+            $this->listeners->set($eventName, new SortedArrayCollection([], new Comparator()));
+        }
+
+        /** @var SortedArrayCollection $sortedListeners */
+        $sortedListeners = $this->listeners->get($eventName);
+        if (!$sortedListeners->containsKey($priority)) {
+            $sortedListeners->set($priority, new ArrayCollection());
+        }
+
+        $sortedListeners->get($priority)->add(new DelegateListener($listener));
     }
 
     /**
@@ -165,19 +183,29 @@ class Emitter
      */
     public function removeListener($eventName, callable $listener)
     {
-        if (!isset($this->listeners[$eventName])) {
+        if (!$this->listeners->containsKey($eventName)) {
             return;
         }
 
-        foreach ($this->listeners[$eventName] as $priority => $listeners) {
-            $index = 0;
+        /** @var SortedArrayCollection $sortedListeners */
+        $sortedListeners = $this->listeners->get($eventName);
+
+        /** @var ArrayCollection $listeners */
+        foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $registered) {
                 /** @var DelegateListener $registered */
                 if ($registered->equals($listener)) {
-                    unset($this->listeners[$eventName][$priority][$index], $this->sorted[$eventName]);
+                    $listeners->remove($registered);
                 }
-                ++$index;
             }
+
+            if ($listeners->count() == 0) {
+                $sortedListeners->removeAt($priority);
+            }
+        }
+
+        if ($sortedListeners->count() == 0) {
+            $this->listeners->removeAt($eventName);
         }
     }
 
@@ -231,28 +259,19 @@ class Emitter
     /**
      * Triggers the listeners of an event.
      *
-     * @param callable[]     $listeners
-     * @param EventInterface $event
+     * @param SortedArrayCollection $sortedListeners
+     * @param EventInterface        $event
      */
-    protected function doDispatch($listeners, EventInterface $event)
+    protected function doDispatch(SortedArrayCollection $sortedListeners, EventInterface $event)
     {
-        foreach ($listeners as $listener) {
-            $listener($event);
-            /** @var EventInterface $event */
-            if ($event->isPropagationStopped()) {
-                break;
+        foreach ($sortedListeners as $priority => $listeners) {
+            foreach ($listeners as $listener) {
+                $listener($event);
+                /** @var EventInterface $event */
+                if ($event->isPropagationStopped()) {
+                    break;
+                }
             }
         }
-    }
-
-    /**
-     * Sorts the internal list of listeners for the given event by priority.
-     *
-     * @param string $eventName
-     */
-    private function sortListeners($eventName)
-    {
-        krsort($this->listeners[$eventName]);
-        $this->sorted[$eventName] = call_user_func_array('array_merge', $this->listeners[$eventName]);
     }
 }

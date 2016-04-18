@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\EventBus;
 
 use Cubiche\Domain\Delegate\Delegate;
@@ -51,7 +50,7 @@ class DelegateListener extends Delegate
     public function equals($listener)
     {
         if ($listener instanceof self) {
-            $listener == $listener->callback();
+            $listener = $listener->callback();
         }
 
         return $this->callback == $listener;

@@ -8,8 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\EventBus\Tests\Units;
+
+use Cubiche\Domain\EventBus\DelegateListener;
 
 /**
  * DelegateListener class.
@@ -23,7 +24,13 @@ class DelegateListenerTests extends TestCase
      */
     public function testCallback()
     {
-        // todo: Implement testCallback().
+        $this
+            ->given($listener = array($this, 'testEquals'))
+            ->and($delegate = new DelegateListener($listener))
+            ->then()
+                ->array($delegate->callback())
+                    ->isEqualTo($listener)
+        ;
     }
 
     /**
@@ -31,6 +38,14 @@ class DelegateListenerTests extends TestCase
      */
     public function testEquals()
     {
-        // todo: Implement testEquals().
+        $this
+            ->given($listener = array($this, 'testEquals'))
+            ->and($delegate = new DelegateListener($listener))
+            ->then()
+                ->boolean($delegate->equals($listener))
+                    ->isTrue()
+                ->boolean($delegate->equals($delegate))
+                    ->isTrue()
+        ;
     }
 }

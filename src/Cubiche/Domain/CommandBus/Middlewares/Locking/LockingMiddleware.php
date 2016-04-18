@@ -8,17 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\CommandBus\Middlewares\Isolated;
+namespace Cubiche\Domain\CommandBus\Middlewares\Locking;
 
 use Cubiche\Domain\CommandBus\MiddlewareInterface;
 use Cubiche\Domain\Delegate\Delegate;
 
 /**
- * IsolatedMiddleware class.
+ * LockingMiddleware class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsolatedMiddleware implements MiddlewareInterface
+class LockingMiddleware implements MiddlewareInterface
 {
     /**
      * @var bool
