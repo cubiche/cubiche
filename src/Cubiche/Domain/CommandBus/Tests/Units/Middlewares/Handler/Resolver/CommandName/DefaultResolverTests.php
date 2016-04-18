@@ -8,10 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\CommandName;
 
-namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler\Resolver\ClassName;
-
-use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\DefaultResolver;
+use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\CommandName\DefaultResolver;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Units\TestCase;
 

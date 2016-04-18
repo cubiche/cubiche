@@ -49,12 +49,12 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /*
-     * Test classNameForCommand method.
+     * Test commandNameForCommand method.
      */
-    public function testClassNameForCommand()
+    public function testCommandNameForCommand()
     {
         $this
-            ->given($exception = NotFoundException::classNameForCommand('bar'))
+            ->given($exception = NotFoundException::commandNameForCommand('bar'))
             ->then
                 ->variable($exception->getPrevious())->isNull()
         ;

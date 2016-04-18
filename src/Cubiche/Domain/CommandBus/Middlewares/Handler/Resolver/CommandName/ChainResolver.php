@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName;
+namespace Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\CommandName;
 
 use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Domain\CommandBus\Exception\NotFoundException;
@@ -54,6 +54,6 @@ class ChainResolver implements ResolverInterface
             }
         }
 
-        throw NotFoundException::classNameForCommand($command);
+        throw NotFoundException::commandNameForCommand($command);
     }
 }

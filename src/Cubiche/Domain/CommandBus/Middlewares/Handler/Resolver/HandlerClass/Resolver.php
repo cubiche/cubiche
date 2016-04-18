@@ -14,21 +14,22 @@ use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Domain\CommandBus\Exception\InvalidLocatorException;
 use Cubiche\Domain\CommandBus\Exception\NotFoundException;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Locator\LocatorInterface;
-use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\ResolverInterface as ClassNameResolverInterface;
+use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\CommandName\ResolverInterface as
+    CommandNameResolverInterface;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\MethodName\ResolverInterface as MethodNameResolverInterface;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * DefaultResolver.
+ * Resolver.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DefaultResolver implements ResolverInterface
+class Resolver implements ResolverInterface
 {
     /**
-     * @var ClassNameResolverInterface
+     * @var CommandNameResolverInterface
      */
-    protected $classNameResolver;
+    protected $commandNameResolver;
 
     /**
      * @var MethodNameResolverInterface
@@ -43,16 +44,16 @@ class DefaultResolver implements ResolverInterface
     /**
      * DefaultResolver constructor.
      *
-     * @param ClassNameResolverInterface  $classNameResolver
-     * @param MethodNameResolverInterface $methodNameResolver
-     * @param array                       $locators
+     * @param CommandNameResolverInterface $commandNameResolver
+     * @param MethodNameResolverInterface  $methodNameResolver
+     * @param array                        $locators
      */
     public function __construct(
-        ClassNameResolverInterface $classNameResolver,
+        CommandNameResolverInterface $commandNameResolver,
         MethodNameResolverInterface $methodNameResolver,
         array $locators
     ) {
-        $this->classNameResolver = $classNameResolver;
+        $this->commandNameResolver = $commandNameResolver;
         $this->methodNameResolver = $methodNameResolver;
 
         $this->locators = new ArrayCollection();
@@ -70,7 +71,7 @@ class DefaultResolver implements ResolverInterface
      */
     public function resolve($command)
     {
-        $commandName = $this->classNameResolver->resolve($command);
+        $commandName = $this->commandNameResolver->resolve($command);
         $handler = $this->getHandlerForCommand($commandName);
 
         if ($handler === null) {

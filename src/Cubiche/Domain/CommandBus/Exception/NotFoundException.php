@@ -20,7 +20,7 @@ use Exception;
 class NotFoundException extends RuntimeException
 {
     /**
-     * Creates an exception for a not found className/methodName or handler.
+     * Creates an exception for a not found commandName/methodName or handler.
      *
      * @param mixed          $command
      * @param string         $type
@@ -43,9 +43,9 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function classNameForCommand($command, Exception $cause = null)
+    public static function commandNameForCommand($command, Exception $cause = null)
     {
-        return self::forCommand($command, 'className', $cause);
+        return self::forCommand($command, 'commandName', $cause);
     }
 
     /**

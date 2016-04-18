@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName;
+namespace Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\CommandName;
 
 use Cubiche\Domain\CommandBus\Exception\NotFoundException;
 use InvalidArgumentException;
@@ -21,7 +21,7 @@ use InvalidArgumentException;
 interface ResolverInterface
 {
     /**
-     * Resolve the handler class name from a command.
+     * Resolve the command name.
      *
      * @param object $command
      *

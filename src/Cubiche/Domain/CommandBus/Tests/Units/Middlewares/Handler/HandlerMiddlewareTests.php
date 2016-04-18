@@ -8,13 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\CommandBus\Tests\Units\Middlewares\Handler;
 
 use Cubiche\Domain\CommandBus\Middlewares\Handler\HandlerMiddleware;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Locator\InMemoryLocator;
-use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\ClassName\DefaultResolver as ClassNameDefaultResolver;
-use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\HandlerClass\DefaultResolver as HandlerClassDefaultResolver;
+use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\CommandName\DefaultResolver as CommandNameDefaultResolver;
+use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\HandlerClass\Resolver as HandlerClassResolver;
 use Cubiche\Domain\CommandBus\Middlewares\Handler\Resolver\MethodName\DefaultResolver as MethodNameDefaultResolver;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommand;
 use Cubiche\Domain\CommandBus\Tests\Fixtures\LoginUserCommandHandler;
@@ -34,8 +33,8 @@ class HandlerMiddlewareTests extends TestCase
     {
         $this
             ->given(
-                $resolver = new HandlerClassDefaultResolver(
-                    new ClassNameDefaultResolver(),
+                $resolver = new HandlerClassResolver(
+                    new CommandNameDefaultResolver(),
                     new MethodNameDefaultResolver(),
                     [new InMemoryLocator([LoginUserCommand::class => new LoginUserCommandHandler()])]
                 )
