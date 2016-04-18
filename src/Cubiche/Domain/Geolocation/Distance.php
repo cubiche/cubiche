@@ -101,7 +101,7 @@ class Distance implements ValueObjectInterface, ComparableInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Cubiche\Domain\Comparable\ComparableInterface::compareTo()
+     * @see \Cubiche\Core\Comparable\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

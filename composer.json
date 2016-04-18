@@ -25,7 +25,6 @@
         "symfony/property-access":      "^3.0"
     },
     "require-dev": {
-        "atoum/visibility-extension":   "~1.0",
         "cubiche/tests":                "dev-master",
         "cubiche/cqt":                  "dev-master"
     },
