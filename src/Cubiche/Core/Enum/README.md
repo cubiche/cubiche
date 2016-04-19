@@ -1,0 +1,2 @@
+# Cubiche - Enum
+[![Build Status](https://travis-ci.org/cubiche/enum.svg?branch=master)](https://travis-ci.org/cubiche/enum) [![Coverage Status](https://coveralls.io/repos/github/cubiche/enum/badge.svg?branch=master)](https://coveralls.io/github/cubiche/enum?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/enum/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/enum/?branch=master) 

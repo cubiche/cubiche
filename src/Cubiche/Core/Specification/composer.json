@@ -1,0 +1,35 @@
+{
+    "name": "cubiche/specification",
+    "type": "library",
+    "description": "Specification library",
+    "keywords": ["specification", "criteria", "query"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/comparable":       "dev-master",
+        "cubiche/equatable":        "dev-master",
+        "cubiche/selector":         "dev-master",
+        "cubiche/visitor":          "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Specification\\": ""
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "name": "cubiche/comparable",
+    "type": "library",
+    "description": "Comparable library",
+    "keywords": ["comparable", "comparator", "compare"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/delegate":         "dev-master",
+        "cubiche/enum":             "dev-master",
+        "cubiche/selector":         "dev-master",
+        "cubiche/visitor":          "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Comparable\\": ""
+        }
+    }
+}

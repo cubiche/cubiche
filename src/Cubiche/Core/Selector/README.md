@@ -1,0 +1,2 @@
+# Cubiche - Selector
+[![Build Status](https://travis-ci.org/cubiche/selector.svg?branch=master)](https://travis-ci.org/cubiche/selector) [![Coverage Status](https://coveralls.io/repos/github/cubiche/selector/badge.svg?branch=master)](https://coveralls.io/github/cubiche/selector?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/selector/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/selector/?branch=master) 

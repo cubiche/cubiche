@@ -1,12 +1,8 @@
 {
-    "name": "cubiche/command-bus",
+    "name": "cubiche/selector",
     "type": "library",
-    "description": "A small, flexible command bus. Handy for building service layers.",
-    "keywords": [
-        "command",
-        "command bus",
-        "service layer"
-    ],
+    "description": "Selector library",
+    "keywords": ["selector", "criteria"],
     "license": "MIT",
     "authors": [
         {
@@ -19,19 +15,20 @@
         }
     ],
     "require": {
-        "php":                  "^5.5.9|^7.0",
-        "cubiche/collections":  "dev-master",
-        "cubiche/delegate":     "dev-master"
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/delegate":         "dev-master",
+        "cubiche/visitor":          "dev-master",
+        "symfony/property-access":  "^3.0"
     },
     "require-dev": {
-        "cubiche/tests":        "dev-master"
+        "cubiche/tests":            "dev-master"
     },
     "autoload": {
         "exclude-from-classmap": [
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Core\\CommandBus\\": ""
+            "Cubiche\\Core\\Selector\\": ""
         }
     }
 }
