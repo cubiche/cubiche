@@ -12,6 +12,7 @@ namespace Cubiche\Core\EventBus\Tests\Units\Middlewares\Locking;
 
 use Cubiche\Core\EventBus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\EventBus\Tests\Fixtures\LoginUserEvent;
+use Cubiche\Core\EventBus\Tests\Fixtures\TriggerEventOnListener;
 use Cubiche\Core\EventBus\Tests\Units\TestCase;
 
 /**
@@ -55,19 +56,15 @@ class LockingMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($counter = 0)
-            ->and($callable = function (LoginUserEvent $event) use (&$counter) {
-                ++$counter;
+            ->and($callable = function (LoginUserEvent $event) {
+                $event->setEmail(md5($event->email()));
             })
-            ->when($middleware->handle($event, $callable))
+            ->and($listener = new TriggerEventOnListener($middleware, $callable))
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->when($middleware->handle($event, array($listener, 'onLogin')))
             ->then()
-                ->integer($counter)
-                    ->isEqualTo(1)
-            ->when($middleware->handle($event, $callable))
-            ->then()
-                ->integer($counter)
-                    ->isEqualTo(2)
+                ->string($event->email())
+                    ->isEqualTo(md5(sha1('ivan@cubiche.com')))
         ;
     }
 }

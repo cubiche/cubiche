@@ -12,6 +12,7 @@ namespace Cubiche\Core\CommandBus\Tests\Units\Middlewares\Locking;
 
 use Cubiche\Core\CommandBus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\CommandBus\Tests\Fixtures\LoginUserCommand;
+use Cubiche\Core\CommandBus\Tests\Fixtures\TriggerCommandOnHandle;
 use Cubiche\Core\CommandBus\Tests\Units\TestCase;
 
 /**
@@ -59,19 +60,15 @@ class LockingMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->and($counter = 0)
-            ->and($callable = function (LoginUserCommand $command) use (&$counter) {
-                ++$counter;
+            ->and($callable = function (LoginUserCommand $command) {
+                $command->setPassword(md5($command->password()));
             })
-            ->when($middleware->execute($command, $callable))
+            ->and($handler = new TriggerCommandOnHandle($middleware, $callable))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
+            ->when($middleware->execute($command, array($handler, 'handle')))
             ->then()
-                ->integer($counter)
-                    ->isEqualTo(1)
-            ->when($middleware->execute($command, $callable))
-            ->then()
-                ->integer($counter)
-                    ->isEqualTo(2)
+                ->string($command->password())
+                    ->isEqualTo(md5(sha1('plainpassword')))
         ;
     }
 }
