@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -13,11 +12,11 @@ namespace Cubiche\Core\CommandBus\Tests\Fixtures;
 use Cubiche\Core\CommandBus\Middlewares\Locking\LockingMiddleware;
 
 /**
- * TriggerCommandOnHandle class.
+ * TriggerCommandOnHandleAndWaiting class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class TriggerCommandOnHandle
+class TriggerCommandOnHandleAndWaiting
 {
     /**
      * @var callable
@@ -49,9 +48,11 @@ class TriggerCommandOnHandle
     public function handle(LoginUserCommand $command)
     {
         // try to execute the same command before set the value
-        $this->middleware->execute($command, $this->callback);
+        $promise = $this->middleware->execute($command, $this->callback);
 
-        $command->setPassword(sha1($command->password()));
+        $promise->then(function () use ($command) {
+            $command->setPassword(sha1($command->password()));
+        });
 
         return $command->password();
     }

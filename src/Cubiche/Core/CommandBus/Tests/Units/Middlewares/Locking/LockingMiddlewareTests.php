@@ -10,9 +10,12 @@
  */
 namespace Cubiche\Core\CommandBus\Tests\Units\Middlewares\Locking;
 
+use Cubiche\Core\Async\Promise;
+use Cubiche\Core\CommandBus\Middlewares\Locking\CommandState;
 use Cubiche\Core\CommandBus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\CommandBus\Tests\Fixtures\LoginUserCommand;
 use Cubiche\Core\CommandBus\Tests\Fixtures\TriggerCommandOnHandle;
+use Cubiche\Core\CommandBus\Tests\Fixtures\TriggerCommandOnHandleAndWaiting;
 use Cubiche\Core\CommandBus\Tests\Units\TestCase;
 
 /**
@@ -29,33 +32,87 @@ class LockingMiddlewareTests extends TestCase
     {
         $this
             ->given($middleware = new LockingMiddleware())
+            ->and($counter = 0)
             ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
 
-                return true;
+                return 'some-value';
             })
-            ->when($result = $middleware->execute($command, $callable))
+            ->when($promise = $middleware->execute($command, $callable))
             ->then()
-                ->boolean($result)
-                    ->isTrue()
+                ->object(
+                    $promise->then(
+                        function ($returnValue) {
+                            // succeed
+                            $this
+                                ->string($returnValue)
+                                    ->isEqualTo('some-value')
+                            ;
+                        },
+                        function () {
+                            // rejected never called
+                        },
+                        function (CommandState $state) use (&$counter) {
+                            // notify
+                            if ($counter == 0) {
+                                $this
+                                    ->string($state)
+                                        ->isEqualTo(CommandState::RECEIVED)
+                                ;
+                            } else {
+                                $this
+                                    ->string($state)
+                                        ->isEqualTo(CommandState::HANDLED)
+                                ;
+                            }
+                            ++$counter;
+                        }
+                    )
+                )->isInstanceOf(Promise::class)
                 ->string($command->email())
                     ->isEqualTo('info@cubiche.org')
         ;
 
         $this
             ->given($middleware = new LockingMiddleware())
+            ->and($counter = 0)
             ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
 
                 throw new \InvalidArgumentException();
             })
-            ->then()
-                ->exception(function () use ($middleware, $command, $callable) {
-                    $middleware->execute($command, $callable);
-                })
-                ->isInstanceOf(\InvalidArgumentException::class)
+            ->when($promise = $middleware->execute($command, $callable))
+            ->then(
+                $promise->then(
+                    function () {
+                        // succeed never called
+                    },
+                    function ($e) {
+                        // rejected
+                        $this
+                            ->object($e)
+                                ->isInstanceOf(\InvalidArgumentException::class)
+                        ;
+                    },
+                    function (CommandState $state) use (&$counter) {
+                        // notify
+                        if ($counter == 0) {
+                            $this
+                                ->string($state)
+                                    ->isEqualTo(CommandState::RECEIVED)
+                            ;
+                        } else {
+                            $this
+                                ->string($state)
+                                    ->isEqualTo(CommandState::FAILED)
+                            ;
+                        }
+                        ++$counter;
+                    }
+                )
+            )
         ;
 
         $this
@@ -65,10 +122,53 @@ class LockingMiddlewareTests extends TestCase
             })
             ->and($handler = new TriggerCommandOnHandle($middleware, $callable))
             ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->when($middleware->execute($command, array($handler, 'handle')))
-            ->then()
+            ->when($promise = $middleware->execute($command, array($handler, 'handle')))
+            ->then(
+                $promise->then(
+                    function ($returnValue) {
+                        $this
+                            ->string($returnValue)
+                            ->isEqualTo(sha1('plainpassword'))
+                        ;
+                    },
+                    function ($e) {
+                        // rejected never called
+                    },
+                    function (CommandState $state) {
+                        // notify never called
+                    }
+                )
+            )
                 ->string($command->password())
                     ->isEqualTo(md5(sha1('plainpassword')))
+        ;
+
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($callable = function (LoginUserCommand $command) {
+                $command->setPassword(md5($command->password()));
+            })
+            ->and($handler = new TriggerCommandOnHandleAndWaiting($middleware, $callable))
+            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
+            ->when($promise = $middleware->execute($command, array($handler, 'handle')))
+            ->then(
+                $promise->then(
+                    function ($returnValue) {
+                        $this
+                            ->string($returnValue)
+                                ->isEqualTo('plainpassword')
+                        ;
+                    },
+                    function ($e) {
+                        // rejected never called
+                    },
+                    function (CommandState $state) {
+                        // notify never called
+                    }
+                )
+            )
+                ->string($command->password())
+                    ->isEqualTo(sha1(md5('plainpassword')))
         ;
     }
 }

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Core\CommandBus\Middlewares\Locking;
 
+use Cubiche\Core\Async\Deferred;
+use Cubiche\Core\Async\Promise;
 use Cubiche\Core\CommandBus\MiddlewareInterface;
 use Cubiche\Core\Delegate\Delegate;
 
@@ -36,47 +38,44 @@ class LockingMiddleware implements MiddlewareInterface
      * @param object   $command
      * @param callable $next
      *
-     * @throws \Exception
-     *
-     * @return mixed|void
+     * @return Promise
      */
     public function execute($command, callable $next)
     {
-        $this->queue[] = Delegate::fromClosure(function () use ($command, $next) {
-            return $next($command);
+        $deferred = Deferred::defer();
+        $this->queue[] = Delegate::fromClosure(function () use ($command, $next, $deferred) {
+            try {
+                $deferred->notify(CommandState::RECEIVED);
+
+                $returnValue = $next($command);
+
+                $deferred->notify(CommandState::HANDLED);
+                $deferred->resolve($returnValue);
+            } catch (\Exception $e) {
+                $deferred->notify(CommandState::FAILED);
+
+                $deferred->reject($e);
+            }
         });
 
         if ($this->isRunning) {
-            return;
+            return $deferred->promise();
         }
 
         $this->isRunning = true;
-        try {
-            $returnValue = $this->runQueuedJobs();
-        } catch (\Exception $e) {
-            $this->isRunning = false;
-            $this->queue = [];
-            throw $e;
-        }
-
+        $this->runQueuedJobs();
         $this->isRunning = false;
 
-        return $returnValue;
+        return $deferred->promise();
     }
 
     /**
-     * Process any pending commands in the queue. If multiple, jobs are in the
-     * queue, only the first return value is given back.
-     *
-     * @return mixed
+     * Process any pending commands in the queue.
      */
     protected function runQueuedJobs()
     {
-        $returnValues = [];
         while ($lastCommand = array_shift($this->queue)) {
-            $returnValues[] = $lastCommand->__invoke();
+            $lastCommand->__invoke();
         }
-
-        return array_shift($returnValues);
     }
 }
