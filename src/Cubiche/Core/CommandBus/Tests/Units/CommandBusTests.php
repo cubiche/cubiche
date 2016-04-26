@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Tests\Units;
 
 use Cubiche\Core\CommandBus\CommandBus;
@@ -22,7 +23,7 @@ use Cubiche\Core\CommandBus\Tests\Fixtures\LoginUserCommand;
  */
 class CommandBusTests extends TestCase
 {
-    /*
+    /**
      * Test create.
      */
     public function testCreate()
@@ -35,7 +36,7 @@ class CommandBusTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test create with invalid middleware.
      */
     public function testCreateWithInvalidMiddleware()
@@ -50,7 +51,7 @@ class CommandBusTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test handle chained middlewares.
      */
     public function testHandleChainedMiddlewares()
@@ -76,7 +77,7 @@ class CommandBusTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test handle with invalid command.
      */
     public function testHandleWithInvalidCommand()

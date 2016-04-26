@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Tests\Units\Exception;
 
 use Cubiche\Core\CommandBus\Exception\InvalidMiddlewareException;
@@ -30,14 +31,14 @@ class InvalidMiddlewareExceptionTests extends TestCase
         ;
     }
 
-    /*
-     * Test forMiddleware method.
+    /**
+     * Test forUnknownValue method.
      */
-    public function testForMiddleware()
+    public function testForUnknownValue()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidMiddlewareException::forMiddleware('foo', $cause))
+            ->when($exception = InvalidMiddlewareException::forUnknownValue('foo', $cause))
             ->then
                 ->object($exception)
                     ->isInstanceOf(InvalidMiddlewareException::class)
@@ -48,7 +49,7 @@ class InvalidMiddlewareExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = InvalidMiddlewareException::forMiddleware('bar'))
+            ->given($exception = InvalidMiddlewareException::forUnknownValue('bar'))
             ->then
                 ->variable($exception->getPrevious())
                     ->isNull()

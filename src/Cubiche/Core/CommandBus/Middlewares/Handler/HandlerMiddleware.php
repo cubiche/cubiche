@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Middlewares\Handler;
 
 use Cubiche\Core\CommandBus\MiddlewareInterface;
@@ -42,10 +43,8 @@ class HandlerMiddleware implements MiddlewareInterface
     {
         $handler = $this->handlerResolver->resolve($command);
 
-        $returnValue = $handler($command);
+        $handler($command);
 
         $next($command);
-
-        return $returnValue;
     }
 }

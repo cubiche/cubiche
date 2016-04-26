@@ -8,10 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Middlewares\Locking;
 
-use Cubiche\Core\Async\Deferred;
-use Cubiche\Core\Async\Promise;
 use Cubiche\Core\CommandBus\MiddlewareInterface;
 use Cubiche\Core\Delegate\Delegate;
 
@@ -38,39 +37,35 @@ class LockingMiddleware implements MiddlewareInterface
      * @param object   $command
      * @param callable $next
      *
-     * @return Promise
+     * @return mixed|void
+     *
+     * @throws \Exception
      */
     public function execute($command, callable $next)
     {
-        $deferred = Deferred::defer();
-        $this->queue[] = Delegate::fromClosure(function () use ($command, $next, $deferred) {
-            try {
-                $deferred->notify(CommandState::RECEIVED);
-
-                $returnValue = $next($command);
-
-                $deferred->notify(CommandState::HANDLED);
-                $deferred->resolve($returnValue);
-            } catch (\Exception $e) {
-                $deferred->notify(CommandState::FAILED);
-
-                $deferred->reject($e);
-            }
+        $this->queue[] = Delegate::fromClosure(function () use ($command, $next) {
+            $next($command);
         });
 
         if ($this->isRunning) {
-            return $deferred->promise();
+            return;
         }
 
         $this->isRunning = true;
-        $this->runQueuedJobs();
-        $this->isRunning = false;
+        try {
+            $this->runQueuedJobs();
+        } catch (\Exception $e) {
+            $this->isRunning = false;
+            $this->queue = [];
 
-        return $deferred->promise();
+            throw $e;
+        }
+
+        $this->isRunning = false;
     }
 
     /**
-     * Process any pending commands in the queue.
+     * Process any pending command in the queue.
      */
     protected function runQueuedJobs()
     {

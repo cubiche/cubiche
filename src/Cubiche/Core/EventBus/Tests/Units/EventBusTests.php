@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus\Tests\Units;
 
 use Cubiche\Core\EventBus\Event;
@@ -29,7 +30,7 @@ use Cubiche\Core\EventBus\Tests\Fixtures\UserEventSubscriber;
  */
 class EventBusTests extends TestCase
 {
-    /*
+    /**
      * Test create.
      */
     public function testCreate()
@@ -42,7 +43,7 @@ class EventBusTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test create with invalid middleware.
      */
     public function testCreateWithInvalidMiddleware()
@@ -66,7 +67,7 @@ class EventBusTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test notify chained middlewares.
      */
     public function testNotifyChainedMiddlewares()

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Exception;
 
 use InvalidArgumentException;
@@ -23,16 +24,16 @@ class InvalidCommandException extends InvalidArgumentException
     /**
      * Creates an exception for an invalid command.
      *
-     * @param mixed          $command
+     * @param mixed          $value
      * @param Exception|null $cause
      *
      * @return InvalidCommandException
      */
-    public static function forUnknownValue($command, Exception $cause = null)
+    public static function forUnknownValue($value, Exception $cause = null)
     {
         return new static(sprintf(
             'Expected a command of type object. Got: %s',
-            gettype($command)
+            gettype($value)
         ), 0, $cause);
     }
 }

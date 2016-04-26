@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Tests\Units\Middlewares\Handler;
 
 use Cubiche\Core\CommandBus\Middlewares\Handler\HandlerMiddleware;
@@ -44,10 +45,8 @@ class HandlerMiddlewareTests extends TestCase
             ->and($callable = function (LoginUserCommand $command) {
                 $command->setEmail('info@cubiche.org');
             })
-            ->when($result = $middleware->execute($command, $callable))
+            ->when($middleware->execute($command, $callable))
             ->then()
-                ->boolean($result)
-                    ->isTrue()
                 ->string($command->email())
                     ->isEqualTo('info@cubiche.org')
         ;

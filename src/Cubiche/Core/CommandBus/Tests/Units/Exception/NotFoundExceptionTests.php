@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Tests\Units\Exception;
 
 use Cubiche\Core\CommandBus\Exception\NotFoundException;
@@ -30,7 +31,7 @@ class NotFoundExceptionTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test forCommand method.
      */
     public function testForCommand()
@@ -48,7 +49,7 @@ class NotFoundExceptionTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test commandNameForCommand method.
      */
     public function testCommandNameForCommand()
@@ -60,7 +61,7 @@ class NotFoundExceptionTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test methodNameForCommand method.
      */
     public function testMethodNameForCommand()
@@ -72,7 +73,7 @@ class NotFoundExceptionTests extends TestCase
         ;
     }
 
-    /*
+    /**
      * Test handlerForCommand method.
      */
     public function testHandlerForCommand()

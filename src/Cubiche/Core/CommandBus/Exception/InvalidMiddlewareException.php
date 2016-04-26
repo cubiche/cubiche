@@ -7,8 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus\Exception;
 
+use Cubiche\Core\CommandBus\MiddlewareInterface;
 use InvalidArgumentException;
 use Exception;
 
@@ -22,16 +24,17 @@ class InvalidMiddlewareException extends InvalidArgumentException
     /**
      * Creates an exception for an invalid middleware.
      *
-     * @param mixed          $middleware
+     * @param mixed          $value
      * @param Exception|null $cause
      *
      * @return InvalidMiddlewareException
      */
-    public static function forMiddleware($middleware, Exception $cause = null)
+    public static function forUnknownValue($value, Exception $cause = null)
     {
         return new static(sprintf(
-            'Expected a middleware that implement the Middleware interface. Got: %s',
-            is_object($middleware) ? get_class($middleware) : gettype($middleware)
+            'Expected a middleware of type %s. Got: %s',
+            MiddlewareInterface::class,
+            is_object($value) ? get_class($value) : gettype($value)
         ), 0, $cause);
     }
 }

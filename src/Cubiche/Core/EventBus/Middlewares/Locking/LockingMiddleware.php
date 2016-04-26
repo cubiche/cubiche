@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus\Middlewares\Locking;
 
 use Cubiche\Core\EventBus\EventInterface;
@@ -37,12 +38,14 @@ class LockingMiddleware implements MiddlewareInterface
      * @param EventInterface $event
      * @param callable       $next
      *
+     * @return mixed|void
+     *
      * @throws \Exception
      */
     public function handle(EventInterface $event, callable $next)
     {
         $this->queue[] = Delegate::fromClosure(function () use ($event, $next) {
-            return $next($event);
+            $next($event);
         });
 
         if ($this->isRunning) {
@@ -55,6 +58,7 @@ class LockingMiddleware implements MiddlewareInterface
         } catch (\Exception $e) {
             $this->isRunning = false;
             $this->queue = [];
+
             throw $e;
         }
 
@@ -62,18 +66,12 @@ class LockingMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Process any pending events in the queue. If multiple, jobs are in the
-     * queue, only the first return value is given back.
-     *
-     * @return mixed
+     * Process any pending event in the queue.
      */
     protected function runQueuedJobs()
     {
-        $returnValues = [];
-        while ($lastCommand = array_shift($this->queue)) {
-            $returnValues[] = $lastCommand->__invoke();
+        while ($lastEvent = array_shift($this->queue)) {
+            $lastEvent->__invoke();
         }
-
-        return array_shift($returnValues);
     }
 }

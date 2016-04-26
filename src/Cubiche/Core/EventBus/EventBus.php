@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus;
 
 use Cubiche\Core\Delegate\Delegate;
@@ -44,7 +45,7 @@ class EventBus
     }
 
     /**
-     * Executes the given event and optionally returns a value.
+     * Notify the given event.
      *
      * @param $event
      *
@@ -77,7 +78,7 @@ class EventBus
             }
         }
 
-        throw NotFoundException::middleware(NotifierMiddleware::class);
+        throw NotFoundException::middlewareOfType(NotifierMiddleware::class);
     }
 
     /**

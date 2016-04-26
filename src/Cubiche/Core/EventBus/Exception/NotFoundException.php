@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus\Exception;
 
 use Exception;
@@ -28,10 +29,10 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function middleware($type, Exception $cause = null)
+    public static function middlewareOfType($type, Exception $cause = null)
     {
         return new static(sprintf(
-            'Not found a middleware of class %s',
+            'Not found a middleware of type %s',
             $type
         ), 0, $cause);
     }

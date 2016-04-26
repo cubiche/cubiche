@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus\Tests\Units\Exception;
 
 use Cubiche\Core\EventBus\Tests\Units\TestCase;
@@ -38,7 +39,7 @@ class NotFoundExceptionTests extends TestCase
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = NotFoundException::middleware(MiddlewareInterface::class, $cause))
+            ->when($exception = NotFoundException::middlewareOfType(MiddlewareInterface::class, $cause))
             ->then
                 ->object($exception)
                     ->isInstanceOf(NotFoundException::class)
@@ -49,7 +50,7 @@ class NotFoundExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = NotFoundException::middleware(MiddlewareInterface::class))
+            ->given($exception = NotFoundException::middlewareOfType(MiddlewareInterface::class))
             ->then
                 ->variable($exception->getPrevious())
                     ->isNull()

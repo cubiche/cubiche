@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\CommandBus;
 
 use Cubiche\Core\CommandBus\Exception\InvalidCommandException;
@@ -37,7 +38,7 @@ class CommandBus
     }
 
     /**
-     * Executes the given command and optionally returns a value.
+     * Executes the given command.
      *
      * @param object $command
      *
@@ -68,7 +69,7 @@ class CommandBus
         // reverse iteration over middlewares
         while ($middleware = array_pop($middlewares)) {
             if (!$middleware instanceof MiddlewareInterface) {
-                throw InvalidMiddlewareException::forMiddleware($middleware);
+                throw InvalidMiddlewareException::forUnknownValue($middleware);
             }
 
             $next = Delegate::fromClosure(function ($command) use ($middleware, $next) {
