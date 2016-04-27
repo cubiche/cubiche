@@ -10,27 +10,48 @@
  */
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
-use Cubiche\Core\Async\Promise\Deferred;
-use Cubiche\Core\Async\Promise\DeferredInterface;
-
 /**
  * Deferred Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 class DeferredTests extends DeferredInterfaceTestCase
 {
     /**
-     * Test defer method.
+     * Test cancel.
      */
-    public function testDefer()
+    public function testCancel()
     {
         $this
-            ->given($deferred = Deferred::defer())
+            ->given(
+                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
+                $deferred = $this->newDefaultTestedInstance()
+            )
+            ->when($canceled = $deferred->cancel())
             ->then()
-                ->object($deferred)
-                    ->isInstanceOf(DeferredInterface::class)
-                    ->isNotIdenticalTo(Deferred::defer())
+                ->boolean($canceled)
+                    ->isTrue()
         ;
+
+        $this
+            ->given($onRejected = $this->delegateMock())
+            ->when($deferred->promise()->then(null, $onRejected))
+            ->then()
+                ->delegateCall($onRejected)
+                    ->once()
+        ;
+
+        $this
+            ->given(
+                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
+                $deferred = $this->newDefaultTestedInstance()
+            )
+            ->if($deferred->resolve('foo'))
+            ->when($canceled = $deferred->cancel())
+                ->then()
+                    ->boolean($canceled)
+                        ->isFalse()
+            ;
     }
 }

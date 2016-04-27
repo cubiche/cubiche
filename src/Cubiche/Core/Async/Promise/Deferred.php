@@ -14,7 +14,7 @@ namespace Cubiche\Core\Async\Promise;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Deferred.
+ * Deferred class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -41,19 +41,9 @@ class Deferred implements DeferredInterface
     protected $notifyDelegate;
 
     /**
-     * @var Delegate
+     * Constructor.
      */
-    protected $cancelDelegate;
-
-    /**
-     * @return \Cubiche\Core\Async\Promise\Deferred
-     */
-    public static function defer()
-    {
-        return new static();
-    }
-
-    protected function __construct()
+    public function __construct()
     {
         $this->promise = null;
     }
@@ -73,9 +63,6 @@ class Deferred implements DeferredInterface
                 }),
                 new Delegate(function (callable $callable) {
                     $this->notifyDelegate = new Delegate($callable);
-                }),
-                new Delegate(function (callable $callable) {
-                    $this->cancelDelegate = new Delegate($callable);
                 })
             );
         }
@@ -114,12 +101,16 @@ class Deferred implements DeferredInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function cancel()
     {
-        $this->promise();
+        if ($this->promise()->state()->equals(State::PENDING())) {
+            $this->reject(new CancellationException());
 
-        return $this->cancelDelegate->__invoke();
+            return true;
+        }
+
+        return false;
     }
 }

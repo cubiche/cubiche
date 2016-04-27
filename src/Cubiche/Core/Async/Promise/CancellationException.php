@@ -12,24 +12,21 @@
 namespace Cubiche\Core\Async\Promise;
 
 /**
- * Deferred Interface.
+ * Cancellation Exception class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DeferredInterface extends PromisorInterface
+class CancellationException extends RejectionException
 {
     /**
-     * @param mixed $value
+     * @param string $message
      */
-    public function resolve($value = null);
+    public function __construct($message = null)
+    {
+        if ($message !== null) {
+            $message = 'The promise has been cancelled';
+        }
 
-    /**
-     * @param mixed $reason
-     */
-    public function reject($reason = null);
-
-    /**
-     * @param mixed $state
-     */
-    public function notify($state = null);
+        parent::__construct($this, $message);
+    }
 }

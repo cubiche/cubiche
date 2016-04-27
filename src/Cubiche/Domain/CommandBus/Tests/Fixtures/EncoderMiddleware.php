@@ -10,7 +10,6 @@
 namespace Cubiche\Domain\CommandBus\Tests\Fixtures;
 
 use Cubiche\Domain\CommandBus\MiddlewareInterface;
-use Cubiche\Core\Delegate\Delegate;
 
 /**
  * EncoderMiddleware class.

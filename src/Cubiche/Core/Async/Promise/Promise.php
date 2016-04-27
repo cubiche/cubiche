@@ -11,60 +11,29 @@
 
 namespace Cubiche\Core\Async\Promise;
 
-use Cubiche\Core\Delegate\Delegate;
-
 /**
- * Promise.
+ * Promise class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Promise implements PromiseInterface
+class Promise extends AbstractPromise
 {
-    const WAITING = 'waiting';
-    const COMPLETED = 'completed';
-    const REJECTED = 'rejected';
-
     /**
-     * @var string
+     * @var DeferredInterface
      */
-    private $state;
-
-    /**
-     * @var Delegate[]
-     */
-    private $succeedDelegates;
-
-    /**
-     * @var Delegate[]
-     */
-    private $rejectedDelegates;
-
-    /**
-     * @var Delegate[]
-     */
-    private $notifyDelegates;
-
-    /**
-     * @var mixed
-     */
-    private $result;
+    private $deferred;
 
     /**
      * @param callable $exportResolve
      * @param callable $exportReject
      * @param callable $exportNotify
-     * @param callable $exportCancel
      */
     public function __construct(
         callable $exportResolve,
         callable $exportReject,
-        callable $exportNotify,
-        callable $exportCancel
+        callable $exportNotify
     ) {
-        $this->state = self::WAITING;
-        $this->succeedDelegates = array();
-        $this->rejectedDelegates = array();
-        $this->notifyDelegates = array();
+        $this->deferred = new PromiseDeferred();
 
         $exportResolve(function ($value = null) {
             return $this->resolve($value);
@@ -75,47 +44,22 @@ class Promise implements PromiseInterface
         $exportNotify(function ($state = null) {
             return $this->notify($state);
         });
-        $exportCancel(function () {
-            return $this->cancel();
-        });
     }
 
     /**
      * {@inheritdoc}
      */
-    public function then(callable $succeed = null, callable $rejected = null, callable $notify = null)
+    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
     {
-        $deferred = Deferred::defer();
-
-        $this->addSucceedDelegate($deferred, $succeed);
-        $this->addRejectedDelegate($deferred, $rejected);
-        $this->addNotifyDelegate($notify);
-
-        $this->resolver();
-
-        return $deferred->promise();
+        return $this->deferred->promise()->then($onFulfilled, $onRejected, $onNotify);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function otherwise(callable $catch)
+    public function state()
     {
-        return $this->then(null, $catch);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function always(callable $finally, callable $notify = null)
-    {
-        return $this->then(function ($value) use ($finally) {
-            $finally($value, null);
-
-            return $value;
-        }, function ($reason) use ($finally) {
-            $finally(null, $reason);
-        }, $notify);
+        return $this->deferred->promise()->state();
     }
 
     /**
@@ -123,7 +67,7 @@ class Promise implements PromiseInterface
      */
     protected function resolve($value = null)
     {
-        $this->result(self::COMPLETED, $value);
+        $this->deferred->resolve($value);
     }
 
     /**
@@ -131,7 +75,7 @@ class Promise implements PromiseInterface
      */
     protected function reject($reason = null)
     {
-        $this->result(self::REJECTED, $reason);
+        $this->deferred->reject($reason);
     }
 
     /**
@@ -139,112 +83,6 @@ class Promise implements PromiseInterface
      */
     protected function notify($state = null)
     {
-        if ($this->state === self::WAITING) {
-            foreach ($this->notifyDelegates as $delegate) {
-                $delegate($state);
-            }
-        } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state));
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function cancel()
-    {
-        if ($this->state !== self::WAITING) {
-            return false;
-        }
-        $this->reject(new \RuntimeException('Promise has been cancelled'));
-
-        return true;
-    }
-
-    /**
-     * @param DeferredInterface $deferred
-     * @param callable          $succeed
-     */
-    private function addSucceedDelegate(DeferredInterface $deferred, callable $succeed = null)
-    {
-        if ($this->state === self::WAITING || $this->state === self::COMPLETED) {
-            $this->succeedDelegates[] = new Delegate(function ($value = null) use ($succeed, $deferred) {
-                $actual = $value;
-                if ($succeed !== null) {
-                    $actual = $succeed($value);
-                }
-
-                $deferred->resolve($actual !== null ? $actual : $value);
-            });
-        }
-    }
-
-    /**
-     * @param DeferredInterface $deferred
-     * @param callable          $rejected
-     */
-    private function addRejectedDelegate(DeferredInterface $deferred, callable $rejected = null)
-    {
-        if ($this->state === self::WAITING || $this->state === self::REJECTED) {
-            $this->rejectedDelegates[] = new Delegate(function ($reason = null) use ($rejected, $deferred) {
-                if ($rejected !== null) {
-                    $rejected($reason);
-                }
-
-                $deferred->reject($reason);
-            });
-        }
-    }
-
-    /**
-     * @param callable $notify
-     */
-    private function addNotifyDelegate(callable $notify = null)
-    {
-        if ($this->state === self::WAITING && $notify !== null) {
-            $this->notifyDelegates[] = new Delegate($notify);
-        }
-    }
-
-    /**
-     * @param string $state
-     * @param mixed  $result
-     *
-     * @throws \LogicException
-     */
-    private function result($state, $result)
-    {
-        if ($this->state === self::WAITING) {
-            $this->state = $state;
-            $this->result = $result;
-
-            $this->resolver();
-        } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be resolved or rejected', $this->state));
-        }
-    }
-
-    private function resolver()
-    {
-        if ($this->state === self::WAITING) {
-            return;
-        }
-
-        if ($this->state === self::COMPLETED) {
-            $this->resolveDelegates($this->succeedDelegates);
-        } elseif ($this->state === self::REJECTED) {
-            $this->resolveDelegates($this->rejectedDelegates);
-        }
-    }
-
-    /**
-     * @param array $delegates
-     */
-    private function resolveDelegates(array &$delegates)
-    {
-        foreach ($delegates as $i => $delegate) {
-            $delegate($this->result);
-            unset($delegates[$i]);
-        }
+        $this->deferred->notify($state);
     }
 }

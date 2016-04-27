@@ -19,13 +19,13 @@ namespace Cubiche\Core\Async\Promise;
 interface PromiseInterface
 {
     /**
-     * @param callable $succeed
-     * @param callable $rejected
-     * @param callable $notify
+     * @param callable $onFulfilled
+     * @param callable $onRejected
+     * @param callable $onNotify
      *
      * @return PromiseInterface
      */
-    public function then(callable $succeed = null, callable $rejected = null, callable $notify = null);
+    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
 
     /**
      * @param callable $catch
@@ -36,8 +36,14 @@ interface PromiseInterface
 
     /**
      * @param callable $finally
+     * @param callable $onNotify
      *
      * @return PromiseInterface
      */
-    public function always(callable $finally, callable $notify = null);
+    public function always(callable $finally, callable $onNotify = null);
+
+    /**
+     * @return State
+     */
+    public function state();
 }

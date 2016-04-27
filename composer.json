@@ -22,7 +22,8 @@
         "myclabs/php-enum":             "^1.4",
         "doctrine/mongodb-odm":         "^1.0.5",
         "ramsey/uuid":                  "^3.2",
-        "symfony/property-access":      "^3.0"
+        "symfony/property-access":      "^3.0",
+        "react/event-loop": "^0.4.2"
     },
     "require-dev": {
         "atoum/visibility-extension":   "~1.0",
