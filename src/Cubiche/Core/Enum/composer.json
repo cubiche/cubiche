@@ -1,0 +1,33 @@
+{
+    "name": "cubiche/enum",
+    "type": "library",
+    "description": "Enum library",
+    "keywords": ["enum"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/equatable":        "dev-master",
+        "myclabs/php-enum":         "^1.4"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Enum\\": ""
+        }
+    }
+}

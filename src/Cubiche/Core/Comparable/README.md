@@ -1,0 +1,2 @@
+# Cubiche - Comparable
+[![Build Status](https://travis-ci.org/cubiche/comparable.svg?branch=master)](https://travis-ci.org/cubiche/comparable) [![Coverage Status](https://coveralls.io/repos/github/cubiche/comparable/badge.svg?branch=master)](https://coveralls.io/github/cubiche/comparable?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/comparable/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/comparable/?branch=master) 

@@ -170,7 +170,7 @@ class ArrayCollection implements ArrayCollectionInterface
      */
     public function slice($offset, $length = null)
     {
-        return new static(\array_slice($this->items, $offset, $length, true));
+        return new self(\array_slice($this->items, $offset, $length, true));
     }
 
     /**
@@ -214,7 +214,7 @@ class ArrayCollection implements ArrayCollectionInterface
             $criteria = new Comparator();
         }
 
-        usort($this->items, function ($a, $b) use ($criteria) {
+        uasort($this->items, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
     }

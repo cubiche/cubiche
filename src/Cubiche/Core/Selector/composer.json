@@ -1,0 +1,34 @@
+{
+    "name": "cubiche/selector",
+    "type": "library",
+    "description": "Selector library",
+    "keywords": ["selector", "criteria"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/delegate":         "dev-master",
+        "cubiche/visitor":          "dev-master",
+        "symfony/property-access":  "^3.0"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Selector\\": ""
+        }
+    }
+}

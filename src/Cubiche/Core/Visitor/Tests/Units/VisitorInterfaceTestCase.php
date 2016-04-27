@@ -78,6 +78,8 @@ abstract class VisitorInterfaceTestCase extends TestCase
                     ->integer($result)
                         ->isEqualTo(25)
                 ;
+        } else {
+            $this->skip(self::class.'::testVisit() skipped');
         }
     }
 

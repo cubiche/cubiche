@@ -1,0 +1,31 @@
+{
+    "name": "cubiche/visitor",
+    "type": "library",
+    "description": "Visitor library",
+    "keywords": ["visitor"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Visitor\\": ""
+        }
+    }
+}

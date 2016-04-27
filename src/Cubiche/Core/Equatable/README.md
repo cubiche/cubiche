@@ -1,0 +1,2 @@
+# Cubiche - Equatable
+[![Build Status](https://travis-ci.org/cubiche/equatable.svg?branch=master)](https://travis-ci.org/cubiche/equatable) [![Coverage Status](https://coveralls.io/repos/github/cubiche/equatable/badge.svg?branch=master)](https://coveralls.io/github/cubiche/equatable?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/equatable/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/equatable/?branch=master) 
