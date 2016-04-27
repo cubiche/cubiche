@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46cee89cd721dc380677fa305a929675",
-    "content-hash": "c4e0a4992c30c42443fdd16218bb92c0",
+    "hash": "39e7d948954746a8a8b318b669a6ee53",
+    "content-hash": "e57159aefadf790a4854de95199bbc92",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -789,6 +789,50 @@
             "time": "2016-03-22 18:40:53"
         },
         {
+            "name": "react/event-loop",
+            "version": "v0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/event-loop.git",
+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/164799f73175e1c80bba92a220ea35df6ca371dd",
+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "ext-event": "~1.0",
+                "ext-libev": "*",
+                "ext-libevent": ">=0.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "React\\EventLoop\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Event loop abstraction layer that libraries can use for evented I/O.",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2016-03-08 02:09:32"
+        },
+        {
             "name": "symfony/console",
             "version": "v2.8.4",
             "source": {
@@ -1210,7 +1254,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/ca6d4039e78fc1846d6a9e2b280a813937c7e55d",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/c4b1b96716fe790b1fad8bd23ca3641e828bff8e",
                 "reference": "ca6d4039e78fc1846d6a9e2b280a813937c7e55d",
                 "shasum": ""
             },
