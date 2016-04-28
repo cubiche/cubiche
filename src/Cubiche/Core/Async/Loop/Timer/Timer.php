@@ -65,7 +65,7 @@ class Timer implements TimerInterface
      */
     public function __construct(LoopInterface $loop, callable $task, $interval, $periodic = false, $count = null)
     {
-        $this->maxIterations = $count !== null ? (int) $count : ($periodic ? $periodic : 1);
+        $this->maxIterations = $count !== null ? (int) $count : ($periodic ? null : 1);
         if ($this->maxIterations !== null && $this->maxIterations <= 0) {
             throw new \InvalidArgumentException('The count argument must be a positive integer value');
         }

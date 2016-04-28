@@ -49,17 +49,7 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
      */
     public function resolve($value = null)
     {
-        if ($this->state()->equals(State::PENDING())) {
-            $this->actual = new FulfilledPromise($value);
-
-            while (!empty($this->deferreds)) {
-                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
-                $deferred = array_shift($this->deferreds);
-                $deferred->resolve($value);
-            }
-        } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be resolved', $this->state()->getValue()));
-        }
+        $this->changeState($value, true);
     }
 
     /**
@@ -67,16 +57,7 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
      */
     public function reject($reason = null)
     {
-        if ($this->state()->equals(State::PENDING())) {
-            $this->actual = new RejectedPromise($reason);
-            while (!empty($this->deferreds)) {
-                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
-                $deferred = array_shift($this->deferreds);
-                $deferred->reject($reason);
-            }
-        } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be resolved', $this->state()->getValue()));
-        }
+        $this->changeState($reason, false);
     }
 
     /**
@@ -107,6 +88,33 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
     public function promise()
     {
         return $this;
+    }
+
+    /**
+     * @param mixed $result
+     * @param bool  $success
+     *
+     * @throws \LogicException
+     */
+    private function changeState($result, $success)
+    {
+        if ($this->state()->equals(State::PENDING())) {
+            $this->actual = $success ? new FulfilledPromise($result) : new RejectedPromise($result);
+
+            while (!empty($this->deferreds)) {
+                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
+                $deferred = array_shift($this->deferreds);
+                if ($success) {
+                    $deferred->resolve($result);
+                } else {
+                    $deferred->reject($result);
+                }
+            }
+        } else {
+            throw new \LogicException(
+                \sprintf('A %s promise cannot be %s', $this->state()->getValue(), $success ? 'resolved' : 'rejected')
+            );
+        }
     }
 
     /**

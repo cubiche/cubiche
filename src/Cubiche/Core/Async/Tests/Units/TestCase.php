@@ -75,6 +75,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @param mixed $return
+     *
      * @return \Cubiche\Core\Delegate\Delegate
      */
     protected function delegateMock($return = null)
@@ -95,7 +97,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param mixed $return
+     * @param \Exception $e
      *
      * @return \Cubiche\Core\Delegate\Delegate
      */
