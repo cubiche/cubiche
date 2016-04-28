@@ -27,8 +27,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -39,8 +37,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -49,8 +45,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -59,8 +53,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {
@@ -69,8 +61,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::sort()
      */
     public function sort(ComparatorInterface $criteria = null)
     {
@@ -91,8 +81,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::removeAt()
      */
     public function removeAt($key)
     {
@@ -101,8 +89,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::keys()
      */
     public function keys()
     {
@@ -111,8 +97,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::values()
      */
     public function values()
     {
@@ -121,8 +105,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -131,8 +113,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see PersistentCollectionAdapter::contains()
      */
     public function contains($item)
     {
@@ -141,8 +121,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see PersistentCollectionAdapter::containsKey()
      */
     public function containsKey($key)
     {
@@ -151,8 +129,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see PersistentCollectionAdapter::get()
      */
     public function get($key)
     {
@@ -161,8 +137,6 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
 
     /**
      * {@inheritdoc}
-     *
-     * @see PersistentCollectionAdapter::set()
      */
     public function set($key, $value)
     {

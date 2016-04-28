@@ -23,8 +23,6 @@ class DataSourceCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -41,8 +39,6 @@ class DataSourceCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {

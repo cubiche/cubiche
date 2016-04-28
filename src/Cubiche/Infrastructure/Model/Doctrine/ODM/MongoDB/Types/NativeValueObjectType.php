@@ -19,8 +19,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -29,8 +27,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToPHPValue()
      */
     public function convertToPHPValue($value)
     {
@@ -41,8 +37,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToMongo()
      */
     public function closureToMongo()
     {
@@ -51,8 +45,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToPHP()
      */
     public function closureToPHP()
     {

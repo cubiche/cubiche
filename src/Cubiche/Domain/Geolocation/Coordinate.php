@@ -87,8 +87,6 @@ class Coordinate implements ValueObjectInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Equatable\EquatableInterface::equals()
      */
     public function equals($other)
     {

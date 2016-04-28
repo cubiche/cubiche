@@ -23,8 +23,6 @@ class ArrayDataSourceTests extends IteratorDataSourceTests
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\DataSource\IteratorDataSourceTests::randomDataSource()
      */
     protected function randomDataSource(
         SpecificationInterface $searchCriteria = null,

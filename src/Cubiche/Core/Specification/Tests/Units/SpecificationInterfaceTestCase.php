@@ -169,8 +169,6 @@ abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::visitorInterface()
      */
     protected function visitorInterface()
     {
@@ -179,8 +177,6 @@ abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::acceptActualVisitorMethod()
      */
     protected function acceptActualVisitorMethod()
     {

@@ -21,8 +21,6 @@ class UUIDType extends StringIdType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types\StringIdType::targetClass()
      */
     public function targetClass()
     {

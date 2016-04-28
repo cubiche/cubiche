@@ -19,8 +19,6 @@ class Visitee implements VisiteeInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\VisiteeInterface::accept()
      */
     public function accept(VisitorInterface $visitor)
     {

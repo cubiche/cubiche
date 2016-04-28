@@ -22,8 +22,6 @@ abstract class ComparatorVisitor extends Visitor implements ComparatorVisitorInt
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

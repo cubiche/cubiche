@@ -21,8 +21,6 @@ class AndSpecificationTests extends SpecificationTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     public function defaultConstructorArguments()
     {
@@ -31,8 +29,6 @@ class AndSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -41,8 +37,6 @@ class AndSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateSuccessDataProvider()
      */
     protected function evaluateSuccessDataProvider()
     {
@@ -54,8 +48,6 @@ class AndSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateFailureDataProvider()
      */
     protected function evaluateFailureDataProvider()
     {

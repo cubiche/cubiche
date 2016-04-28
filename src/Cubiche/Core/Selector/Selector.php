@@ -22,8 +22,6 @@ abstract class Selector extends Visitee implements SelectorInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::select()
      */
     public function select(SelectorInterface $selector)
     {
@@ -80,8 +78,6 @@ abstract class Selector extends Visitee implements SelectorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitee::accept()
      */
     public function accept(VisitorInterface $visitor)
     {

@@ -22,8 +22,6 @@ class NotEqualTests extends BinaryConstraintOperatorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -32,8 +30,6 @@ class NotEqualTests extends BinaryConstraintOperatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateSuccessDataProvider()
      */
     protected function evaluateSuccessDataProvider()
     {
@@ -45,8 +41,6 @@ class NotEqualTests extends BinaryConstraintOperatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateFailureDataProvider()
      */
     protected function evaluateFailureDataProvider()
     {

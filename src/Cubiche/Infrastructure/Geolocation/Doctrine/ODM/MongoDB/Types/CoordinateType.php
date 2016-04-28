@@ -22,8 +22,6 @@ class CoordinateType extends ValueObjectType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -50,8 +48,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToPHPValue()
      */
     public function convertToPHPValue($value)
     {
@@ -64,8 +60,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToMongo()
      */
     public function closureToMongo()
     {
@@ -80,8 +74,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToPHP()
      */
     public function closureToPHP()
     {

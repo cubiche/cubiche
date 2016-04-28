@@ -20,8 +20,6 @@ abstract class FieldTestCase extends SelectorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::newDefaultTestedInstance()
      */
     public function newDefaultTestedInstance()
     {
@@ -30,8 +28,6 @@ abstract class FieldTestCase extends SelectorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\Tests\Units\SelectorInterfaceTestCase::testCreate()
      */
     public function testCreate()
     {

@@ -21,8 +21,6 @@ class VariableAsserter extends BaseVariableAsserter
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \mageekguy\atoum\asserters\variable::isEqualTo()
      */
     public function isEqualTo($value, $failMessage = null)
     {

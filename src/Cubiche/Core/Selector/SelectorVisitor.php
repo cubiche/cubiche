@@ -22,8 +22,6 @@ abstract class SelectorVisitor extends Visitor implements SelectorVisitorInterfa
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

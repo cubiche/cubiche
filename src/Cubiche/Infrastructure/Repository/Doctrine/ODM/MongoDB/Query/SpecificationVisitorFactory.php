@@ -19,8 +19,6 @@ class SpecificationVisitorFactory implements SpecificationVisitorFactoryInterfac
 {
     /**
      * {@inheritdoc}
-     *
-     * @see SpecificationVisitorFactoryInterface::create()
      */
     public function create(QueryBuilder $queryBuilder)
     {

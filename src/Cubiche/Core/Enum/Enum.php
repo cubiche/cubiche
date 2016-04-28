@@ -33,8 +33,6 @@ abstract class Enum extends BaseEnum implements EquatableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Equatable\EquatableInterface::equals()
      */
     public function equals($other)
     {

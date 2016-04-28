@@ -19,8 +19,6 @@ class This extends Selector
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::apply()
      */
     public function apply($value)
     {
@@ -29,8 +27,6 @@ class This extends Selector
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::accept()
      */
     public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
     {
@@ -39,8 +35,6 @@ class This extends Selector
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\Selector::select()
      */
     public function select(SelectorInterface $selector)
     {

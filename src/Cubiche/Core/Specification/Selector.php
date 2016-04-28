@@ -59,8 +59,6 @@ class Selector extends Specification implements SelectorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -69,8 +67,6 @@ class Selector extends Specification implements SelectorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::apply()
      */
     public function apply($value)
     {
@@ -79,8 +75,6 @@ class Selector extends Specification implements SelectorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\Selector::select()
      */
     public function select(SelectorInterface $selector)
     {
@@ -99,8 +93,6 @@ class Selector extends Specification implements SelectorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {

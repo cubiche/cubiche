@@ -43,8 +43,6 @@ class ReverseComparator extends AbstractComparator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::compare()
      */
     public function compare($a, $b)
     {
@@ -53,8 +51,6 @@ class ReverseComparator extends AbstractComparator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::reverse()
      */
     public function reverse()
     {
@@ -63,8 +59,6 @@ class ReverseComparator extends AbstractComparator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::acceptComparatorVisitor()
      */
     public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
     {

@@ -21,8 +21,6 @@ class SpecificationVisitorTests extends VisitorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisitorInterfaceTestCase::visiteeInterface()
      */
     protected function visiteeInterface()
     {
@@ -31,8 +29,6 @@ class SpecificationVisitorTests extends VisitorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisitorInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {

@@ -30,8 +30,6 @@ class DocumentRepositoryTests extends RepositoryTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase::emptyRepository()
      */
     protected function emptyRepository()
     {
@@ -40,8 +38,6 @@ class DocumentRepositoryTests extends RepositoryTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

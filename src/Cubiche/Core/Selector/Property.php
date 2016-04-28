@@ -39,8 +39,6 @@ class Property extends Field
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::acceptSelectorVisitor()
      */
     public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
     {
@@ -49,8 +47,6 @@ class Property extends Field
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::apply()
      */
     public function apply($value)
     {

@@ -22,8 +22,6 @@ abstract class SpecificationVisitor extends Visitor implements SpecificationVisi
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

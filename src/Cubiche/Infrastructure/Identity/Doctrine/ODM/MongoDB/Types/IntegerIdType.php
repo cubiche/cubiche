@@ -21,8 +21,6 @@ class IntegerIdType extends IdType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Model\Doctrine\Common\Types\ValueObjectTypeInterface::targetClass()
      */
     public function targetClass()
     {

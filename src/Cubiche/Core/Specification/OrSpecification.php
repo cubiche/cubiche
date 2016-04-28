@@ -19,8 +19,6 @@ class OrSpecification extends BinarySpecification
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -29,8 +27,6 @@ class OrSpecification extends BinarySpecification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {

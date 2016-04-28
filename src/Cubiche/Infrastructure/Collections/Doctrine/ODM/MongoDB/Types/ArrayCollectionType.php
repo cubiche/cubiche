@@ -45,8 +45,6 @@ class ArrayCollectionType extends CollectionType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\CollectionType::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -64,8 +62,6 @@ class ArrayCollectionType extends CollectionType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\CollectionType::convertToPHPValue()
      */
     public function convertToPHPValue($value)
     {

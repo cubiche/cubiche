@@ -35,8 +35,6 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory::getMetadataFor()
      */
     public function getMetadataFor($className)
     {
@@ -62,8 +60,6 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory::setDocumentManager()
      */
     public function setDocumentManager(DocumentManager $dm)
     {

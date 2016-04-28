@@ -65,8 +65,6 @@ abstract class DataSource implements DataSourceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see Countable::count()
      */
     public function count()
     {
@@ -79,8 +77,6 @@ abstract class DataSource implements DataSourceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::length()
      */
     public function length()
     {
@@ -89,8 +85,6 @@ abstract class DataSource implements DataSourceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::offset()
      */
     public function offset()
     {
@@ -99,8 +93,6 @@ abstract class DataSource implements DataSourceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::searchCriteria()
      */
     public function searchCriteria()
     {
@@ -109,8 +101,6 @@ abstract class DataSource implements DataSourceInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortCriteria()
      */
     public function sortCriteria()
     {

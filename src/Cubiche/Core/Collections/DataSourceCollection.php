@@ -36,8 +36,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::count()
      */
     public function count()
     {
@@ -50,8 +48,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::getIterator()
      */
     public function getIterator()
     {
@@ -64,8 +60,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -78,8 +72,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -92,8 +84,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -106,8 +96,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {
@@ -120,8 +108,6 @@ class DataSourceCollection extends LazyCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\LazyCollection::initialize()
      */
     protected function initialize()
     {

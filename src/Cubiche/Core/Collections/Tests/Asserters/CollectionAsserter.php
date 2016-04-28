@@ -120,8 +120,6 @@ class CollectionAsserter extends ObjectAsserter
 
     /**
      * {@inheritdoc}
-     *
-     * @see \mageekguy\atoum\asserters\object::setWith()
      */
     public function setWith($value, $checkType = true)
     {
@@ -296,8 +294,6 @@ class CollectionAsserter extends ObjectAsserter
 
     /**
      * {@inheritdoc}
-     *
-     * @see \mageekguy\atoum\asserters\object::valueIsSet()
      */
     protected function valueIsSet($message = 'Collection is undefined')
     {

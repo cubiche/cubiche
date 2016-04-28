@@ -52,8 +52,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see IteratorAggregate::getIterator()
      */
     public function getIterator()
     {
@@ -78,8 +76,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::findOne()
      */
     public function findOne()
     {
@@ -92,8 +88,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::filteredDataSource()
      */
     public function filteredDataSource(SpecificationInterface $criteria)
     {
@@ -112,8 +106,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
     public function slicedDataSource($offset, $length = null)
     {
@@ -128,8 +120,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
@@ -144,8 +134,6 @@ class IteratorDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {

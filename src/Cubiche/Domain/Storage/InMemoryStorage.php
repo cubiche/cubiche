@@ -37,8 +37,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::set()
      */
     public function set($key, $value)
     {
@@ -49,8 +47,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::get()
      */
     public function get($key, $default = null)
     {
@@ -64,8 +60,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::getOrFail()
      */
     public function getOrFail($key)
     {
@@ -79,8 +73,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::getMultiple()
      */
     public function getMultiple(array $keys, $default = null)
     {
@@ -94,8 +86,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::getMultipleOrFail()
      */
     public function getMultipleOrFail(array $keys)
     {
@@ -109,8 +99,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::exists()
      */
     public function exists($key)
     {
@@ -121,8 +109,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::remove()
      */
     public function remove($key)
     {
@@ -141,8 +127,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::clear()
      */
     public function clear()
     {
@@ -151,8 +135,6 @@ class InMemoryStorage extends AbstractStorage
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Storage\StorageInterface::keys()
      */
     public function keys()
     {

@@ -40,8 +40,6 @@ class Value extends Selector
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::apply()
      */
     public function apply($value)
     {
@@ -50,8 +48,6 @@ class Value extends Selector
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorInterface::acceptSelectorVisitor()
      */
     public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
     {

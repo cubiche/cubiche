@@ -25,8 +25,6 @@ abstract class BinaryConstraintOperatorTestCase extends SpecificationTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     public function defaultConstructorArguments()
     {

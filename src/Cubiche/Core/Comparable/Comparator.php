@@ -20,8 +20,6 @@ class Comparator extends AbstractComparator
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::acceptComparatorVisitor()
      */
     public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
     {

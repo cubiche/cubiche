@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
 use Cubiche\Domain\Exception\NotImplementedException;
@@ -86,8 +87,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::add()
      */
     public function add(Number $x)
     {
@@ -102,8 +101,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::addInteger()
      */
     public function addInteger(Integer $x)
     {
@@ -112,8 +109,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::addReal()
      */
     public function addReal(Real $x)
     {
@@ -122,8 +117,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::addDecimal()
      */
     public function addDecimal(Decimal $x, $scale = null)
     {
@@ -132,8 +125,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::sub()
      */
     public function sub(Number $x)
     {
@@ -148,8 +139,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::subInteger()
      */
     public function subInteger(Integer $x)
     {
@@ -158,8 +147,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::subReal()
      */
     public function subReal(Real $x)
     {
@@ -168,8 +155,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::subDecimal()
      */
     public function subDecimal(Decimal $x, $scale = null)
     {
@@ -178,8 +163,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::mult()
      */
     public function mult(Number $x)
     {
@@ -196,8 +179,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::multInteger()
      */
     public function multInteger(Integer $x)
     {
@@ -206,8 +187,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::multReal()
      */
     public function multReal(Real $x)
     {
@@ -216,8 +195,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::multDecimal()
      */
     public function multDecimal(Decimal $x, $scale = null)
     {
@@ -235,8 +212,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::div()
      */
     public function div(Number $x)
     {
@@ -251,8 +226,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::divInteger()
      */
     public function divInteger(Integer $x)
     {
@@ -261,8 +234,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::divReal()
      */
     public function divReal(Real $x)
     {
@@ -271,8 +242,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::divDecimal()
      */
     public function divDecimal(Decimal $x, $scale = null)
     {
@@ -305,8 +274,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::powInteger()
      */
     public function powInteger(Integer $x)
     {
@@ -324,8 +291,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::powReal()
      */
     public function powReal(Real $x)
     {
@@ -339,8 +304,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Decimal::powDecimal()
      */
     public function powDecimal(Decimal $x, $scale = null)
     {
@@ -354,8 +317,6 @@ class DecimalInfinite extends Decimal
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::sqrt()
      */
     public function sqrt($scale = null)
     {

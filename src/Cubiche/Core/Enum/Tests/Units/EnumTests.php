@@ -21,8 +21,6 @@ class EnumTests extends EnumTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::newDefaultTestedInstance()
      */
     public function newDefaultTestedInstance()
     {

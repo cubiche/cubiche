@@ -22,8 +22,6 @@ abstract class SelectorInterfaceTestCase extends VisiteeInterfaceTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::testCreate()
      */
     public function testCreate()
     {
@@ -39,8 +37,6 @@ abstract class SelectorInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::visitorInterface()
      */
     protected function visitorInterface()
     {
@@ -49,8 +45,6 @@ abstract class SelectorInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::acceptActualVisitorMethod()
      */
     protected function acceptActualVisitorMethod()
     {

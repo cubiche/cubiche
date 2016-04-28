@@ -21,8 +21,6 @@ class EventSubscriber extends EventListener implements BaseEventSubscriber
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\Common\EventSubscriber::getSubscribedEvents()
      */
     public function getSubscribedEvents()
     {

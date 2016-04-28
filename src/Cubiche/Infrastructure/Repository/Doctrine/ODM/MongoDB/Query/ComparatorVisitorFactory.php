@@ -19,8 +19,6 @@ class ComparatorVisitorFactory implements ComparatorVisitorFactoryInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactoryInterface::create()
      */
     public function create(QueryBuilder $queryBuilder)
     {

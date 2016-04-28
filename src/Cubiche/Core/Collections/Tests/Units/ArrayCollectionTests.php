@@ -23,8 +23,6 @@ class ArrayCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {
@@ -33,8 +31,6 @@ class ArrayCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {
@@ -43,8 +39,6 @@ class ArrayCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {

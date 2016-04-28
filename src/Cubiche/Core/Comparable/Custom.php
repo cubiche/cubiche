@@ -34,8 +34,6 @@ class Custom extends AbstractComparator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\Comparator::compare()
      */
     public function compare($a, $b)
     {
@@ -44,8 +42,6 @@ class Custom extends AbstractComparator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\Comparator::acceptComparatorVisitor()
      */
     public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
     {

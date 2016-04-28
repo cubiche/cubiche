@@ -19,8 +19,6 @@ class Visitor implements VisitorInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\VisitorInterface::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

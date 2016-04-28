@@ -22,8 +22,6 @@ trait GeoSpecificationVisitorTrait
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\Specification\GeoSpecificationVisitorInterface::visitNear()
      */
     public function visitNear(Near $near)
     {

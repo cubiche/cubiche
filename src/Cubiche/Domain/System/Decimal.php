@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System;
 
 /**
@@ -75,8 +76,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedAdd()
      */
     protected function invertedAdd(Number $x)
     {
@@ -85,8 +84,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addInteger()
      */
     public function addInteger(Integer $x)
     {
@@ -95,8 +92,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addReal()
      */
     public function addReal(Real $x)
     {
@@ -105,8 +100,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addDecimal()
      */
     public function addDecimal(Decimal $x, $scale = null)
     {
@@ -119,8 +112,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Real::invertedSub()
      */
     protected function invertedSub(Number $x)
     {
@@ -129,8 +120,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subInteger()
      */
     public function subInteger(Integer $x)
     {
@@ -139,8 +128,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subReal()
      */
     public function subReal(Real $x)
     {
@@ -149,8 +136,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subDecimal()
      */
     public function subDecimal(Decimal $x, $scale = null)
     {
@@ -163,8 +148,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedMult()
      */
     protected function invertedMult(Number $x)
     {
@@ -173,8 +156,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multInteger()
      */
     public function multInteger(Integer $x)
     {
@@ -183,8 +164,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multReal()
      */
     public function multReal(Real $x)
     {
@@ -193,8 +172,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multDecimal()
      */
     public function multDecimal(Decimal $x, $scale = null)
     {
@@ -207,8 +184,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Real::invertedDiv()
      */
     protected function invertedDiv(Number $x)
     {
@@ -217,8 +192,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divInteger()
      */
     public function divInteger(Integer $x)
     {
@@ -227,8 +200,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divReal()
      */
     public function divReal(Real $x)
     {
@@ -237,8 +208,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divDecimal()
      */
     public function divDecimal(Decimal $x, $scale = null)
     {
@@ -252,8 +221,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Real::invertedPow()
      */
     protected function invertedPow(Number $x)
     {
@@ -262,8 +229,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Real::powInteger()
      */
     public function powInteger(Integer $x)
     {
@@ -272,8 +237,6 @@ class Decimal extends Real
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::sqrt()
      */
     public function sqrt($scale = null)
     {

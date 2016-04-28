@@ -43,8 +43,6 @@ class ComparableObject implements ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

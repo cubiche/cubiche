@@ -88,8 +88,6 @@ class Distance implements ValueObjectInterface, ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Equatable\EquatableInterface::equals()
      */
     public function equals($other)
     {
@@ -100,8 +98,6 @@ class Distance implements ValueObjectInterface, ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

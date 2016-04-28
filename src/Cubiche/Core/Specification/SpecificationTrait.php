@@ -36,8 +36,6 @@ trait SpecificationTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::andX()
      */
     public function andX(SpecificationInterface $specification)
     {
@@ -46,8 +44,6 @@ trait SpecificationTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::orX()
      */
     public function orX(SpecificationInterface $specification)
     {
@@ -56,8 +52,6 @@ trait SpecificationTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::not()
      */
     public function not()
     {
@@ -66,8 +60,6 @@ trait SpecificationTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitee::accept()
      */
     public function accept(VisitorInterface $visitor)
     {

@@ -37,8 +37,6 @@ trait ComparatorTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::compare()
      */
     public function compare($a, $b)
     {
@@ -51,8 +49,6 @@ trait ComparatorTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::reverse()
      */
     public function reverse()
     {
@@ -61,8 +57,6 @@ trait ComparatorTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::orX()
      */
     public function orX(ComparatorInterface $other)
     {
@@ -71,8 +65,6 @@ trait ComparatorTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitee::accept()
      */
     public function accept(VisitorInterface $visitor)
     {

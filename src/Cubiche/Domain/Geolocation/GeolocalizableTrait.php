@@ -24,8 +24,6 @@ trait GeolocalizableTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\GeolocalizableInterface::coordinate()
      */
     public function coordinate()
     {
@@ -34,8 +32,6 @@ trait GeolocalizableTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\GeolocalizableInterface::setCoordinate()
      */
     public function setCoordinate(Coordinate $coordinate)
     {

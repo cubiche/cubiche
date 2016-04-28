@@ -55,8 +55,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -66,8 +64,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -79,8 +75,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Repository\RepositoryInterface::update()
      */
     public function update($item)
     {
@@ -89,8 +83,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -100,8 +92,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::clear()
      */
     public function clear()
     {
@@ -115,8 +105,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Repository\RepositoryInterface::get()
      */
     public function get($id)
     {
@@ -125,8 +113,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see Countable::count()
      */
     public function count()
     {
@@ -135,8 +121,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see IteratorAggregate::getIterator()
      */
     public function getIterator()
     {
@@ -145,8 +129,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -161,8 +143,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -171,8 +151,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -181,8 +159,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::toArray()
      */
     public function toArray()
     {
@@ -191,8 +167,6 @@ class DocumentRepository extends Repository
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {

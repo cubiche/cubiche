@@ -23,8 +23,6 @@ abstract class ValueObjectType extends BaseType implements ValueObjectTypeInterf
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Model\Doctrine\Common\Types\ValueObjectTypeInterface::toDatabaseValue()
      */
     final public function toDatabaseValue(ValueObjectInterface $value)
     {
@@ -33,8 +31,6 @@ abstract class ValueObjectType extends BaseType implements ValueObjectTypeInterf
 
     /**
      * {@inheritdoc}
-     *
-     * @see ValueObjectTypeInterface::fromDatabaseValue()
      */
     final public function fromDatabaseValue($value)
     {

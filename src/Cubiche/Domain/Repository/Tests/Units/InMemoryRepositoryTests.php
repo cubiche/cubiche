@@ -22,8 +22,6 @@ class InMemoryRepositoryTests extends RepositoryTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase::emptyRepository()
      */
     protected function emptyRepository()
     {

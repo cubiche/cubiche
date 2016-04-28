@@ -22,8 +22,6 @@ class UserIdType extends UUIDType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types\UUIDType::nativeValueObjectClass()
      */
     protected function nativeValueObjectClass()
     {

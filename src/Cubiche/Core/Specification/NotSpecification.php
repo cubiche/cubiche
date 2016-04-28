@@ -32,8 +32,6 @@ class NotSpecification extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -42,8 +40,6 @@ class NotSpecification extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {
@@ -60,8 +56,6 @@ class NotSpecification extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::not()
      */
     public function not()
     {

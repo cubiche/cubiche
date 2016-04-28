@@ -22,8 +22,6 @@ class SelectorComparatorTests extends AbstractComparatorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -32,8 +30,6 @@ class SelectorComparatorTests extends AbstractComparatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     protected function defaultConstructorArguments()
     {
@@ -42,8 +38,6 @@ class SelectorComparatorTests extends AbstractComparatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\Tests\Units\AbstractComparatorTestCase::compareDataProvider()
      */
     protected function compareDataProvider()
     {

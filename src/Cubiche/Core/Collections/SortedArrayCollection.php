@@ -45,8 +45,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -57,8 +55,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -71,8 +67,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -83,8 +77,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::removeAt()
      */
     public function removeAt($key)
     {
@@ -95,8 +87,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::set()
      */
     public function set($key, $value)
     {
@@ -107,8 +97,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::sort()
      */
     public function sort(ComparatorInterface $criteria = null)
     {
@@ -121,8 +109,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)
     {

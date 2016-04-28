@@ -33,8 +33,6 @@ abstract class Entity implements EntityInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\EntityInterface::id()
      */
     public function id()
     {
@@ -43,8 +41,6 @@ abstract class Entity implements EntityInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
      */
     public function equals($other)
     {

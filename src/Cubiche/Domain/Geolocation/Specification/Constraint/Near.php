@@ -84,8 +84,6 @@ class Near extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -105,8 +103,6 @@ class Near extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {

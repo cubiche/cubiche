@@ -28,8 +28,6 @@ abstract class Number extends NativeValueObject implements ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {
@@ -296,8 +294,6 @@ abstract class Number extends NativeValueObject implements ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

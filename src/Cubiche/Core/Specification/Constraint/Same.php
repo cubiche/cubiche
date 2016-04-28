@@ -21,8 +21,6 @@ class Same extends BinaryConstraintOperator
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -31,8 +29,6 @@ class Same extends BinaryConstraintOperator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {
@@ -41,8 +37,6 @@ class Same extends BinaryConstraintOperator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::not()
      */
     public function not()
     {

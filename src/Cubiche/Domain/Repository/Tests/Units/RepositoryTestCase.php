@@ -75,8 +75,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -98,8 +96,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {
@@ -113,8 +109,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {
@@ -123,8 +117,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {
@@ -133,8 +125,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

@@ -53,8 +53,6 @@ abstract class AbstractComparatorTestCase extends ComparatorInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\Tests\Units\ComparatorInterfaceTestCase::compareDataProvider()
      */
     protected function compareDataProvider()
     {
