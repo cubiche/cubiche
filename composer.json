@@ -23,7 +23,7 @@
         "doctrine/mongodb-odm":         "^1.0.5",
         "ramsey/uuid":                  "^3.2",
         "symfony/property-access":      "^3.0",
-        "react/event-loop": "^0.4.2"
+        "react/event-loop":             "^0.4.2"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",

@@ -24,7 +24,7 @@ class RejectedPromise extends AbstractPromise
     protected $reason;
 
     /**
-     * @param mixed $value
+     * @param mixed $reason
      */
     public function __construct($reason = null)
     {
