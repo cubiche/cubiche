@@ -7,20 +7,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Event;
+namespace Cubiche\Domain\Model\EventSourcing;
 
-use Cubiche\Core\EventBus\EventInterface;
-use DateTime;
+use Cubiche\Domain\Event\DomainEventInterface;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
- * DomainEvent interface.
+ * EntityDomainEvent interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DomainEventInterface extends EventInterface
+interface EntityDomainEventInterface extends DomainEventInterface
 {
     /**
-     * @return DateTime
+     * @return IdInterface
      */
-    public function occurredOn();
+    public function aggregateId();
 }
