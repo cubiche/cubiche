@@ -8,11 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventBus;
 
 use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\EventBus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\EventBus\Exception\NotFoundException;
+use Cubiche\Core\EventBus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\EventBus\Middlewares\Notifier\NotifierMiddleware;
 
 /**
@@ -41,6 +43,14 @@ class EventBus
     {
         $this->ensureNotifierMiddleware($middlewares);
         $this->chainedMiddleware = $this->chainedExecution($middlewares);
+    }
+
+    /**
+     * @return EventBus
+     */
+    public static function create()
+    {
+        return new static([new LockingMiddleware(), new NotifierMiddleware(new Notifier())]);
     }
 
     /**
