@@ -31,12 +31,12 @@ interface DataSourceInterface extends \Countable, \IteratorAggregate
     public function offset();
 
     /**
-     * @return \Cubiche\Domain\Specification\SpecificationInterface
+     * @return \Cubiche\Core\Specification\SpecificationInterface
      */
     public function searchCriteria();
 
     /**
-     * @return \Cubiche\Domain\Comparable\ComparatorInterface
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     public function sortCriteria();
 

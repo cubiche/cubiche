@@ -22,7 +22,7 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 class SortedArrayCollection extends ArrayCollection
 {
     /**
-     * @var array
+     * @var ComparatorInterface
      */
     protected $criteria;
 
@@ -59,7 +59,7 @@ class SortedArrayCollection extends ArrayCollection
     public function addAll($items)
     {
         foreach ($items as $item) {
-            parent::add($item);
+            $this->items[] = $item;
         }
 
         $this->sort();

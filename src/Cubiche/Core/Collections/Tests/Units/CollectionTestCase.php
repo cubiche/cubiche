@@ -10,85 +10,18 @@
  */
 namespace Cubiche\Core\Collections\Tests\Units;
 
+use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Core\Collections\CollectionInterface;
-use mageekguy\atoum\adapter as Adapter;
-use mageekguy\atoum\annotations\extractor as Extractor;
-use mageekguy\atoum\asserter\generator as Generator;
-use mageekguy\atoum\test\assertion\manager as Manager;
-use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
- * CollectionTestCase class.
+ * Collection Test Case class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 abstract class CollectionTestCase extends TestCase
 {
-    /**
-     * @param Adapter   $adapter
-     * @param Extractor $annotationExtractor
-     * @param Generator $asserterGenerator
-     * @param Manager   $assertionManager
-     * @param \Closure  $reflectionClassFactory
-     * @param \Closure  $phpExtensionFactory
-     * @param Analyzer  $analyzer
-     */
-    public function __construct(
-        Adapter $adapter = null,
-        Extractor $annotationExtractor = null,
-        Generator $asserterGenerator = null,
-        Manager $assertionManager = null,
-        \Closure $reflectionClassFactory = null,
-        \Closure $phpExtensionFactory = null,
-        Analyzer $analyzer = null
-    ) {
-        parent::__construct(
-            $adapter,
-            $annotationExtractor,
-            $asserterGenerator,
-            $assertionManager,
-            $reflectionClassFactory,
-            $phpExtensionFactory,
-            $analyzer
-        );
-
-        $this->getAssertionManager()
-            ->setHandler(
-                'randomCollection',
-                function ($size = null) {
-                    return $this->randomCollection($size);
-                }
-            )
-            ->setHandler(
-                'emptyCollection',
-                function () {
-                    return $this->emptyCollection();
-                }
-            )
-            ->setHandler(
-                'randomValue',
-                function () {
-                    return $this->randomValue();
-                }
-            )
-            ->setHandler(
-                'uniqueValue',
-                function () {
-                    return $this->uniqueValue();
-                }
-            )
-            ->setHandler(
-                'comparator',
-                function () {
-                    return $this->comparator();
-                }
-            )
-        ;
-    }
-
     /**
      * @return \Cubiche\Core\Collections\CollectionInterface
      */
@@ -134,11 +67,22 @@ abstract class CollectionTestCase extends TestCase
     abstract protected function uniqueValue();
 
     /**
-     * @return \Cubiche\Domain\Comparable\Comparator
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     protected function comparator()
     {
         return new Comparator();
+    }
+
+    /**
+     * Test class.
+     */
+    public function testClass()
+    {
+        $this
+            ->testedClass
+                ->implements(CollectionInterface::class)
+        ;
     }
 
     /**
@@ -185,12 +129,12 @@ abstract class CollectionTestCase extends TestCase
                 $emptyCollection = $this->emptyCollection()
             )
             ->when($emptyCollection->add($unique))
-            ->then
+            ->then()
                 ->collection($emptyCollection)
                     ->contains($unique)
-            ->and
+            ->and()
             ->when($emptyCollection->remove($unique))
-            ->then
+            ->then()
                 ->collection($emptyCollection)
                     ->notContains($unique)
         ;
@@ -201,12 +145,12 @@ abstract class CollectionTestCase extends TestCase
                 $randomCollection = $this->randomCollection()
             )
             ->when($randomCollection->add($unique))
-            ->then
+            ->then()
                 ->collection($randomCollection)
                     ->contains($unique)
-            ->and
+            ->and()
             ->when($randomCollection->remove($unique))
-            ->then
+            ->then()
                 ->collection($randomCollection)
                     ->notContains($unique)
         ;
@@ -219,7 +163,7 @@ abstract class CollectionTestCase extends TestCase
     {
         $this
             ->given($randomCollection = $this->randomCollection())
-            ->then
+            ->then()
                 ->collection($randomCollection)
                     ->isNotEmpty()
             ->and()
@@ -272,7 +216,7 @@ abstract class CollectionTestCase extends TestCase
             ->then
                 ->collection($findResult)
                     ->isEmpty()
-            ->and
+            ->and()
             ->when(
                 $emptyCollection->add($unique),
                 $findResult = $emptyCollection->find($criteria)
@@ -292,7 +236,7 @@ abstract class CollectionTestCase extends TestCase
             ->then
                 ->collection($findResult)
                     ->isEmpty()
-            ->and
+            ->and()
             ->when(
                 $randomCollection->add($unique),
                 $findResult = $randomCollection->find($criteria)
@@ -318,12 +262,12 @@ abstract class CollectionTestCase extends TestCase
             ->then
                 ->variable($findResult)
                     ->isNull()
-            ->and
+            ->and()
             ->when(
                 $emptyCollection->add($unique),
                 $findResult = $emptyCollection->findOne($criteria)
             )
-            ->then
+            ->then()
                 ->variable($findResult)
                     ->isEqualTo($unique)
         ;
@@ -335,15 +279,15 @@ abstract class CollectionTestCase extends TestCase
                 $randomCollection = $this->randomCollection()
             )
             ->when($findResult = $randomCollection->findOne($criteria))
-            ->then
+            ->then()
                 ->variable($findResult)
                     ->isNull()
-            ->and
+            ->and()
             ->when(
                 $randomCollection->add($unique),
                 $findResult = $randomCollection->findOne($criteria)
             )
-            ->then
+            ->then()
                 ->variable($findResult)
                     ->isEqualTo($unique)
         ;
