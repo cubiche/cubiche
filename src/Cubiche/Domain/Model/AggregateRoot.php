@@ -13,11 +13,13 @@ namespace Cubiche\Domain\Model;
 
 use Cubiche\Domain\Event\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\EntityDomainEventInterface;
+use Cubiche\Domain\Model\EventSourcing\EventStream;
 
 /**
  * Abstract Aggregate Root Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 abstract class AggregateRoot extends Entity implements AggregateRootInterface
 {
@@ -76,5 +78,30 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     public function clearEvents()
     {
         $this->recordedEvents = [];
+    }
+
+    /**
+     * @param EventStream $history
+     *
+     * @return AggregateRootInterface
+     */
+    public static function loadFromHistory(EventStream $history)
+    {
+        if (static::class !== $history->className()->toNative()) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You cannot load an AggregateRoot of type %s from an EventStream for object of type %s',
+                    static::class,
+                    $history->className()->toNative()
+                )
+            );
+        }
+
+        $aggregateRoot = new static($history->aggregateId());
+        foreach ($history->events() as $event) {
+            $aggregateRoot->applyEvent($event);
+        }
+
+        return $aggregateRoot;
     }
 }

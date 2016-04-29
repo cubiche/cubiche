@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Domain\Model\IdInterface;
@@ -20,7 +21,7 @@ use Cubiche\Domain\System\StringLiteral;
 class EventStream
 {
     /**
-     * @var string
+     * @var StringLiteral
      */
     private $className;
 

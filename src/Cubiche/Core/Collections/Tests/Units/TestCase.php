@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Collections\Tests\Asserters\Asserters;
-use Cubiche\Core\Collections\Tests\Asserters\CollectionAsserter;
-use Cubiche\Core\Collections\Tests\Asserters\DataSourceAsserter;
 use Cubiche\Tests\TestCase as BaseTestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
