@@ -114,6 +114,7 @@ class ArrayCollectionTests extends CollectionTestCase
             ->given(
                 $key = 'foo',
                 $unique = $this->uniqueValue(),
+                /** @var \Cubiche\Core\Collections\ArrayCollectionInterface $collection */
                 $collection = $this->randomCollection()
             )
             ->when($collection->set($key, $unique))

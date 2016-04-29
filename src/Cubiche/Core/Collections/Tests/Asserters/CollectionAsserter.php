@@ -143,33 +143,35 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function thatMatchToCriteria(SpecificationInterface $criteria)
     {
-        $passed = 0;
-        $failed = 0;
         $collection = $this->valueAsCollection();
         foreach ($collection as $item) {
-            if ($criteria->evaluate($item)) {
-                ++$passed;
-            } else {
-                ++$failed;
+            if (!$this->checkMatchResult($criteria->evaluate($item))) {
+                return $this;
             }
         }
-
-        if ($this->assertAll === true) {
-            if ($failed == 0) {
-                $this->pass();
-            } else {
-                $this->fail($this->_('There is %s items that not match with the given criteria', $failed));
-            }
-        } elseif ($this->assertAll === false) {
-            if ($passed == 0) {
-                $this->pass();
-            } else {
-                $this->fail($this->_('There is %s items that match with the given criteria', $failed));
-            }
-        }
-
+        
+        $this->pass();
         return $this;
     }
+    
+    /**
+     * @param bool $result
+     * @return bool
+     */
+    private function checkMatchResult($result)
+    {
+        if($result === true && $this->assertAll === false) {
+            $this->fail($this->_('At least one items that match with the given criteria'));
+            return false;
+        }
+        if($result === false && $this->assertAll === true) {
+            $this->fail($this->_('At least one items that not match with the given criteria'));
+            return false;
+        }
+        
+        return true;
+    }
+    
 
     /**
      * @return $this
@@ -186,23 +188,14 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueAsCollection();
-        $last = null;
-        foreach ($collection as $item) {
-            if ($last !== null) {
-                if ($comparator->compare($last, $item) > 0) {
-                    $this->fail(
-                        $this->_("There are items [%s, %s] that aren't ordered in the given collection", $last, $item)
-                    );
-
-                    return $this;
-                }
-            }
-
-            $last = $item;
+        list($item1, $item2) = $this->checkIsSorted($comparator);
+        if($item1 !== null && $item2 !== null) {
+            $this->fail(
+                $this->_("There are items [%s, %s] that aren't ordered in the given collection", $item1, $item2)
+            );
+        } else {
+            $this->pass();
         }
-
-        $this->pass();
 
         return $this;
     }
@@ -222,28 +215,33 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isNotSortedUsing(ComparatorInterface $comparator)
     {
-        $collection = $this->valueAsCollection();
-        $last = null;
-        $unsorted = 0;
-        foreach ($collection as $item) {
-            if ($last !== null) {
-                if ($comparator->compare($last, $item) > 0) {
-                    ++$unsorted;
-                }
-            }
-
-            $last = $item;
-        }
-
-        if ($unsorted > 0) {
-            $this->pass();
-        } else {
+        list($item1, $item2) = $this->checkIsSorted($comparator);
+        if($item1 !== null && $item2 !== null) {
             $this->fail($this->_('The given collection is sorted'));
+        } else {
+            $this->pass();
         }
-
+        
         return $this;
     }
 
+    /**
+     * @param ComparatorInterface $comparator
+     * @return array
+     */
+    private function checkIsSorted(ComparatorInterface $comparator)
+    {
+        $collection = $this->valueAsCollection();
+        $last = null;
+        foreach ($collection as $item) {
+            if ($last !== null && $comparator->compare($last, $item) > 0) {
+                return array($last, $item);
+            }
+        }
+        
+        return array(null, null);
+    }
+    
     /**
      * @param mixed $value
      *
