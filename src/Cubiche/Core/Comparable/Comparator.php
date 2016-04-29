@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Comparable;
 
 /**
@@ -20,8 +21,6 @@ class Comparator extends AbstractComparator
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorInterface::acceptComparatorVisitor()
      */
     public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
     {

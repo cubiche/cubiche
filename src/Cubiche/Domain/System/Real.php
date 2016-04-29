@@ -50,8 +50,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::toInteger()
      */
     public function toInteger(RoundingMode $roundingMode = null)
     {
@@ -64,8 +62,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::toReal()
      */
     public function toReal()
     {
@@ -74,8 +70,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::toDecimal()
      */
     public function toDecimal()
     {
@@ -84,8 +78,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::isInfinite()
      */
     public function isInfinite()
     {
@@ -94,8 +86,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::isPositive()
      */
     public function isPositive()
     {
@@ -104,8 +94,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::isNegative()
      */
     public function isNegative()
     {
@@ -114,8 +102,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::isZero()
      */
     public function isZero()
     {
@@ -124,8 +110,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedAdd()
      */
     protected function invertedAdd(Number $x)
     {
@@ -134,8 +118,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addInteger()
      */
     public function addInteger(Integer $x)
     {
@@ -144,8 +126,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addReal()
      */
     public function addReal(Real $x)
     {
@@ -154,8 +134,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::addDecimal()
      */
     public function addDecimal(Decimal $x, $scale = null)
     {
@@ -164,8 +142,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedSub()
      */
     protected function invertedSub(Number $x)
     {
@@ -174,8 +150,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subInteger()
      */
     public function subInteger(Integer $x)
     {
@@ -184,8 +158,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subReal()
      */
     public function subReal(Real $x)
     {
@@ -194,8 +166,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::subDecimal()
      */
     public function subDecimal(Decimal $x, $scale = null)
     {
@@ -204,8 +174,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedMult()
      */
     protected function invertedMult(Number $x)
     {
@@ -214,8 +182,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multInteger()
      */
     public function multInteger(Integer $x)
     {
@@ -224,8 +190,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multReal()
      */
     public function multReal(Real $x)
     {
@@ -234,8 +198,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::multDecimal()
      */
     public function multDecimal(Decimal $x, $scale = null)
     {
@@ -244,8 +206,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedDiv()
      */
     protected function invertedDiv(Number $x)
     {
@@ -254,8 +214,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divInteger()
      */
     public function divInteger(Integer $x)
     {
@@ -264,8 +222,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divReal()
      */
     public function divReal(Real $x)
     {
@@ -279,8 +235,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::divDecimal()
      */
     public function divDecimal(Decimal $x, $scale = null)
     {
@@ -289,8 +243,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::invertedPow()
      */
     protected function invertedPow(Number $x)
     {
@@ -309,8 +261,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::powReal()
      */
     public function powReal(Real $x)
     {
@@ -319,8 +269,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::powDecimal()
      */
     public function powDecimal(Decimal $x, $scale = null)
     {
@@ -329,8 +277,6 @@ class Real extends Number
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\System\Number::sqrt()
      */
     public function sqrt($scale = null)
     {

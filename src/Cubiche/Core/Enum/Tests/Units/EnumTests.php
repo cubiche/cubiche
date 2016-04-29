@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Enum\Tests\Units;
 
 use Cubiche\Core\Enum\Tests\Units\Fixtures\EnumFixture;
@@ -21,8 +22,6 @@ class EnumTests extends EnumTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::newDefaultTestedInstance()
      */
     public function newDefaultTestedInstance()
     {

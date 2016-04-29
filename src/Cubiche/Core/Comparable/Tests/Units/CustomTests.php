@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -22,8 +23,6 @@ class CustomTests extends AbstractComparatorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     protected function defaultConstructorArguments()
     {
@@ -36,8 +35,6 @@ class CustomTests extends AbstractComparatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\Tests\Units\ComparatorInterfaceTestCase::compareDataProvider()
      */
     protected function compareDataProvider()
     {
@@ -50,8 +47,6 @@ class CustomTests extends AbstractComparatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -36,8 +37,6 @@ class ComparatorVisitor extends BaseComparatorVisitor
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorVisitorInterface::visitComparator()
      */
     public function visitComparator(Comparator $comparator)
     {
@@ -46,8 +45,6 @@ class ComparatorVisitor extends BaseComparatorVisitor
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorVisitorInterface::visitReverseComparator()
      */
     public function visitReverseComparator(ReverseComparator $comparator)
     {
@@ -61,8 +58,6 @@ class ComparatorVisitor extends BaseComparatorVisitor
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorVisitorInterface::visitCustomComparator()
      */
     public function visitCustomComparator(Custom $comparator)
     {
@@ -71,8 +66,6 @@ class ComparatorVisitor extends BaseComparatorVisitor
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorVisitorInterface::visitMultiComparator()
      */
     public function visitMultiComparator(MultiComparator $comparator)
     {
@@ -82,8 +75,6 @@ class ComparatorVisitor extends BaseComparatorVisitor
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparatorVisitorInterface::visitSelectorComparator()
      */
     public function visitSelectorComparator(SelectorComparator $comparator)
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Geolocation;
 
 use Cubiche\Domain\Model\ValueObjectInterface;
@@ -87,8 +88,6 @@ class Coordinate implements ValueObjectInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Equatable\EquatableInterface::equals()
      */
     public function equals($other)
     {

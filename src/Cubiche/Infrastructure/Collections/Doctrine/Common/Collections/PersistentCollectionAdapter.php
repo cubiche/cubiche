@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
 use Cubiche\Core\Collections\CollectionInterface;
@@ -36,8 +37,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setDocumentManager()
      */
     public function setDocumentManager(DocumentManager $dm)
     {
@@ -46,8 +45,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setMongoData()
      */
     public function setMongoData(array $mongoData)
     {
@@ -56,8 +53,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getMongoData()
      */
     public function getMongoData()
     {
@@ -66,8 +61,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setHints()
      */
     public function setHints(array $hints)
     {
@@ -76,8 +69,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getHints()
      */
     public function getHints()
     {
@@ -86,8 +77,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::initialize()
      */
     public function initialize()
     {
@@ -96,8 +85,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::isDirty()
      */
     public function isDirty()
     {
@@ -106,8 +93,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setDirty()
      */
     public function setDirty($dirty)
     {
@@ -116,8 +101,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setOwner()
      */
     public function setOwner($document, array $mapping)
     {
@@ -126,8 +109,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::takeSnapshot()
      */
     public function takeSnapshot()
     {
@@ -136,8 +117,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::clearSnapshot()
      */
     public function clearSnapshot()
     {
@@ -146,8 +125,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getSnapshot()
      */
     public function getSnapshot()
     {
@@ -156,8 +133,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getDeleteDiff()
      */
     public function getDeleteDiff()
     {
@@ -166,8 +141,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getDeletedDocuments()
      */
     public function getDeletedDocuments()
     {
@@ -176,8 +149,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getInsertDiff()
      */
     public function getInsertDiff()
     {
@@ -186,8 +157,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getOwner()
      */
     public function getOwner()
     {
@@ -196,8 +165,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getMapping()
      */
     public function getMapping()
     {
@@ -206,8 +173,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getTypeClass()
      */
     public function getTypeClass()
     {
@@ -216,8 +181,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::setInitialized()
      */
     public function setInitialized($bool)
     {
@@ -226,8 +189,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::isInitialized()
      */
     public function isInitialized()
     {
@@ -236,8 +197,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::first()
      */
     public function first()
     {
@@ -246,8 +205,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::last()
      */
     public function last()
     {
@@ -256,8 +213,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::remove()
      */
     public function remove($key)
     {
@@ -266,8 +221,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::removeElement()
      */
     public function removeElement($element)
     {
@@ -276,8 +229,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::containsKey()
      */
     public function containsKey($key)
     {
@@ -286,8 +237,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::contains()
      */
     public function contains($element)
     {
@@ -296,8 +245,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::exists()
      */
     public function exists(\Closure $p)
     {
@@ -306,8 +253,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::indexOf()
      */
     public function indexOf($element)
     {
@@ -316,8 +261,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::get()
      */
     public function get($key)
     {
@@ -326,8 +269,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getKeys()
      */
     public function getKeys()
     {
@@ -336,8 +277,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getValues()
      */
     public function getValues()
     {
@@ -346,8 +285,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::count()
      */
     public function count()
     {
@@ -356,8 +293,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::set()
      */
     public function set($key, $value)
     {
@@ -366,8 +301,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::add()
      */
     public function add($value)
     {
@@ -376,8 +309,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::isEmpty()
      */
     public function isEmpty()
     {
@@ -386,8 +317,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::getIterator()
      */
     public function getIterator()
     {
@@ -396,8 +325,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::map()
      */
     public function map(\Closure $func)
     {
@@ -406,8 +333,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::filter()
      */
     public function filter(\Closure $p)
     {
@@ -416,8 +341,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::forAll()
      */
     public function forAll(\Closure $p)
     {
@@ -426,8 +349,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::partition()
      */
     public function partition(\Closure $p)
     {
@@ -436,8 +357,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::toArray()
      */
     public function toArray()
     {
@@ -446,8 +365,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::clear()
      */
     public function clear()
     {
@@ -456,8 +373,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -466,8 +381,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::__sleep()
      */
     public function __sleep()
     {
@@ -476,8 +389,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::offsetExists()
      */
     public function offsetExists($offset)
     {
@@ -486,8 +397,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::offsetGet()
      */
     public function offsetGet($offset)
     {
@@ -496,8 +405,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::offsetSet()
      */
     public function offsetSet($offset, $value)
     {
@@ -506,8 +413,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::offsetUnset()
      */
     public function offsetUnset($offset)
     {
@@ -516,8 +421,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::key()
      */
     public function key()
     {
@@ -526,8 +429,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::current()
      */
     public function current()
     {
@@ -536,8 +437,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::next()
      */
     public function next()
     {
@@ -546,8 +445,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::unwrap()
      */
     public function unwrap()
     {
@@ -556,8 +453,6 @@ abstract class PersistentCollectionAdapter extends PersistentCollection implemen
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\PersistentCollection::__clone()
      */
     public function __clone()
     {

@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Equatable\Tests\Asserters;
 
 use Cubiche\Core\Equatable\EquatableInterface;
@@ -21,8 +22,6 @@ class VariableAsserter extends BaseVariableAsserter
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \mageekguy\atoum\asserters\variable::isEqualTo()
      */
     public function isEqualTo($value, $failMessage = null)
     {

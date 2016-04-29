@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Comparable\Tests\Fixtures;
 
 use Cubiche\Core\Comparable\ComparableInterface;
@@ -43,8 +44,6 @@ class ComparableObject implements ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

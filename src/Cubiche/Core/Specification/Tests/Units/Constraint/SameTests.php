@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units\Constraint;
 
 /**
@@ -19,8 +20,6 @@ class SameTests extends BinaryConstraintOperatorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -29,8 +28,6 @@ class SameTests extends BinaryConstraintOperatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateSuccessDataProvider()
      */
     protected function evaluateSuccessDataProvider()
     {
@@ -41,8 +38,6 @@ class SameTests extends BinaryConstraintOperatorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateFailureDataProvider()
      */
     protected function evaluateFailureDataProvider()
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Quantifier;
 
 use Cubiche\Core\Selector\SelectorInterface;
@@ -48,8 +49,6 @@ class AtLeast extends Quantifier
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -73,8 +72,6 @@ class AtLeast extends Quantifier
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {

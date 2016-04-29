@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Sort;
@@ -30,8 +31,6 @@ class DocumentRepositoryTests extends RepositoryTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase::emptyRepository()
      */
     protected function emptyRepository()
     {
@@ -40,8 +39,6 @@ class DocumentRepositoryTests extends RepositoryTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

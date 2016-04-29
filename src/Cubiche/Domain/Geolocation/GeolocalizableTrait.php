@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Geolocation;
 
 /**
@@ -24,8 +25,6 @@ trait GeolocalizableTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\GeolocalizableInterface::coordinate()
      */
     public function coordinate()
     {
@@ -34,8 +33,6 @@ trait GeolocalizableTrait
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\GeolocalizableInterface::setCoordinate()
      */
     public function setCoordinate(Coordinate $coordinate)
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Geolocation;
 
 use Cubiche\Core\Comparable\ComparableInterface;
@@ -88,8 +89,6 @@ class Distance implements ValueObjectInterface, ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Equatable\EquatableInterface::equals()
      */
     public function equals($other)
     {
@@ -100,8 +99,6 @@ class Distance implements ValueObjectInterface, ComparableInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Comparable\ComparableInterface::compareTo()
      */
     public function compareTo($other)
     {

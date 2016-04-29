@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Units\DataSource;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
@@ -23,8 +24,6 @@ class ArrayDataSourceTests extends IteratorDataSourceTests
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\DataSource\IteratorDataSourceTests::randomDataSource()
      */
     protected function randomDataSource(
         SpecificationInterface $searchCriteria = null,

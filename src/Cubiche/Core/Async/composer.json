@@ -21,12 +21,15 @@
         }
     ],
     "require": {
-        "php": "^5.5.9|^7.0",
-        "cubiche/delegate": "dev-master"
+        "php":                  "^5.5.9|^7.0",
+        "cubiche/delegate":     "dev-master",
+        "cubiche/enum":         "dev-master",
+        "react/event-loop":     "^0.4.2"
     },
     "require-dev": {
         "cubiche/tests": "dev-master"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "exclude-from-classmap": [
             "/Tests/"

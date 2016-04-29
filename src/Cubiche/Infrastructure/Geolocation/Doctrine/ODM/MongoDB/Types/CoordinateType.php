@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Domain\Geolocation\Coordinate;
@@ -22,8 +23,6 @@ class CoordinateType extends ValueObjectType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -50,8 +49,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToPHPValue()
      */
     public function convertToPHPValue($value)
     {
@@ -64,8 +61,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToMongo()
      */
     public function closureToMongo()
     {
@@ -80,8 +75,6 @@ class CoordinateType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToPHP()
      */
     public function closureToPHP()
     {

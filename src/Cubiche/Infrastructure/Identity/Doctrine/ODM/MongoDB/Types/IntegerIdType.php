@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Domain\Identity\IntegerId;
@@ -21,8 +22,6 @@ class IntegerIdType extends IdType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Infrastructure\Model\Doctrine\Common\Types\ValueObjectTypeInterface::targetClass()
      */
     public function targetClass()
     {

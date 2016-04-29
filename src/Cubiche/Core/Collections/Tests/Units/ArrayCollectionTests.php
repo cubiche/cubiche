@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
@@ -23,8 +24,6 @@ class ArrayCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {
@@ -33,8 +32,6 @@ class ArrayCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {
@@ -43,8 +40,6 @@ class ArrayCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {
@@ -120,6 +115,7 @@ class ArrayCollectionTests extends CollectionTestCase
             ->given(
                 $key = 'foo',
                 $unique = $this->uniqueValue(),
+                /** @var \Cubiche\Core\Collections\ArrayCollectionInterface $collection */
                 $collection = $this->randomCollection()
             )
             ->when($collection->set($key, $unique))

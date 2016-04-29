@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Selector;
 
 use Cubiche\Core\Visitor\Visitor;
@@ -22,8 +23,6 @@ abstract class SelectorVisitor extends Visitor implements SelectorVisitorInterfa
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

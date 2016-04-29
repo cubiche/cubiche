@@ -37,8 +37,6 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {

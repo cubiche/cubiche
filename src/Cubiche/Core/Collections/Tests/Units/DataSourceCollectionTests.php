@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -23,8 +24,6 @@ class DataSourceCollectionTests extends CollectionTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -41,8 +40,6 @@ class DataSourceCollectionTests extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {

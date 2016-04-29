@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Comparable;
 
 use Cubiche\Core\Visitor\Visitor;
@@ -22,8 +23,6 @@ abstract class ComparatorVisitor extends Visitor implements ComparatorVisitorInt
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Visitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {

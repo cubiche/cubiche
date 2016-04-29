@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Geolocation\Specification\Constraint;
 
 use Cubiche\Core\Selector\SelectorInterface;
@@ -84,8 +85,6 @@ class Near extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -105,8 +104,6 @@ class Near extends Specification
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {

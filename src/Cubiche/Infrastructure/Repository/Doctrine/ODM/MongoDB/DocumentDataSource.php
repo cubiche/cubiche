@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
@@ -80,8 +81,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see IteratorAggregate::getIterator()
      */
     public function getIterator()
     {
@@ -90,8 +89,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::findOne()
      */
     public function findOne()
     {
@@ -100,8 +97,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::filteredDataSource()
      */
     public function filteredDataSource(SpecificationInterface $criteria)
     {
@@ -119,8 +114,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::slicedDataSource()
      */
     public function slicedDataSource($offset, $length = null)
     {
@@ -134,8 +127,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSourceInterface::sortedDataSource()
      */
     public function sortedDataSource(ComparatorInterface $sortCriteria)
     {
@@ -149,8 +140,6 @@ class DocumentDataSource extends DataSource
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\DataSource\DataSource::calculateCount()
      */
     protected function calculateCount()
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
@@ -21,8 +22,6 @@ abstract class IdType extends NativeValueObjectType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -36,8 +35,6 @@ abstract class IdType extends NativeValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToPHP()
      */
     public function closureToPHP()
     {

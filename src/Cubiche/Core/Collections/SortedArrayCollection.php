@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -22,7 +23,7 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 class SortedArrayCollection extends ArrayCollection
 {
     /**
-     * @var array
+     * @var ComparatorInterface
      */
     protected $criteria;
 
@@ -45,8 +46,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -57,13 +56,11 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
         foreach ($items as $item) {
-            parent::add($item);
+            $this->items[] = $item;
         }
 
         $this->sort();
@@ -71,8 +68,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -83,8 +78,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::removeAt()
      */
     public function removeAt($key)
     {
@@ -95,8 +88,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::set()
      */
     public function set($key, $value)
     {
@@ -107,8 +98,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Collections\ArrayCollectionInterface::sort()
      */
     public function sort(ComparatorInterface $criteria = null)
     {
@@ -121,8 +110,6 @@ class SortedArrayCollection extends ArrayCollection
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -40,8 +41,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::add()
      */
     public function add($item)
     {
@@ -50,8 +49,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::addAll()
      */
     public function addAll($items)
     {
@@ -62,8 +59,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::remove()
      */
     public function remove($item)
     {
@@ -77,8 +72,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::removeAt()
      */
     public function removeAt($key)
     {
@@ -89,8 +82,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::clear()
      */
     public function clear()
     {
@@ -99,8 +90,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::contains()
      */
     public function contains($item)
     {
@@ -109,8 +98,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::exists()
      */
     public function containsKey($key)
     {
@@ -121,8 +108,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::get()
      */
     public function get($key)
     {
@@ -133,8 +118,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::set()
      */
     public function set($key, $value)
     {
@@ -145,8 +128,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see Countable::count()
      */
     public function count()
     {
@@ -155,8 +136,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see IteratorAggregate::getIterator()
      */
     public function getIterator()
     {
@@ -165,8 +144,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::slice()
      */
     public function slice($offset, $length = null)
     {
@@ -175,8 +152,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::find()
      */
     public function find(SpecificationInterface $criteria)
     {
@@ -185,8 +160,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::findOne()
      */
     public function findOne(SpecificationInterface $criteria)
     {
@@ -195,8 +168,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::toArray()
      */
     public function toArray()
     {
@@ -205,8 +176,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::sort()
      */
     public function sort(ComparatorInterface $criteria = null)
     {
@@ -221,8 +190,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\CollectionInterface::sorted()
      */
     public function sorted(ComparatorInterface $criteria)
     {
@@ -231,8 +198,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::keys()
      */
     public function keys()
     {
@@ -241,8 +206,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\ArrayCollectionInterface::values()
      */
     public function values()
     {
@@ -251,8 +214,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetExists()
      */
     public function offsetExists($offset)
     {
@@ -261,8 +222,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetGet()
      */
     public function offsetGet($offset)
     {
@@ -271,8 +230,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetSet()
      */
     public function offsetSet($offset, $value)
     {
@@ -285,8 +242,6 @@ class ArrayCollection implements ArrayCollectionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)
     {

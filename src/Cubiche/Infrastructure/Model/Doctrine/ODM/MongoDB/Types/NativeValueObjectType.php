@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types;
 
 /**
@@ -19,8 +20,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToDatabaseValue()
      */
     public function convertToDatabaseValue($value)
     {
@@ -29,8 +28,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::convertToPHPValue()
      */
     public function convertToPHPValue($value)
     {
@@ -41,8 +38,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToMongo()
      */
     public function closureToMongo()
     {
@@ -51,8 +46,6 @@ abstract class NativeValueObjectType extends ValueObjectType
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Types\Type::closureToPHP()
      */
     public function closureToPHP()
     {

@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Async;
+namespace Cubiche\Core\Async\Promise;
 
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Deferred.
+ * Deferred class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -41,27 +41,15 @@ class Deferred implements DeferredInterface
     protected $notifyDelegate;
 
     /**
-     * @var Delegate
+     * Constructor.
      */
-    protected $cancelDelegate;
-
-    /**
-     * @return \Cubiche\Core\Async\Deferred
-     */
-    public static function defer()
-    {
-        return new static();
-    }
-
-    protected function __construct()
+    public function __construct()
     {
         $this->promise = null;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\DeferredInterface::promise()
      */
     public function promise()
     {
@@ -75,9 +63,6 @@ class Deferred implements DeferredInterface
                 }),
                 new Delegate(function (callable $callable) {
                     $this->notifyDelegate = new Delegate($callable);
-                }),
-                new Delegate(function (callable $callable) {
-                    $this->cancelDelegate = new Delegate($callable);
                 })
             );
         }
@@ -87,8 +72,6 @@ class Deferred implements DeferredInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\DeferredInterface::resolve()
      */
     public function resolve($value = null)
     {
@@ -99,8 +82,6 @@ class Deferred implements DeferredInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\DeferredInterface::reject()
      */
     public function reject($reason = null)
     {
@@ -111,8 +92,6 @@ class Deferred implements DeferredInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\DeferredInterface::notify()
      */
     public function notify($state = null)
     {
@@ -122,14 +101,16 @@ class Deferred implements DeferredInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Async\DeferredInterface::cancel()
+     * @return bool
      */
     public function cancel()
     {
-        $this->promise();
+        if ($this->promise()->state()->equals(State::PENDING())) {
+            $this->reject(new CancellationException());
 
-        return $this->cancelDelegate->__invoke();
+            return true;
+        }
+
+        return false;
     }
 }

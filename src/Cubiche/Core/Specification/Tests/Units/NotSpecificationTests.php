@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Specification\Criteria;
@@ -21,8 +22,6 @@ class NotSpecificationTests extends SpecificationTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     public function defaultConstructorArguments()
     {
@@ -31,8 +30,6 @@ class NotSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -41,8 +38,6 @@ class NotSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateSuccessDataProvider()
      */
     protected function evaluateSuccessDataProvider()
     {
@@ -54,8 +49,6 @@ class NotSpecificationTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateFailureDataProvider()
      */
     protected function evaluateFailureDataProvider()
     {

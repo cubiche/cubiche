@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping;
 
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory as BaseClassMetadataFactory;
@@ -35,8 +36,6 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\Common\Persistence\Mapping\AbstractClassMetadataFactory::getMetadataFor()
      */
     public function getMetadataFor($className)
     {
@@ -62,8 +61,6 @@ class ClassMetadataFactory extends BaseClassMetadataFactory
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory::setDocumentManager()
      */
     public function setDocumentManager(DocumentManager $dm)
     {

@@ -37,8 +37,6 @@ abstract class Id extends NativeValueObject implements IdInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\NativeValueObjectInterface::toNative()
      */
     public function toNative()
     {

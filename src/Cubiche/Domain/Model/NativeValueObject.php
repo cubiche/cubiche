@@ -20,8 +20,6 @@ abstract class NativeValueObject implements NativeValueObjectInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\EquatableInterface::equals()
      */
     public function equals($other)
     {
@@ -30,8 +28,6 @@ abstract class NativeValueObject implements NativeValueObjectInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Model\ValueObjectInterface::__toString()
      */
     public function __toString()
     {

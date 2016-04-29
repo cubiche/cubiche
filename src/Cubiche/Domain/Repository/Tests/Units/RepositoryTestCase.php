@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Units;
 
 use Cubiche\Core\Comparable\Sort;
@@ -75,8 +76,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomCollection()
      */
     protected function randomCollection($size = null)
     {
@@ -98,8 +97,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::emptyCollection()
      */
     protected function emptyCollection()
     {
@@ -113,8 +110,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::randomValue()
      */
     protected function randomValue()
     {
@@ -123,8 +118,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::uniqueValue()
      */
     protected function uniqueValue()
     {
@@ -133,8 +126,6 @@ abstract class RepositoryTestCase extends CollectionTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Collections\Tests\Units\CollectionTestCase::comparator()
      */
     protected function comparator()
     {

@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Selector\Key;
@@ -21,8 +22,6 @@ class SelectorTests extends SpecificationTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::defaultConstructorArguments()
      */
     public function defaultConstructorArguments()
     {
@@ -31,8 +30,6 @@ class SelectorTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
@@ -41,8 +38,6 @@ class SelectorTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateSuccessDataProvider()
      */
     protected function evaluateSuccessDataProvider()
     {
@@ -53,8 +48,6 @@ class SelectorTests extends SpecificationTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\Tests\Units\SpecificationInterfaceTestCase::evaluateFailureDataProvider()
      */
     protected function evaluateFailureDataProvider()
     {

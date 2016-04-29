@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB;
 
 use Doctrine\Common\EventSubscriber as BaseEventSubscriber;
@@ -21,8 +22,6 @@ class EventSubscriber extends EventListener implements BaseEventSubscriber
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Doctrine\Common\EventSubscriber::getSubscribedEvents()
      */
     public function getSubscribedEvents()
     {

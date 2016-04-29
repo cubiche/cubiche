@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Selector\Property;
@@ -22,8 +23,6 @@ trait GeoSpecificationVisitorTrait
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Domain\Geolocation\Specification\GeoSpecificationVisitorInterface::visitNear()
      */
     public function visitNear(Near $near)
     {

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Selector\Composite;
@@ -63,8 +64,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitor::visit()
      */
     public function visit(VisiteeInterface $visitee)
     {
@@ -77,8 +76,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitAnd()
      */
     public function visitAnd(AndSpecification $specification)
     {
@@ -96,8 +93,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitOr()
      */
     public function visitOr(OrSpecification $specification)
     {
@@ -110,8 +105,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitNot()
      */
     public function visitNot(NotSpecification $specification)
     {
@@ -121,8 +114,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitSelector()
      */
     public function visitSelector(Selector $selector)
     {
@@ -131,8 +122,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitValue()
      */
     public function visitValue(Value $specification)
     {
@@ -141,8 +130,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitKey()
      */
     public function visitKey(Key $specification)
     {
@@ -151,8 +138,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitProperty()
      */
     public function visitProperty(Property $specification)
     {
@@ -161,8 +146,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitMethod()
      */
     public function visitMethod(Method $specification)
     {
@@ -171,8 +154,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitThis()
      */
     public function visitThis(This $specification)
     {
@@ -181,8 +162,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitCustom()
      */
     public function visitCustom(Custom $specification)
     {
@@ -191,8 +170,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitComposite()
      */
     public function visitComposite(Composite $specification)
     {
@@ -201,8 +178,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Selector\SelectorVisitorInterface::visitCount()
      */
     public function visitCount(Count $specification)
     {
@@ -211,8 +186,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitGreaterThan()
      */
     public function visitGreaterThan(GreaterThan $specification)
     {
@@ -221,8 +194,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitGreaterThanEqual()
      */
     public function visitGreaterThanEqual(GreaterThanEqual $specification)
     {
@@ -231,8 +202,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitLessThan()
      */
     public function visitLessThan(LessThan $specification)
     {
@@ -241,8 +210,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitLessThanEqual()
      */
     public function visitLessThanEqual(LessThanEqual $specification)
     {
@@ -251,8 +218,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitEqual()
      */
     public function visitEqual(Equal $specification)
     {
@@ -261,8 +226,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitNotEqual()
      */
     public function visitNotEqual(NotEqual $specification)
     {
@@ -271,8 +234,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitSame()
      */
     public function visitSame(Same $specification)
     {
@@ -281,8 +242,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitNotSame()
      */
     public function visitNotSame(NotSame $specification)
     {
@@ -291,8 +250,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitAll()
      */
     public function visitAll(All $specification)
     {
@@ -306,8 +263,6 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationVisitorInterface::visitAtLeast()
      */
     public function visitAtLeast(AtLeast $specification)
     {

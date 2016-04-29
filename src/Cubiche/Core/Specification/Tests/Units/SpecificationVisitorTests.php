@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Specification\SpecificationInterface;
@@ -21,8 +22,6 @@ class SpecificationVisitorTests extends VisitorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisitorInterfaceTestCase::visiteeInterface()
      */
     protected function visiteeInterface()
     {
@@ -31,8 +30,6 @@ class SpecificationVisitorTests extends VisitorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisitorInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {

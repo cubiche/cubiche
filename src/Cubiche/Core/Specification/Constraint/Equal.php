@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Constraint;
 
 use Cubiche\Core\Equatable\EquatableInterface;
@@ -22,8 +23,6 @@ class Equal extends BinaryConstraintOperator
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::evaluate()
      */
     public function evaluate($value)
     {
@@ -39,8 +38,6 @@ class Equal extends BinaryConstraintOperator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::acceptSpecificationVisitor()
      */
     public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
     {
@@ -49,8 +46,6 @@ class Equal extends BinaryConstraintOperator
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Specification\SpecificationInterface::not()
      */
     public function not()
     {

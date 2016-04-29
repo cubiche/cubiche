@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Specification\AndSpecification;
@@ -169,8 +170,6 @@ abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::visitorInterface()
      */
     protected function visitorInterface()
     {
@@ -179,8 +178,6 @@ abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::acceptActualVisitorMethod()
      */
     protected function acceptActualVisitorMethod()
     {

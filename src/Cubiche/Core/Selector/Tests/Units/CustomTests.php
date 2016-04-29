@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Selector\Tests\Units;
 
 use Cubiche\Core\Selector\Custom;
@@ -20,8 +21,6 @@ class CustomTests extends SelectorTestCase
 {
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Tests\TestCase::newDefaultTestedInstance()
      */
     public function newDefaultTestedInstance()
     {
@@ -32,8 +31,6 @@ class CustomTests extends SelectorTestCase
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase::shouldVisitMethod()
      */
     protected function shouldVisitMethod()
     {
