@@ -93,12 +93,11 @@ class DeferredProxy implements DeferredInterface
     public function resolve($value = null)
     {
         try {
-            $actual = $value;
             if ($this->onFulfilled !== null) {
-                $actual = $this->onFulfilled->__invoke($value);
+                $value = $this->onFulfilled->__invoke($value);
             }
 
-            $this->deferred->resolve($actual !== null ? $actual : $value);
+            $this->deferred->resolve($value);
         } catch (\Throwable $e) {
             $this->reject($e);
         } catch (\Exception $e) {

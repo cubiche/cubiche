@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
 use Cubiche\Core\Async\Promise\Deferred;
@@ -28,7 +27,8 @@ class DeferredProxyTests extends DeferredInterfaceTestCase
     {
         return array(
             new Deferred(),
-            function () {
+            function ($value = null) {
+                return $value;
             },
             function () {
             },

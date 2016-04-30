@@ -21,6 +21,20 @@ abstract class AbstractPromise implements PromiseInterface
     /**
      * {@inheritdoc}
      */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        return $this->then(function ($value = null) use ($onFulfilled) {
+            if ($onFulfilled !== null) {
+                $onFulfilled($value);
+            }
+
+            return $value;
+        }, $onRejected);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function otherwise(callable $onRejected)
     {
         return $this->then(null, $onRejected);
@@ -31,12 +45,6 @@ abstract class AbstractPromise implements PromiseInterface
      */
     public function always(callable $onFulfilledOrRejected, callable $onNotify = null)
     {
-        return $this->then(function ($value) use ($onFulfilledOrRejected) {
-            $onFulfilledOrRejected($value);
-
-            return $value;
-        }, function ($reason) use ($onFulfilledOrRejected) {
-            $onFulfilledOrRejected($reason);
-        }, $onNotify);
+        return $this->done($onFulfilledOrRejected, $onFulfilledOrRejected, $onNotify);
     }
 }

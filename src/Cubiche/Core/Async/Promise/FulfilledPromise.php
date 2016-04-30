@@ -41,7 +41,7 @@ class FulfilledPromise extends AbstractPromise
         }
 
         try {
-            return new self($this->resolveActual($onFulfilled));
+            return new self($onFulfilled($this->value));
         } catch (\Exception $e) {
             return new RejectedPromise($e);
         }
@@ -53,17 +53,5 @@ class FulfilledPromise extends AbstractPromise
     public function state()
     {
         return State::FULFILLED();
-    }
-
-    /**
-     * @param callable $onFulfilled
-     *
-     * @return mixed
-     */
-    private function resolveActual(callable $onFulfilled)
-    {
-        $actual = $onFulfilled($this->value);
-
-        return $actual !== null ? $actual : $this->value;
     }
 }

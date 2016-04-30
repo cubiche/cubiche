@@ -134,6 +134,14 @@ class Timer implements TimerInterface
     /**
      * {@inheritdoc}
      */
+    public function done(callable $onSucceed = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        return $this->deferred()->promise()->done($onSucceed, $onRejected, $onNotify);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function otherwise(callable $onRejected)
     {
         return $this->deferred()->promise()->otherwise($onRejected);

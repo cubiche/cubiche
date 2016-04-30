@@ -16,7 +16,7 @@ namespace Cubiche\Core\Async\Promise;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface PromiseInterface
+interface PromiseInterface extends ThenableInterface
 {
     /**
      * @param callable $onFulfilled
@@ -25,7 +25,7 @@ interface PromiseInterface
      *
      * @return PromiseInterface
      */
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
 
     /**
      * @param callable $onRejected
