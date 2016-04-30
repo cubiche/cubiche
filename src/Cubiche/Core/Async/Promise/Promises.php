@@ -74,7 +74,9 @@ class Promises
         $deferred = self::defer();
         $results = array();
 
-        /** @var \Cubiche\Core\Async\Promise\PromiseInterface $promise */
+        /*
+         * @var \Cubiche\Core\Async\Promise\PromiseInterface
+         */
         foreach ($promises as $key => $promise) {
             $promise->then(
                 function ($value) use ($deferred, &$results, $map, $key, &$pending) {
@@ -106,17 +108,23 @@ class Promises
     public static function timeout(PromiseInterface $promise, $time, LoopInterface $loop)
     {
         $deferred = self::defer();
-        $timer = $loop->timeout(function () use ($promise, $deferred, $time) {
-            $deferred->reject(new TimeoutException($time));
-        }, $time);
+        $timer = $loop->timeout(
+            function () use ($promise, $deferred, $time) {
+                $deferred->reject(new TimeoutException($time));
+            },
+            $time
+        );
 
-        $promise->then(function ($value = null) use ($deferred, $timer) {
-            $timer->cancel();
-            $deferred->resolve($value);
-        }, function ($reason = null) use ($deferred, $timer) {
-            $timer->cancel();
-            $deferred->reject($reason);
-        });
+        $promise->then(
+            function ($value = null) use ($deferred, $timer) {
+                $timer->cancel();
+                $deferred->resolve($value);
+            },
+            function ($reason = null) use ($deferred, $timer) {
+                $timer->cancel();
+                $deferred->reject($reason);
+            }
+        );
 
         return $deferred->promise();
     }
@@ -138,13 +146,18 @@ class Promises
             $promise = self::timeout($promise, $timeout, $loop);
         }
 
-        $promise->then(function ($value = null) use (&$result) {
-            $result = $value;
-        }, function ($reason = null) use (&$rejectionReason) {
-            $rejectionReason = $reason;
-        })->always(function () use ($loop) {
-            $loop->stop();
-        });
+        $promise->then(
+            function ($value = null) use (&$result) {
+                $result = $value;
+            },
+            function ($reason = null) use (&$rejectionReason) {
+                $rejectionReason = $reason;
+            }
+        )->always(
+            function () use ($loop) {
+                $loop->stop();
+            }
+        );
 
         while ($promise->state()->equals(State::PENDING())) {
             $loop->run();

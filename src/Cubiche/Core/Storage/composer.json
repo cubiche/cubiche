@@ -1,0 +1,37 @@
+{
+    "name": "cubiche/storage",
+    "type": "library",
+    "description": "Storage library",
+    "keywords": [
+        "storage",
+        "key-value",
+        "expirable"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                  "^5.5.9|^7.0",
+        "cubiche/collections":  "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":        "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Storage\\": ""
+        }
+    }
+}
