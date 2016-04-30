@@ -46,6 +46,16 @@ class RejectedPromise extends AbstractPromise
     /**
      * {@inheritdoc}
      */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        if ($onRejected !== null) {
+            $onRejected($this->reason);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function state()
     {
         return State::REJECTED();

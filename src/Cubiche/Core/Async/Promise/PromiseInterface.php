@@ -22,8 +22,6 @@ interface PromiseInterface extends ThenableInterface
      * @param callable $onFulfilled
      * @param callable $onRejected
      * @param callable $onNotify
-     *
-     * @return PromiseInterface
      */
     public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
 

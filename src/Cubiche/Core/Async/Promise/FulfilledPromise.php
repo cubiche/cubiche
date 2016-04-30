@@ -41,9 +41,19 @@ class FulfilledPromise extends AbstractPromise
         }
 
         try {
-            return new self($onFulfilled($this->value));
+            return $this->resolveActual($onFulfilled);
         } catch (\Exception $e) {
             return new RejectedPromise($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        if ($onFulfilled !== null) {
+            $onFulfilled($this->value);
         }
     }
 
@@ -53,5 +63,17 @@ class FulfilledPromise extends AbstractPromise
     public function state()
     {
         return State::FULFILLED();
+    }
+
+    /**
+     * @param callable $onFulfilled
+     *
+     * @return mixed
+     */
+    private function resolveActual(callable $onFulfilled)
+    {
+        $value = $onFulfilled($this->value);
+
+        return $value instanceof PromiseInterface ? $value : new self($value);
     }
 }

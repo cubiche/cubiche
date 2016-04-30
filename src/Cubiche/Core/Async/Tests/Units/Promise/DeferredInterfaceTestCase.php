@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
 use Cubiche\Core\Async\Promise\Deferred;
@@ -28,8 +27,6 @@ abstract class DeferredInterfaceTestCase extends PromisorInterfaceTestCase
      */
     public function testClass()
     {
-        parent::testClass();
-
         $this
             ->testedClass
                 ->implements(DeferredInterface::class)

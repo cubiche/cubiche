@@ -57,6 +57,14 @@ class Promise extends AbstractPromise
     /**
      * {@inheritdoc}
      */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        $this->deferred->promise()->done($onFulfilled, $onRejected, $onNotify);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function state()
     {
         return $this->deferred->promise()->state();

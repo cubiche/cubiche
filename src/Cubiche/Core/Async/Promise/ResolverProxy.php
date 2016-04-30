@@ -14,16 +14,16 @@ namespace Cubiche\Core\Async\Promise;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Deferred Proxy class.
+ * Resolver Proxy class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DeferredProxy implements DeferredInterface
+class ResolverProxy implements ResolverInterface
 {
     /**
-     * @var DeferredInterface
+     * @var ResolverInterface
      */
-    protected $deferred;
+    protected $resolver;
 
     /**
      * @var Delegate
@@ -41,31 +41,18 @@ class DeferredProxy implements DeferredInterface
     protected $onNotify;
 
     /**
-     * @var bool
-     */
-    protected $notifyPropagation;
-
-    /**
-     * @param DeferredInterface $deferred
+     * @param ResolverInterface $resolver
      * @param callable          $onFulfilled
      * @param callable          $onRejected
      * @param callable          $onNotify
-     * @param bool              $notifyPropagation
-     *
-     * @throws \InvalidArgumentException
      */
     public function __construct(
-        DeferredInterface $deferred,
+        ResolverInterface $resolver,
         callable $onFulfilled = null,
         callable $onRejected = null,
-        callable $onNotify = null,
-        $notifyPropagation = true
+        callable $onNotify = null
     ) {
-        if (!$deferred->promise()->state()->equals(State::PENDING())) {
-            throw new \InvalidArgumentException('The deferred target must be unresolved');
-        }
-
-        $this->deferred = $deferred;
+        $this->resolver = $resolver;
         if ($onFulfilled !== null) {
             $this->onFulfilled = new Delegate($onFulfilled);
         }
@@ -75,16 +62,6 @@ class DeferredProxy implements DeferredInterface
         if ($onNotify !== null) {
             $this->onNotify = new Delegate($onNotify);
         }
-
-        $this->notifyPropagation = $notifyPropagation;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function promise()
-    {
-        return $this->deferred->promise();
     }
 
     /**
@@ -96,8 +73,17 @@ class DeferredProxy implements DeferredInterface
             if ($this->onFulfilled !== null) {
                 $value = $this->onFulfilled->__invoke($value);
             }
-
-            $this->deferred->resolve($value);
+            if ($value instanceof PromiseInterface) {
+                $value->then(function ($actual) {
+                    $this->resolver->resolve($actual);
+                }, function ($reason) {
+                    $this->resolver->reject($reason);
+                }, function ($state) {
+                    $this->resolver->notify($state);
+                });
+            } else {
+                $this->resolver->resolve($value);
+            }
         } catch (\Throwable $e) {
             $this->reject($e);
         } catch (\Exception $e) {
@@ -120,7 +106,7 @@ class DeferredProxy implements DeferredInterface
             $reason = $e;
         }
 
-        $this->deferred->reject($reason);
+        $this->resolver->reject($reason);
     }
 
     /**
@@ -131,9 +117,6 @@ class DeferredProxy implements DeferredInterface
         try {
             if ($this->onNotify !== null) {
                 $this->onNotify->__invoke($state);
-            }
-            if ($this->notifyPropagation) {
-                $this->deferred->notify($state);
             }
         } catch (\Throwable $e) {
             $this->reject($e);

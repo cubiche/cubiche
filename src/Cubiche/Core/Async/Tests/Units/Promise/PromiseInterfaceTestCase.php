@@ -8,12 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
 use Cubiche\Core\Async\Promise\PromiseInterface;
 use Cubiche\Core\Async\Promise\State;
 use Cubiche\Core\Async\Tests\Units\TestCase;
+use Cubiche\Core\Async\Promise\Deferred;
+use Cubiche\Core\Async\Promise\RejectedPromise;
 
 /**
  * Promise Interface Test Case Class.
@@ -139,7 +140,58 @@ abstract class PromiseInterfaceTestCase extends TestCase
                     ->never()
                 ->delegateCall($onRejectedThen)
                     ->withArguments($e)
-                    ->once();
+                    ->once()
+        ;
+
+        $this->chainingTest($promise);
+    }
+
+    /**
+     * @param PromiseInterface $promise
+     */
+    protected function chainingTest(PromiseInterface $promise)
+    {
+        $this
+            ->given(
+                $deferred = new Deferred(),
+                $onFulfilled = $this->delegateMockWithReturn($deferred->promise())
+            )
+            ->when($thenPromise = $promise->then($onFulfilled))
+            ->then()
+                ->boolean($thenPromise->state()->equals(State::PENDING()))
+                    ->isTrue()
+        ;
+
+        $this
+            ->given(
+                $onFulfilledThen = $this->delegateMock(),
+                $onNotify = $this->delegateMock()
+            )
+            ->when(function () use ($deferred, $thenPromise, $onFulfilledThen, $onNotify) {
+                $thenPromise->then($onFulfilledThen, null, $onNotify);
+                $deferred->notify('state');
+                $deferred->resolve('bar');
+            })
+            ->then()
+                ->delegateCall($onNotify)
+                    ->withArguments('state')
+                    ->once()
+                ->delegateCall($onFulfilledThen)
+                    ->withArguments('bar')
+                    ->once()
+        ;
+
+        $this
+            ->given(
+                $onFulfilled = $this->delegateMockWithReturn(new RejectedPromise($this->defaultRejectReason())),
+                $onRejectedThen = $this->delegateMock()
+            )
+            ->when($promise->then($onFulfilled)->then(null, $onRejectedThen))
+            ->then()
+                ->delegateCall($onRejectedThen)
+                    ->withArguments($this->defaultRejectReason())
+                    ->once()
+        ;
     }
 
     /**
@@ -203,6 +255,80 @@ abstract class PromiseInterfaceTestCase extends TestCase
                     ->never()
                 ->delegateCall($onNotify)
                     ->never();
+    }
+
+    /**
+     * Test done.
+     *
+     * @param PromiseInterface $promise
+     *
+     * @dataProvider promiseDataProvider
+     */
+    public function testDone(PromiseInterface $promise)
+    {
+        $this
+            ->given($promise)
+            ->when($null = $promise->done())
+            ->then()
+                ->variable($null)
+                    ->isNull();
+
+        if ($promise->state()->equals(State::FULFILLED())) {
+            $this
+                ->given(
+                    $onFulfilled = $this->delegateMock(),
+                    $onRejected = $this->delegateMock(),
+                    $onNotify = $this->delegateMock(),
+                    $value = $this->defaultResolveValue()
+                )
+                ->when($promise->done($onFulfilled, $onRejected, $onNotify))
+                ->then()
+                    ->delegateCall($onFulfilled)
+                        ->withArguments($value)
+                        ->once()
+                    ->delegateCall($onRejected)
+                        ->never()
+                    ->delegateCall($onNotify)
+                        ->never();
+
+            $this
+                    ->given(
+                        $onFulfilled = $this->delegateMockWithException(new \Exception())
+                    )
+                    ->exception(function () use ($promise, $onFulfilled) {
+                        $promise->done($onFulfilled);
+                    })->isInstanceof(\Exception::class)
+                ;
+        }
+
+        if ($promise->state()->equals(State::REJECTED())) {
+            $this
+                ->given(
+                    $onFulfilled = $this->delegateMock(),
+                    $onRejected = $this->delegateMock(),
+                    $onNotify = $this->delegateMock(),
+                    $reason = $this->defaultRejectReason()
+                )
+                ->when($promise->done($onFulfilled, $onRejected, $onNotify))
+                ->then()
+                    ->delegateCall($onFulfilled)
+                        ->never()
+                    ->delegateCall($onRejected)
+                        ->withArguments($reason)
+                        ->once()
+                    ->delegateCall($onNotify)
+                        ->never()
+            ;
+
+            $this
+                ->given(
+                    $onRejected = $this->delegateMockWithException(new \Exception())
+                )
+                ->exception(function () use ($promise, $onRejected) {
+                    $promise->done(null, $onRejected);
+                })->isInstanceof(\Exception::class)
+            ;
+        }
     }
 
     /**
