@@ -149,29 +149,32 @@ class CollectionAsserter extends ObjectAsserter
                 return $this;
             }
         }
-        
+
         $this->pass();
+
         return $this;
     }
-    
+
     /**
      * @param bool $result
+     *
      * @return bool
      */
     private function checkMatchResult($result)
     {
-        if($result === true && $this->assertAll === false) {
+        if ($result === true && $this->assertAll === false) {
             $this->fail($this->_('At least one items that match with the given criteria'));
+
             return false;
         }
-        if($result === false && $this->assertAll === true) {
+        if ($result === false && $this->assertAll === true) {
             $this->fail($this->_('At least one items that not match with the given criteria'));
+
             return false;
         }
-        
+
         return true;
     }
-    
 
     /**
      * @return $this
@@ -189,7 +192,7 @@ class CollectionAsserter extends ObjectAsserter
     public function isSortedUsing(ComparatorInterface $comparator)
     {
         list($item1, $item2) = $this->checkIsSorted($comparator);
-        if($item1 !== null && $item2 !== null) {
+        if ($item1 !== null && $item2 !== null) {
             $this->fail(
                 $this->_("There are items [%s, %s] that aren't ordered in the given collection", $item1, $item2)
             );
@@ -216,17 +219,18 @@ class CollectionAsserter extends ObjectAsserter
     public function isNotSortedUsing(ComparatorInterface $comparator)
     {
         list($item1, $item2) = $this->checkIsSorted($comparator);
-        if($item1 !== null && $item2 !== null) {
+        if ($item1 !== null && $item2 !== null) {
             $this->fail($this->_('The given collection is sorted'));
         } else {
             $this->pass();
         }
-        
+
         return $this;
     }
 
     /**
      * @param ComparatorInterface $comparator
+     *
      * @return array
      */
     private function checkIsSorted(ComparatorInterface $comparator)
@@ -238,10 +242,10 @@ class CollectionAsserter extends ObjectAsserter
                 return array($last, $item);
             }
         }
-        
+
         return array(null, null);
     }
-    
+
     /**
      * @param mixed $value
      *

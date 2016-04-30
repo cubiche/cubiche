@@ -216,9 +216,9 @@ abstract class PromiseInterfaceTestCase extends TestCase
         $this
             ->given(
                 $promise,
-                $catch = $this->delegateMock()
+                $onRejected = $this->delegateMock()
             )
-            ->when($otherwise = $promise->otherwise($catch))
+            ->when($otherwise = $promise->otherwise($onRejected))
             ->then()
                 ->object($otherwise)
                     ->isInstanceOf(PromiseInterface::class)
@@ -228,7 +228,7 @@ abstract class PromiseInterfaceTestCase extends TestCase
         if ($promise->state()->equals(State::FULFILLED())) {
             $this
                 ->then()
-                    ->delegateCall($catch)
+                    ->delegateCall($onRejected)
                         ->never()
             ;
         }
@@ -237,7 +237,7 @@ abstract class PromiseInterfaceTestCase extends TestCase
             $this
                 ->given($reason = $this->defaultRejectReason())
                 ->then()
-                    ->delegateCall($catch)
+                    ->delegateCall($onRejected)
                         ->withArguments($reason)
                         ->once()
             ;
@@ -256,10 +256,10 @@ abstract class PromiseInterfaceTestCase extends TestCase
         $this
             ->given(
                 $promise,
-                $finally = $this->delegateMock(),
+                $onFulfilledOrRejected = $this->delegateMock(),
                 $onNotify = $this->delegateMock()
             )
-            ->when($always = $promise->always($finally, $onNotify))
+            ->when($always = $promise->always($onFulfilledOrRejected, $onNotify))
             ->then()
                 ->object($always)
                     ->isInstanceOf(PromiseInterface::class)
@@ -270,8 +270,8 @@ abstract class PromiseInterfaceTestCase extends TestCase
             $this
                 ->given($value = $this->defaultResolveValue())
                 ->then()
-                    ->delegateCall($finally)
-                        ->withArguments($value, null)
+                    ->delegateCall($onFulfilledOrRejected)
+                        ->withArguments($value)
                         ->once()
             ;
         }
@@ -280,8 +280,8 @@ abstract class PromiseInterfaceTestCase extends TestCase
             $this
                 ->given($reason = $this->defaultRejectReason())
                 ->then()
-                    ->delegateCall($finally)
-                        ->withArguments(null, $reason)
+                    ->delegateCall($onFulfilledOrRejected)
+                        ->withArguments($reason)
                         ->once()
             ;
         }

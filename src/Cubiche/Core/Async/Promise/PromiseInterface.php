@@ -28,19 +28,19 @@ interface PromiseInterface
     public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
 
     /**
-     * @param callable $catch
+     * @param callable $onRejected
      *
      * @return PromiseInterface
      */
-    public function otherwise(callable $catch);
+    public function otherwise(callable $onRejected);
 
     /**
-     * @param callable $finally
+     * @param callable $onFulfilledOrRejected
      * @param callable $onNotify
      *
      * @return PromiseInterface
      */
-    public function always(callable $finally, callable $onNotify = null);
+    public function always(callable $onFulfilledOrRejected, callable $onNotify = null);
 
     /**
      * @return State
