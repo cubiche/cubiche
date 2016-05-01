@@ -169,4 +169,14 @@ class Promises
 
         throw new RejectionException($rejectionReason);
     }
+
+    /**
+     * @param ThenableInterface $thenable
+     *
+     * @return \Cubiche\Core\Async\Promise\PromisorInterface
+     */
+    public static function promisor(ThenableInterface $thenable)
+    {
+        return new ThenablePromisor($thenable);
+    }
 }

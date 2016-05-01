@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/cubiche/async.svg?branch=master)](https://travis-ci.org/cubiche/async) [![Coverage Status](https://coveralls.io/repos/github/cubiche/async/badge.svg?branch=master)](https://coveralls.io/github/cubiche/async?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/async/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/async/?branch=master) 
 
 An Event loop abstraction layer,  built on top of [React PHP/Event Loop](https://github.com/reactphp/event-loop), and
-a lightweight implementation of [Promises/A+](https://promisesaplus.com/) for PHP.
+a lightweight implementation of [Promises/A+](https://promisesaplus.com/) for PHP, inspired in [React PHP/Promise](https://github.com/reactphp/promise).
 
 ## Installation
 
@@ -20,7 +20,8 @@ Methods:
 
   * `PromiseInterface::then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)` –  regardless of when the promise was or will be resolved or rejected, then calls one of the `$onFulfilled` or `$onRejected` callbacks asynchronously as soon as the result is available. The callbacks are called with a single argument: the result value or rejection reason. Additionally, the `$onNotify` callback may be called zero or more times to provide a progress indication, before the promise is resolved or rejected.
   
-  This method returns a new promise which is resolved or rejected via the return value of the `$onFulfilled` or `$onRejected` callbacks.
+  This method returns a new promise which is resolved or rejected via the return value of the `$onFulfilled` or `$onRejected` callbacks (unless that value is a promise, in which case it is resolved with the value which is resolved in that promise using promise chaining). It also notifies via the return value of the `$onNotify` callback.
+  * `PromiseInterface::done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)` – this method is similar to `PromiseInterface::then` but not returns a new promise. It will cause a fatal error if either `$onFulfilled`, `$onRejected` or  `$onNotify` callbacks throw an exception.
   * `PromiseInterface::otherwise(callable $onRejected)` – shorthand for `PromiseInterface::then(null, $onRejected)`.
   * `PromiseInterface::always(callable $onFulfilledOrRejected, callable $onNotify = null)` – allows you to observe either the fulfillment or rejection of a promise, but to do so without modifying the final value. This is useful to release resources or do some clean-up that needs to be done whether the promise was rejected or resolved.
   * `PromiseInterface::state()` – returns the promise state (`State::PENDING()`, `State::FULFILLED()`, or `State::REJECTED()`).
@@ -34,6 +35,7 @@ Methods:
   * `DeferredInterface::resolve($value = null)` – resolves the derived promise with the `$value`.
   * `DeferredInterface::reject($reason = null)` – rejects the derived promise with the `$reason`.
   * `DeferredInterface::notify($state = null)` – provides updates on the status of the promise's execution. This may be called multiple times before the promise is either resolved or rejected.
+  * `DeferredInterface::cancel()` – rejects the derived promise, if it is posible, with `CancellationException` reason.
   * `DeferredInterface::promise()` – returns the promise object associated with this deferred.
 
 ## Basic usage
@@ -52,7 +54,7 @@ use React\EventLoop\Timer\Timer;
 $loop = Factory::create();
 $promise = asyncTask($loop);
 
-$promise->then(function($message){
+$promise->done(function($message){
     echo $message. ' Done!'. PHP_EOL; 
 });
 
@@ -84,7 +86,7 @@ $loop = new Loop();
 //timer is a Promise
 $timer = asyncTask($loop);
 
-$timer->then(function($message){
+$timer->done(function($message){
     echo $message. ' Done!'. PHP_EOL; 
 });
 
@@ -116,7 +118,7 @@ $b = matrix($n);
 
 $promise = mult($a, $b, $n, $loop);
 
-$promise->then(function($c) use ($n){
+$promise->done(function($c) use ($n){
     echo 'Result matrix:'. PHP_EOL;
     for ($i = 0; $i < $n; $i++){
         echo '('. implode(',', $c[$i]). ')' . PHP_EOL; 
@@ -186,41 +188,32 @@ $ composer require react/dns:~0.4.0
 require 'vendor/autoload.php';
 
 use Cubiche\Core\Async\Loop\LoopAdapter;
-use Cubiche\Core\Async\Promise\DeferredInterface;
 use Cubiche\Core\Async\Promise\Promises;
-use Cubiche\Core\Async\Promise\PromisorInterface;
-use Cubiche\Core\Async\Promise\State;
+use Cubiche\Core\Async\Promise\ThenableInterface;
 use React\Dns\Resolver\Factory;
 use React\Promise\PromiseInterface as ReactPromiseInterface;
 
-class PromisorAdapter implements PromisorInterface{
+class ThenableAdapter implements ThenableInterface{
 
     /**
-     * @var DeferredInterface
+     * @var ReactPromiseInterface
      */
-    protected $deferred;
-
+    private $promise;
+    
     /**
      * @param ReactPromiseInterface $promise
      */
     public function __construct(ReactPromiseInterface $promise)
     {
-        $this->deferred = Promises::defer();
-        $promise->then(function($value){
-            $this->deferred->resolve($value);
-        }, function ($reason){
-            $this->deferred->reject($reason);
-        }, function ($state){
-            $this->deferred->notify($state);
-        });
+        $this->promise = $promise;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function promise()
+    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
     {
-        return $this->deferred->promise();
+        $this->promise->then($onFulfilled, $onRejected, $onNotify);
     }
 }
 
@@ -232,7 +225,7 @@ $domains = array('github.com', 'google.com', 'amazon.com');
 $promises = array();
 foreach ($domains as $domain) {
     $reactPromise = $dns->resolve($domain);
-    $promisor = new PromisorAdapter($reactPromise);
+    $promisor = Promises::promisor(new ThenableAdapter($reactPromise));
     $promises[$domain] = $promisor->promise();
 }
 
@@ -242,7 +235,6 @@ foreach ($hots as $domain => $host) {
     echo 'Domain: '. $domain. ' Host: '. $host. PHP_EOL;
 }
 ```
-
 
 ##Authors
 

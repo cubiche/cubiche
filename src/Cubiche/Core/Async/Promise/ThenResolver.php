@@ -66,7 +66,7 @@ class ThenResolver extends ObservableResolver implements PromisorInterface
     {
         $value = $this->callResolveCallback($value);
         if ($value instanceof PromiseInterface) {
-            $value->then(function ($actual) {
+            $value->done(function ($actual) {
                 $this->deferred->resolve($actual);
             }, function ($reason) {
                 $this->deferred->reject($reason);
