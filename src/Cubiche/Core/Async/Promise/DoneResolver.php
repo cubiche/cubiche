@@ -16,31 +16,26 @@ namespace Cubiche\Core\Async\Promise;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DoneResolver implements ResolverInterface
+class DoneResolver extends ObservableResolver
 {
     /**
-     * {@inheritdoc}
+     * @param callable $onFulfilled
+     * @param callable $onRejected
+     * @param callable $onNotify
      */
-    public function resolve($value = null)
-    {
+    public function __construct(
+        callable $onFulfilled = null,
+        callable $onRejected = null,
+        callable $onNotify = null
+    ) {
+        parent::__construct($onFulfilled, $onRejected, $onNotify);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function reject($reason = null)
+    protected function onInnerFailure(\Exception $reason)
     {
-        if ($reason === null || !$reason instanceof \Exception) {
-            $reason = new RejectionException($reason);
-        }
-
         throw $reason;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function notify($state = null)
-    {
     }
 }

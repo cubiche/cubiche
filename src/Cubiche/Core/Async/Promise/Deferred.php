@@ -11,40 +11,27 @@
 
 namespace Cubiche\Core\Async\Promise;
 
-use Cubiche\Core\Delegate\Delegate;
-
 /**
  * Deferred class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Deferred implements DeferredInterface
+class Deferred extends ObservableResolver implements DeferredInterface
 {
+    use CancelDeferredTrait;
+
     /**
      * @var PromiseInterface
      */
     protected $promise;
 
     /**
-     * @var Delegate
-     */
-    protected $resolveDelegate;
-
-    /**
-     * @var Delegate
-     */
-    protected $rejectDelegate;
-
-    /**
-     * @var Delegate
-     */
-    protected $notifyDelegate;
-
-    /**
      * Constructor.
      */
     public function __construct()
     {
+        parent::__construct(null, null, null);
+
         $this->promise = null;
     }
 
@@ -55,15 +42,15 @@ class Deferred implements DeferredInterface
     {
         if ($this->promise === null) {
             $this->promise = new Promise(
-                new Delegate(function (callable $callable) {
-                    $this->resolveDelegate = new Delegate($callable);
-                }),
-                new Delegate(function (callable $callable) {
-                    $this->rejectDelegate = new Delegate($callable);
-                }),
-                new Delegate(function (callable $callable) {
-                    $this->notifyDelegate = new Delegate($callable);
-                })
+                function (callable $resolveCallback) {
+                    $this->resolveCallback = $resolveCallback;
+                },
+                function (callable $rejectCallback) {
+                    $this->rejectCallback = $rejectCallback;
+                },
+                function (callable $notifyCallback) {
+                    $this->notifyCallback = $notifyCallback;
+                }
             );
         }
 
@@ -77,7 +64,7 @@ class Deferred implements DeferredInterface
     {
         $this->promise();
 
-        $this->resolveDelegate->__invoke($value);
+        parent::resolve($value);
     }
 
     /**
@@ -87,7 +74,7 @@ class Deferred implements DeferredInterface
     {
         $this->promise();
 
-        $this->rejectDelegate->__invoke($reason);
+        parent::reject($reason);
     }
 
     /**
@@ -97,20 +84,6 @@ class Deferred implements DeferredInterface
     {
         $this->promise();
 
-        $this->notifyDelegate->__invoke($state);
-    }
-
-    /**
-     * @return bool
-     */
-    public function cancel()
-    {
-        if ($this->promise()->state()->equals(State::PENDING())) {
-            $this->reject(new CancellationException());
-
-            return true;
-        }
-
-        return false;
+        parent::notify($state);
     }
 }

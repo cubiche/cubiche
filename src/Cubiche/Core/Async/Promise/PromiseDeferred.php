@@ -18,6 +18,8 @@ namespace Cubiche\Core\Async\Promise;
  */
 class PromiseDeferred extends AbstractPromise implements DeferredInterface
 {
+    use CancelDeferredTrait;
+
     /**
      * @var ResolverInterface[]
      */
@@ -34,10 +36,10 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
     public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
     {
         if ($this->state()->equals(State::PENDING())) {
-            $deferred = new Deferred();
-            $this->enqueue($deferred, $onFulfilled, $onRejected, $onNotify);
+            $resolver = new ThenResolver($onFulfilled, $onRejected, $onNotify);
+            $this->resolvers[] = $resolver;
 
-            return $deferred->promise();
+            return $resolver->promise();
         }
 
         return $this->actual->then($onFulfilled, $onRejected, $onNotify);
@@ -49,7 +51,8 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
     public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
     {
         if ($this->state()->equals(State::PENDING())) {
-            $this->enqueue(new DoneResolver(), $onFulfilled, $onRejected, $onNotify);
+            $resolver = new DoneResolver($onFulfilled, $onRejected, $onNotify);
+            $this->resolvers[] = $resolver;
         } else {
             $this->actual->done($onFulfilled, $onRejected, $onNotify);
         }
@@ -126,20 +129,5 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
                 \sprintf('A %s promise cannot be %s', $this->state()->getValue(), $success ? 'resolved' : 'rejected')
             );
         }
-    }
-
-    /**
-     * @param ResolverInterface $resolver
-     * @param callable          $onFulfilled
-     * @param callable          $onRejected
-     * @param callable          $onNotify
-     */
-    private function enqueue(
-        ResolverInterface $resolver,
-        callable $onFulfilled = null,
-        callable $onRejected = null,
-        callable $onNotify = null
-    ) {
-        $this->resolvers[] = new ResolverProxy($resolver, $onFulfilled, $onRejected, $onNotify);
     }
 }

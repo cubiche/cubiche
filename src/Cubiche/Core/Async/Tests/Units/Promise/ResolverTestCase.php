@@ -10,12 +10,23 @@
  */
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
+use Cubiche\Core\Async\Promise\Resolver;
+
 /**
- * Deferred Tests class.
+ * Resolver Test Case class.
  *
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DeferredTests extends DeferredInterfaceTestCase
+abstract class ResolverTestCase extends ResolverInterfaceTestCase
 {
+    /**
+     * Test class.
+     */
+    public function testClass()
+    {
+        $this
+            ->testedClass
+                ->extends(Resolver::class)
+        ;
+    }
 }

@@ -130,6 +130,43 @@ abstract class DeferredInterfaceTestCase extends PromisorInterfaceTestCase
     }
 
     /**
+     * Test cancel.
+     */
+    public function testCancel()
+    {
+        $this
+        ->given(
+            /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
+            $deferred = $this->newDefaultTestedInstance()
+        )
+        ->when($canceled = $deferred->cancel())
+        ->then()
+            ->boolean($canceled)
+                ->isTrue()
+        ;
+
+        $this
+            ->given($onRejected = $this->delegateMock())
+            ->when($deferred->promise()->then(null, $onRejected))
+            ->then()
+                ->delegateCall($onRejected)
+                    ->once()
+        ;
+
+        $this
+            ->given(
+                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
+                $deferred = $this->newDefaultTestedInstance()
+            )
+            ->if($deferred->resolve('foo'))
+            ->when($canceled = $deferred->cancel())
+            ->then()
+                ->boolean($canceled)
+                    ->isFalse()
+        ;
+    }
+
+    /**
      * @param DeferredInterface $deferred
      */
     protected function invalidActionTest(DeferredInterface $deferred)

@@ -10,29 +10,25 @@
  */
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
-use Cubiche\Core\Async\Promise\RejectionException;
-
 /**
  * Done Resolver Tests class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DoneResolverTests extends ResolverInterfaceTestCase
+class DoneResolverTests extends ObservableResolverTestCase
 {
     /**
-     * Test resolve.
+     * {@inheritdoc}
      */
     public function testResolve()
     {
-        $this
-            ->given(
-                $resolver = $this->newDefaultTestedInstance()
-            )
-            ->when($result = $resolver->resolve())
-            ->then()
-                ->variable($result)
-                    ->isNull()
-        ;
+        parent::testResolve();
+
+        $this->innerFailureTest(function (callable $onFulfilled) {
+            /** @var \Cubiche\Core\Async\Promise\DoneResolver $resolver */
+            $resolver = $this->newTestedInstance($onFulfilled);
+            $resolver->resolve();
+        });
     }
 
     /**
@@ -40,15 +36,13 @@ class DoneResolverTests extends ResolverInterfaceTestCase
      */
     public function testReject()
     {
-        $this
-            ->given(
-                $resolver = $this->newDefaultTestedInstance()
-            )
-            ->exception(function () use ($resolver) {
-                $resolver->reject();
-            })
-            ->isInstanceof(RejectionException::class)
-        ;
+        parent::testReject();
+
+        $this->innerFailureTest(function (callable $onRejected) {
+            /** @var \Cubiche\Core\Async\Promise\DoneResolver $resolver */
+            $resolver = $this->newTestedInstance(null, $onRejected);
+            $resolver->reject();
+        });
     }
 
     /**
@@ -56,14 +50,28 @@ class DoneResolverTests extends ResolverInterfaceTestCase
      */
     public function testNotify()
     {
+        parent::testNotify();
+
+        $this->innerFailureTest(function (callable $onNotify) {
+            /** @var \Cubiche\Core\Async\Promise\DoneResolver $resolver */
+            $resolver = $this->newTestedInstance(null, null, $onNotify);
+            $resolver->notify();
+        });
+    }
+
+    /**
+     * @param callable $when
+     */
+    protected function innerFailureTest(callable $when)
+    {
         $this
             ->given(
-                $resolver = $this->newDefaultTestedInstance()
+                $reason = new \Exception(),
+                $callback = $this->delegateMockWithException($reason)
             )
-            ->when($result = $resolver->notify())
-            ->then()
-                ->variable($result)
-                    ->isNull()
+            ->exception(function () use ($when, $callback) {
+                $when($callback);
+            })
         ;
     }
 }

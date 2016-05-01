@@ -52,8 +52,6 @@ class CallablePromisor extends Delegate implements PromisorInterface
     {
         try {
             $this->deferred()->resolve($this->delegate->invokeWith(\func_get_args()));
-        } catch (\Throwable $e) {
-            $this->deferred()->reject($e);
         } catch (\Exception $e) {
             $this->deferred()->reject($e);
         }
