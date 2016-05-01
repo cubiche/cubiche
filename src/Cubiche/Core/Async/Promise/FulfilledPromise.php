@@ -28,6 +28,9 @@ class FulfilledPromise extends AbstractPromise
      */
     public function __construct($value = null)
     {
+        if ($value instanceof PromiseInterface) {
+            throw new \InvalidArgumentException(\sprintf('You cannot create %s with a promise.', self::class));
+        }
         $this->value = $value;
     }
 

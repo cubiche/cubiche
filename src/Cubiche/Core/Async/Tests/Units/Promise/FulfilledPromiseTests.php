@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Async\Tests\Units\Promise;
 
 /**
@@ -34,5 +33,18 @@ class FulfilledPromiseTests extends PromiseInterfaceTestCase
         return array(
             array($this->newDefaultTestedInstance()),
         );
+    }
+
+    /**
+     * Test __construct.
+     */
+    public function testConstruct()
+    {
+        $this
+            ->exception(function () {
+                $this->newTestedInstance($this->newDefaultTestedInstance());
+            })
+            ->isInstanceOf(\InvalidArgumentException::class)
+        ;
     }
 }
