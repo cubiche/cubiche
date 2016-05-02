@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage;
 
 use Cubiche\Core\Collections\ArrayCollection;
@@ -85,7 +84,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
     /**
      * {@inheritdoc}
      */
-    public function getAll($key)
+    public function all($key)
     {
         if (!$this->has($key)) {
             return array();
@@ -95,5 +94,35 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
         $collection = $this->store->get($key);
 
         return $collection->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count($key)
+    {
+        if (!$this->has($key)) {
+            return 0;
+        }
+
+        /** @var ArrayCollection $collection */
+        $collection = $this->store->get($key);
+
+        return $collection->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($key, $offset, $length = null)
+    {
+        if (!$this->has($key)) {
+            return array();
+        }
+
+        /** @var ArrayCollection $collection */
+        $collection = $this->store->get($key);
+
+        return $collection->slice($offset, $length)->toArray();
     }
 }

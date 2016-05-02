@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\Model;
 
 use Cubiche\Domain\Event\DomainEventPublisher;
-use Cubiche\Domain\EventSourcing\EntityDomainEventInterface;
+use Cubiche\Domain\Model\EventSourcing\EntityDomainEventInterface;
 use Cubiche\Domain\Model\EventSourcing\EventStream;
 
 /**
@@ -31,10 +31,9 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     /**
      * @param EntityDomainEventInterface $event
      */
-    protected function applyAndPublishEvent(EntityDomainEventInterface $event)
+    protected function recordApplyAndPublishEvent(EntityDomainEventInterface $event)
     {
-        $this->recordedEvents[] = $event;
-
+        $this->recordEvent($event);
         $this->applyEvent($event);
         $this->publishEvent($event);
     }
@@ -65,6 +64,14 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     }
 
     /**
+     * @param EntityDomainEventInterface $event
+     */
+    protected function recordEvent(EntityDomainEventInterface $event)
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    /**
      * @return EntityDomainEventInterface[]
      */
     public function recordedEvents()
@@ -87,21 +94,29 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
      */
     public static function loadFromHistory(EventStream $history)
     {
-        if (static::class !== $history->className()->toNative()) {
+        $aggregateRoot = new static($history->aggregateId());
+        $aggregateRoot->replay($history);
+
+        return $aggregateRoot;
+    }
+
+    /**
+     * @param EventStream $history
+     */
+    public function replay(EventStream $history)
+    {
+        if (get_class($this) !== $history->className()->toNative()) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'You cannot load an AggregateRoot of type %s from an EventStream for object of type %s',
-                    static::class,
+                    'You cannot replay an AggregateRoot of type %s from an EventStream for object of type %s',
+                    get_class($this),
                     $history->className()->toNative()
                 )
             );
         }
 
-        $aggregateRoot = new static($history->aggregateId());
         foreach ($history->events() as $event) {
-            $aggregateRoot->applyEvent($event);
+            $this->applyEvent($event);
         }
-
-        return $aggregateRoot;
     }
 }

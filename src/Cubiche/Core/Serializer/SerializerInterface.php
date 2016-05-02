@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Serializer;
 
 use Cubiche\Core\Serializer\Exception\SerializationException;
@@ -22,9 +21,9 @@ interface SerializerInterface
     /**
      * Serializes data in the appropriate format.
      *
-     * @param mixed  $data    any data
-     * @param string $format  format name
-     * @param array  $context options normalizers/encoders have access to
+     * @param mixed  $data
+     * @param string $format
+     * @param array  $context
      *
      * @return string
      *
@@ -40,7 +39,7 @@ interface SerializerInterface
      * @param string $format
      * @param array  $context
      *
-     * @return object
+     * @return mixed
      *
      * @throws SerializationException
      */

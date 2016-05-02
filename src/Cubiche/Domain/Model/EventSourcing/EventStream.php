@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Domain\Model\IdInterface;
@@ -23,7 +22,7 @@ class EventStream
     /**
      * @var StringLiteral
      */
-    private $className;
+    protected $className;
 
     /**
      * @var IdInterface
@@ -42,8 +41,11 @@ class EventStream
      * @param IdInterface                  $aggregateId
      * @param EntityDomainEventInterface[] $events
      */
-    public function __construct(StringLiteral $className, IdInterface $aggregateId, array $events)
-    {
+    public function __construct(
+        StringLiteral $className,
+        IdInterface $aggregateId,
+        array $events
+    ) {
         $this->className = $className;
         $this->aggregateId = $aggregateId;
 
