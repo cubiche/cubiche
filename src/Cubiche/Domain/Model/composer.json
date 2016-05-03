@@ -1,0 +1,44 @@
+{
+    "name": "cubiche/model",
+    "type": "library",
+    "description": "Model library.",
+    "keywords": [
+        "model",
+        "entity",
+        "aggregateroot"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/collections":      "dev-master",
+        "cubiche/serializer":       "dev-master",
+        "cubiche/storage":          "dev-master",
+        "cubiche/event":            "dev-master",
+        "cubiche/system":           "dev-master",
+        "cubiche/selector":         "dev-master",
+        "cubiche/specification":    "dev-master",
+        "cubiche/equatable":        "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\EventBus\\": ""
+        }
+    }
+}

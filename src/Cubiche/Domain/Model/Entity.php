@@ -26,9 +26,19 @@ abstract class Entity implements EntityInterface
     /**
      * @param IdInterface $id
      */
-    public function __construct(IdInterface $id)
+    protected function __construct(IdInterface $id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @param IdInterface $id
+     *
+     * @return static
+     */
+    public static function create(IdInterface $id)
+    {
+        return new static($id);
     }
 
     /**
