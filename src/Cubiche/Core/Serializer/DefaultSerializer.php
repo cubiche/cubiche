@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Serializer;
 
 /**
@@ -15,12 +16,12 @@ namespace Cubiche\Core\Serializer;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DefaultSerializer implements SerializerInterface
+class DefaultSerializer extends AbstractSerializer
 {
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, array $context = array())
+    public function serialize(SerializableInterface $data, $format, array $context = array())
     {
         return serialize($data);
     }
@@ -30,6 +31,8 @@ class DefaultSerializer implements SerializerInterface
      */
     public function deserialize($data, $type, $format, array $context = array())
     {
+        $this->ensureType($type);
+
         return unserialize($data);
     }
 }

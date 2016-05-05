@@ -8,14 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Serializer\Tests\Fixtures;
+
+use Cubiche\Core\Serializer\SerializableInterface;
 
 /**
  * Person class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Person
+class Person implements SerializableInterface
 {
     /**
      * @var string
