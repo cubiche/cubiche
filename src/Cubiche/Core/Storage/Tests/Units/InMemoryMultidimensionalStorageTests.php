@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage\Tests\Units;
 
 use Cubiche\Core\Storage\AbstractStorage;
@@ -45,16 +44,22 @@ class InMemoryMultidimensionalStorageTests extends TestCase
             ->given($storage = $this->newTestedInstance())
             ->when($storage->push('foo', 'bar'))
             ->then()
-                ->array($storage->getAll('bar'))
+                ->array($storage->all('bar'))
                     ->isEmpty()
-                ->array($storage->getAll('foo'))
+                ->integer($storage->count('bar'))
+                    ->isEqualTo(0)
+                ->array($storage->all('foo'))
                     ->hasSize(1)
+                ->integer($storage->count('foo'))
+                    ->isEqualTo(1)
             ->and()
             ->when($storage->push('foo', 'baz'))
             ->then()
-                ->array($storage->getAll('foo'))
+                ->array($storage->all('foo'))
                     ->hasSize(2)
                     ->isIdenticalTo(array('bar', 'baz'))
+                ->integer($storage->count('foo'))
+                    ->isEqualTo(2)
         ;
     }
 
@@ -79,6 +84,27 @@ class InMemoryMultidimensionalStorageTests extends TestCase
                     ->isEqualTo('baz')
                 ->variable($storage->pop('key'))
                     ->isNull()
+        ;
+    }
+
+    /**
+     * Test slice method.
+     */
+    public function testSlice()
+    {
+        $this
+            ->given($storage = $this->newTestedInstance())
+            ->when($storage->push('foo', 'bar'))
+            ->and($storage->push('foo', 'baz'))
+            ->and($storage->push('foo', 'test'))
+            ->then()
+                ->array($storage->slice('foo', 1))
+                    ->hasSize(2)
+                    ->containsValues(array('baz', 'test'))
+                ->array($storage->slice('foo', 3))
+                    ->isEmpty()
+                ->array($storage->slice('key', 0))
+                    ->isEmpty()
         ;
     }
 }

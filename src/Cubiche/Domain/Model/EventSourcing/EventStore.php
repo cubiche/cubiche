@@ -12,7 +12,7 @@ namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\MultidimensionalStorageInterface;
-use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * EventStore class.
@@ -32,15 +32,30 @@ class EventStore
     protected $serializer;
 
     /**
+     * @var int
+     */
+    protected $versionBase;
+
+    /**
      * EventStore constructor.
      *
      * @param MultidimensionalStorageInterface $storage
      * @param SerializerInterface              $serializer
+     * @param int                              $versionBase
      */
-    public function __construct(MultidimensionalStorageInterface $storage, SerializerInterface $serializer)
-    {
+    public function __construct(
+        MultidimensionalStorageInterface $storage,
+        SerializerInterface $serializer,
+        $versionBase
+    ) {
         $this->storage = $storage;
         $this->serializer = $serializer;
+
+        if ((int) $versionBase <= 0) {
+            throw new \InvalidArgumentException('The version base should be greater than cero.');
+        }
+
+        $this->versionBase = (int) $versionBase;
     }
 
     /**
@@ -48,24 +63,32 @@ class EventStore
      */
     public function persist(EventStream $eventStream)
     {
-        $key = $this->createKey($eventStream->className(), $eventStream->aggregateId());
+        $key = $this->createKey(
+            $eventStream->className(),
+            $eventStream->aggregateId()
+        );
+
         foreach ($eventStream->events() as $event) {
             $this->storage->push($key, $this->serializeEvent($event));
         }
     }
 
     /**
-     * @param StringLiteral $className
-     * @param IdInterface   $aggregateId
+     * @param string      $className
+     * @param int         $version
+     * @param IdInterface $aggregateId
      *
      * @return EventStream
      */
-    public function getEventsFor(StringLiteral $className, IdInterface $aggregateId)
+    public function eventsFor($className, $version, IdInterface $aggregateId)
     {
-        $events = [];
+        $key = $this->createKey(
+            $className,
+            $aggregateId
+        );
 
-        $key = $this->createKey($className, $aggregateId);
-        foreach ($this->storage->getAll($key) as $data) {
+        $events = [];
+        foreach ($this->storage->slice($key, $version * $this->versionBase) as $data) {
             $events[] = $this->deserializeEvent($data);
         }
 
@@ -73,14 +96,49 @@ class EventStore
     }
 
     /**
-     * @param StringLiteral $className
-     * @param IdInterface   $aggregateId
+     * @param string      $className
+     * @param IdInterface $aggregateId
+     *
+     * @return int
+     */
+    public function versionFor($className, IdInterface $aggregateId)
+    {
+        $countOfEvents = $this->countEventsFor($className, $aggregateId);
+
+        return intval($countOfEvents / $this->versionBase);
+    }
+
+    /**
+     * @param string      $className
+     * @param IdInterface $aggregateId
+     *
+     * @return int
+     */
+    protected function countEventsFor($className, IdInterface $aggregateId)
+    {
+        $key = $this->createKey(
+            $className,
+            $aggregateId
+        );
+
+        return $this->storage->count($key);
+    }
+
+    /**
+     * @param string      $className
+     * @param IdInterface $aggregateId
      *
      * @return string
      */
-    protected function createKey(StringLiteral $className, IdInterface $aggregateId)
+    protected function createKey($className, IdInterface $aggregateId)
     {
-        return sprintf('events:%s:%s', $className->toNative(), $aggregateId->toNative());
+        $classParts = explode('\\', $className);
+
+        return sprintf(
+            'events:%s:%s',
+            strtolower(end($classParts)),
+            $aggregateId->toNative()
+        );
     }
 
     /**

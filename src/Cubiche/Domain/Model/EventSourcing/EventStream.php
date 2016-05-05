@@ -10,20 +10,20 @@
 
 namespace Cubiche\Domain\Model\EventSourcing;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * EventStream class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventStream
+class EventStream implements SerializableInterface
 {
     /**
-     * @var StringLiteral
+     * @var string
      */
-    private $className;
+    protected $className;
 
     /**
      * @var IdInterface
@@ -38,22 +38,35 @@ class EventStream
     /**
      * EntityDomainEvent constructor.
      *
-     * @param StringLiteral                $className
+     * @param string                       $className
      * @param IdInterface                  $aggregateId
      * @param EntityDomainEventInterface[] $events
      */
-    public function __construct(StringLiteral $className, IdInterface $aggregateId, array $events)
-    {
+    public function __construct(
+        $className,
+        IdInterface $aggregateId,
+        array $events
+    ) {
         $this->className = $className;
         $this->aggregateId = $aggregateId;
 
         foreach ($events as $event) {
+            if (!$event instanceof EntityDomainEventInterface) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'The event must be an instance of %s. Instance of %s given',
+                        EntityDomainEventInterface::class,
+                        is_object($event) ? get_class($event) : gettype($event)
+                    )
+                );
+            }
+
             $this->addEvent($event);
         }
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function className()
     {

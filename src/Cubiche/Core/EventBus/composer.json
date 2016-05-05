@@ -22,7 +22,8 @@
     "require": {
         "php":                  "^5.5.9|^7.0",
         "cubiche/collections":  "dev-master",
-        "cubiche/delegate":     "dev-master"
+        "cubiche/delegate":     "dev-master",
+        "cubiche/serializer":   "dev-master"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"

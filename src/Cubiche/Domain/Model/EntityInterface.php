@@ -11,12 +11,14 @@
 
 namespace Cubiche\Domain\Model;
 
+use Cubiche\Core\Serializer\SerializableInterface;
+
 /**
  * Entity Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface EntityInterface extends DomainObjectInterface
+interface EntityInterface extends DomainObjectInterface, SerializableInterface
 {
     /**
      * @return IdInterface

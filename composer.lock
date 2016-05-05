@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "39e7d948954746a8a8b318b669a6ee53",
-    "content-hash": "e57159aefadf790a4854de95199bbc92",
+    "hash": "2e093e08557f4a1ad3e2b2dff35d5dc5",
+    "content-hash": "0e226682be9ee1403d148f7502f1c148",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1197,7 +1197,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/cqt/zipball/7c775b50eb141b689805a48d25354829088fca6a",
+                "url": "https://api.github.com/repos/cubiche/cqt/zipball/114a002449d3f19a59962fa25d1fd7d4877a6f9b",
                 "reference": "114a002449d3f19a59962fa25d1fd7d4877a6f9b",
                 "shasum": ""
             },
@@ -1250,22 +1250,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "ca6d4039e78fc1846d6a9e2b280a813937c7e55d"
+                "reference": "52b0b0a9565e67d3908f4aa4340985da9326055a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/c4b1b96716fe790b1fad8bd23ca3641e828bff8e",
-                "reference": "ca6d4039e78fc1846d6a9e2b280a813937c7e55d",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/52b0b0a9565e67d3908f4aa4340985da9326055a",
+                "reference": "52b0b0a9565e67d3908f4aa4340985da9326055a",
                 "shasum": ""
             },
             "require": {
                 "atoum/atoum": "~2.5",
                 "atoum/stubs": "~2.5",
+                "atoum/visibility-extension": "~1.0",
                 "php": "^5.5.9|^7.0",
                 "symfony/console": "~2.4"
             },
             "require-dev": {
-                "cubiche/cqt": "dev-master"
+                "cubiche/cqt": "dev-master",
+                "fzaninotto/faker": "^1.6"
             },
             "bin": [
                 "test-generator"
@@ -1297,7 +1299,7 @@
                 "test",
                 "test generator"
             ],
-            "time": "2016-04-13 16:19:25"
+            "time": "2016-05-03 16:35:14"
         },
         {
             "name": "fabpot/php-cs-fixer",
@@ -1352,6 +1354,56 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "time": "2016-02-26 07:37:29"
+        },
+        {
+            "name": "fzaninotto/faker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "120198f907231348a29cbcb362ec4d41ea22c1dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/120198f907231348a29cbcb362ec4d41ea22c1dc",
+                "reference": "120198f907231348a29cbcb362ec4d41ea22c1dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3|^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2016-05-02 21:13:20"
         },
         {
             "name": "pdepend/pdepend",
