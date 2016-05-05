@@ -126,12 +126,12 @@ abstract class AggregateRoot implements AggregateRootInterface
      */
     public function replay(EventStream $history)
     {
-        if (get_class($this) !== $history->className()->toNative()) {
+        if (get_class($this) !== $history->className()) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'You cannot replay an AggregateRoot of type %s from an EventStream for object of type %s',
                     get_class($this),
-                    $history->className()->toNative()
+                    $history->className()
                 )
             );
         }

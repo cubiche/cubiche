@@ -10,7 +10,12 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units;
 
+use Cubiche\Domain\Model\EventSourcing\EventStream;
+use Cubiche\Domain\Model\Tests\Fixtures\Category;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * AggregateRootTests class.
@@ -38,11 +43,45 @@ class AggregateRootTests extends TestCase
     }
 
     /**
+     * Test applyEvent method.
+     */
+    public function testApplyEventWithoutApplyMethod()
+    {
+        $this
+            ->given(
+                $post = Post::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->then()
+                ->exception(function () use ($post) {
+                    $post->publish();
+                })->isInstanceOf(\BadMethodCallException::class)
+        ;
+    }
+
+    /**
      * Test ClearEvents method.
      */
     public function testClearEvents()
     {
-        // todo: Implement testClearEvents().
+        $this
+            ->given(
+                $post = Post::create(
+                    $this->faker->sentence(),
+                    $this->faker->paragraph()
+                )
+            )
+            ->then()
+                ->array($post->recordedEvents())
+                    ->hasSize(1)
+            ->and()
+            ->when($post->clearEvents())
+            ->then()
+                ->array($post->recordedEvents())
+                    ->isEmpty()
+        ;
     }
 
     /**
@@ -50,14 +89,49 @@ class AggregateRootTests extends TestCase
      */
     public function testLoadFromHistory()
     {
-        // todo: Implement testLoadFromHistory().
+        $this
+            ->given($title = $this->faker->sentence())
+            ->and($content = $this->faker->paragraph())
+            ->and($newTitle = $this->faker->sentence())
+            ->and($post = Post::create($title, $content))
+            ->and($post->changeTitle($newTitle))
+            ->and(
+                $eventStream = new EventStream(
+                    Post::class,
+                    $post->id(),
+                    [
+                        new PostWasCreated($post->id(), $title, $content),
+                        new PostTitleWasChanged($post->id(), $newTitle),
+                    ]
+                )
+            )
+            ->when($other = Post::loadFromHistory($eventStream))
+            ->then()
+                ->boolean($post->equals($other))
+                    ->isTrue()
+        ;
     }
 
     /**
      * Test Replay method.
      */
-    public function testReplay()
+    public function testReplayWithInvalidEventStream()
     {
-        // todo: Implement testReplay().
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->and(
+                $eventStream = new EventStream(
+                    Category::class,
+                    PostId::fromNative('123'),
+                    [
+                        new PostTitleWasChanged(PostId::fromNative('123'), $this->faker->sentence()),
+                    ]
+                )
+            )
+            ->then()
+                ->exception(function () use ($post, $eventStream) {
+                    $post->replay($eventStream);
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
     }
 }
