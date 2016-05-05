@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
 use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;

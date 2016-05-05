@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Core\Serializer\SerializerInterface;
@@ -87,7 +88,7 @@ class EventStore
         );
 
         $events = [];
-        foreach ($this->storage->slice($key, $version*$this->versionBase) as $data) {
+        foreach ($this->storage->slice($key, $version * $this->versionBase) as $data) {
             $events[] = $this->deserializeEvent($data);
         }
 
@@ -104,7 +105,7 @@ class EventStore
     {
         $countOfEvents = $this->countEventsFor($className, $aggregateId);
 
-        return intval($countOfEvents/$this->versionBase);
+        return intval($countOfEvents / $this->versionBase);
     }
 
     /**

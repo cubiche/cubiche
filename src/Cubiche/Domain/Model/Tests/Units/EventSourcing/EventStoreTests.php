@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
 use Cubiche\Core\Serializer\DefaultSerializer;
@@ -36,7 +37,7 @@ class EventStoreTests extends TestCase
         $this
             ->given($base = -20)
             ->then()
-                ->exception(function() use ($base) {
+                ->exception(function () use ($base) {
                     new EventStore(new InMemoryMultidimensionalStorage(), new DefaultSerializer(), $base);
                 })->isInstanceOf(\InvalidArgumentException::class)
         ;

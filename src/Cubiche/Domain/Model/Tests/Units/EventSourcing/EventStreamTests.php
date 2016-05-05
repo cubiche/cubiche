@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
 use Cubiche\Domain\Model\EventSourcing\EventStream;
@@ -71,7 +72,7 @@ class EventStreamTests extends TestCase
                         new PostTitleWasChanged(
                             PostId::fromNative($this->faker->ean13()),
                             $this->faker->sentence()
-                        )
+                        ),
                     ]
                 )
             )
@@ -87,11 +88,11 @@ class EventStreamTests extends TestCase
                         PostId::fromNative($this->faker->ean13()),
                         $this->faker->sentence()
                     ),
-                    new \StdClass()
+                    new \StdClass(),
                 ]
             )
             ->then()
-                ->exception(function() use ($events) {
+                ->exception(function () use ($events) {
                     new EventStream(
                         Post::class,
                         PostId::fromNative($this->faker->ean13()),
