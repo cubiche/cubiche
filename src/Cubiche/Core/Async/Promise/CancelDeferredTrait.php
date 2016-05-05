@@ -12,14 +12,23 @@
 namespace Cubiche\Core\Async\Promise;
 
 /**
- * Deferred Interface.
+ * Cancel Deferred trait.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DeferredInterface extends PromisorInterface, ResolverInterface
+trait CancelDeferredTrait
 {
     /**
      * @return bool
      */
-    public function cancel();
+    public function cancel()
+    {
+        if ($this->promise()->state()->equals(State::PENDING())) {
+            $this->reject(new CancellationException());
+
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -12,14 +12,24 @@
 namespace Cubiche\Core\Async\Promise;
 
 /**
- * Deferred Interface.
+ * Resolver Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DeferredInterface extends PromisorInterface, ResolverInterface
+interface ResolverInterface
 {
     /**
-     * @return bool
+     * @param mixed $value
      */
-    public function cancel();
+    public function resolve($value = null);
+
+    /**
+     * @param mixed $reason
+     */
+    public function reject($reason = null);
+
+    /**
+     * @param mixed $state
+     */
+    public function notify($state = null);
 }

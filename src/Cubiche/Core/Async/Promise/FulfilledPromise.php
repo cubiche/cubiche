@@ -28,6 +28,9 @@ class FulfilledPromise extends AbstractPromise
      */
     public function __construct($value = null)
     {
+        if ($value instanceof PromiseInterface) {
+            throw new \InvalidArgumentException(\sprintf('You cannot create %s with a promise.', self::class));
+        }
         $this->value = $value;
     }
 
@@ -41,9 +44,19 @@ class FulfilledPromise extends AbstractPromise
         }
 
         try {
-            return new self($this->resolveActual($onFulfilled));
+            return $this->resolveActual($onFulfilled);
         } catch (\Exception $e) {
             return new RejectedPromise($e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        if ($onFulfilled !== null) {
+            $onFulfilled($this->value);
         }
     }
 
@@ -62,8 +75,8 @@ class FulfilledPromise extends AbstractPromise
      */
     private function resolveActual(callable $onFulfilled)
     {
-        $actual = $onFulfilled($this->value);
+        $value = $onFulfilled($this->value);
 
-        return $actual !== null ? $actual : $this->value;
+        return $value instanceof PromiseInterface ? $value : new self($value);
     }
 }

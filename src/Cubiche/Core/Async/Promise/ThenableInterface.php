@@ -12,14 +12,18 @@
 namespace Cubiche\Core\Async\Promise;
 
 /**
- * Deferred Interface.
+ * Thenable Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DeferredInterface extends PromisorInterface, ResolverInterface
+interface ThenableInterface
 {
     /**
-     * @return bool
+     * @param callable $onFulfilled
+     * @param callable $onRejected
+     * @param callable $onNotify
+     *
+     * @return static
      */
-    public function cancel();
+    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null);
 }

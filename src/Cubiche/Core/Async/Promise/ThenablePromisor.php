@@ -11,33 +11,30 @@
 
 namespace Cubiche\Core\Async\Promise;
 
-use Cubiche\Core\Delegate\Delegate;
-
 /**
- * Callable Promisor class.
+ * Thenable Promisor class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class CallablePromisor extends Delegate implements PromisorInterface
+class ThenablePromisor implements PromisorInterface
 {
-    /**
-     * @var Delegate
-     */
-    protected $delegate;
-
     /**
      * @var DeferredInterface
      */
     protected $deferred = null;
 
-    /**
-     * @param callable $callable
+    /*
+     * @param ThenableInterface $thenable
      */
-    public function __construct(callable $callable)
+    public function __construct(ThenableInterface $thenable)
     {
-        parent::__construct(array($this, 'execute'));
-
-        $this->delegate = new Delegate($callable);
+        $thenable->then(function ($value) {
+            $this->deferred()->resolve($value);
+        }, function ($reason) {
+            $this->deferred()->reject($reason);
+        }, function ($state) {
+            $this->deferred()->notify($state);
+        });
     }
 
     /**
@@ -46,15 +43,6 @@ class CallablePromisor extends Delegate implements PromisorInterface
     public function promise()
     {
         return $this->deferred()->promise();
-    }
-
-    protected function execute()
-    {
-        try {
-            $this->deferred()->resolve($this->delegate->invokeWith(\func_get_args()));
-        } catch (\Exception $e) {
-            $this->deferred()->reject($e);
-        }
     }
 
     /**

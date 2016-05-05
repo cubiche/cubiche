@@ -18,10 +18,12 @@ namespace Cubiche\Core\Async\Promise;
  */
 class PromiseDeferred extends AbstractPromise implements DeferredInterface
 {
+    use CancelDeferredTrait;
+
     /**
-     * @var DeferredInterface[]
+     * @var ResolverInterface[]
      */
-    private $deferreds = array();
+    private $resolvers = array();
 
     /**
      * @var PromiseInterface
@@ -29,19 +31,31 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
     private $actual = null;
 
     /**
-     * @param callable $onFulfilled
-     * @param callable $onRejected
-     * @param callable $onNotify
-     *
-     * @return PromiseInterface
+     * {@inheritdoc}
      */
     public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
     {
         if ($this->state()->equals(State::PENDING())) {
-            return $this->enqueue($onFulfilled, $onRejected, $onNotify)->promise();
+            $resolver = new ThenResolver($onFulfilled, $onRejected, $onNotify);
+            $this->resolvers[] = $resolver;
+
+            return $resolver->promise();
         }
 
         return $this->actual->then($onFulfilled, $onRejected, $onNotify);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
+    {
+        if ($this->state()->equals(State::PENDING())) {
+            $resolver = new DoneResolver($onFulfilled, $onRejected, $onNotify);
+            $this->resolvers[] = $resolver;
+        } else {
+            $this->actual->done($onFulfilled, $onRejected, $onNotify);
+        }
     }
 
     /**
@@ -66,8 +80,8 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
     public function notify($state = null)
     {
         if ($this->state()->equals(State::PENDING())) {
-            foreach ($this->deferreds as $deferred) {
-                $deferred->notify($state);
+            foreach ($this->resolvers as $resolver) {
+                $resolver->notify($state);
             }
         } else {
             throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state()->getValue()));
@@ -101,13 +115,13 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
         if ($this->state()->equals(State::PENDING())) {
             $this->actual = $success ? new FulfilledPromise($result) : new RejectedPromise($result);
 
-            while (!empty($this->deferreds)) {
-                /** @var \Cubiche\Core\Async\Promise\DeferredInterface $deferred */
-                $deferred = array_shift($this->deferreds);
+            while (!empty($this->resolvers)) {
+                /** @var \Cubiche\Core\Async\Promise\ResolverInterface $resolver */
+                $resolver = array_shift($this->resolvers);
                 if ($success) {
-                    $deferred->resolve($result);
+                    $resolver->resolve($result);
                 } else {
-                    $deferred->reject($result);
+                    $resolver->reject($result);
                 }
             }
         } else {
@@ -115,20 +129,5 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
                 \sprintf('A %s promise cannot be %s', $this->state()->getValue(), $success ? 'resolved' : 'rejected')
             );
         }
-    }
-
-    /**
-     * @param callable $onFulfilled
-     * @param callable $onRejected
-     * @param callable $onNotify
-     *
-     * @return \Cubiche\Core\Async\Promise\DeferredProxy
-     */
-    private function enqueue(callable $onFulfilled = null, callable $onRejected = null, callable $onNotify = null)
-    {
-        $deferred = new DeferredProxy(new Deferred(), $onFulfilled, $onRejected, $onNotify, false);
-        $this->deferreds[] = $deferred;
-
-        return $deferred;
     }
 }

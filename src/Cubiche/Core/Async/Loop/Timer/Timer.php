@@ -134,17 +134,25 @@ class Timer implements TimerInterface
     /**
      * {@inheritdoc}
      */
-    public function otherwise(callable $catch)
+    public function done(callable $onSucceed = null, callable $onRejected = null, callable $onNotify = null)
     {
-        return $this->deferred()->promise()->otherwise($catch);
+        $this->deferred()->promise()->done($onSucceed, $onRejected, $onNotify);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function always(callable $finally, callable $notify = null)
+    public function otherwise(callable $onRejected)
     {
-        return $this->deferred()->promise()->always($finally, $notify);
+        return $this->deferred()->promise()->otherwise($onRejected);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function always(callable $onFulfilledOrRejected, callable $notify = null)
+    {
+        return $this->deferred()->promise()->always($onFulfilledOrRejected, $notify);
     }
 
     /**
@@ -172,8 +180,8 @@ class Timer implements TimerInterface
     private function onTick()
     {
         try {
+            $this->lastResult = $this->task->__invoke($this);
             ++$this->iterations;
-            $this->lastResult = $this->task->__invoke();
             if ($this->timer->isPeriodic()) {
                 $this->deferred()->notify($this->lastResult);
                 if ($this->maxIterations() !== null && $this->iterations() >= $this->maxIterations()) {
