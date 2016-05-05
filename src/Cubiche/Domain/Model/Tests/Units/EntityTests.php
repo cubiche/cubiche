@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units;
 
-use Cubiche\Domain\Identity\StringId;
 use Cubiche\Domain\Model\Tests\Fixtures\Category;
+use Cubiche\Domain\Model\Tests\Fixtures\CategoryId;
 
 /**
  * EntityTestCase class.
@@ -26,8 +26,8 @@ class EntityTests extends TestCase
     public function testId()
     {
         $this
-            ->given($id = StringId::fromNative($this->faker->ean13()))
-            ->and($entity = Category::create($id))
+            ->given($id = CategoryId::fromNative($this->faker->ean13()))
+            ->and($entity = new Category($id))
             ->then()
                 ->boolean($entity->id()->equals($id))
                     ->isTrue()
@@ -40,10 +40,8 @@ class EntityTests extends TestCase
     public function testEquals()
     {
         $this
-            ->given($id1 = StringId::fromNative($this->faker->unique()->uuid()))
-            ->and($id2 = StringId::fromNative($this->faker->ean13()))
-            ->and($entity1 = Category::create($id1))
-            ->and($entity2 = Category::create($id2))
+            ->given($entity1 = new Category(CategoryId::fromNative($this->faker->unique()->uuid())))
+            ->and($entity2 = new Category(CategoryId::fromNative($this->faker->ean13())))
             ->then()
                 ->boolean($entity1->equals($entity1))
                     ->isTrue()

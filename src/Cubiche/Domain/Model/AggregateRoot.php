@@ -21,12 +21,33 @@ use Cubiche\Domain\Model\EventSourcing\EventStream;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+abstract class AggregateRoot implements AggregateRootInterface
 {
+    /**
+     * @var IdInterface
+     */
+    protected $id;
+
     /**
      * @var EntityDomainEventInterface[]
      */
     private $recordedEvents = [];
+
+    /**
+     * @param IdInterface $id
+     */
+    protected function __construct(IdInterface $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function id()
+    {
+        return $this->id;
+    }
 
     /**
      * @param EntityDomainEventInterface $event
@@ -118,5 +139,13 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
         foreach ($history->events() as $event) {
             $this->applyEvent($event);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals($other)
+    {
+        return $other instanceof static && $this->id()->equals($other->id());
     }
 }

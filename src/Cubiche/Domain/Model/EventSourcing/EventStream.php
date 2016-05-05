@@ -10,7 +10,6 @@
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * EventStream class.
@@ -20,7 +19,7 @@ use Cubiche\Domain\System\StringLiteral;
 class EventStream
 {
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $className;
 
@@ -37,12 +36,12 @@ class EventStream
     /**
      * EntityDomainEvent constructor.
      *
-     * @param StringLiteral                $className
+     * @param string                       $className
      * @param IdInterface                  $aggregateId
      * @param EntityDomainEventInterface[] $events
      */
     public function __construct(
-        StringLiteral $className,
+        $className,
         IdInterface $aggregateId,
         array $events
     ) {
@@ -55,7 +54,7 @@ class EventStream
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function className()
     {

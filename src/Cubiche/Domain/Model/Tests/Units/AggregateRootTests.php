@@ -11,7 +11,6 @@
 namespace Cubiche\Domain\Model\Tests\Units;
 
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * AggregateRootTests class.
@@ -28,8 +27,8 @@ class AggregateRootTests extends TestCase
         $this
             ->given(
                 $post = Post::create(
-                    StringLiteral::fromNative('new post'),
-                    StringLiteral::fromNative('post content')
+                    $this->faker->sentence,
+                    $this->faker->paragraph
                 )
             )
             ->then()

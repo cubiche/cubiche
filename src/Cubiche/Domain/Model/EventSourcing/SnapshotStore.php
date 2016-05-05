@@ -13,7 +13,6 @@ use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\StorageInterface;
 use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * SnapshotStore class.
@@ -58,12 +57,12 @@ class SnapshotStore
     }
 
     /**
-     * @param StringLiteral $className
-     * @param IdInterface   $aggregateId
+     * @param string      $className
+     * @param IdInterface $aggregateId
      *
      * @return Snapshot
      */
-    public function getSnapshotFor(StringLiteral $className, IdInterface $aggregateId)
+    public function getSnapshotFor($className, IdInterface $aggregateId)
     {
         $key = $this->createKey($className, $aggregateId);
 
@@ -73,14 +72,14 @@ class SnapshotStore
     }
 
     /**
-     * @param StringLiteral $className
-     * @param IdInterface   $aggregateId
+     * @param string      $className
+     * @param IdInterface $aggregateId
      *
      * @return string
      */
-    protected function createKey(StringLiteral $className, IdInterface $aggregateId)
+    protected function createKey($className, IdInterface $aggregateId)
     {
-        $classParts = explode('\\', get_class($className->toNative()));
+        $classParts = explode('\\', get_class($className));
 
         return sprintf(
             'snapshots:%s:%s',
@@ -101,8 +100,8 @@ class SnapshotStore
 
         return $this->serializer->serialize(
             array(
-                'snapshotVersion' => $snapshot->version()->toNative(),
-                'aggregateType' => $snapshot->className()->toNative(),
+                'snapshotVersion' => $snapshot->version(),
+                'aggregateType' => $snapshot->className(),
                 'aggregateData' => $aggregateData,
             ),
             'json'
@@ -130,7 +129,7 @@ class SnapshotStore
         );
 
         return new Snapshot(
-            StringLiteral::fromNative($serializedSnapshot['snapshotVersion']),
+            $serializedSnapshot['snapshotVersion'],
             $aggregate
         );
     }

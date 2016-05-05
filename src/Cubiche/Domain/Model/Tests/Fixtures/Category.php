@@ -9,9 +9,7 @@
  */
 namespace Cubiche\Domain\Model\Tests\Fixtures;
 
-use Cubiche\Domain\Model\AggregateRoot;
 use Cubiche\Domain\Model\Entity;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * Category class.
@@ -21,15 +19,23 @@ use Cubiche\Domain\System\StringLiteral;
 class Category extends Entity
 {
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $name;
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function name()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

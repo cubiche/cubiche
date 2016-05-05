@@ -10,8 +10,7 @@
 namespace Cubiche\Domain\Model\Tests\Fixtures\Event;
 
 use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
-use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * PostWasCreated class.
@@ -21,23 +20,23 @@ use Cubiche\Domain\System\StringLiteral;
 class PostWasCreated extends EntityDomainEvent
 {
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $title;
 
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $content;
 
     /**
      * PostWasCreated constructor.
      *
-     * @param IdInterface   $id
-     * @param StringLiteral $title
-     * @param StringLiteral $content
+     * @param PostId $id
+     * @param string $title
+     * @param string $content
      */
-    public function __construct(IdInterface $id, StringLiteral $title, StringLiteral $content)
+    public function __construct(PostId $id, $title, $content)
     {
         parent::__construct($id);
 
@@ -46,7 +45,7 @@ class PostWasCreated extends EntityDomainEvent
     }
 
     /**
-     * @return IdInterface
+     * @return PostId
      */
     public function id()
     {
@@ -54,7 +53,7 @@ class PostWasCreated extends EntityDomainEvent
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function title()
     {
@@ -62,7 +61,7 @@ class PostWasCreated extends EntityDomainEvent
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function content()
     {

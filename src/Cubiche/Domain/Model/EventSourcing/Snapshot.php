@@ -10,7 +10,6 @@
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Domain\Model\AggregateRootInterface;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * Snapshot class.
@@ -20,7 +19,7 @@ use Cubiche\Domain\System\StringLiteral;
 class Snapshot
 {
     /**
-     * @var StringLiteral
+     * @var int
      */
     protected $version;
 
@@ -32,27 +31,25 @@ class Snapshot
     /**
      * Snapshot constructor.
      *
-     * @param StringLiteral          $version
+     * @param int                    $version
      * @param AggregateRootInterface $aggregate
      */
-    public function __construct(StringLiteral $version, AggregateRootInterface $aggregate)
+    public function __construct($version, AggregateRootInterface $aggregate)
     {
         $this->version = $version;
         $this->aggregate = $aggregate;
     }
 
     /**
-     * @return StringLiteral
+     * @return string
      */
     public function className()
     {
-        return StringLiteral::fromNative(
-            get_class($this->aggregate())
-        );
+        return get_class($this->aggregate());
     }
 
     /**
-     * @return StringLiteral
+     * @return int
      */
     public function version()
     {

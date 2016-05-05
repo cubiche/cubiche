@@ -9,12 +9,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Fixtures;
 
-use Cubiche\Core\Collections\ArrayCollection;
-use Cubiche\Domain\Identity\UUID;
 use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
-use Cubiche\Domain\System\StringLiteral;
 
 /**
  * Post class.
@@ -24,12 +20,12 @@ use Cubiche\Domain\System\StringLiteral;
 class Post extends AggregateRoot
 {
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $title;
 
     /**
-     * @var StringLiteral
+     * @var string
      */
     protected $content;
 
@@ -39,31 +35,19 @@ class Post extends AggregateRoot
     protected $published = false;
 
     /**
-     * @var ArrayCollection
+     * @var Category[]
      */
-    protected $categories;
+    protected $categories = [];
 
     /**
-     * Post constructor.
-     *
-     * @param IdInterface $id
-     */
-    protected function __construct(IdInterface $id)
-    {
-        parent::__construct($id);
-
-        $this->categories = new ArrayCollection();
-    }
-
-    /**
-     * @param StringLiteral $title
-     * @param StringLiteral $content
+     * @param string $title
+     * @param string $content
      *
      * @return Post
      */
-    public static function create(StringLiteral $title, StringLiteral $content)
+    public static function create($title, $content)
     {
-        $post = new self(UUID::next());
+        $post = new self(PostId::fromNative(md5(rand())));
         $post->recordApplyAndPublishEvent(
             new PostWasCreated($post->id(), $title, $content)
         );
