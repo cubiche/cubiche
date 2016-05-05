@@ -21,8 +21,10 @@ class DefaultSerializer extends AbstractSerializer
     /**
      * {@inheritdoc}
      */
-    public function serialize(SerializableInterface $data, $format, array $context = array())
+    public function serialize($data, $format, array $context = array())
     {
+        $this->ensureType($data);
+
         return serialize($data);
     }
 
@@ -31,8 +33,6 @@ class DefaultSerializer extends AbstractSerializer
      */
     public function deserialize($data, $type, $format, array $context = array())
     {
-        $this->ensureType($type);
-
         return unserialize($data);
     }
 }

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
+use Cubiche\Domain\Model\EventSourcing\Snapshot;
+use Cubiche\Domain\Model\Tests\Fixtures\Post;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -24,7 +26,13 @@ class SnapshotTests extends TestCase
      */
     public function testClassName()
     {
-        // todo: Implement testClassName().
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->and($snapshot = new Snapshot(13, $post))
+            ->then()
+                ->string($snapshot->className())
+                    ->isEqualTo(Post::class)
+        ;
     }
 
     /**
@@ -32,7 +40,13 @@ class SnapshotTests extends TestCase
      */
     public function testVersion()
     {
-        // todo: Implement testVersion().
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->and($snapshot = new Snapshot(15, $post))
+            ->then()
+                ->integer($snapshot->version())
+                    ->isEqualTo(15)
+        ;
     }
 
     /**
@@ -40,6 +54,12 @@ class SnapshotTests extends TestCase
      */
     public function testAggregate()
     {
-        // todo: Implement testAggregate().
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->and($snapshot = new Snapshot(15, $post))
+            ->then()
+                ->object($snapshot->aggregate())
+                    ->isEqualTo($post)
+        ;
     }
 }

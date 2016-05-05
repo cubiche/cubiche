@@ -10,6 +10,15 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
+use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Storage\InMemoryMultidimensionalStorage;
+use Cubiche\Domain\Model\EventSourcing\EventStore;
+use Cubiche\Domain\Model\EventSourcing\EventStream;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasPublished;
+use Cubiche\Domain\Model\Tests\Fixtures\Post;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -20,11 +29,45 @@ use Cubiche\Domain\Model\Tests\Units\TestCase;
 class EventStoreTests extends TestCase
 {
     /**
+     * Test create.
+     */
+    public function testCreate()
+    {
+        $this
+            ->given($base = -20)
+            ->then()
+                ->exception(function() use ($base) {
+                    new EventStore(new InMemoryMultidimensionalStorage(), new DefaultSerializer(), $base);
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
      * Test Persist method.
      */
     public function testPersist()
     {
-        // todo: Implement testPersist().
+        $this
+            ->given($eventStore = new EventStore(new InMemoryMultidimensionalStorage(), new DefaultSerializer(), 10))
+            ->and($postId = PostId::fromNative($this->faker->ean13()))
+            ->and($title = $this->faker->sentence())
+            ->and($content = $this->faker->paragraph())
+            ->and($newTitle = $this->faker->sentence())
+            ->and(
+                $eventStream = new EventStream(
+                    Post::class,
+                    $postId,
+                    [
+                        new PostWasCreated($postId, $title, $content),
+                        new PostTitleWasChanged($postId, $newTitle),
+                    ]
+                )
+            )
+            ->when($eventStore->persist($eventStream))
+            ->then()
+                ->integer($eventStore->versionFor(Post::class, $postId))
+                    ->isEqualTo(0)
+        ;
     }
 
     /**
@@ -32,14 +75,36 @@ class EventStoreTests extends TestCase
      */
     public function testEventsFor()
     {
-        // todo: Implement testEventsFor().
-    }
-
-    /**
-     * Test VersionFor method.
-     */
-    public function testVersionFor()
-    {
-        // todo: Implement testVersionFor().
+        $this
+            ->given($eventStore = new EventStore(new InMemoryMultidimensionalStorage(), new DefaultSerializer(), 2))
+            ->and($postId = PostId::fromNative($this->faker->ean13()))
+            ->and($title = $this->faker->sentence())
+            ->and($content = $this->faker->paragraph())
+            ->and($newTitle = $this->faker->sentence())
+            ->and(
+                $eventStream = new EventStream(
+                    Post::class,
+                    $postId,
+                    [
+                        new PostWasCreated($postId, $title, $content),
+                        new PostTitleWasChanged($postId, $newTitle),
+                        new PostWasPublished($postId),
+                    ]
+                )
+            )
+            ->when($eventStore->persist($eventStream))
+            ->and($version = $eventStore->versionFor(Post::class, $postId))
+            ->and($history = $eventStore->eventsFor(Post::class, $version, $postId))
+            ->then()
+                ->integer($version)
+                    ->isEqualTo(1)
+                ->object($history)
+                    ->isInstanceOf(EventStream::class)
+                ->array($history->events())
+                    ->hasSize(1)
+                ->array($history->events())
+                    ->object[0]
+                        ->isInstanceOf(PostWasPublished::class)
+        ;
     }
 }

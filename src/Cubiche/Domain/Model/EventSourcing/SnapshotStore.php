@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Domain\Model\EventSourcing;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\StorageInterface;
 use Cubiche\Domain\Model\AggregateRootInterface;
@@ -19,7 +20,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SnapshotStore
+class SnapshotStore implements SerializableInterface
 {
     /**
      * @var StorageInterface
@@ -79,7 +80,7 @@ class SnapshotStore
      */
     protected function createKey($className, IdInterface $aggregateId)
     {
-        $classParts = explode('\\', get_class($className));
+        $classParts = explode('\\', $className);
 
         return sprintf(
             'snapshots:%s:%s',

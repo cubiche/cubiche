@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\Selector;
 
+use Cubiche\Domain\Model\Selector\Id;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
-use Cubiche\Core\Selector\SelectorInterface;
 
 /**
  * IdTests class.
@@ -21,13 +21,15 @@ use Cubiche\Core\Selector\SelectorInterface;
 class IdTests extends TestCase
 {
     /**
-     * Test class.
+     * Test create.
      */
-    public function testClass()
+    public function testCreate()
     {
         $this
-            ->testedClass
-                ->implements(SelectorInterface::class)
+            ->given($selector = new Id())
+            ->then()
+                ->string($selector->name())
+                    ->isEqualTo('id')
         ;
     }
 }

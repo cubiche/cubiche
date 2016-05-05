@@ -10,6 +10,12 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
+use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Storage\InMemoryStorage;
+use Cubiche\Domain\Model\EventSourcing\Snapshot;
+use Cubiche\Domain\Model\EventSourcing\SnapshotStore;
+use Cubiche\Domain\Model\Tests\Fixtures\Post;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -24,7 +30,22 @@ class SnapshotStoreTests extends TestCase
      */
     public function testPersist()
     {
-        // todo: Implement testPersist().
+        $this
+            ->given($snapshotStore = new SnapshotStore(new InMemoryStorage(), new DefaultSerializer()))
+            ->and($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->and($snapshot = new Snapshot(15, $post))
+            ->when($snapshotStore->persist($snapshot))
+            ->then()
+                ->object($result = $snapshotStore->getSnapshotFor(Post::class, $post->id()))
+                    ->isInstanceOf(Snapshot::class)
+                ->integer($result->version())
+                    ->isEqualTo($snapshot->version())
+                ->object($result->aggregate())
+                    ->isEqualTo($snapshot->aggregate())
+                ->string($result->className())
+                    ->isEqualTo($snapshot->className())
+
+        ;
     }
 
     /**
@@ -32,6 +53,11 @@ class SnapshotStoreTests extends TestCase
      */
     public function testGetSnapshotFor()
     {
-        // todo: Implement testGetSnapshotFor().
+        $this
+            ->given($snapshotStore = new SnapshotStore(new InMemoryStorage(), new DefaultSerializer()))
+            ->then()
+                ->variable($snapshotStore->getSnapshotFor(Post::class, PostId::fromNative($this->faker->ean13())))
+                    ->isNull()
+        ;
     }
 }

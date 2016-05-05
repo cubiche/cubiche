@@ -10,6 +10,10 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\EventSourcing;
 
+use Cubiche\Domain\Model\EventSourcing\EventStream;
+use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
+use Cubiche\Domain\Model\Tests\Fixtures\Post;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -24,7 +28,12 @@ class EventStreamTests extends TestCase
      */
     public function testClassName()
     {
-        // todo: Implement testClassName().
+        $this
+            ->given($eventStream = new EventStream(Post::class, PostId::fromNative($this->faker->ean13()), []))
+            ->then()
+                ->string($eventStream->className())
+                    ->isEqualTo(Post::class)
+        ;
     }
 
     /**
@@ -32,7 +41,13 @@ class EventStreamTests extends TestCase
      */
     public function testAggregateId()
     {
-        // todo: Implement testAggregateId().
+        $this
+            ->given($postId = PostId::fromNative($this->faker->ean13()))
+            ->and($eventStream = new EventStream(Post::class, $postId, []))
+            ->then()
+                ->object($eventStream->aggregateId())
+                    ->isEqualTo($postId)
+        ;
     }
 
     /**
@@ -40,6 +55,50 @@ class EventStreamTests extends TestCase
      */
     public function testEvents()
     {
-        // todo: Implement testEvents().
+        $this
+            ->given($eventStream = new EventStream(Post::class, PostId::fromNative($this->faker->ean13()), []))
+            ->then()
+                ->array($eventStream->events())
+                    ->isEmpty()
+        ;
+
+        $this
+            ->given(
+                $eventStream = new EventStream(
+                    Post::class,
+                    PostId::fromNative($this->faker->ean13()),
+                    [
+                        new PostTitleWasChanged(
+                            PostId::fromNative($this->faker->ean13()),
+                            $this->faker->sentence()
+                        )
+                    ]
+                )
+            )
+            ->then()
+                ->array($eventStream->events())
+                    ->hasSize(1)
+        ;
+
+        $this
+            ->given(
+                $events = [
+                    new PostTitleWasChanged(
+                        PostId::fromNative($this->faker->ean13()),
+                        $this->faker->sentence()
+                    ),
+                    new \StdClass()
+                ]
+            )
+            ->then()
+                ->exception(function() use ($events) {
+                    new EventStream(
+                        Post::class,
+                        PostId::fromNative($this->faker->ean13()),
+                        $events
+                    );
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
     }
 }

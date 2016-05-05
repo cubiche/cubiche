@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\Specification;
 
+use Cubiche\Domain\Model\Selector\Entity;
+use Cubiche\Domain\Model\Specification\ModelCriteria;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -24,6 +26,11 @@ class ModelCriteriaTests extends TestCase
      */
     public function testAsEntity()
     {
-        // todo: Implement testAsEntity().
+        $this
+            ->given($criteria = ModelCriteria::asEntity())
+            ->then()
+                ->object($criteria)
+                    ->isInstanceOf(Entity::class)
+        ;
     }
 }

@@ -38,8 +38,8 @@ class DefaultSerializerTests extends TestCase
                     ->isTrue()
                 ->boolean($person1->equals($serializer->deserialize($data, Person::class, 'json')))
                     ->isFalse()
-                ->exception(function () use ($serializer, $person) {
-                    $serializer->deserialize($person, Address::class, 'json');
+                ->exception(function () use ($serializer, $address) {
+                    $serializer->serialize($address, 'json');
                 })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }

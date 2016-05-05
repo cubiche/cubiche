@@ -25,7 +25,7 @@ trait ModelCriteriaTrait
     protected static $entity = null;
 
     /**
-     * @return \Cubiche\Domain\Model\Specification\Selector\Entity
+     * @return \Cubiche\Domain\Model\Selector\Entity
      */
     public static function asEntity()
     {

@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units\Selector;
 
+use Cubiche\Domain\Model\Selector\Entity;
+use Cubiche\Domain\Model\Selector\Id;
 use Cubiche\Domain\Model\Tests\Units\TestCase;
 
 /**
@@ -24,6 +26,11 @@ class EntityTests extends TestCase
      */
     public function testId()
     {
-        // todo: Implement testId().
+        $this
+            ->given($selector = new Entity())
+            ->then()
+                ->object($selector->id())
+                    ->isInstanceOf(Id::class)
+        ;
     }
 }

@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Domain\Model\EventSourcing;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -16,7 +17,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventStream
+class EventStream implements SerializableInterface
 {
     /**
      * @var string
@@ -49,6 +50,16 @@ class EventStream
         $this->aggregateId = $aggregateId;
 
         foreach ($events as $event) {
+            if (!$event instanceof EntityDomainEventInterface) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'The event must be an instance of %s. Instance of %s given',
+                        EntityDomainEventInterface::class,
+                        is_object($event) ? get_class($event) : gettype($event)
+                    )
+                );
+            }
+
             $this->addEvent($event);
         }
     }

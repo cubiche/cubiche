@@ -11,6 +11,7 @@ namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\MultidimensionalStorageInterface;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * EventStore class.
@@ -86,7 +87,7 @@ class EventStore
         );
 
         $events = [];
-        foreach ($this->storage->slice($key, $version) as $data) {
+        foreach ($this->storage->slice($key, $version*$this->versionBase) as $data) {
             $events[] = $this->deserializeEvent($data);
         }
 
@@ -103,7 +104,7 @@ class EventStore
     {
         $countOfEvents = $this->countEventsFor($className, $aggregateId);
 
-        return $countOfEvents->div($this->versionBase);
+        return intval($countOfEvents/$this->versionBase);
     }
 
     /**
@@ -130,7 +131,7 @@ class EventStore
      */
     protected function createKey($className, IdInterface $aggregateId)
     {
-        $classParts = explode('\\', get_class($className));
+        $classParts = explode('\\', $className);
 
         return sprintf(
             'events:%s:%s',

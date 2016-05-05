@@ -22,15 +22,15 @@ interface SerializerInterface
     /**
      * Serializes data in the appropriate format.
      *
-     * @param SerializableInterface $object
-     * @param string                $format
-     * @param array                 $context
+     * @param mixed  $object
+     * @param string $format
+     * @param array  $context
      *
      * @return string
      *
      * @throws SerializationException
      */
-    public function serialize(SerializableInterface $object, $format, array $context = array());
+    public function serialize($object, $format, array $context = array());
 
     /**
      * Deserializes data into the given type.
@@ -40,7 +40,7 @@ interface SerializerInterface
      * @param string $format
      * @param array  $context
      *
-     * @return SerializableInterface
+     * @return mixed
      *
      * @throws SerializationException
      */

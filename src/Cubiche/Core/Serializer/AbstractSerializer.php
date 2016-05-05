@@ -19,21 +19,22 @@ namespace Cubiche\Core\Serializer;
 abstract class AbstractSerializer implements SerializerInterface
 {
     /**
-     * @param string $type
+     * @param string $value
      *
      * @throws \InvalidArgumentException
      */
-    public function ensureType($type)
+    public function ensureType($value)
     {
-        $reflector = new \ReflectionClass($type);
-        if (!$reflector->isSubclassOf(SerializableInterface::class)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The type must be an instance of %s. Instance of %s given',
-                    SerializableInterface::class,
-                    $type
-                )
-            );
+        if (is_object($value)) {
+            if (!$value instanceof SerializableInterface) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'The object must be an instance of %s. Instance of %s given',
+                        SerializableInterface::class,
+                        is_object($value) ? get_class($value) : gettype($value)
+                    )
+                );
+            }
         }
     }
 }
