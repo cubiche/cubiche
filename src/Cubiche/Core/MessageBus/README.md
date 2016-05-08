@@ -1,0 +1,2 @@
+# Cubiche - MessageBus
+[![Build Status](https://travis-ci.org/cubiche/message-bus.svg?branch=master)](https://travis-ci.org/cubiche/message-bus) [![Coverage Status](https://coveralls.io/repos/github/cubiche/message-bus/badge.svg?branch=master)](https://coveralls.io/github/cubiche/message-bus?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/message-bus/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/message-bus/?branch=master) 

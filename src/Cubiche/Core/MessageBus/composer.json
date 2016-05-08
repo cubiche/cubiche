@@ -1,0 +1,46 @@
+{
+    "name": "cubiche/message-bus",
+    "type": "library",
+    "description": "A small, flexible message bus. Handy for building service layers.",
+    "keywords": [
+        "bus",
+        "message",
+        "event",
+        "command",
+        "command bus",
+        "event bus",
+        "query bus"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+
+        "cubiche/collections":      "dev-master",
+        "cubiche/comparable":       "dev-master",
+        "cubiche/delegate":         "dev-master",
+        "cubiche/event-dispatcher": "dev-master",
+        "cubiche/serializer":       "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":        "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\MessageBus\\": ""
+        }
+    }
+}
