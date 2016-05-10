@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Middlewares\Handler;
 
 use Cubiche\Core\Bus\Query\QueryInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\ResolverInterface;
 
 /**
  * QueryHandlerMiddleware class.
@@ -45,5 +45,13 @@ class QueryHandlerMiddleware extends CommandHandlerMiddleware
 
         // return the last value
         return $returnValue;
+    }
+
+    /**
+     * @return ResolverInterface
+     */
+    public function resolver()
+    {
+        return parent::resolver();
     }
 }

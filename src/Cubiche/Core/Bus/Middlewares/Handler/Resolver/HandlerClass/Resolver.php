@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Command\CommandInterface;
@@ -65,11 +64,10 @@ class Resolver implements ResolverInterface
         $name = $this->nameResolver->resolve($command);
         $handler = $this->getHandlerFor($name);
 
-        if ($handler === null) {
-            throw NotFoundException::handlerFor($command);
-        }
-
         $methodName = $this->methodNameResolver->resolve($command);
+        if (!method_exists($handler, $methodName)) {
+            throw NotFoundException::methodForObject($command, $methodName);
+        }
 
         return Delegate::fromMethod($handler, $methodName);
     }

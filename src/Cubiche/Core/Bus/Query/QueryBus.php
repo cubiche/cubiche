@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Query;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\MessageBus;
+use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\QueryHandlerMiddleware;
@@ -27,8 +26,13 @@ use Cubiche\Core\Bus\Middlewares\Handler\Resolver\QueryName\QueryNamedResolver;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class QueryBus extends MessageBus
+class QueryBus extends Bus
 {
+    /**
+     * @var QueryHandlerMiddleware
+     */
+    protected $queryHandlerMiddleware;
+
     /**
      * @return QueryBus
      */
@@ -36,11 +40,11 @@ class QueryBus extends MessageBus
     {
         return new static([
             100 => new QueryHandlerMiddleware(new Resolver(
-                new ChainResolver(
+                new ChainResolver([
+                    new QueryNamedResolver(),
                     new DefaultResolver(),
-                    new QueryNamedResolver()
-                ),
-                new MethodWithShortObjectNameResolver(),
+                ]),
+                new MethodWithShortObjectNameResolver('Query'),
                 new InMemoryLocator()
             )),
         ]);
@@ -49,36 +53,53 @@ class QueryBus extends MessageBus
     /**
      * {@inheritdoc}
      */
-    public function dispatch(MessageInterface $command)
+    public function dispatch(MessageInterface $query)
     {
-        if (!$command instanceof QueryInterface) {
+        if (!$query instanceof QueryInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'The object must be an instance of %s. Instance of %s given',
                     QueryInterface::class,
-                    get_class($command)
+                    get_class($query)
                 )
             );
         }
 
         $this->ensureQueryHandlerMiddleware();
 
-        parent::dispatch($command);
+        return parent::dispatch($query);
     }
 
     /**
-     * Ensure that exists an command handler middleware.
+     * Ensure that exists an query handler middleware.
      *
      * @throws NotFoundException
      */
     protected function ensureQueryHandlerMiddleware()
     {
+        if ($this->queryHandlerMiddleware !== null) {
+            return;
+        }
+
         foreach ($this->middlewares as $priority => $middleware) {
             if ($middleware instanceof QueryHandlerMiddleware) {
+                $this->queryHandlerMiddleware = $middleware;
+
                 return;
             }
         }
 
         throw NotFoundException::middlewareOfType(QueryHandlerMiddleware::class);
+    }
+
+    /**
+     * @param string $queryName
+     * @param mixed  $queryHandler
+     */
+    public function addHandler($queryName, $queryHandler)
+    {
+        $this->ensureQueryHandlerMiddleware();
+
+        $this->queryHandlerMiddleware->resolver()->addHandler($queryName, $queryHandler);
     }
 }

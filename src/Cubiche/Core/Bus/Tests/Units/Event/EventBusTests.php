@@ -7,13 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Event;
 
+use Cubiche\Core\Bus\Event\Event;
 use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\UserEventSubscriber;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
@@ -75,6 +77,171 @@ class EventBusTests extends TestCase
                     $eventBus->dispatch(new FooMessage());
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test AddListener method.
+     */
+    public function testAddListener()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($eventBus->addListener('event.foo', array(new LoginUserEventListener(), 'onLogin')))
+            ->and($eventBus->addListener('event.foo', function (Event $event) {
+
+            }))
+            ->and($eventBus->addListener('event.bar', function (Event $event) {
+
+            }))
+            ->when($listeners = $eventBus->listeners())
+            ->then()
+                ->array($listeners->toArray())
+                    ->hasKey('event.foo')
+                    ->hasKey('event.bar')
+                ->array($listeners->toArray())
+                    ->hasSize(2)
+                ->array($listeners->toArray())
+                    ->array['event.foo']
+                        ->hasSize(2)
+        ;
+    }
+
+    /**
+     * Test listenerPriority method.
+     */
+    public function testListenerPriority()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
+
+            })
+            ->and($eventBus->addListener('event.foo', $listener1, 100))
+            ->and($eventBus->addListener('event.foo', $listener2, 50))
+            ->and($eventBus->addListener('event.bar', $listener3))
+            ->then()
+                ->variable($eventBus->listenerPriority('event.unknow', $listener1))
+                    ->isNull()
+                ->variable($eventBus->listenerPriority('event.foo', $listener3))
+                    ->isNull()
+                ->integer($eventBus->listenerPriority('event.foo', $listener1))
+                    ->isEqualTo(100)
+                ->integer($eventBus->listenerPriority('event.foo', $listener2))
+                    ->isEqualTo(50)
+        ;
+    }
+
+    /**
+     * Test HasListeners method.
+     */
+    public function testHasListeners()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
+
+            })
+            ->and($eventBus->addListener('event.foo', $listener1, 100))
+            ->and($eventBus->addListener('event.foo', $listener2, 50))
+            ->and($eventBus->addListener('event.bar', $listener3))
+            ->then()
+                ->boolean($eventBus->hasListeners('event.unknow'))
+                    ->isFalse()
+                ->boolean($eventBus->hasListeners('event.foo'))
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners())
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test RemoveListener method.
+     */
+    public function testRemoveListener()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener2 = function (Event $event) {
+                return $event->name();
+            })
+            ->and($listener3 = function (Event $event) {
+
+            })
+            ->and($eventBus->addListener('event.foo', $listener1, 100))
+            ->and($eventBus->addListener('event.foo', $listener2, 50))
+            ->and($eventBus->addListener('event.bar', $listener3))
+            ->then()
+                ->boolean($eventBus->hasListeners('event.foo'))
+                    ->isTrue()
+                ->and()
+                ->when($eventBus->removeListener('event.foo', $listener1))
+                ->then()
+                    ->boolean($eventBus->hasListeners('event.foo'))
+                        ->isTrue()
+                ->and()
+                ->when($eventBus->removeListener('event.unknow', $listener2))
+                ->and($eventBus->removeListener('event.foo', $listener2))
+                ->then()
+                    ->boolean($eventBus->hasListeners('event.foo'))
+                        ->isFalse()
+        ;
+    }
+
+    /**
+     * Test AddSubscriber method.
+     */
+    public function testAddSubscriber()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($eventBus->addSubscriber(new UserEventSubscriber()))
+            ->then()
+                ->boolean($eventBus->hasListeners())
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test RemoveSubscriber method.
+     */
+    public function testRemoveSubscriber()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->and($subscriber = new UserEventSubscriber())
+            ->and($eventBus->addSubscriber($subscriber))
+            ->then()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                    ->isTrue()
+                ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                    ->isTrue()
+                ->and()
+                ->when($eventBus->removeSubscriber($subscriber))
+                ->then()
+                    ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                        ->isFalse()
+                    ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                        ->isFalse()
+                    ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                        ->isFalse()
         ;
     }
 }

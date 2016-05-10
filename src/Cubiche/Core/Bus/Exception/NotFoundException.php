@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Exception;
 
 use RuntimeException;
@@ -117,5 +116,21 @@ class NotFoundException extends RuntimeException
     public static function queryNameForQuery($query, Exception $cause = null)
     {
         return self::forQuery($query, 'query name', $cause);
+    }
+
+    /**
+     * @param mixed          $object
+     * @param string         $method
+     * @param Exception|null $cause
+     *
+     * @return NotFoundException
+     */
+    public static function methodForObject($object, $method, Exception $cause = null)
+    {
+        return new static(sprintf(
+            'Not found a method with name `%s` for a given object of type %s',
+            $method,
+            is_object($object) ? get_class($object) : gettype($object)
+        ), 0, $cause);
     }
 }

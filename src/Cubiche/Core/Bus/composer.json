@@ -40,7 +40,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Core\\MessageBus\\": ""
+            "Cubiche\\Core\\Bus\\": ""
         }
     }
 }

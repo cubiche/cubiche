@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus;
 
 use Cubiche\Core\Collections\SortedArrayCollection;
@@ -18,11 +17,11 @@ use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 
 /**
- * MessageBus class.
+ * Bus class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MessageBus implements MessageBusInterface
+class Bus implements BusInterface
 {
     /**
      * @var SortedArrayCollection
@@ -30,7 +29,7 @@ class MessageBus implements MessageBusInterface
     protected $middlewares;
 
     /**
-     * MessageBus constructor.
+     * Bus constructor.
      *
      * @param MiddlewareInterface[] $middlewares
      */

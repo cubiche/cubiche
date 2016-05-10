@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
@@ -16,6 +15,7 @@ use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\CommandName\DefaultResolver as CommandNameDefaultResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\Resolver as HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\MethodName\DefaultResolver as MethodNameDefaultResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\MethodName\MethodWithShortObjectNameResolver;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommandHandler;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\LogoutUserCommand;
@@ -54,12 +54,28 @@ class ResolverTests extends TestCase
                 $resolver = new HandlerClassResolver(
                     new CommandNameDefaultResolver(),
                     new MethodNameDefaultResolver(),
+                    new InMemoryLocator([])
+                )
+            )
+            ->and($resolver->addHandler(LoginUserCommand::class, new LoginUserCommandHandler()))
+            ->then()
+                ->exception(function () use ($resolver) {
+                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
+                })
+                ->isInstanceOf(NotFoundException::class)
+        ;
+
+        $this
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new CommandNameDefaultResolver(),
+                    new MethodWithShortObjectNameResolver(),
                     new InMemoryLocator([LoginUserCommand::class => new LoginUserCommandHandler()])
                 )
             )
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
+                    $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

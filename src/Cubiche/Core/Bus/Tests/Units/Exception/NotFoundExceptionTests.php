@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Exception;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
@@ -95,6 +94,19 @@ class NotFoundExceptionTests extends TestCase
     {
         $this
             ->given($exception = NotFoundException::queryNameForQuery('bar'))
+            ->then()
+                ->variable($exception->getPrevious())
+                    ->isNull()
+        ;
+    }
+
+    /**
+     * Test methodForObject method.
+     */
+    public function testMethodForObject()
+    {
+        $this
+            ->given($exception = NotFoundException::methodForObject('foo', 'bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()

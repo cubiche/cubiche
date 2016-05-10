@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Command;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\MessageBus;
+use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\CommandHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
@@ -28,7 +27,7 @@ use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CommandBus extends MessageBus
+class CommandBus extends Bus
 {
     /**
      * @var CommandHandlerMiddleware

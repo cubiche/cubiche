@@ -7,20 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units;
 
-use Cubiche\Core\Bus\MessageBus;
+use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
 
 /**
- * MessageBusTests class.
+ * BusTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MessageBusTests extends TestCase
+class BusTests extends TestCase
 {
     /**
      * Test create with invalid middleware.
@@ -31,7 +30,7 @@ class MessageBusTests extends TestCase
             ->given($middleware = new LockingMiddleware())
             ->then()
                 ->exception(function () use ($middleware) {
-                    new MessageBus([$middleware, new \StdClass()]);
+                    new Bus([$middleware, new \StdClass()]);
                 })
                 ->isInstanceOf(InvalidMiddlewareException::class)
         ;
@@ -44,7 +43,7 @@ class MessageBusTests extends TestCase
     {
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($messageBus = new MessageBus([12 => $middleware]))
+            ->and($messageBus = new Bus([12 => $middleware]))
             ->then()
                 ->exception(function () use ($messageBus, $middleware) {
                     $messageBus->addMiddleware($middleware, 12);
@@ -60,7 +59,7 @@ class MessageBusTests extends TestCase
     {
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($messageBus = new MessageBus([12 => $middleware]))
+            ->and($messageBus = new Bus([12 => $middleware]))
             ->when($result = $messageBus->dispatch(new FooMessage()))
             ->then()
                 ->variable($result)
