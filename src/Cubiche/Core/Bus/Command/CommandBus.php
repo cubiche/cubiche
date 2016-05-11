@@ -15,11 +15,11 @@ use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\CommandHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\CommandName\ChainResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\CommandName\DefaultResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\CommandName\CommandNamedResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\Resolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\MethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand\ChainResolver as NameOfCommandChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand\FromCommandNamedResolver;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 
 /**
@@ -41,12 +41,12 @@ class CommandBus extends Bus
     {
         return new static([
             0 => new LockingMiddleware(),
-            100 => new CommandHandlerMiddleware(new Resolver(
-                new ChainResolver([
-                    new DefaultResolver(),
-                    new CommandNamedResolver(),
+            100 => new CommandHandlerMiddleware(new HandlerClassResolver(
+                new NameOfCommandChainResolver([
+                    new FromCommandNamedResolver(),
+                    new FromClassNameResolver(),
                 ]),
-                new MethodWithShortObjectNameResolver(),
+                new MethodWithShortObjectNameResolver('Command'),
                 new InMemoryLocator()
             )),
         ]);

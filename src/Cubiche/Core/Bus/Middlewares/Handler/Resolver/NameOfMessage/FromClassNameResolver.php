@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,15 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Query;
+namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\MessageInterface;
 
 /**
- * Query interface.
+ * FromClassNameResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryInterface extends MessageInterface
+class FromClassNameResolver implements ResolverInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function resolve(MessageInterface $message)
+    {
+        return get_class($message);
+    }
 }

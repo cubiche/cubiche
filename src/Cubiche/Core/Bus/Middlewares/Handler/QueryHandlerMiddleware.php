@@ -11,31 +11,21 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler;
 
 use Cubiche\Core\Bus\Query\QueryInterface;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\ResolverInterface;
 
 /**
  * QueryHandlerMiddleware class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class QueryHandlerMiddleware extends CommandHandlerMiddleware
+class QueryHandlerMiddleware extends MessageHandlerMiddleware
 {
     /**
      * {@inheritdoc}
      */
     public function handle($query, callable $next)
     {
-        if (!$query instanceof QueryInterface) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'The object must be an instance of %s. Instance of %s given',
-                    QueryInterface::class,
-                    get_class($query)
-                )
-            );
-        }
-
-        $handler = $this->handlerResolver->resolve($query);
+        $this->ensureTypeOfMessage($query);
+        $handler = $this->handlerClassResolver->resolve($query);
 
         // get the query result
         $returnValue = $handler($query);
@@ -48,10 +38,18 @@ class QueryHandlerMiddleware extends CommandHandlerMiddleware
     }
 
     /**
-     * @return ResolverInterface
+     * {@inheritdoc}
      */
-    public function resolver()
+    protected function ensureTypeOfMessage($message)
     {
-        return parent::resolver();
+        if (!$message instanceof QueryInterface) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'The object must be an instance of %s. Instance of %s given',
+                    QueryInterface::class,
+                    get_class($message)
+                )
+            );
+        }
     }
 }

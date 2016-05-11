@@ -8,31 +8,28 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Middlewares\Handler\Locator;
+namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
+use Cubiche\Core\Bus\MessageInterface;
+use InvalidArgumentException;
 
 /**
- * Locator interface.
+ * Resolver interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface LocatorInterface
+interface ResolverInterface
 {
     /**
-     * Retrieves the handler for a specified name of message.
+     * Resolve the name of message for a given message.
      *
-     * @param string $nameOfMessage
+     * @param MessageInterface $message
      *
-     * @return object
+     * @return string
      *
+     * @throws InvalidArgumentException
      * @throws NotFoundException
      */
-    public function locate($nameOfMessage);
-
-    /**
-     * @param string $nameOfMessage
-     * @param mixed  $handler
-     */
-    public function addHandler($nameOfMessage, $handler);
+    public function resolve(MessageInterface $message);
 }

@@ -20,61 +20,21 @@ use Exception;
 class NotFoundException extends RuntimeException
 {
     /**
-     * Creates an exception for a not found commandName/methodName or handler.
+     * Creates an exception for a not found message name, method name or handler for a given message.
      *
-     * @param mixed          $command
      * @param string         $type
+     * @param mixed          $message
      * @param Exception|null $cause
      *
      * @return NotFoundException
      */
-    protected static function forCommand($command, $type, Exception $cause = null)
+    protected static function notFound($type, $message, Exception $cause = null)
     {
         return new static(sprintf(
-            'Not found a %s for a given command of type %s',
+            'Not found a %s for a given object of type %s',
             $type,
-            is_object($command) ? get_class($command) : gettype($command)
+            is_object($message) ? get_class($message) : gettype($message)
         ), 0, $cause);
-    }
-
-    /**
-     * Creates an exception for a not found queryName/methodName or handler.
-     *
-     * @param mixed          $query
-     * @param string         $type
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    protected static function forQuery($query, $type, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'Not found a %s for a given query of type %s',
-            $type,
-            is_object($query) ? get_class($query) : gettype($query)
-        ), 0, $cause);
-    }
-
-    /**
-     * @param mixed          $command
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    public static function commandNameForCommand($command, Exception $cause = null)
-    {
-        return self::forCommand($command, 'command name', $cause);
-    }
-
-    /**
-     * @param mixed          $command
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    public static function methodNameForCommand($command, Exception $cause = null)
-    {
-        return self::forCommand($command, 'method name', $cause);
     }
 
     /**
@@ -83,11 +43,44 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function handlerFor($object, Exception $cause = null)
+    public static function commandNameForObject($object, Exception $cause = null)
+    {
+        return self::notFound('command name', $object, $cause);
+    }
+
+    /**
+     * @param mixed          $object
+     * @param Exception|null $cause
+     *
+     * @return NotFoundException
+     */
+    public static function methodNameForObject($object, Exception $cause = null)
+    {
+        return self::notFound('method name', $object, $cause);
+    }
+
+    /**
+     * @param mixed          $object
+     * @param Exception|null $cause
+     *
+     * @return NotFoundException
+     */
+    public static function queryNameForObject($object, Exception $cause = null)
+    {
+        return self::notFound('query name', $object, $cause);
+    }
+
+    /**
+     * @param string         $messageName
+     * @param Exception|null $cause
+     *
+     * @return NotFoundException
+     */
+    public static function handlerFor($messageName, Exception $cause = null)
     {
         return new static(sprintf(
-            'Not found a handler for a given object of type %s',
-            is_object($object) ? get_class($object) : gettype($object)
+            'Not found a handler for a given message named %s',
+            $messageName
         ), 0, $cause);
     }
 
@@ -108,17 +101,6 @@ class NotFoundException extends RuntimeException
     }
 
     /**
-     * @param mixed          $query
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    public static function queryNameForQuery($query, Exception $cause = null)
-    {
-        return self::forQuery($query, 'query name', $cause);
-    }
-
-    /**
      * @param mixed          $object
      * @param string         $method
      * @param Exception|null $cause
@@ -127,10 +109,6 @@ class NotFoundException extends RuntimeException
      */
     public static function methodForObject($object, $method, Exception $cause = null)
     {
-        return new static(sprintf(
-            'Not found a method with name `%s` for a given object of type %s',
-            $method,
-            is_object($object) ? get_class($object) : gettype($object)
-        ), 0, $cause);
+        return self::notFound('method with name `'.$method.'`', $object, $cause);
     }
 }

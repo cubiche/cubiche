@@ -10,21 +10,21 @@
  */
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler;
 
-use Cubiche\Core\Bus\Middlewares\Handler\CommandHandlerMiddleware;
+use Cubiche\Core\Bus\Middlewares\Handler\QueryHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver as HandlerMethodNameDefaultResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommandHandler;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
+use Cubiche\Core\Bus\Tests\Fixtures\Query\NearbyVenuesQuery;
+use Cubiche\Core\Bus\Tests\Fixtures\Query\VenuesQueryHandler;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
- * CommandHandlerMiddlewareTests class.
+ * QueryHandlerMiddlewareTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CommandHandlerMiddlewareTests extends TestCase
+class QueryHandlerMiddlewareTests extends TestCase
 {
     /**
      * Test handle method.
@@ -35,19 +35,22 @@ class CommandHandlerMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new HandlerMethodNameDefaultResolver(),
-                    new InMemoryLocator([LoginUserCommand::class => new LoginUserCommandHandler()])
+                    new MethodWithShortObjectNameResolver('Query'),
+                    new InMemoryLocator()
                 )
             )
-            ->and($middleware = new CommandHandlerMiddleware($resolver))
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->and($callable = function (LoginUserCommand $command) {
-                $command->setEmail('info@cubiche.org');
+            ->and($middleware = new QueryHandlerMiddleware($resolver))
+            ->and($query = new NearByVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
+            ->and($queryHandler = new VenuesQueryHandler())
+            ->and($resolver->addHandler(NearByVenuesQuery::class, $queryHandler))
+            ->and($callable = function (array $result) {
+                return json_encode($result);
             })
-            ->when($middleware->handle($command, $callable))
+            ->when($result = $middleware->handle($query, $callable))
             ->then()
-                ->string($command->email())
-                    ->isEqualTo('info@cubiche.org')
+                ->string($result)
+                    ->isNotEmpty()
+                    ->isEqualTo(json_encode($queryHandler->nearbyVenues($query)))
                 ->exception(function () use ($middleware, $callable) {
                     $middleware->handle(new \StdClass(), $callable);
                 })->isInstanceOf(\InvalidArgumentException::class)
@@ -63,11 +66,11 @@ class CommandHandlerMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new HandlerMethodNameDefaultResolver(),
-                    new InMemoryLocator([LoginUserCommand::class => new LoginUserCommandHandler()])
+                    new MethodWithShortObjectNameResolver('Query'),
+                    new InMemoryLocator([NearByVenuesQuery::class => new VenuesQueryHandler()])
                 )
             )
-            ->and($middleware = new CommandHandlerMiddleware($resolver))
+            ->and($middleware = new QueryHandlerMiddleware($resolver))
             ->when($result = $middleware->resolver())
             ->then()
                 ->object($result)

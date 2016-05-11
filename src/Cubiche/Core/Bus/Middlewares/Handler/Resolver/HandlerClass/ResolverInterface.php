@@ -8,12 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
-use Cubiche\Core\Bus\Command\CommandInterface;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
+use Cubiche\Core\Bus\MessageInterface;
 use InvalidArgumentException;
 
 /**
@@ -24,9 +23,9 @@ use InvalidArgumentException;
 interface ResolverInterface
 {
     /**
-     * Resolve the handler class from a given command.
+     * Resolve the handler class from a given message.
      *
-     * @param CommandInterface $command
+     * @param MessageInterface $message
      *
      * @return callable
      *
@@ -34,7 +33,7 @@ interface ResolverInterface
      * @throws NotFoundException
      * @throws InvalidResolverException
      */
-    public function resolve(CommandInterface $command);
+    public function resolve(MessageInterface $message);
 
     /**
      * @param string $className

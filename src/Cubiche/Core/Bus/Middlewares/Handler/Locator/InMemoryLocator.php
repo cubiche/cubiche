@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Middlewares\Handler\Locator;
 
 use Cubiche\Core\Collections\ArrayCollection;
@@ -28,26 +27,26 @@ class InMemoryLocator implements LocatorInterface
     /**
      * InMemoryLocator constructor.
      *
-     * @param array $classNameToHandlerMap
+     * @param array $nameOfMessageToHandlerMap
      */
-    public function __construct(array $classNameToHandlerMap = [])
+    public function __construct(array $nameOfMessageToHandlerMap = [])
     {
         $this->handlers = new ArrayCollection();
-        foreach ($classNameToHandlerMap as $className => $handler) {
-            $this->addHandler($className, $handler);
+        foreach ($nameOfMessageToHandlerMap as $nameOfMessage => $handler) {
+            $this->addHandler($nameOfMessage, $handler);
         }
     }
 
     /**
-     * @param string $className
+     * @param string $nameOfMessage
      * @param object $handler
      */
-    public function addHandler($className, $handler)
+    public function addHandler($nameOfMessage, $handler)
     {
-        if (!is_string($className)) {
+        if (!is_string($nameOfMessage)) {
             throw new \InvalidArgumentException(sprintf(
-                'Expected an string as a command/query name. Instance of %s given',
-                is_object($className) ? get_class($className) : gettype($className)
+                'Expected an string as a name of message. Instance of %s given',
+                is_object($nameOfMessage) ? get_class($nameOfMessage) : gettype($nameOfMessage)
             ));
         }
 
@@ -58,18 +57,18 @@ class InMemoryLocator implements LocatorInterface
             ));
         }
 
-        $this->handlers->set($className, $handler);
+        $this->handlers->set($nameOfMessage, $handler);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function locate($className)
+    public function locate($nameOfMessage)
     {
-        if (!$this->handlers->containsKey($className)) {
-            throw NotFoundException::handlerFor($className);
+        if (!$this->handlers->containsKey($nameOfMessage)) {
+            throw NotFoundException::handlerFor($nameOfMessage);
         }
 
-        return $this->handlers->get($className);
+        return $this->handlers->get($nameOfMessage);
     }
 }

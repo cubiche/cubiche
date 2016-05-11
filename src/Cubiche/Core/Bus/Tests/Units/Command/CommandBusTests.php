@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Command;
 
 use Cubiche\Core\Bus\Command\CommandBus;
@@ -16,7 +15,6 @@ use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\EncodePasswordCommand;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\EncodePasswordHandler;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
-use Cubiche\Core\Bus\Tests\Fixtures\Query\PublishedPostsQuery;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
@@ -36,7 +34,7 @@ class CommandBusTests extends TestCase
             ->and($commandBus = new CommandBus([$middleware]))
             ->then()
                 ->exception(function () use ($commandBus) {
-                    $commandBus->dispatch(new PublishedPostsQuery(new \DateTime()));
+                    $commandBus->dispatch(new EncodePasswordCommand('plainpassword'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

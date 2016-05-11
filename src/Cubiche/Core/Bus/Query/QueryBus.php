@@ -15,11 +15,11 @@ use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\QueryHandlerMiddleware;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\Resolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\MethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\QueryName\ChainResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\QueryName\DefaultResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\QueryName\QueryNamedResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\ChainResolver as NameOfQueryChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\FromQueryNamedResolver;
 
 /**
  * QueryBus class.
@@ -39,10 +39,10 @@ class QueryBus extends Bus
     public static function create()
     {
         return new static([
-            100 => new QueryHandlerMiddleware(new Resolver(
-                new ChainResolver([
-                    new QueryNamedResolver(),
-                    new DefaultResolver(),
+            100 => new QueryHandlerMiddleware(new HandlerClassResolver(
+                new NameOfQueryChainResolver([
+                    new FromQueryNamedResolver(),
+                    new FromClassNameResolver(),
                 ]),
                 new MethodWithShortObjectNameResolver('Query'),
                 new InMemoryLocator()

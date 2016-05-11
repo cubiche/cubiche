@@ -31,13 +31,13 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test commandNameForCommand method.
+     * Test commandNameForObject method.
      */
-    public function testCommandNameForCommand()
+    public function testCommandNameForObject()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = NotFoundException::commandNameForCommand('foo', $cause))
+            ->when($exception = NotFoundException::commandNameForObject('foo', $cause))
             ->then()
                 ->object($exception)
                     ->isInstanceOf(NotFoundException::class)
@@ -49,12 +49,12 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test methodNameForCommand method.
+     * Test methodNameForObject method.
      */
-    public function testMethodNameForCommand()
+    public function testMethodNameForObject()
     {
         $this
-            ->given($exception = NotFoundException::methodNameForCommand('bar'))
+            ->given($exception = NotFoundException::methodNameForObject('bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
@@ -88,12 +88,12 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test queryNameForQuery method.
+     * Test queryNameForObject method.
      */
-    public function testQueryNameForQuery()
+    public function testQueryNameForObject()
     {
         $this
-            ->given($exception = NotFoundException::queryNameForQuery('bar'))
+            ->given($exception = NotFoundException::queryNameForObject('bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,15 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Query;
+namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand;
 
-use Cubiche\Core\Bus\MessageNamedInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ResolverInterface as NameOfMessageResolverInterface;
 
 /**
- * QueryNamed interface.
+ * Resolver interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryNamedInterface extends QueryInterface, MessageNamedInterface
+interface ResolverInterface extends NameOfMessageResolverInterface
 {
 }

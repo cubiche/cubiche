@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,15 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Query;
-
-use Cubiche\Core\Bus\MessageNamedInterface;
+namespace Cubiche\Core\Bus;
 
 /**
- * QueryNamed interface.
+ * MessageNamed interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryNamedInterface extends QueryInterface, MessageNamedInterface
+interface MessageNamedInterface extends MessageInterface
 {
+    /**
+     * Return the message name.
+     *
+     * @return string
+     */
+    public function name();
 }
