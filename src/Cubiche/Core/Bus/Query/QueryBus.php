@@ -81,11 +81,13 @@ class QueryBus extends Bus
             return;
         }
 
-        foreach ($this->middlewares as $priority => $middleware) {
-            if ($middleware instanceof QueryHandlerMiddleware) {
-                $this->queryHandlerMiddleware = $middleware;
+        foreach ($this->middlewares as $priority => $collection) {
+            foreach ($collection as $middleware) {
+                if ($middleware instanceof QueryHandlerMiddleware) {
+                    $this->queryHandlerMiddleware = $middleware;
 
-                return;
+                    return;
+                }
             }
         }
 

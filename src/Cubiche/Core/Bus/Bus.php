@@ -10,11 +10,12 @@
  */
 namespace Cubiche\Core\Bus;
 
-use Cubiche\Core\Collections\SortedArrayCollection;
-use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
+use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Delegate\Delegate;
+use Cubiche\Core\Specification\Criteria;
 
 /**
  * Bus class.
@@ -35,7 +36,7 @@ class Bus implements BusInterface
      */
     public function __construct(array $middlewares = array())
     {
-        $this->middlewares = new SortedArrayCollection([], new Comparator());
+        $this->middlewares = new SortedArrayCollection([]);
         foreach ($middlewares as $priority => $middleware) {
             if (!$middleware instanceof MiddlewareInterface) {
                 throw InvalidMiddlewareException::forUnknownValue($middleware);
@@ -53,13 +54,15 @@ class Bus implements BusInterface
      */
     public function addMiddleware(MiddlewareInterface $middleware, $priority = 0)
     {
-        if ($this->middlewares->containsKey($priority)) {
-            throw new \InvalidArgumentException(
-                sprintf('There is another middleware with the same priority %s', $priority)
-            );
+        if (!$this->middlewares->containsKey($priority)) {
+            $this->middlewares->set($priority, new ArrayCollection());
         }
 
-        $this->middlewares->set($priority, $middleware);
+        /** @var ArrayCollection $middlewares */
+        $middlewares = $this->middlewares->get($priority);
+        if ($middlewares->findOne(Criteria::eq($middleware)) === null) {
+            $middlewares->add($middleware);
+        }
     }
 
     /**
@@ -77,7 +80,13 @@ class Bus implements BusInterface
      */
     private function chainedExecution()
     {
-        $middlewares = $this->middlewares->toArray();
+        $middlewares = [];
+        foreach ($this->middlewares as $priority => $collection) {
+            foreach ($collection as $middleware) {
+                $middlewares[] = $middleware;
+            }
+        }
+
         $next = Delegate::fromClosure(function ($message) {
             // the final middleware return the same message
             return $message;

@@ -68,6 +68,11 @@ interface ArrayCollectionInterface extends CollectionInterface, \ArrayAccess
     public function sort(ComparatorInterface $criteria = null);
 
     /**
+     * @param ComparatorInterface $criteria
+     */
+    public function sortByKey(ComparatorInterface $criteria = null);
+
+    /**
      * Gets keys collection.
      *
      * @return ArrayCollectionInterface

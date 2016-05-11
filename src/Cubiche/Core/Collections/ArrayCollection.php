@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -184,6 +183,20 @@ class ArrayCollection implements ArrayCollectionInterface
         }
 
         uasort($this->items, function ($a, $b) use ($criteria) {
+            return $criteria->compare($a, $b);
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sortByKey(ComparatorInterface $criteria = null)
+    {
+        if ($criteria === null) {
+            $criteria = new Comparator();
+        }
+
+        uksort($this->items, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
     }

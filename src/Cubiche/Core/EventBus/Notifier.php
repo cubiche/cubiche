@@ -13,6 +13,7 @@ namespace Cubiche\Core\EventBus;
 use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Collections\SortedArrayCollection;
 use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ReverseComparator;
 
 /**
  * Notifier class.
@@ -161,7 +162,7 @@ class Notifier
     public function addListener($eventName, callable $listener, $priority = 0)
     {
         if (!$this->listeners->containsKey($eventName)) {
-            $this->listeners->set($eventName, new SortedArrayCollection([], new Comparator()));
+            $this->listeners->set($eventName, new SortedArrayCollection([], new ReverseComparator(new Comparator())));
         }
 
         /** @var SortedArrayCollection $sortedListeners */

@@ -35,22 +35,22 @@ class BusTests extends TestCase
                 ->isInstanceOf(InvalidMiddlewareException::class)
         ;
     }
-
-    /**
-     * Test add middleware.
-     */
-    public function testAddMiddleware()
-    {
-        $this
-            ->given($middleware = new LockingMiddleware())
-            ->and($messageBus = new Bus([12 => $middleware]))
-            ->then()
-                ->exception(function () use ($messageBus, $middleware) {
-                    $messageBus->addMiddleware($middleware, 12);
-                })
-                ->isInstanceOf(\InvalidArgumentException::class)
-        ;
-    }
+//
+//    /**
+//     * Test add middleware.
+//     */
+//    public function testAddMiddleware()
+//    {
+//        $this
+//            ->given($middleware = new LockingMiddleware())
+//            ->and($messageBus = new Bus([12 => $middleware]))
+//            ->then()
+//                ->exception(function () use ($messageBus, $middleware) {
+//                    $messageBus->addMiddleware($middleware, 12);
+//                })
+//                ->isInstanceOf(\InvalidArgumentException::class)
+//        ;
+//    }
 
     /**
      * Test dispatch method.

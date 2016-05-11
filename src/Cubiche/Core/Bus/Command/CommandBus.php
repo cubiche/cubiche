@@ -83,11 +83,13 @@ class CommandBus extends Bus
             return;
         }
 
-        foreach ($this->middlewares as $priority => $middleware) {
-            if ($middleware instanceof CommandHandlerMiddleware) {
-                $this->commandHandlerMiddleware = $middleware;
+        foreach ($this->middlewares as $priority => $collection) {
+            foreach ($collection as $middleware) {
+                if ($middleware instanceof CommandHandlerMiddleware) {
+                    $this->commandHandlerMiddleware = $middleware;
 
-                return;
+                    return;
+                }
             }
         }
 

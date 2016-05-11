@@ -71,11 +71,13 @@ class EventBus extends Bus
             return;
         }
 
-        foreach ($this->middlewares as $priority => $middleware) {
-            if ($middleware instanceof EventDispatcherMiddleware) {
-                $this->dispatcherMiddleware = $middleware;
+        foreach ($this->middlewares as $priority => $collection) {
+            foreach ($collection as $middleware) {
+                if ($middleware instanceof EventDispatcherMiddleware) {
+                    $this->dispatcherMiddleware = $middleware;
 
-                return;
+                    return;
+                }
             }
         }
 
