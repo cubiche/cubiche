@@ -8,12 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\EventDispatcher;
 
 use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Collections\SortedArrayCollection;
 use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ReverseComparator;
 
 /**
  * EventDispatcher class.
@@ -135,7 +135,7 @@ class EventDispatcher implements EventDispatcherInterface
     public function addListener($eventName, callable $listener, $priority = 0)
     {
         if (!$this->listeners->containsKey($eventName)) {
-            $this->listeners->set($eventName, new SortedArrayCollection([], new Comparator()));
+            $this->listeners->set($eventName, new SortedArrayCollection([], new ReverseComparator(new Comparator())));
         }
 
         /** @var SortedArrayCollection $sortedListeners */
