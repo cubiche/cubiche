@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Domain\Event;
 
-use Cubiche\Core\EventBus\Event;
+use Cubiche\Core\Bus\Event\Event;
 use DateTime;
 
 /**

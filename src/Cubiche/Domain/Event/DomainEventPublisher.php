@@ -8,10 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Event;
 
-use Cubiche\Core\EventBus\EventBus;
+use Cubiche\Core\Bus\Event\EventBus;
 
 /**
  * DomainEventPublisher class.
@@ -57,7 +56,7 @@ class DomainEventPublisher
      */
     public static function publish(DomainEventInterface $event)
     {
-        static::instance()->notify($event);
+        static::instance()->dispatch($event);
     }
 
     /**
@@ -71,9 +70,9 @@ class DomainEventPublisher
     /**
      * @param DomainEventInterface $event
      */
-    protected function notify(DomainEventInterface $event)
+    protected function dispatch(DomainEventInterface $event)
     {
-        $this->eventBus->notify($event);
+        $this->eventBus->dispatch($event);
     }
 
     /**

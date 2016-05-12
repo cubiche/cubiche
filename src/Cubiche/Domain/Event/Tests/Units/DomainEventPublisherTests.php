@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Event\Tests\Units;
 
-use Cubiche\Core\EventBus\EventBus;
+use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Domain\Event\DomainEventPublisher;
 use Cubiche\Domain\Event\Tests\Fixtures\CounterEventSubscriber;
 use Cubiche\Domain\Event\Tests\Fixtures\DecrementCounterEvent;

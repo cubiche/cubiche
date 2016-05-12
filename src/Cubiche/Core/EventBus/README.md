@@ -1,2 +1,0 @@
-# Cubiche - EventBus
-[![Build Status](https://travis-ci.org/cubiche/event-bus.svg?branch=master)](https://travis-ci.org/cubiche/event-bus) [![Coverage Status](https://coveralls.io/repos/github/cubiche/event-bus/badge.svg?branch=master)](https://coveralls.io/github/cubiche/event-bus?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/event-bus/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/event-bus/?branch=master) 
