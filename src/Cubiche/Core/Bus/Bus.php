@@ -14,6 +14,8 @@ use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Specification\Criteria;
 
@@ -36,7 +38,7 @@ class Bus implements BusInterface
      */
     public function __construct(array $middlewares = array())
     {
-        $this->middlewares = new SortedArrayCollection([]);
+        $this->middlewares = new SortedArrayCollection([], new ReverseComparator(new Comparator()));
         foreach ($middlewares as $priority => $middleware) {
             if (!$middleware instanceof MiddlewareInterface) {
                 throw InvalidMiddlewareException::forUnknownValue($middleware);
@@ -47,10 +49,11 @@ class Bus implements BusInterface
     }
 
     /**
+     * Adds a middleware to the middleware list. The higher priority value, the earlier a middleware
+     * will be triggered in the chain (defaults to 0).
+     *
      * @param MiddlewareInterface $middleware
      * @param int                 $priority
-     *
-     * @throws \InvalidArgumentException
      */
     public function addMiddleware(MiddlewareInterface $middleware, $priority = 0)
     {
@@ -63,6 +66,70 @@ class Bus implements BusInterface
         if ($middlewares->findOne(Criteria::eq($middleware)) === null) {
             $middlewares->add($middleware);
         }
+    }
+
+    /**
+     * Add a middleware before a given middleware.
+     *
+     * @param MiddlewareInterface $middleware
+     * @param MiddlewareInterface $target
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addMiddlewareBefore(MiddlewareInterface $middleware, MiddlewareInterface $target)
+    {
+        $priority = $this->middlewarePriority($target);
+        if ($priority === null) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'There is not a middleware of type %s registered.',
+                    get_class($target)
+                )
+            );
+        }
+
+        $this->addMiddleware($middleware, $priority + 1);
+    }
+
+    /**
+     * Add a middleware before a given middleware.
+     *
+     * @param MiddlewareInterface $middleware
+     * @param MiddlewareInterface $target
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function addMiddlewareAfter(MiddlewareInterface $middleware, MiddlewareInterface $target)
+    {
+        $priority = $this->middlewarePriority($target);
+        if ($priority === null) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'There is not a middleware of type %s registered.',
+                    get_class($target)
+                )
+            );
+        }
+
+        $this->addMiddleware($middleware, $priority - 1);
+    }
+
+    /**
+     * @param MiddlewareInterface $middleware
+     *
+     * @return int|null
+     */
+    protected function middlewarePriority(MiddlewareInterface $middleware)
+    {
+        /** @var ArrayCollection $collection */
+        foreach ($this->middlewares as $priority => $collection) {
+            $targetMiddleware = $collection->findOne(Criteria::eq($middleware));
+            if ($targetMiddleware !== null) {
+                return $priority;
+            }
+        }
+
+        return;
     }
 
     /**

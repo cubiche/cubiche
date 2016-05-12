@@ -35,7 +35,7 @@ class EventBus extends Bus
     public static function create()
     {
         return new static([
-            0 => new LockingMiddleware(),
+            250 => new LockingMiddleware(),
             100 => new EventDispatcherMiddleware(new EventDispatcher()),
         ]);
     }
@@ -82,6 +82,16 @@ class EventBus extends Bus
         }
 
         throw NotFoundException::middlewareOfType(EventDispatcherMiddleware::class);
+    }
+
+    /**
+     * @return EventDispatcherMiddleware
+     */
+    public function dispatcherMiddleware()
+    {
+        $this->ensureEventDispatcherMiddleware();
+
+        return $this->dispatcherMiddleware;
     }
 
     /**

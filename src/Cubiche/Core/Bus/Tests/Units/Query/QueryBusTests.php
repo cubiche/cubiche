@@ -60,7 +60,7 @@ class QueryBusTests extends TestCase
 
         $this
             ->given($queryBus = QueryBus::create())
-            ->and($queryBus->addMiddleware(new JsonEncodeMiddleware(), 150))
+            ->and($queryBus->addMiddlewareAfter(new JsonEncodeMiddleware(), $queryBus->handlerMiddleware()))
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
             ->and($queryBus->addHandler($query->name(), $queryHandler))

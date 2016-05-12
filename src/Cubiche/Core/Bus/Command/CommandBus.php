@@ -40,7 +40,7 @@ class CommandBus extends Bus
     public static function create()
     {
         return new static([
-            0 => new LockingMiddleware(),
+            250 => new LockingMiddleware(),
             100 => new CommandHandlerMiddleware(new HandlerClassResolver(
                 new NameOfCommandChainResolver([
                     new FromCommandNamedResolver(),
@@ -94,6 +94,16 @@ class CommandBus extends Bus
         }
 
         throw NotFoundException::middlewareOfType(CommandHandlerMiddleware::class);
+    }
+
+    /**
+     * @return CommandHandlerMiddleware
+     */
+    public function handlerMiddleware()
+    {
+        $this->ensureCommandHandlerMiddleware();
+
+        return $this->commandHandlerMiddleware;
     }
 
     /**

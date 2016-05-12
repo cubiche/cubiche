@@ -12,6 +12,7 @@ namespace Cubiche\Core\Bus\Tests\Units\Event;
 use Cubiche\Core\Bus\Event\Event;
 use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
+use Cubiche\Core\Bus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
 use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
@@ -77,6 +78,20 @@ class EventBusTests extends TestCase
                     $eventBus->dispatch(new FooMessage());
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test dispatcherMiddleware method.
+     */
+    public function testDispatcherMiddleware()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->when($middleware = $eventBus->dispatcherMiddleware())
+            ->then()
+                ->object($middleware)
+                    ->isInstanceOf(EventDispatcherMiddleware::class)
         ;
     }
 

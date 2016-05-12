@@ -11,6 +11,7 @@ namespace Cubiche\Core\Bus\Tests\Units\Command;
 
 use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
+use Cubiche\Core\Bus\Middlewares\Handler\CommandHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\EncodePasswordCommand;
 use Cubiche\Core\Bus\Tests\Fixtures\Command\EncodePasswordHandler;
@@ -68,6 +69,20 @@ class CommandBusTests extends TestCase
                     $commandBus->dispatch(new FooMessage());
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test handlerMiddleware method.
+     */
+    public function testHandlerMiddleware()
+    {
+        $this
+            ->given($commandBus = CommandBus::create())
+            ->when($middleware = $commandBus->handlerMiddleware())
+            ->then()
+                ->object($middleware)
+                    ->isInstanceOf(CommandHandlerMiddleware::class)
         ;
     }
 }

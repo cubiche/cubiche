@@ -39,7 +39,7 @@ class QueryBus extends Bus
     public static function create()
     {
         return new static([
-            100 => new QueryHandlerMiddleware(new HandlerClassResolver(
+            250 => new QueryHandlerMiddleware(new HandlerClassResolver(
                 new NameOfQueryChainResolver([
                     new FromQueryNamedResolver(),
                     new FromClassNameResolver(),
@@ -92,6 +92,16 @@ class QueryBus extends Bus
         }
 
         throw NotFoundException::middlewareOfType(QueryHandlerMiddleware::class);
+    }
+
+    /**
+     * @return QueryHandlerMiddleware
+     */
+    public function handlerMiddleware()
+    {
+        $this->ensureQueryHandlerMiddleware();
+
+        return $this->queryHandlerMiddleware;
     }
 
     /**

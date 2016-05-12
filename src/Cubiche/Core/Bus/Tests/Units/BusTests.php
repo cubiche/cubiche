@@ -35,22 +35,6 @@ class BusTests extends TestCase
                 ->isInstanceOf(InvalidMiddlewareException::class)
         ;
     }
-//
-//    /**
-//     * Test add middleware.
-//     */
-//    public function testAddMiddleware()
-//    {
-//        $this
-//            ->given($middleware = new LockingMiddleware())
-//            ->and($messageBus = new Bus([12 => $middleware]))
-//            ->then()
-//                ->exception(function () use ($messageBus, $middleware) {
-//                    $messageBus->addMiddleware($middleware, 12);
-//                })
-//                ->isInstanceOf(\InvalidArgumentException::class)
-//        ;
-//    }
 
     /**
      * Test dispatch method.
@@ -59,11 +43,59 @@ class BusTests extends TestCase
     {
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($messageBus = new Bus([12 => $middleware]))
-            ->when($result = $messageBus->dispatch(new FooMessage()))
+            ->and($bus = new Bus([12 => $middleware]))
+            ->when($result = $bus->dispatch(new FooMessage()))
             ->then()
                 ->variable($result)
                     ->isNull()
+        ;
+    }
+
+    /**
+     * Test addMiddlewareBefore method.
+     */
+    public function testAddMiddlewareBefore()
+    {
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($bus = new Bus([12 => $middleware]))
+            ->when($result = $bus->addMiddlewareBefore($middleware, $middleware))
+            ->then()
+                ->variable($result)
+                    ->isNull()
+        ;
+
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($bus = new Bus())
+            ->then()
+                ->exception(function () use ($bus, $middleware) {
+                    $bus->addMiddlewareBefore($middleware, $middleware);
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test addMiddlewareAfter method.
+     */
+    public function testAddMiddlewareAfter()
+    {
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($bus = new Bus([12 => $middleware]))
+            ->when($result = $bus->addMiddlewareAfter($middleware, $middleware))
+            ->then()
+                ->variable($result)
+                    ->isNull()
+        ;
+
+        $this
+            ->given($middleware = new LockingMiddleware())
+            ->and($bus = new Bus())
+            ->then()
+                ->exception(function () use ($bus, $middleware) {
+                    $bus->addMiddlewareAfter($middleware, $middleware);
+                })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }
 }
