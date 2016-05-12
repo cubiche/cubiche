@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Collections;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -83,7 +82,7 @@ class SortedArrayCollection extends ArrayCollection
     {
         parent::removeAt($key);
 
-        $this->sort();
+        $this->sortByKey();
     }
 
     /**
@@ -93,7 +92,7 @@ class SortedArrayCollection extends ArrayCollection
     {
         parent::set($key, $value);
 
-        $this->sort();
+        $this->sortByKey();
     }
 
     /**
@@ -106,6 +105,18 @@ class SortedArrayCollection extends ArrayCollection
         }
 
         parent::sort($this->criteria);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sortByKey(ComparatorInterface $criteria = null)
+    {
+        if ($criteria !== null) {
+            $this->criteria = $criteria;
+        }
+
+        parent::sortByKey($this->criteria);
     }
 
     /**

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -71,6 +70,26 @@ class PersistentArrayCollection extends PersistentCollectionAdapter implements A
         }
 
         usort($items, function ($a, $b) use ($criteria) {
+            return $criteria->compare($a, $b);
+        });
+
+        $this->clear();
+        foreach ($items as $item) {
+            $this->add($item);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sortByKey(ComparatorInterface $criteria = null)
+    {
+        $items = $this->collection->toArray();
+        if ($criteria === null) {
+            $criteria = new Comparator();
+        }
+
+        uksort($items, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
 
