@@ -1,5 +1,5 @@
 {
-    "name": "cubiche/message-bus",
+    "name": "cubiche/bus",
     "type": "library",
     "description": "A small, flexible message bus. Handy for building service layers.",
     "keywords": [
