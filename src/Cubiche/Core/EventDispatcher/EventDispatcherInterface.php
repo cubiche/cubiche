@@ -7,8 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\EventDispatcher;
+
+use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\SortedArrayCollection;
 
 /**
  * EventDispatcher interface.
@@ -27,13 +29,20 @@ interface EventDispatcherInterface
     public function dispatch($event);
 
     /**
+     * Gets the list of event listeners.
+     *
+     * @return ArrayCollection
+     */
+    public function listeners();
+
+    /**
      * Gets the listeners of a specific event or all listeners sorted by descending priority.
      *
      * @param string $eventName
      *
-     * @return array
+     * @return SortedArrayCollection
      */
-    public function listeners($eventName = null);
+    public function eventListeners($eventName);
 
     /**
      * Gets the listener priority for a specific event.
@@ -48,13 +57,20 @@ interface EventDispatcherInterface
     public function listenerPriority($eventName, callable $listener);
 
     /**
+     * Checks whether has any registered listener.
+     *
+     * @return bool
+     */
+    public function hasListeners();
+
+    /**
      * Checks whether an event has any registered listeners.
      *
      * @param string $eventName
      *
      * @return bool
      */
-    public function hasListeners($eventName = null);
+    public function hasEventListeners($eventName);
 
     /**
      * Adds an event listener that listens on the specified events. The higher priority value, the earlier an event

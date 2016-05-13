@@ -231,9 +231,9 @@ class EventDispatcherTests extends TestCase
             ->and($dispatcher->addListener('event.foo', $listener2, 50))
             ->and($dispatcher->addListener('event.bar', $listener3))
             ->then()
-                ->boolean($dispatcher->hasListeners('event.unknow'))
+                ->boolean($dispatcher->hasEventListeners('event.unknow'))
                     ->isFalse()
-                ->boolean($dispatcher->hasListeners('event.foo'))
+                ->boolean($dispatcher->hasEventListeners('event.foo'))
                     ->isTrue()
                 ->boolean($dispatcher->hasListeners())
                     ->isTrue()
@@ -269,7 +269,7 @@ class EventDispatcherTests extends TestCase
                 ->when($dispatcher->removeListener('event.unknow', $listener2))
                 ->when($dispatcher->removeListener('event.foo', $listener2))
                 ->then()
-                    ->boolean($dispatcher->hasListeners('event.foo'))
+                    ->boolean($dispatcher->hasEventListeners('event.foo'))
                         ->isFalse()
         ;
     }

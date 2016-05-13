@@ -43,7 +43,7 @@ class EventDispatcher implements EventDispatcherInterface
         $event = $this->ensureEvent($event);
 
         $eventName = $event->name();
-        if ($listeners = $this->listeners($eventName)) {
+        if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $event);
         }
 
@@ -81,16 +81,20 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function listeners($eventName = null)
+    public function eventListeners($eventName)
     {
-        if (null !== $eventName) {
-            if (!$this->listeners->containsKey($eventName)) {
-                return array();
-            }
-
-            return $this->listeners->get($eventName);
+        if (!$this->listeners->containsKey($eventName)) {
+            return array();
         }
 
+        return $this->listeners->get($eventName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function listeners()
+    {
         return $this->listeners;
     }
 
@@ -120,13 +124,17 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function hasListeners($eventName = null)
+    public function hasEventListeners($eventName)
     {
-        if ($eventName === null) {
-            return $this->listeners->count() > 0;
-        }
-
         return $this->listeners->containsKey($eventName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasListeners()
+    {
+        return $this->listeners->count() > 0;
     }
 
     /**

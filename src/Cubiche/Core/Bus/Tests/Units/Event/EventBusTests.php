@@ -123,62 +123,6 @@ class EventBusTests extends TestCase
     }
 
     /**
-     * Test listenerPriority method.
-     */
-    public function testListenerPriority()
-    {
-        $this
-            ->given($eventBus = EventBus::create())
-            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
-            ->and($listener2 = function (Event $event) {
-                return $event->name();
-            })
-            ->and($listener3 = function (Event $event) {
-
-            })
-            ->and($eventBus->addListener('event.foo', $listener1, 100))
-            ->and($eventBus->addListener('event.foo', $listener2, 50))
-            ->and($eventBus->addListener('event.bar', $listener3))
-            ->then()
-                ->variable($eventBus->listenerPriority('event.unknow', $listener1))
-                    ->isNull()
-                ->variable($eventBus->listenerPriority('event.foo', $listener3))
-                    ->isNull()
-                ->integer($eventBus->listenerPriority('event.foo', $listener1))
-                    ->isEqualTo(100)
-                ->integer($eventBus->listenerPriority('event.foo', $listener2))
-                    ->isEqualTo(50)
-        ;
-    }
-
-    /**
-     * Test HasListeners method.
-     */
-    public function testHasListeners()
-    {
-        $this
-            ->given($eventBus = EventBus::create())
-            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
-            ->and($listener2 = function (Event $event) {
-                return $event->name();
-            })
-            ->and($listener3 = function (Event $event) {
-
-            })
-            ->and($eventBus->addListener('event.foo', $listener1, 100))
-            ->and($eventBus->addListener('event.foo', $listener2, 50))
-            ->and($eventBus->addListener('event.bar', $listener3))
-            ->then()
-                ->boolean($eventBus->hasListeners('event.unknow'))
-                    ->isFalse()
-                ->boolean($eventBus->hasListeners('event.foo'))
-                    ->isTrue()
-                ->boolean($eventBus->hasListeners())
-                    ->isTrue()
-        ;
-    }
-
-    /**
      * Test RemoveListener method.
      */
     public function testRemoveListener()
@@ -196,18 +140,18 @@ class EventBusTests extends TestCase
             ->and($eventBus->addListener('event.foo', $listener2, 50))
             ->and($eventBus->addListener('event.bar', $listener3))
             ->then()
-                ->boolean($eventBus->hasListeners('event.foo'))
+                ->boolean($eventBus->hasEventListeners('event.foo'))
                     ->isTrue()
                 ->and()
                 ->when($eventBus->removeListener('event.foo', $listener1))
                 ->then()
-                    ->boolean($eventBus->hasListeners('event.foo'))
+                    ->boolean($eventBus->hasEventListeners('event.foo'))
                         ->isTrue()
                 ->and()
                 ->when($eventBus->removeListener('event.unknow', $listener2))
                 ->and($eventBus->removeListener('event.foo', $listener2))
                 ->then()
-                    ->boolean($eventBus->hasListeners('event.foo'))
+                    ->boolean($eventBus->hasEventListeners('event.foo'))
                         ->isFalse()
         ;
     }
@@ -223,11 +167,11 @@ class EventBusTests extends TestCase
             ->then()
                 ->boolean($eventBus->hasListeners())
                     ->isTrue()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::FOO_EVENT))
                     ->isTrue()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::BAR_EVENT))
                     ->isTrue()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::USER_LOGIN))
                     ->isTrue()
         ;
     }
@@ -242,20 +186,20 @@ class EventBusTests extends TestCase
             ->and($subscriber = new UserEventSubscriber())
             ->and($eventBus->addSubscriber($subscriber))
             ->then()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::FOO_EVENT))
                     ->isTrue()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::BAR_EVENT))
                     ->isTrue()
-                ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                ->boolean($eventBus->hasEventListeners(UserEventSubscriber::USER_LOGIN))
                     ->isTrue()
                 ->and()
                 ->when($eventBus->removeSubscriber($subscriber))
                 ->then()
-                    ->boolean($eventBus->hasListeners(UserEventSubscriber::FOO_EVENT))
+                    ->boolean($eventBus->hasEventListeners(UserEventSubscriber::FOO_EVENT))
                         ->isFalse()
-                    ->boolean($eventBus->hasListeners(UserEventSubscriber::BAR_EVENT))
+                    ->boolean($eventBus->hasEventListeners(UserEventSubscriber::BAR_EVENT))
                         ->isFalse()
-                    ->boolean($eventBus->hasListeners(UserEventSubscriber::USER_LOGIN))
+                    ->boolean($eventBus->hasEventListeners(UserEventSubscriber::USER_LOGIN))
                         ->isFalse()
         ;
     }

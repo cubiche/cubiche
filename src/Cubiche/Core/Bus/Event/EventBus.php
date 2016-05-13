@@ -156,34 +156,15 @@ class EventBus extends Bus
     }
 
     /**
-     * Gets the listeners of a specific event or all listeners sorted by descending priority.
-     *
-     * @param string $eventName
+     * Gets the list of event listeners.
      *
      * @return array
      */
-    public function listeners($eventName = null)
+    public function listeners()
     {
         $this->ensureEventDispatcherMiddleware();
 
-        return $this->dispatcherMiddleware->dispatcher()->listeners($eventName);
-    }
-
-    /**
-     * Gets the listener priority for a specific event.
-     *
-     * Returns null if the event or the listener does not exist.
-     *
-     * @param string   $eventName
-     * @param callable $listener
-     *
-     * @return int
-     */
-    public function listenerPriority($eventName, callable $listener)
-    {
-        $this->ensureEventDispatcherMiddleware();
-
-        return $this->dispatcherMiddleware->dispatcher()->listenerPriority($eventName, $listener);
+        return $this->dispatcherMiddleware->dispatcher()->listeners();
     }
 
     /**
@@ -193,10 +174,22 @@ class EventBus extends Bus
      *
      * @return bool
      */
-    public function hasListeners($eventName = null)
+    public function hasEventListeners($eventName)
     {
         $this->ensureEventDispatcherMiddleware();
 
-        return $this->dispatcherMiddleware->dispatcher()->hasListeners($eventName);
+        return $this->dispatcherMiddleware->dispatcher()->hasEventListeners($eventName);
+    }
+
+    /**
+     * Checks whether has any registered listener.
+     *
+     * @return bool
+     */
+    public function hasListeners()
+    {
+        $this->ensureEventDispatcherMiddleware();
+
+        return $this->dispatcherMiddleware->dispatcher()->hasListeners();
     }
 }
