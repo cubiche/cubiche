@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Serializer;
 
 /**
@@ -21,7 +20,7 @@ class DefaultSerializer extends AbstractSerializer
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, array $context = array())
+    public function serialize($data)
     {
         $this->ensureType($data);
 
@@ -31,7 +30,7 @@ class DefaultSerializer extends AbstractSerializer
     /**
      * {@inheritdoc}
      */
-    public function deserialize($data, $type, $format, array $context = array())
+    public function deserialize($data)
     {
         return unserialize($data);
     }

@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Model\EventSourcing;
 
 use Cubiche\Core\Serializer\SerializerInterface;
@@ -69,7 +68,7 @@ class EventStore
         );
 
         foreach ($eventStream->events() as $event) {
-            $this->storage->push($key, $this->serializeEvent($event));
+            $this->storage->push($key, $this->serializer->serialize($event));
         }
     }
 
@@ -89,7 +88,7 @@ class EventStore
 
         $events = [];
         foreach ($this->storage->slice($key, $version * $this->versionBase) as $data) {
-            $events[] = $this->deserializeEvent($data);
+            $events[] = $this->serializer->deserialize($data);
         }
 
         return new EventStream($className, $aggregateId, $events);
@@ -138,40 +137,6 @@ class EventStore
             'events:%s:%s',
             strtolower(end($classParts)),
             $aggregateId->toNative()
-        );
-    }
-
-    /**
-     * @param EntityDomainEventInterface $event
-     *
-     * @return string
-     */
-    protected function serializeEvent(EntityDomainEventInterface $event)
-    {
-        $eventData = $this->serializer->serialize($event, 'json');
-
-        return $this->serializer->serialize(
-            array(
-                'eventType' => get_class($event),
-                'eventData' => $eventData,
-            ),
-            'json'
-        );
-    }
-
-    /**
-     * @param string $data
-     *
-     * @return EntityDomainEventInterface
-     */
-    protected function deserializeEvent($data)
-    {
-        $serializedEvent = $this->serializer->deserialize($data, 'array', 'json');
-
-        return $this->serializer->deserialize(
-            $serializedEvent['eventData'],
-            $serializedEvent['eventType'],
-            'json'
         );
     }
 }

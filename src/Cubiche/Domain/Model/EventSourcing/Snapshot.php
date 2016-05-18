@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Domain\Model\EventSourcing;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\Model\AggregateRootInterface;
 
 /**
@@ -16,7 +17,7 @@ use Cubiche\Domain\Model\AggregateRootInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Snapshot
+class Snapshot implements SerializableInterface
 {
     /**
      * @var int

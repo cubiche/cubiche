@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Serializer;
 
 use Cubiche\Core\Serializer\Exception\SerializationException;
@@ -20,29 +19,24 @@ use Cubiche\Core\Serializer\Exception\SerializationException;
 interface SerializerInterface
 {
     /**
-     * Serializes data in the appropriate format.
+     * Serializes data.
      *
-     * @param mixed  $object
-     * @param string $format
-     * @param array  $context
+     * @param mixed $object
      *
      * @return string
      *
      * @throws SerializationException
      */
-    public function serialize($object, $format, array $context = array());
+    public function serialize($object);
 
     /**
-     * Deserializes data into the given type.
+     * Deserializes data.
      *
      * @param string $data
-     * @param string $type
-     * @param string $format
-     * @param array  $context
      *
      * @return mixed
      *
      * @throws SerializationException
      */
-    public function deserialize($data, $type, $format, array $context = array());
+    public function deserialize($data);
 }

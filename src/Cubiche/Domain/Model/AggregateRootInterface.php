@@ -11,6 +11,9 @@
 
 namespace Cubiche\Domain\Model;
 
+use Cubiche\Domain\Model\EventSourcing\EntityDomainEventInterface;
+use Cubiche\Domain\Model\EventSourcing\EventStream;
+
 /**
  * Aggregate Root Interface.
  *
@@ -18,4 +21,18 @@ namespace Cubiche\Domain\Model;
  */
 interface AggregateRootInterface extends EntityInterface
 {
+    /**
+     * @return EntityDomainEventInterface[]
+     */
+    public function recordedEvents();
+
+    /**
+     * Clear recorded events.
+     */
+    public function clearEvents();
+
+    /**
+     * @param EventStream $history
+     */
+    public function replay(EventStream $history);
 }

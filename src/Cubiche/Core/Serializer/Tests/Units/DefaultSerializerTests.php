@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Serializer\Tests\Units;
 
 use Cubiche\Core\Serializer\DefaultSerializer;
@@ -32,14 +31,14 @@ class DefaultSerializerTests extends TestCase
             ->and($address = new Address('Avinguda Vilares, 5, Montgar', '08390', 'Barcelona'))
             ->and($person = new Person('Ivannis Suarez Jerez', $address))
             ->and($person1 = new Person('Carla Fernandez Couso', $address))
-            ->when($data = $serializer->serialize($person, 'json'))
+            ->when($data = $serializer->serialize($person))
             ->then()
-                ->boolean($person->equals($serializer->deserialize($data, Person::class, 'json')))
+                ->boolean($person->equals($serializer->deserialize($data)))
                     ->isTrue()
-                ->boolean($person1->equals($serializer->deserialize($data, Person::class, 'json')))
+                ->boolean($person1->equals($serializer->deserialize($data)))
                     ->isFalse()
                 ->exception(function () use ($serializer, $address) {
-                    $serializer->serialize($address, 'json');
+                    $serializer->serialize($address);
                 })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }

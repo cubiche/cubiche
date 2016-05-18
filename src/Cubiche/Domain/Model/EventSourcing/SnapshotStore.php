@@ -7,10 +7,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Model\EventSourcing;
 
-use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\StorageInterface;
 use Cubiche\Domain\Model\AggregateRootInterface;
@@ -21,7 +19,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SnapshotStore implements SerializableInterface
+class SnapshotStore
 {
     /**
      * @var StorageInterface
