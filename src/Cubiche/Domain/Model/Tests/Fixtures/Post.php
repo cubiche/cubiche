@@ -9,13 +9,18 @@
  */
 namespace Cubiche\Domain\Model\Tests\Fixtures;
 
+use Cubiche\Core\Validator\Constraints;
+use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\Model\AggregateRoot;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasPublished;
+use Cubiche\Domain\Model\Tests\Fixtures\Validator\PostValidator;
 
 /**
  * Post class.
+ *
+ * @method PostValidator validator()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
@@ -82,6 +87,12 @@ class Post extends AggregateRoot
     public static function create($title, $content)
     {
         $post = new self(PostId::fromNative(md5(rand())));
+
+        $validator = $post->validator();
+
+        $validator->title()->assert($title);
+        $validator->content()->assert($content);
+
         $post->recordApplyAndPublishEvent(
             new PostWasCreated($post->id(), $title, $content)
         );
@@ -94,6 +105,8 @@ class Post extends AggregateRoot
      */
     public function changeTitle($newTitle)
     {
+        $this->validator()->title()->assert($newTitle);
+
         $this->recordApplyAndPublishEvent(
             new PostTitleWasChanged($this->id, $newTitle)
         );

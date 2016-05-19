@@ -10,12 +10,16 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\ValidationException;
+use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\Model\EventSourcing\EventStream;
+use Cubiche\Domain\Model\Tests\Fixtures\Blog;
 use Cubiche\Domain\Model\Tests\Fixtures\Category;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\Model\Tests\Fixtures\Tag;
 
 /**
  * AggregateRootTests class.
@@ -132,6 +136,55 @@ class AggregateRootTests extends TestCase
                 ->exception(function () use ($post, $eventStream) {
                     $post->replay($eventStream);
                 })->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test validator method.
+     */
+    public function testValidator()
+    {
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->then()
+                ->object($post->validator())
+                    ->isInstanceOf(Validator::class)
+        ;
+
+        $this
+            ->given($blog = Blog::create())
+            ->then()
+                ->exception(function () use ($blog) {
+                    $blog->validator();
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        $this
+            ->given($tag = Tag::create())
+            ->then()
+                ->object($tag->validator())
+                    ->isInstanceOf(Validator::class)
+        ;
+    }
+
+    /**
+     * Test validation.
+     */
+    public function testValidation()
+    {
+        $this
+            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->when($post->changeTitle($this->faker->sentence()))
+            ->then()
+                ->array($post->recordedEvents())
+                    ->hasSize(2)
+            ->and()
+                ->exception(function () use ($post) {
+                    $post->changeTitle('');
+                })->isInstanceOf(ValidationException::class)
+                ->exception(function () use ($post) {
+                    $post->changeTitle(10);
+                })->isInstanceOf(ValidationException::class)
         ;
     }
 }
