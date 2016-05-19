@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Event\Tests\Units;
+namespace Cubiche\Domain\EventPublisher\Tests\Units;
 
 use Cubiche\Core\Bus\Event\EventBus;
-use Cubiche\Domain\Event\DomainEventPublisher;
-use Cubiche\Domain\Event\Tests\Fixtures\CounterEventSubscriber;
-use Cubiche\Domain\Event\Tests\Fixtures\DecrementCounterEvent;
-use Cubiche\Domain\Event\Tests\Fixtures\IncrementCounterEvent;
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\EventPublisher\Tests\Fixtures\CounterEventSubscriber;
+use Cubiche\Domain\EventPublisher\Tests\Fixtures\DecrementCounterEvent;
+use Cubiche\Domain\EventPublisher\Tests\Fixtures\IncrementCounterEvent;
 
 /**
  * DomainEventPublisher class.

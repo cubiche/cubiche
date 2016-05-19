@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Model;
 
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Core\Validator\ValidatorInterface;
-use Cubiche\Domain\Event\DomainEventPublisher;
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\Model\EventSourcing\EntityDomainEventInterface;
 use Cubiche\Domain\Model\EventSourcing\EventStream;
 
