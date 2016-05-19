@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Model;
 
+use Cubiche\Core\Validator\Validator;
+use Cubiche\Core\Validator\ValidatorInterface;
 use Cubiche\Domain\Event\DomainEventPublisher;
 use Cubiche\Domain\Model\EventSourcing\EntityDomainEventInterface;
 use Cubiche\Domain\Model\EventSourcing\EventStream;
@@ -139,6 +141,45 @@ abstract class AggregateRoot implements AggregateRootInterface
         foreach ($history->events() as $event) {
             $this->applyEvent($event);
         }
+    }
+
+    /**
+     * Return an instance of the aggregareRoot validator.
+     *
+     * @return Validator
+     */
+    public function validator()
+    {
+        // e.g Cubiche\Domain\Locale\Locale
+        $aggregateClass = static::class;
+
+        $classParts = explode('\\', $aggregateClass);
+        $className = end($classParts);
+        $prefix = substr($aggregateClass, 0, strpos($aggregateClass, $className));
+
+        $classNames = [
+            // e.g. Cubiche\Domain\Locale\LocaleValidator
+            $aggregateClass.'Validator',
+            // e.g. Cubiche\Domain\Locale\Validator\LocaleValidator
+            $prefix.'Validator\\'.$className.'Validator',
+        ];
+
+        foreach ($classNames as $className) {
+            if (class_exists($className)) {
+                $reflection = new \ReflectionClass($className);
+                if (!$reflection->implementsInterface(ValidatorInterface::class)) {
+                    throw new \InvalidArgumentException(sprintf(
+                        'The class %s must be instance of %s',
+                        $className,
+                        ValidatorInterface::class
+                    ));
+                }
+
+                return $className::create();
+            }
+        }
+
+        return Validator::create();
     }
 
     /**
