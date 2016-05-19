@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Domain\Model\EventSourcing;
 
-use Cubiche\Domain\Event\DomainEvent;
+use Cubiche\Domain\EventPublisher\DomainEvent;
 use Cubiche\Domain\Model\IdInterface;
 
 /**

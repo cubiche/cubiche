@@ -7,15 +7,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Event;
+namespace Cubiche\Domain\EventPublisher;
 
-use Cubiche\Core\Bus\Event\EventSubscriberInterface;
+use Cubiche\Core\Bus\Event\EventInterface;
+use DateTime;
 
 /**
- * DomainEventSubscriber interface.
+ * DomainEvent interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DomainEventSubscriberInterface extends EventSubscriberInterface
+interface DomainEventInterface extends EventInterface
 {
+    /**
+     * @return DateTime
+     */
+    public function occurredOn();
 }
