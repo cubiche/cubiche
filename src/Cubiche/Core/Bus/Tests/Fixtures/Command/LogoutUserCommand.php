@@ -7,17 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Fixtures\Command;
 
 use Cubiche\Core\Bus\Command\CommandNamedInterface;
+use Cubiche\Core\Bus\Command\CommandValidatableInterface;
+use Cubiche\Core\Validator\Validator;
 
 /**
  * LogoutUserCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserCommand implements CommandNamedInterface
+class LogoutUserCommand implements CommandNamedInterface, CommandValidatableInterface
 {
     /**
      * @var string
@@ -64,5 +65,12 @@ class LogoutUserCommand implements CommandNamedInterface
     public function name()
     {
         return 'logout_user';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addValidationConstraints(Validator $validator)
+    {
     }
 }
