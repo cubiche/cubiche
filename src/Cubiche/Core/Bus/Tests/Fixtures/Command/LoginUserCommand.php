@@ -7,17 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Fixtures\Command;
 
-use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Bus\Command\CommandValidatableInterface;
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Validator;
 
 /**
  * LoginUserCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserCommand implements CommandInterface
+class LoginUserCommand implements CommandValidatableInterface
 {
     /**
      * @var string
@@ -92,5 +93,18 @@ class LoginUserCommand implements CommandInterface
     public function setLogin($login)
     {
         $this->login = $login;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addValidationConstraints(Validator $validator)
+    {
+        $assert = Assert::create()
+            ->attribute('email', Assert::email())
+            ->attribute('password', Assert::stringType()->notBlank())
+        ;
+
+        $validator->addConstraint($assert);
     }
 }
