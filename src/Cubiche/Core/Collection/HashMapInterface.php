@@ -9,8 +9,6 @@
  */
 namespace Cubiche\Core\Collection;
 
-use Cubiche\Core\Comparable\ComparatorInterface;
-
 /**
  * HashMap interface.
  *
@@ -77,11 +75,4 @@ interface HashMapInterface extends CollectionInterface
      * @return CollectionInterface
      */
     public function values();
-
-    /**
-     * Sorts the map keys according to the order induced by the specified comparator.
-     *
-     * @param ComparatorInterface $criteria
-     */
-    public function sort(ComparatorInterface $criteria = null);
 }

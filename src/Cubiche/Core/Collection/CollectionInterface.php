@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Core\Collection;
 
+use Cubiche\Core\Comparable\ComparatorInterface;
+
 /**
  * Collection Interface.
  *
@@ -62,4 +64,11 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @return array
      */
     public function toArray();
+
+    /**
+     * Sorts the collection according to the order induced by the specified comparator.
+     *
+     * @param ComparatorInterface $criteria
+     */
+    public function sort(ComparatorInterface $criteria = null);
 }
