@@ -11,30 +11,14 @@
 namespace Cubiche\Core\Selector;
 
 /**
- * Abstract Field Selector Class.
+ * Named Selector Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Field extends Selector implements NamedSelectorInterface
+interface NamedSelectorInterface extends SelectorInterface
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
     /**
      * @return string
      */
-    public function name()
-    {
-        return $this->name;
-    }
+    public function name();
 }

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification;
 
 use Cubiche\Core\Visitor\VisitorInterface;
@@ -29,7 +28,7 @@ trait SpecificationTrait
     public function __call($method, array $arguments)
     {
         if ($method === 'and' || $method === 'or') {
-            return call_user_func_array(array($this, $method.'X'), $arguments);
+            return \call_user_func_array(array($this, $method.'X'), $arguments);
         }
 
         throw new \BadMethodCallException(\sprintf('Call to undefined method %s::%s', \get_class($this), $method));

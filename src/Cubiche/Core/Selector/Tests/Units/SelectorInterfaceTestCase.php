@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector\Tests\Units;
 
 use Cubiche\Core\Selector\SelectorInterface;
@@ -42,13 +41,5 @@ abstract class SelectorInterfaceTestCase extends VisiteeInterfaceTestCase
     protected function visitorInterface()
     {
         return SelectorVisitorInterface::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function acceptActualVisitorMethod()
-    {
-        return 'acceptSelectorVisitor';
     }
 }

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -27,7 +26,7 @@ class Property extends Field
     private static $accessor = null;
 
     /**
-     * @return \Cubiche\Domain\Specification\Selector\PropertyAccessor
+     * @return \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     protected static function accessor()
     {
