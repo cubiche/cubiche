@@ -9,7 +9,9 @@
  */
 namespace Cubiche\Core\Collection\ArrayCollection;
 
-use Cubiche\Core\Collection\HashMapInterface;
+use Cubiche\Core\Collection\CollectionInterface;
+use Cubiche\Core\Collection\DataSource\ArrayDataSource;
+use Cubiche\Core\Collection\DataSourceHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 
@@ -19,7 +21,7 @@ use Cubiche\Core\Comparable\ComparatorInterface;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayHashMap extends ArrayCollection implements HashMapInterface
+class ArrayHashMap extends ArrayCollection implements ArrayHashMapInterface
 {
     /**
      * ArrayHashMap constructor.
@@ -109,6 +111,16 @@ class ArrayHashMap extends ArrayCollection implements HashMapInterface
         uksort($this->items, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
+    }
+
+    /**
+     * @param ComparatorInterface $criteria
+     *
+     * @return CollectionInterface
+     */
+    public function sorted(ComparatorInterface $criteria)
+    {
+        return new DataSourceHashMap(new ArrayDataSource($this->elements, null, $criteria));
     }
 
     /**

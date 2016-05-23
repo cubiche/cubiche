@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Collection\LazyCollection;
 
 use Cubiche\Core\Collection\CollectionInterface;
+use Cubiche\Core\Comparable\ComparatorInterface;
 
 /**
  * Lazy Collection.
@@ -29,46 +30,6 @@ abstract class LazyCollection implements CollectionInterface
      * @var bool
      */
     protected $initialized = false;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function first()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->first();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function last()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->last();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->next();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->current();
-    }
 
     /**
      * {@inheritdoc}
@@ -118,6 +79,16 @@ abstract class LazyCollection implements CollectionInterface
         $this->lazyInitialize();
 
         return $this->collection()->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sorted(ComparatorInterface $criteria)
+    {
+        $this->lazyInitialize();
+
+        return $this->collection()->sorted($criteria);
     }
 
     /**

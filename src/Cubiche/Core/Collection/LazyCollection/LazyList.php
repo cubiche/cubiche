@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Collection\LazyCollection;
 
 use Cubiche\Core\Collection\ListInterface;
-use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
@@ -67,51 +66,11 @@ abstract class LazyList extends LazyCollection implements ListInterface
     /**
      * {@inheritdoc}
      */
-    public function removeAt($key)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->removeAt($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function contains($element)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->contains($element);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function indexOf($element)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->indexOf($element);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function subList($offset, $length = null)
     {
         $this->lazyInitialize();
 
         return $this->collection()->subList($offset, $length);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sort(ComparatorInterface $criteria = null)
-    {
-        $this->lazyInitialize();
-
-        $this->collection()->sort($criteria);
     }
 
     /**

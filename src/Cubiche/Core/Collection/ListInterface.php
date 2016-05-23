@@ -53,34 +53,6 @@ interface ListInterface extends CollectionInterface
     public function removeAll($elements);
 
     /**
-     * Removes the element at the specified position in this list.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    public function removeAt($key);
-
-    /**
-     * Returns true if this collection contains the specified element.
-     *
-     * @param mixed $element
-     *
-     * @return bool
-     */
-    public function contains($element);
-
-    /**
-     * Returns the index of the first occurrence of the specified element in this list,
-     * or -1 if this list does not contain the element.
-     *
-     * @param mixed $element
-     *
-     * @return int
-     */
-    public function indexOf($element);
-
-    /**
      * Returns a view of the portion of this list starting at the specified $offset, with size equals to $length.
      *
      * @param int $offset

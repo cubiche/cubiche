@@ -12,7 +12,6 @@ namespace Cubiche\Core\Collection\ArrayCollection;
 use Cubiche\Core\Collection\DataSource\ArrayDataSource;
 use Cubiche\Core\Collection\DataSourceList;
 use Cubiche\Core\Collection\Exception\InvalidKeyException;
-use Cubiche\Core\Collection\ListInterface;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
@@ -24,7 +23,7 @@ use Cubiche\Core\Specification\SpecificationInterface;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayList extends ArrayCollection implements ListInterface
+class ArrayList extends ArrayCollection implements ArrayListInterface
 {
     /**
      * {@inheritdoc}
@@ -144,9 +143,17 @@ class ArrayList extends ArrayCollection implements ListInterface
             $criteria = new Comparator();
         }
 
-        uasort($this->items, function ($a, $b) use ($criteria) {
+        uasort($this->elements, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sorted(ComparatorInterface $criteria)
+    {
+        return new DataSourceList(new ArrayDataSource($this->elements, null, $criteria));
     }
 
     /**
@@ -162,7 +169,7 @@ class ArrayList extends ArrayCollection implements ListInterface
      */
     public function findOne(SpecificationInterface $criteria)
     {
-        return (new ArrayDataSource($this->items, $criteria))->findOne();
+        return (new ArrayDataSource($this->elements, $criteria))->findOne();
     }
 
     /**
@@ -171,7 +178,7 @@ class ArrayList extends ArrayCollection implements ListInterface
     protected function validateKey($key)
     {
         if (!is_int($key)) {
-            throw InvalidKeyException::forKey($key);
+            throw InvalidKeyException::forKey($key, 'Expected a key of type integer. Got: %s');
         }
 
         return true;
@@ -183,5 +190,13 @@ class ArrayList extends ArrayCollection implements ListInterface
     public function offsetUnset($offset)
     {
         return $this->removeAt($offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->add($value);
     }
 }

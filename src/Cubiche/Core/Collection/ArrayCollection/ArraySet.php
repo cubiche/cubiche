@@ -12,7 +12,6 @@ namespace Cubiche\Core\Collection\ArrayCollection;
 use Cubiche\Core\Collection\DataSource\ArrayDataSource;
 use Cubiche\Core\Collection\DataSourceSet;
 use Cubiche\Core\Collection\Exception\InvalidKeyException;
-use Cubiche\Core\Collection\SetInterface;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
@@ -24,7 +23,7 @@ use Cubiche\Core\Specification\SpecificationInterface;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArraySet extends ArrayCollection implements SetInterface
+class ArraySet extends ArrayCollection implements ArraySetInterface
 {
     /**
      * ArraySet constructor.
@@ -144,6 +143,14 @@ class ArraySet extends ArrayCollection implements SetInterface
         uasort($this->items, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sorted(ComparatorInterface $criteria)
+    {
+        return new DataSourceSet(new ArrayDataSource($this->elements, null, $criteria));
     }
 
     /**

@@ -23,14 +23,18 @@ class InvalidKeyException extends InvalidArgumentException
      * Creates an exception for an invalid key.
      *
      * @param mixed          $key
+     * @param string         $message
      * @param Exception|null $cause
      *
      * @return InvalidKeyException
      */
-    public static function forKey($key, Exception $cause = null)
-    {
+    public static function forKey(
+        $key,
+        $message = 'Expected a key of type integer or string. Got: %s',
+        Exception $cause = null
+    ) {
         return new static(sprintf(
-            'Expected a key of type integer or string. Got: %s',
+            $message,
             is_object($key) ? get_class($key) : gettype($key)
         ), 0, $cause);
     }

@@ -21,34 +21,6 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 interface CollectionInterface extends \Countable, \IteratorAggregate
 {
     /**
-     * Get the first element in the collection.
-     *
-     * @return mixed
-     */
-    public function first();
-
-    /**
-     * Get the last element in the collection.
-     *
-     * @return mixed
-     */
-    public function last();
-
-    /**
-     * Get the next element in the collection.
-     *
-     * @return mixed
-     */
-    public function next();
-
-    /**
-     * Get the current element in the collection.
-     *
-     * @return mixed
-     */
-    public function current();
-
-    /**
      * Clears the collection, removing all elements.
      */
     public function clear();
@@ -66,9 +38,9 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function toArray();
 
     /**
-     * Sorts the collection according to the order induced by the specified comparator.
-     *
      * @param ComparatorInterface $criteria
+     *
+     * @return CollectionInterface
      */
-    public function sort(ComparatorInterface $criteria = null);
+    public function sorted(ComparatorInterface $criteria);
 }

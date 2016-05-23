@@ -31,26 +31,6 @@ interface DataSourceInterface extends \Countable, \IteratorAggregate
     public function offset();
 
     /**
-     * @return mixed
-     */
-    public function first();
-
-    /**
-     * @return mixed
-     */
-    public function last();
-
-    /**
-     * @return mixed
-     */
-    public function next();
-
-    /**
-     * @return mixed
-     */
-    public function current();
-
-    /**
      * @return \Cubiche\Core\Specification\SpecificationInterface
      */
     public function searchCriteria();

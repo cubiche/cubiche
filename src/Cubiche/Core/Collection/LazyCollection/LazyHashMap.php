@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Collection\LazyCollection;
 
 use Cubiche\Core\Collection\HashMapInterface;
-use Cubiche\Core\Comparable\ComparatorInterface;
 
 /**
  * Lazy HashMap.
@@ -23,16 +22,6 @@ use Cubiche\Core\Comparable\ComparatorInterface;
  */
 abstract class LazyHashMap extends LazyCollection implements HashMapInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function get($key)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->get($key);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -56,50 +45,10 @@ abstract class LazyHashMap extends LazyCollection implements HashMapInterface
     /**
      * {@inheritdoc}
      */
-    public function containsValue($value)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->containsValue($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function removeAt($key)
     {
         $this->lazyInitialize();
 
         return $this->collection()->removeAt($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function keys()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->keys();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function values()
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->values();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sort(ComparatorInterface $criteria = null)
-    {
-        $this->lazyInitialize();
-
-        $this->collection()->sort($criteria);
     }
 }

@@ -77,61 +77,6 @@ class IteratorDataSource extends DataSource
     /**
      * {@inheritdoc}
      */
-    public function first()
-    {
-        $iterator = $this->getIterator();
-        $iterator->rewind();
-
-        if ($iterator->valid()) {
-            return $iterator->current();
-        }
-
-        return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function last()
-    {
-        $last = false;
-        $iterator = $this->getIterator();
-
-        while ($iterator->valid()) {
-            $last = $iterator->current();
-
-            $iterator->next();
-        }
-
-        return $last;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        $iterator = $this->getIterator();
-        $iterator->next();
-
-        if ($iterator->valid()) {
-            return $iterator->current();
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        return $this->getIterator()->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findOne()
     {
         foreach ($this->getIterator() as $item) {

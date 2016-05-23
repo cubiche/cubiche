@@ -48,54 +48,6 @@ trait DataSourceCollectionTrait
     /**
      * {@inheritdoc}
      */
-    public function first()
-    {
-        if ($this->isInitialized()) {
-            return parent::first();
-        }
-
-        return $this->dataSource->first();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function last()
-    {
-        if ($this->isInitialized()) {
-            return parent::last();
-        }
-
-        return $this->dataSource->last();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        if ($this->isInitialized()) {
-            return parent::next();
-        }
-
-        return $this->dataSource->next();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        if ($this->isInitialized()) {
-            return parent::current();
-        }
-
-        return $this->dataSource->current();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getIterator()
     {
         if ($this->isInitialized()) {

@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Collection\LazyCollection;
 
 use Cubiche\Core\Collection\SetInterface;
-use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
@@ -47,26 +46,6 @@ abstract class LazySet extends LazyCollection implements SetInterface
     /**
      * {@inheritdoc}
      */
-    public function contains($element)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->contains($element);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function containsAll($elements)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->containsAll($elements);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function remove($element)
     {
         $this->lazyInitialize();
@@ -92,16 +71,6 @@ abstract class LazySet extends LazyCollection implements SetInterface
         $this->lazyInitialize();
 
         return $this->collection()->subSet($offset, $length);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sort(ComparatorInterface $criteria = null)
-    {
-        $this->lazyInitialize();
-
-        $this->collection()->sort($criteria);
     }
 
     /**

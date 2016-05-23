@@ -18,7 +18,7 @@ use Cubiche\Core\Collection\Exception\InvalidKeyException;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class ArrayCollection implements CollectionInterface
+abstract class ArrayCollection implements CollectionInterface, \ArrayAccess
 {
     /**
      * @var array
@@ -33,38 +33,6 @@ abstract class ArrayCollection implements CollectionInterface
     public function __construct(array $elements = array())
     {
         $this->elements = $elements;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function first()
-    {
-        return reset($this->elements);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function last()
-    {
-        return end($this->elements);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function next()
-    {
-        return next($this->elements);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function current()
-    {
-        return current($this->elements);
     }
 
     /**
