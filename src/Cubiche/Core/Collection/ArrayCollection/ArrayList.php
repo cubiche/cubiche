@@ -50,7 +50,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function remove($element)
     {
-        $criteria = Criteria::eq($element);
+        $criteria = Criteria::same($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 unset($this->elements[$key]);
@@ -101,7 +101,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function contains($element)
     {
-        $criteria = Criteria::eq($element);
+        $criteria = Criteria::same($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 return true;
@@ -116,7 +116,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function indexOf($element)
     {
-        $criteria = Criteria::eq($element);
+        $criteria = Criteria::same($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 return $key;
@@ -124,14 +124,6 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
         }
 
         return -1;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function subList($offset, $length = null)
-    {
-        return new self(\array_slice($this->elements, $offset, $length, true));
     }
 
     /**

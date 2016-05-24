@@ -37,8 +37,8 @@ class SortedArrayList extends ArrayList
             $criteria = new Comparator();
         }
 
-        parent::__construct($elements);
-        $this->sort($criteria);
+        $this->criteria = $criteria;
+        $this->addAll($elements);
     }
 
     /**

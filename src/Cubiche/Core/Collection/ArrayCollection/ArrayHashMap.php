@@ -14,6 +14,7 @@ use Cubiche\Core\Collection\DataSource\ArrayDataSource;
 use Cubiche\Core\Collection\DataSourceHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * ArrayHashMap Class.
@@ -25,9 +26,14 @@ class ArrayHashMap extends ArrayCollection implements ArrayHashMapInterface
 {
     /**
      * ArrayHashMap constructor.
+     *
+     * @param array $elements
      */
-    public function __construct()
+    public function __construct(array $elements = array())
     {
+        foreach ($elements as $key => $element) {
+            $this->set($key, $element);
+        }
     }
 
     /**
@@ -57,7 +63,7 @@ class ArrayHashMap extends ArrayCollection implements ArrayHashMapInterface
      */
     public function containsKey($key)
     {
-        return $this->keys()->contains($key);
+        return $this->hasKey($key);
     }
 
     /**
@@ -86,6 +92,14 @@ class ArrayHashMap extends ArrayCollection implements ArrayHashMapInterface
     /**
      * {@inheritdoc}
      */
+    public function find(SpecificationInterface $criteria)
+    {
+        return new DataSourceHashMap(new ArrayDataSource($this->elements, $criteria));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function keys()
     {
         return new ArraySet(\array_keys($this->elements));
@@ -108,7 +122,7 @@ class ArrayHashMap extends ArrayCollection implements ArrayHashMapInterface
             $criteria = new Comparator();
         }
 
-        uksort($this->items, function ($a, $b) use ($criteria) {
+        uksort($this->elements, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
     }

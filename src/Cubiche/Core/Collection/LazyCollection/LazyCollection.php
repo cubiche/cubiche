@@ -12,6 +12,7 @@ namespace Cubiche\Core\Collection\LazyCollection;
 
 use Cubiche\Core\Collection\CollectionInterface;
 use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * Lazy Collection.
@@ -79,6 +80,26 @@ abstract class LazyCollection implements CollectionInterface
         $this->lazyInitialize();
 
         return $this->collection()->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($offset, $length = null)
+    {
+        $this->lazyInitialize();
+
+        return $this->collection()->slice($offset, $length);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find(SpecificationInterface $criteria)
+    {
+        $this->lazyInitialize();
+
+        return $this->collection()->find($criteria);
     }
 
     /**

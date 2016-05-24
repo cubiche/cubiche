@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -10,23 +9,23 @@
  */
 namespace Cubiche\Core\Collection\Tests\Units;
 
-use Cubiche\Core\Collection\ListInterface;
+use Cubiche\Core\Collection\SetInterface;
 use Cubiche\Core\Specification\Criteria;
 
 /**
- * ListTestCase class.
+ * SetTestCase class.
  *
- * @method protected ListInterface emptyCollection()
+ * @method protected SetInterface emptyCollection()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class ListTestCase extends CollectionTestCase
+abstract class SetTestCase extends CollectionTestCase
 {
     /**
      * @param int $size
      *
-     * @return ListInterface
+     * @return SetInterface
      */
     protected function randomCollection($size = null)
     {
@@ -43,7 +42,7 @@ abstract class ListTestCase extends CollectionTestCase
     {
         $this
             ->testedClass
-                ->implements(ListInterface::class)
+                ->implements(SetInterface::class)
         ;
     }
 
@@ -53,15 +52,15 @@ abstract class ListTestCase extends CollectionTestCase
     public function testAdd()
     {
         $this
-            ->given($collection = $this->randomCollection())
+            ->given($collection = $this->emptyCollection())
             ->and($unique = $this->uniqueValue())
-            ->and($count = $collection->count())
             ->when($collection->add($unique))
+            ->and($collection->add($unique))
             ->then()
-                ->list($collection)
+                ->set($collection)
                     ->contains($unique)
                     ->size()
-                        ->isEqualTo($count + 1)
+                        ->isEqualTo(1)
         ;
     }
 
@@ -72,10 +71,11 @@ abstract class ListTestCase extends CollectionTestCase
     {
         $this
             ->given($collection = $this->emptyCollection())
-            ->and($items = $this->randomValues(10))
+            ->and($items = [1, 2, 3, 4, 5, 6])
             ->when($collection->addAll($items))
+            ->and($collection->addAll($items))
             ->then()
-                ->list($collection)
+                ->set($collection)
                     ->containsValues($items)
                     ->size()
                         ->isEqualTo(\count($items))
@@ -99,12 +99,12 @@ abstract class ListTestCase extends CollectionTestCase
             )
             ->when($emptyCollection->add($unique))
             ->then()
-                ->list($emptyCollection)
+                ->set($emptyCollection)
                     ->contains($unique)
             ->and()
             ->when($result = $emptyCollection->remove($unique))
             ->then()
-                ->list($emptyCollection)
+                ->set($emptyCollection)
                     ->notContains($unique)
                 ->boolean($result)
                     ->isTrue()
@@ -117,12 +117,12 @@ abstract class ListTestCase extends CollectionTestCase
             )
             ->when($randomCollection->add($unique))
             ->then()
-                ->list($randomCollection)
+                ->set($randomCollection)
                     ->contains($unique)
             ->and()
             ->when($randomCollection->remove($unique))
             ->then()
-                ->list($randomCollection)
+                ->set($randomCollection)
                     ->notContains($unique)
             ->and()
             ->when($result = $randomCollection->remove('foo'))
@@ -145,9 +145,9 @@ abstract class ListTestCase extends CollectionTestCase
             )
             ->and($collection->addAll([$unique, $random]))
             ->then()
-                ->list($collection)
+                ->set($collection)
                     ->contains($unique)
-                ->list($collection)
+                ->set($collection)
                     ->contains($random)
             ->and()
             ->when($collection->removeAll([$unique, $random]))

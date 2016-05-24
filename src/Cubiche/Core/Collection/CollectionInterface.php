@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Collection;
 
 use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * Collection Interface.
@@ -43,4 +44,23 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
      * @return CollectionInterface
      */
     public function sorted(ComparatorInterface $criteria);
+
+    /**
+     * Returns a view of the portion of this collection starting at the specified $offset, with size equals to $length.
+     *
+     * @param int $offset
+     * @param int $length
+     *
+     * @return CollectionInterface
+     */
+    public function slice($offset, $length = null);
+
+    /**
+     * Find all elements that match with a given specification in this collection.
+     *
+     * @param SpecificationInterface $criteria
+     *
+     * @return CollectionInterface
+     */
+    public function find(SpecificationInterface $criteria);
 }

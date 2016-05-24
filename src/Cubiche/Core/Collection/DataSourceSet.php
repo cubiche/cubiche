@@ -27,30 +27,6 @@ class DataSourceSet extends LazySet
     /**
      * {@inheritdoc}
      */
-    public function subSet($offset, $length = null)
-    {
-        if ($this->isInitialized()) {
-            return parent::subSet($offset, $length);
-        }
-
-        return new self($this->dataSource->slicedDataSource($offset, $length));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function find(SpecificationInterface $criteria)
-    {
-        if ($this->isInitialized()) {
-            return parent::find($criteria);
-        }
-
-        return new self($this->dataSource->filteredDataSource($criteria));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findOne(SpecificationInterface $criteria)
     {
         if ($this->isInitialized()) {

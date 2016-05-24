@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Collection;
 
 use Cubiche\Core\Collection\DataSource\DataSourceInterface;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * DataSourceCollection Trait.
@@ -55,5 +56,29 @@ trait DataSourceCollectionTrait
         }
 
         return $this->dataSource->getIterator();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($offset, $length = null)
+    {
+        if ($this->isInitialized()) {
+            return parent::slice($offset, $length);
+        }
+
+        return new self($this->dataSource->slicedDataSource($offset, $length));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find(SpecificationInterface $criteria)
+    {
+        if ($this->isInitialized()) {
+            return parent::find($criteria);
+        }
+
+        return new self($this->dataSource->filteredDataSource($criteria));
     }
 }

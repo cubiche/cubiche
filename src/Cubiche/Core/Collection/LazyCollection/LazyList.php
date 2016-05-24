@@ -66,26 +66,6 @@ abstract class LazyList extends LazyCollection implements ListInterface
     /**
      * {@inheritdoc}
      */
-    public function subList($offset, $length = null)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->subList($offset, $length);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function find(SpecificationInterface $criteria)
-    {
-        $this->lazyInitialize();
-
-        return $this->collection()->find($criteria);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findOne(SpecificationInterface $criteria)
     {
         $this->lazyInitialize();

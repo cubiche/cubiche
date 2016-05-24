@@ -51,7 +51,7 @@ class HashMapAsserter extends CollectionAsserter
     public function containsKey($key)
     {
         $collection = $this->valueAsCollection();
-        if ($collection->containsKey($key) !== null) {
+        if ($collection->containsKey($key) === true) {
             $this->pass();
         } else {
             $this->fail($this->getLocale()->_('The hashmap not contain the key %s', $key));
@@ -79,10 +79,10 @@ class HashMapAsserter extends CollectionAsserter
      *
      * @return $this
      */
-    public function notContains($key)
+    public function notContainsKey($key)
     {
         $collection = $this->valueAsCollection();
-        if ($collection->containsKey($key) !== null) {
+        if ($collection->containsKey($key) === true) {
             $this->fail($this->getLocale()->_('The hashmap contain this key %s', $key));
         } else {
             $this->pass();
@@ -98,7 +98,7 @@ class HashMapAsserter extends CollectionAsserter
      */
     protected function valueAsCollection()
     {
-        $value = $this->valueIsHashMap()->getValue();
+        $value = $this->valueIsSet()->getValue();
         if ($value instanceof HashMapInterface) {
             return $value;
         }

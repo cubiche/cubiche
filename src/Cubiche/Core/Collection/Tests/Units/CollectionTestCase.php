@@ -12,6 +12,7 @@ namespace Cubiche\Core\Collection\Tests\Units;
 
 use Cubiche\Core\Collection\CollectionInterface;
 use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Specification\Criteria;
 
 /**
  * Collection Test Case class.
@@ -135,6 +136,70 @@ abstract class CollectionTestCase extends TestCase
             ->when($array = $collection->toArray())
                 ->array($array)
                     ->isEqualTo(\iterator_to_array($collection->getIterator()));
+    }
+
+    /**
+     * Test slice.
+     */
+    public function testSlice()
+    {
+        $this
+            ->given($collection = $this->randomCollection())
+            ->and($count = $collection->count())
+            ->and($offset = rand(0, $count / 2))
+            ->and($length = rand($count / 2, $count))
+            ->and($maxCount = max([$count - $offset, 0]))
+            ->when($slice = $collection->slice($offset, $length))
+            ->then()
+                ->collection($slice)
+                    ->size()
+                        ->isEqualTo(min($maxCount, $length))
+        ;
+    }
+
+    /**
+     * Test find.
+     */
+    public function testFind()
+    {
+        $this
+            ->given(
+                $unique = $this->uniqueValue(),
+                $criteria = Criteria::same($unique),
+                $emptyCollection = $this->emptyCollection()
+            )
+            ->when($findResult = $emptyCollection->find($criteria))
+            ->then()
+                ->collection($findResult)
+                    ->isEmpty()
+            ->and()
+            ->when($emptyCollection->add($unique))
+            ->and($findResult = $emptyCollection->find($criteria))
+            ->then()
+                ->collection($findResult)
+                    ->size()
+                        ->isEqualTo(1)
+                ->array($findResult->toArray())
+                    ->contains($unique)
+        ;
+
+        $this
+            ->given(
+                $unique = $this->uniqueValue(),
+                $criteria = Criteria::same($unique),
+                $randomCollection = $this->randomCollection()
+            )
+            ->when($findResult = $randomCollection->find($criteria))
+            ->then()
+                ->collection($findResult)
+                    ->isEmpty()
+            ->and()
+            ->when($randomCollection->add($unique))
+            ->and($findResult = $randomCollection->find($criteria))
+            ->then()
+                ->array($findResult->toArray())
+                    ->contains($unique)
+        ;
     }
 
     /**

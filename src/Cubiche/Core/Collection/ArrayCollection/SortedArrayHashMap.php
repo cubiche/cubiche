@@ -28,15 +28,21 @@ class SortedArrayHashMap extends ArrayHashMap
     /**
      * SortedArrayHashMap constructor.
      *
+     * @param array                    $elements
      * @param ComparatorInterface|null $criteria
      */
-    public function __construct(ComparatorInterface $criteria = null)
+    public function __construct(array $elements = array(), ComparatorInterface $criteria = null)
     {
         if ($criteria === null) {
             $criteria = new Comparator();
         }
 
         $this->criteria = $criteria;
+        foreach ($elements as $key => $element) {
+            parent::set($key, $element);
+        }
+
+        $this->sort();
     }
 
     /**

@@ -62,7 +62,7 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
      */
     public function contains($element)
     {
-        $criteria = Criteria::eq($element);
+        $criteria = Criteria::same($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 return true;
@@ -93,7 +93,7 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
      */
     public function remove($element)
     {
-        $criteria = Criteria::eq($element);
+        $criteria = Criteria::same($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 unset($this->elements[$key]);
@@ -126,21 +126,13 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
     /**
      * {@inheritdoc}
      */
-    public function subSet($offset, $length = null)
-    {
-        return new self(\array_slice($this->elements, $offset, $length, true));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function sort(ComparatorInterface $criteria = null)
     {
         if ($criteria === null) {
             $criteria = new Comparator();
         }
 
-        uasort($this->items, function ($a, $b) use ($criteria) {
+        uasort($this->elements, function ($a, $b) use ($criteria) {
             return $criteria->compare($a, $b);
         });
     }
@@ -166,7 +158,7 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
      */
     public function findOne(SpecificationInterface $criteria)
     {
-        return (new ArrayDataSource($this->items, $criteria))->findOne();
+        return (new ArrayDataSource($this->elements, $criteria))->findOne();
     }
 
     /**

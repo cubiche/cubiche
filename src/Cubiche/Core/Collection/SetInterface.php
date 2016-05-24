@@ -53,25 +53,6 @@ interface SetInterface extends CollectionInterface
     public function removeAll($elements);
 
     /**
-     * Returns a view of the portion of this set starting at the specified $offset, with size equals to $length.
-     *
-     * @param int $offset
-     * @param int $length
-     *
-     * @return ListInterface
-     */
-    public function subSet($offset, $length = null);
-
-    /**
-     * Find all elements that match with a given specification in this set.
-     *
-     * @param SpecificationInterface $criteria
-     *
-     * @return SetInterface
-     */
-    public function find(SpecificationInterface $criteria);
-
-    /**
      * Find the first element that match with a given specification in this set.
      *
      * @param SpecificationInterface $criteria

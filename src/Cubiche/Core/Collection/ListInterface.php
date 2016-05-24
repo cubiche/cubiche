@@ -53,25 +53,6 @@ interface ListInterface extends CollectionInterface
     public function removeAll($elements);
 
     /**
-     * Returns a view of the portion of this list starting at the specified $offset, with size equals to $length.
-     *
-     * @param int $offset
-     * @param int $length
-     *
-     * @return ListInterface
-     */
-    public function subList($offset, $length = null);
-
-    /**
-     * Find all elements that match with a given specification in this list.
-     *
-     * @param SpecificationInterface $criteria
-     *
-     * @return ListInterface
-     */
-    public function find(SpecificationInterface $criteria);
-
-    /**
      * Find the first element that match with a given specification in this list.
      *
      * @param SpecificationInterface $criteria

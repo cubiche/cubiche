@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -9,27 +10,27 @@
  */
 namespace Cubiche\Core\Collection\Tests\Units\ArrayCollection;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
-use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
+use Cubiche\Core\Collection\ArrayCollection\ArraySet;
+use Cubiche\Core\Collection\ArrayCollection\ArraySetInterface;
 use Cubiche\Core\Collection\Exception\InvalidKeyException;
-use Cubiche\Core\Collection\Tests\Units\ListTestCase;
+use Cubiche\Core\Collection\Tests\Units\SetTestCase;
 use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
 
 /**
- * ArrayListTests class.
+ * ArraySetTests class.
  *
- * @method protected ArrayListInterface randomCollection($size = null)
+ * @method protected ArraySetInterface randomCollection($size = null)
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayListTests extends ListTestCase
+class ArraySetTests extends SetTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function emptyCollection()
     {
-        return new ArrayList();
+        return new ArraySet();
     }
 
     /**
@@ -56,8 +57,8 @@ class ArrayListTests extends ListTestCase
         $this
             ->given($collection = $this->randomCollection())
             ->then()
-                ->list($collection)
-                    ->isInstanceOf(ArrayListInterface::class)
+                ->set($collection)
+                    ->isInstanceOf(ArraySetInterface::class)
         ;
     }
 
@@ -83,36 +84,28 @@ class ArrayListTests extends ListTestCase
     }
 
     /*
-     * Test removeAt.
+     * Test containsAll.
      */
-    public function testRemoveAt()
+    public function testContainsAll()
     {
         $this
             ->given(
                 $unique = $this->uniqueValue(),
-                $collection = $this->emptyCollection()
+                $other = 'foo',
+                $collection = $this->randomCollection()
             )
-            ->and($collection->add($unique))
-            ->and($key = $collection->indexOf('foo'))
-            ->when($element = $collection->removeAt($key))
-            ->then()
-                ->variable($element)
-                    ->isNull()
-        ;
-
-        $this
-            ->given(
-                $unique = $this->uniqueValue(),
-                $collection = $this->emptyCollection()
-            )
-            ->and($collection->add($unique))
-            ->and($key = $collection->indexOf($unique))
-            ->when($element = $collection->removeAt($key))
             ->then()
                 ->boolean($collection->contains($unique))
                     ->isFalse()
-                ->variable($element)
-                    ->isEqualTo($unique)
+                ->boolean($collection->contains($other))
+                    ->isFalse()
+            ->and
+            ->when($collection->addAll([$unique, $other]))
+            ->then()
+                ->boolean($collection->containsAll([$unique, $other]))
+                    ->isTrue()
+                ->boolean($collection->containsAll([$unique, 'hjgasd756']))
+                    ->isFalse()
         ;
     }
 
@@ -129,37 +122,15 @@ class ArrayListTests extends ListTestCase
             )
             ->when($collection->sort())
             ->then()
-                ->list($collection)
+                ->set($collection)
                     ->isSortedUsing($comparator)
             ->and
             ->when($collection->sort($reverseComparator))
             ->then()
-                ->list($collection)
+                ->set($collection)
                     ->isSortedUsing($reverseComparator)
-                ->list($collection)
+                ->set($collection)
                     ->isNotSortedUsing($comparator)
-        ;
-    }
-
-    /*
-     * Test validateKey.
-     */
-    public function testValidateKey()
-    {
-        $this
-            ->given(
-                $key = 0,
-                $unique = $this->uniqueValue(),
-                $collection = $this->emptyCollection()
-            )
-            ->then()
-                ->boolean(isset($collection[$key]))
-                    ->isFalse()
-            ->and()
-            ->then()
-                ->exception(function () use ($collection) {
-                    $collection->removeAt('foo');
-                })->isInstanceOf(InvalidKeyException::class)
         ;
     }
 
@@ -182,6 +153,9 @@ class ArrayListTests extends ListTestCase
             ->then()
                 ->boolean(isset($collection[$key]))
                     ->isTrue()
+                ->exception(function () use ($collection) {
+                    isset($collection['foo']);
+                })->isInstanceOf(InvalidKeyException::class)
         ;
     }
 

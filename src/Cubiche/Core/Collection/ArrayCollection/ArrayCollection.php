@@ -78,6 +78,14 @@ abstract class ArrayCollection implements CollectionInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
+    public function slice($offset, $length = null)
+    {
+        return new static(\array_slice($this->elements, $offset, $length, true));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function hasKey($key)
     {
         $this->validateKey($key);
