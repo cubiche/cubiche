@@ -9,8 +9,8 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
-use Cubiche\Core\Collections\ArrayCollection;
-use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collection\ArrayCollection\SortedArrayHashMap;
 
 /**
  * EventDispatcher interface.
@@ -31,7 +31,7 @@ interface EventDispatcherInterface
     /**
      * Gets the list of event listeners.
      *
-     * @return ArrayCollection
+     * @return ArrayHashMap
      */
     public function listeners();
 
@@ -40,7 +40,7 @@ interface EventDispatcherInterface
      *
      * @param string $eventName
      *
-     * @return SortedArrayCollection
+     * @return SortedArrayHashMap
      */
     public function eventListeners($eventName);
 

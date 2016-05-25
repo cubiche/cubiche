@@ -10,8 +10,9 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
-use Cubiche\Core\Collections\ArrayCollection;
-use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collection\ArrayCollection\ArrayList;
+use Cubiche\Core\Collection\ArrayCollection\SortedArrayHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ReverseComparator;
 
@@ -23,7 +24,7 @@ use Cubiche\Core\Comparable\ReverseComparator;
 class EventDispatcher implements EventDispatcherInterface
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayHashMap
      */
     protected $listeners;
 
@@ -32,7 +33,7 @@ class EventDispatcher implements EventDispatcherInterface
      */
     public function __construct()
     {
-        $this->listeners = new ArrayCollection();
+        $this->listeners = new ArrayHashMap();
     }
 
     /**
@@ -107,10 +108,10 @@ class EventDispatcher implements EventDispatcherInterface
             return;
         }
 
-        /** @var SortedArrayCollection $sortedListeners */
+        /** @var SortedArrayHashMap $sortedListeners */
         $sortedListeners = $this->listeners->get($eventName);
 
-        /** @var ArrayCollection $listeners */
+        /** @var ArrayList $listeners */
         foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $registered) {
                 /** @var DelegateListener $registered */
@@ -143,13 +144,13 @@ class EventDispatcher implements EventDispatcherInterface
     public function addListener($eventName, callable $listener, $priority = 0)
     {
         if (!$this->listeners->containsKey($eventName)) {
-            $this->listeners->set($eventName, new SortedArrayCollection([], new ReverseComparator(new Comparator())));
+            $this->listeners->set($eventName, new SortedArrayHashMap([], new ReverseComparator(new Comparator())));
         }
 
-        /** @var SortedArrayCollection $sortedListeners */
+        /** @var SortedArrayHashMap $sortedListeners */
         $sortedListeners = $this->listeners->get($eventName);
         if (!$sortedListeners->containsKey($priority)) {
-            $sortedListeners->set($priority, new ArrayCollection());
+            $sortedListeners->set($priority, new ArrayList());
         }
 
         $sortedListeners->get($priority)->add(new DelegateListener($listener));
@@ -164,10 +165,10 @@ class EventDispatcher implements EventDispatcherInterface
             return;
         }
 
-        /** @var SortedArrayCollection $sortedListeners */
+        /** @var SortedArrayHashMap $sortedListeners */
         $sortedListeners = $this->listeners->get($eventName);
 
-        /** @var ArrayCollection $listeners */
+        /** @var ArrayList $listeners */
         foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $registered) {
                 /** @var DelegateListener $registered */
@@ -227,10 +228,10 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * Triggers the listeners of an event.
      *
-     * @param SortedArrayCollection $sortedListeners
-     * @param EventInterface        $event
+     * @param SortedArrayHashMap $sortedListeners
+     * @param EventInterface     $event
      */
-    protected function doDispatch(SortedArrayCollection $sortedListeners, EventInterface $event)
+    protected function doDispatch(SortedArrayHashMap $sortedListeners, EventInterface $event)
     {
         foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $listener) {
