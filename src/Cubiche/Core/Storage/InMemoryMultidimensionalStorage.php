@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Core\Storage;
 
-use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collection\ArrayCollection\ArrayList;
 
 /**
  * InMemoryMultidimensionalStorage class.
@@ -20,7 +21,7 @@ use Cubiche\Core\Collections\ArrayCollection;
 class InMemoryMultidimensionalStorage extends AbstractStorage implements MultidimensionalStorageInterface
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayHashMap
      */
     protected $store;
 
@@ -29,7 +30,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
      */
     public function __construct()
     {
-        $this->store = new ArrayCollection();
+        $this->store = new ArrayHashMap();
     }
 
     /**
@@ -48,10 +49,10 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
     public function push($key, $value)
     {
         if (!$this->has($key)) {
-            $this->store->set($key, new ArrayCollection());
+            $this->store->set($key, new ArrayList());
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
         $collection->add($value);
     }
@@ -65,7 +66,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             return;
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         // get the last element and remove from the collection
@@ -78,7 +79,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             $this->store->removeAt($key);
         }
 
-        return $sliced->get($index);
+        return $sliced[$index];
     }
 
     /**
@@ -90,7 +91,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             return array();
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         return $collection->toArray();
@@ -105,7 +106,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             return 0;
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         return $collection->count();
@@ -120,7 +121,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             return array();
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         return $collection->slice($offset, $length)->toArray();

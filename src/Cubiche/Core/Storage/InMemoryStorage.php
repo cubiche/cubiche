@@ -7,10 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage;
 
-use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
 
 /**
  * InMemoryStorage class.
@@ -20,7 +19,7 @@ use Cubiche\Core\Collections\ArrayCollection;
 class InMemoryStorage extends AbstractStorage implements StorageInterface
 {
     /**
-     * @var ArrayCollection
+     * @var HashMap
      */
     protected $store;
 
@@ -31,7 +30,7 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
      */
     public function __construct(array $elements = array())
     {
-        $this->store = new ArrayCollection($elements);
+        $this->store = new ArrayHashMap($elements);
     }
 
     /**
@@ -74,11 +73,8 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
     {
         $this->validateKey($key);
 
-        if ($this->store->containsKey($key)) {
-            $this->store->remove(
-                $this->store->get($key)
-            );
-
+        $removed = $this->store->removeAt($key);
+        if ($removed !== null) {
             return true;
         }
 
