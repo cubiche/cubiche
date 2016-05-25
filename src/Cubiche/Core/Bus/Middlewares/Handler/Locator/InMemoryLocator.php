@@ -9,8 +9,8 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Locator;
 
-use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Bus\Exception\NotFoundException;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
 
 /**
  * InMemoryLocator class.
@@ -31,7 +31,7 @@ class InMemoryLocator implements LocatorInterface
      */
     public function __construct(array $nameOfMessageToHandlerMap = [])
     {
-        $this->handlers = new ArrayCollection();
+        $this->handlers = new ArrayHashMap();
         foreach ($nameOfMessageToHandlerMap as $nameOfMessage => $handler) {
             $this->addHandler($nameOfMessage, $handler);
         }

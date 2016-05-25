@@ -12,8 +12,8 @@ namespace Cubiche\Core\Bus;
 
 use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
-use Cubiche\Core\Collections\ArrayCollection;
-use Cubiche\Core\Collections\SortedArrayCollection;
+use Cubiche\Core\Collection\ArrayCollection\ArrayList;
+use Cubiche\Core\Collection\ArrayCollection\SortedArrayHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Delegate\Delegate;
@@ -27,7 +27,7 @@ use Cubiche\Core\Specification\Criteria;
 class Bus implements BusInterface
 {
     /**
-     * @var SortedArrayCollection
+     * @var SortedArrayHashMap
      */
     protected $middlewares;
 
@@ -38,7 +38,7 @@ class Bus implements BusInterface
      */
     public function __construct(array $middlewares = array())
     {
-        $this->middlewares = new SortedArrayCollection([], new ReverseComparator(new Comparator()));
+        $this->middlewares = new SortedArrayHashMap([], new ReverseComparator(new Comparator()));
         foreach ($middlewares as $priority => $middleware) {
             if (!$middleware instanceof MiddlewareInterface) {
                 throw InvalidMiddlewareException::forUnknownValue($middleware);
@@ -58,10 +58,10 @@ class Bus implements BusInterface
     public function addMiddleware(MiddlewareInterface $middleware, $priority = 0)
     {
         if (!$this->middlewares->containsKey($priority)) {
-            $this->middlewares->set($priority, new ArrayCollection());
+            $this->middlewares->set($priority, new ArrayList());
         }
 
-        /** @var ArrayCollection $middlewares */
+        /** @var ArrayList $middlewares */
         $middlewares = $this->middlewares->get($priority);
         if ($middlewares->findOne(Criteria::eq($middleware)) === null) {
             $middlewares->add($middleware);
@@ -121,7 +121,7 @@ class Bus implements BusInterface
      */
     protected function middlewarePriority(MiddlewareInterface $middleware)
     {
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         foreach ($this->middlewares as $priority => $collection) {
             $targetMiddleware = $collection->findOne(Criteria::eq($middleware));
             if ($targetMiddleware !== null) {

@@ -11,9 +11,9 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
 use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Collections\ArrayCollection;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
+use Cubiche\Core\Collection\ArrayCollection\ArrayList;
 
 /**
  * ChainResolver class.
@@ -23,13 +23,13 @@ use Cubiche\Core\Bus\Exception\InvalidResolverException;
 class ChainResolver implements ResolverInterface
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayList
      */
     protected $resolvers;
 
     public function __construct(array $resolvers)
     {
-        $this->resolvers = new ArrayCollection();
+        $this->resolvers = new ArrayList();
         foreach ($resolvers as $resolver) {
             if (!$resolver instanceof ResolverInterface) {
                 throw InvalidResolverException::forUnknownValue($resolver, ResolverInterface::class);
