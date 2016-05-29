@@ -15,7 +15,7 @@ namespace Cubiche\Core\Projection;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class JoinProjection extends Projection
+class JoinProjection implements ProjectionInterface
 {
     /**
      * @var ProjectionInterface
@@ -46,9 +46,33 @@ class JoinProjection extends Projection
         foreach ($this->left()->project($value) as $leftItem) {
             /** @var \Cubiche\Core\Projection\ProjectionItem $rightItem */
             foreach ($this->right()->project($value) as $rightItem) {
-                yield $leftItem->join($rightItem);
+                if ($this->checkJoin($leftItem, $rightItem)) {
+                    yield $this->doJoin($leftItem, $rightItem);
+                }
             }
         }
+    }
+
+    /**
+     * @param ProjectionItem $leftItem
+     * @param ProjectionItem $rightItem
+     *
+     * @return bool
+     */
+    protected function checkJoin(ProjectionItem $leftItem, ProjectionItem $rightItem)
+    {
+        return true;
+    }
+
+    /**
+     * @param ProjectionItem $leftItem
+     * @param ProjectionItem $rightItem
+     *
+     * @return ProjectionItem
+     */
+    protected function doJoin(ProjectionItem $leftItem, ProjectionItem $rightItem)
+    {
+        return $leftItem->join($rightItem);
     }
 
     /**
@@ -65,21 +89,5 @@ class JoinProjection extends Projection
     public function right()
     {
         return $this->right;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function properties()
-    {
-        $projection = new SimpleProjection();
-        foreach ($this->left()->properties() as $property) {
-            $projection->add($property);
-        }
-        foreach ($this->right()->properties() as $property) {
-            $projection->add($property);
-        }
-
-        return $projection->properties();
     }
 }

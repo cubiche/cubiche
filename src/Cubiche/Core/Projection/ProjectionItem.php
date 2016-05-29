@@ -39,11 +39,29 @@ class ProjectionItem
 
     /**
      * @param string $property
+     *
+     * @return mixed
+     */
+    public function get($property)
+    {
+        return $this->{$property};
+    }
+
+    /**
+     * @param string $property
      * @param mixed  $value
      */
     public function set($property, $value)
     {
         $this->{$property} = $value;
+    }
+
+    /**
+     * @param string $property
+     */
+    public function remove($property)
+    {
+        unset($this->{$property});
     }
 
     /**

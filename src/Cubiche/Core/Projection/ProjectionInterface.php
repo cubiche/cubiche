@@ -23,16 +23,4 @@ interface ProjectionInterface
      * @return \Iterator<ProjectionItem>
      */
     public function project($value);
-
-    /**
-     * @param ProjectionInterface $projection
-     *
-     * @return ProjectionInterface
-     */
-    public function join(ProjectionInterface $projection);
-
-    /**
-     * @return Property[]
-     */
-    public function properties();
 }

@@ -17,7 +17,7 @@ use Cubiche\Core\Selector\SelectorInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ForEachProjection extends Projection
+class ForEachProjection implements ProjectionInterface
 {
     /**
      * @var SelectorInterface
@@ -50,7 +50,7 @@ class ForEachProjection extends Projection
         }
 
         foreach ($values as $value) {
-            //yield from $this->projection()->project($item); in PHP 7
+            //yield from $this->projection()->project($value); in PHP 7
             foreach ($this->projection()->project($value) as $item) {
                 yield $item;
             }
@@ -71,13 +71,5 @@ class ForEachProjection extends Projection
     public function projection()
     {
         return $this->projection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function properties()
-    {
-        return $this->projection()->properties();
     }
 }

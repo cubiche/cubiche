@@ -22,7 +22,7 @@ class Projections
     /**
      * @param SelectorInterface $selector
      *
-     * @return \Cubiche\Core\Projection\PropertyProjectionBuilder
+     * @return \Cubiche\Core\Projection\ExtendedProjection
      */
     public static function select(SelectorInterface $selector)
     {
@@ -37,6 +37,6 @@ class Projections
      */
     public static function forAll(SelectorInterface $selector, ProjectionInterface $projection)
     {
-        return new ForEachProjection($selector, $projection);
+        return new ExtendedProjection(new ForEachProjection($selector, $projection));
     }
 }

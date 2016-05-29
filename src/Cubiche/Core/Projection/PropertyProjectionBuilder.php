@@ -20,7 +20,7 @@ use Cubiche\Core\Selector\NamedSelectorInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class PropertyProjectionBuilder implements ProjectionInterface
+class PropertyProjectionBuilder extends ExtendedProjection
 {
     /**
      * @var PropertyProjection
@@ -42,6 +42,8 @@ class PropertyProjectionBuilder implements ProjectionInterface
      */
     public function __construct(SelectorInterface $selector)
     {
+        parent::__construct($this);
+
         $this->projection = new PropertyProjection();
         $this->currentSelector = $selector;
     }
@@ -92,19 +94,11 @@ class PropertyProjectionBuilder implements ProjectionInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return Property[]
      */
     public function properties()
     {
         return $this->projection()->properties();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function join(ProjectionInterface $projection)
-    {
-        return $this->projection()->join($projection);
     }
 
     /**

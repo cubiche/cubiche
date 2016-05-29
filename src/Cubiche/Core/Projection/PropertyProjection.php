@@ -17,7 +17,7 @@ use Cubiche\Core\Collections\ArrayCollection;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class PropertyProjection extends Projection
+class PropertyProjection implements ProjectionInterface
 {
     /**
      * @var ArrayCollection
@@ -70,25 +70,18 @@ class PropertyProjection extends Projection
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $propertyName
+     */
+    public function remove($propertyName)
+    {
+        $this->properties->removeAt($propertyName);
+    }
+
+    /**
+     * @return Property[]
      */
     public function properties()
     {
         return $this->properties->toArray();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function join(ProjectionInterface $projection)
-    {
-        if ($projection instanceof self) {
-            $join = new self($this->properties());
-            $join->addAll($projection->properties());
-
-            return $join;
-        }
-
-        return new JoinProjection($this, $projection);
     }
 }
