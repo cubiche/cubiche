@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Selector\Composite;
 use Cubiche\Core\Selector\Count;
 use Cubiche\Core\Selector\Custom;
@@ -41,8 +42,6 @@ use Cubiche\Core\Specification\Selector;
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Core\Specification\SpecificationVisitor as BaseSpecificationVisitor;
 use Cubiche\Core\Visitor\VisiteeInterface;
-use Cubiche\Core\Collections\ArrayCollection;
-use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -283,7 +282,7 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
      */
     protected function hasSameOperator(QueryBuilder $queryBuilder1, QueryBuilder $queryBuilder2)
     {
-        $intersection = new ArrayCollection(
+        $intersection = new ArrayHashMap(
             \array_intersect_key($queryBuilder1->getQueryArray(), $queryBuilder2->getQueryArray())
         );
 

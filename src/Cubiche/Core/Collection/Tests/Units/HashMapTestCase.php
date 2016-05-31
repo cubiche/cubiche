@@ -107,17 +107,14 @@ abstract class HashMapTestCase extends CollectionTestCase
      */
     public function testFind()
     {
+        parent::testFind();
+
         $this
             ->given(
                 $unique = $this->uniqueValue(),
                 $criteria = Criteria::same($unique),
                 $emptyCollection = $this->emptyCollection()
             )
-            ->when($findResult = $emptyCollection->find($criteria))
-            ->then()
-                ->hashmap($findResult)
-                    ->isEmpty()
-            ->and()
             ->when($emptyCollection->set('foo', $unique))
             ->and($findResult = $emptyCollection->find($criteria))
             ->then()
@@ -134,11 +131,6 @@ abstract class HashMapTestCase extends CollectionTestCase
                 $criteria = Criteria::same($unique),
                 $randomCollection = $this->randomCollection()
             )
-            ->when($findResult = $randomCollection->find($criteria))
-            ->then()
-                ->hashmap($findResult)
-                    ->isEmpty()
-            ->and()
             ->when($randomCollection->set('bar', $unique))
             ->and($findResult = $randomCollection->find($criteria))
             ->then()

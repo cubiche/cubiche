@@ -19,6 +19,7 @@ use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFac
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactory;
 use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
+use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\RoleType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -59,6 +60,7 @@ trait DocumentManagerTestCaseTrait
             $this->uow = $this->dm->getUnitOfWork();
 
             Type::addType('Phonenumber', PhonenumberType::class);
+            Type::addType('Role', RoleType::class);
 
             $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());

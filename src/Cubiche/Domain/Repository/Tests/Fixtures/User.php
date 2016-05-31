@@ -10,14 +10,19 @@
  */
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collection\ArrayCollection\ArrayHashMapInterface;
+use Cubiche\Core\Collection\ArrayCollection\ArrayList;
+use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
+use Cubiche\Core\Collection\ArrayCollection\ArraySet;
+use Cubiche\Core\Collection\ArrayCollection\ArraySetInterface;
 use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Core\Collections\ArrayCollectionInterface;
-use Cubiche\Core\Collections\ArrayCollection;
 
 /**
  * User Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class User extends AggregateRoot
 {
@@ -32,9 +37,19 @@ class User extends AggregateRoot
     protected $age;
 
     /**
-     * @var ArrayCollectionInterface
+     * @var ArrayListInterface
      */
     protected $phonenumbers;
+
+    /**
+     * @var ArraySetInterface
+     */
+    protected $roles;
+
+    /**
+     * @var ArrayHashMapInterface
+     */
+    protected $languagesLevel;
 
     /**
      * @param UserId $id
@@ -47,7 +62,9 @@ class User extends AggregateRoot
 
         $this->name = $name;
         $this->age = $age;
-        $this->phonenumbers = new ArrayCollection();
+        $this->phonenumbers = new ArrayList();
+        $this->roles = new ArraySet();
+        $this->languagesLevel = new ArrayHashMap();
     }
 
     /**
@@ -75,10 +92,53 @@ class User extends AggregateRoot
     }
 
     /**
-     * @return ArrayCollectionInterface
+     * @return ArrayListInterface
      */
     public function phonenumbers()
     {
         return $this->phonenumbers;
+    }
+
+    /**
+     * @param Phonenumber $phonenumber
+     */
+    public function addPhonenumber(Phonenumber $phonenumber)
+    {
+        return $this->phonenumbers->add($phonenumber);
+    }
+
+    /**
+     * @return ArraySetInterface
+     */
+    public function roles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param Role $role
+     */
+    public function addRole(Role $role)
+    {
+        return $this->roles->add($role);
+    }
+
+    /**
+     * @return ArrayHashMapInterface
+     */
+    public function languagesLevel()
+    {
+        return $this->languagesLevel;
+    }
+
+    /**
+     * @param string $language
+     * @param int    $level
+     *
+     * @return ArrayHashMap|ArrayHashMapInterface
+     */
+    public function setLanguageLevel($language, $level)
+    {
+        return $this->languagesLevel->set($language, $level);
     }
 }

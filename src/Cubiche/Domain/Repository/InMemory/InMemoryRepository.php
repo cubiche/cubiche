@@ -8,33 +8,34 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
+namespace Cubiche\Domain\Repository\InMemory;
 
+use Cubiche\Core\Collection\ArrayCollection\ArraySet;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\Repository;
-use Doctrine\ODM\MongoDB\DocumentRepository as MongoDBDocumentRepository;
 
 /**
- * Document Repository Class.
+ * InMemoryRepository Class.
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class DocumentRepository extends Repository
+class InMemoryRepository extends Repository
 {
     /**
-     * @var MongoDBDocumentRepository
+     * @var ArraySet
      */
-    protected $repository;
+    protected $collection;
 
     /**
-     * @param MongoDBDocumentRepository $repository
+     * @param string $entityName
      */
-    public function __construct(MongoDBDocumentRepository $repository)
+    public function __construct($entityName)
     {
-        parent::__construct($repository->getDocumentName());
+        parent::__construct($entityName);
 
-        $this->repository = $repository;
+        $this->collection = new ArraySet();
     }
 
     /**
@@ -42,7 +43,7 @@ class DocumentRepository extends Repository
      */
     public function get(IdInterface $id)
     {
-        return $this->repository->find($id->toNative());
+        return $this->collection->findOne(Criteria::method('id')->eq($id));
     }
 
     /**
@@ -51,7 +52,7 @@ class DocumentRepository extends Repository
     public function persist($element)
     {
         $this->checkType($element);
-        $this->dm()->persist($element);
+        $this->collection->add($element);
     }
 
     /**
@@ -62,8 +63,6 @@ class DocumentRepository extends Repository
         foreach ($elements as $element) {
             $this->persist($element);
         }
-
-        $this->dm()->flush();
     }
 
     /**
@@ -72,9 +71,7 @@ class DocumentRepository extends Repository
     public function remove($element)
     {
         $this->checkType($element);
-
-        $this->dm()->remove($element);
-        $this->dm()->flush();
+        $this->collection->remove($element);
     }
 
     /**
@@ -82,14 +79,6 @@ class DocumentRepository extends Repository
      */
     public function getIterator()
     {
-        return $this->repository->createQueryBuilder()->getQuery()->getIterator();
-    }
-
-    /**
-     * @return \Doctrine\ODM\MongoDB\DocumentManager
-     */
-    protected function dm()
-    {
-        return $this->repository->getDocumentManager();
+        return $this->collection->getIterator();
     }
 }

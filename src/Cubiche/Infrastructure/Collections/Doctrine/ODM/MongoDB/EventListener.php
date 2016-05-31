@@ -10,9 +10,11 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB;
 
-use Cubiche\Core\Collections\CollectionInterface;
+use Cubiche\Core\Collection\CollectionInterface;
 use Cubiche\Infrastructure\Collections\Doctrine\Common\Collections\PersistentArrayCollection;
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayCollectionType;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayHashMapType;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayListType;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArraySetType;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
@@ -26,6 +28,7 @@ use Doctrine\ODM\MongoDB\Types\Type;
  * Event Listener Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class EventListener
 {
@@ -72,8 +75,10 @@ class EventListener
         foreach ($classMetadata->getReflectionProperties() as $propertyName => $reflectionProperty) {
             $mapping = $classMetadata->getFieldMapping($propertyName);
             $value = $reflectionProperty->getValue($document);
+
             if ((isset($mapping['association']) && $mapping['type'] === 'many')
-                && $value !== null && !($value instanceof PersistentCollection)) {
+                && $value !== null && !($value instanceof PersistentCollection)
+            ) {
                 if ($value instanceof CollectionInterface) {
                     $value = new DoctrineArrayCollection($value->toArray());
                     $reflectionProperty->setValue($document, $value);
@@ -93,11 +98,19 @@ class EventListener
         foreach ($classMetadata->getReflectionProperties() as $propertyName => $reflectionProperty) {
             $mapping = $classMetadata->getFieldMapping($propertyName);
             $value = $reflectionProperty->getValue($document);
-            if ((isset($mapping['association']) && $mapping['type'] === 'many')
-                && $value !== null && !($value instanceof PersistentArrayCollection)) {
-                $value = new PersistentArrayCollection($value);
-                $reflectionProperty->setValue($document, $value);
+
+            if ((isset($mapping['association']) && $mapping['type'] === 'many') && $value !== null) {
+                if (!($value instanceof PersistentArrayCollection)) {
+                    $value = new PersistentArrayCollection($value);
+                    $reflectionProperty->setValue($document, $value);
+                }
             }
+
+//            if ((isset($mapping['association']) && $mapping['type'] === 'many')
+//                && $value !== null && !($value instanceof PersistentArrayCollection)) {
+//                $value = new PersistentArrayCollection($value);
+//                $reflectionProperty->setValue($document, $value);
+//            }
         }
     }
 
@@ -109,18 +122,53 @@ class EventListener
     protected function checkArrayCollectionType(ClassMetadata $classMetadata)
     {
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
-            if ($mapping['type'] === 'ArrayCollection') {
+            if ($mapping['type'] === 'ArrayList') {
                 if (isset($mapping['innerType'])) {
-                    $type = $mapping['innerType'].'ArrayCollection';
+                    $type = $mapping['innerType'].'ArrayList';
                     if (!Type::hasType($type)) {
-                        Type::addType($type, ArrayCollectionType::class);
+                        Type::addType($type, ArrayListType::class);
                         Type::getType($type)->setInnerType($mapping['innerType']);
                     }
+
                     $classMetadata->fieldMappings[$fieldName]['type'] = $type;
                     unset($classMetadata->fieldMappings[$fieldName]['innerType']);
                 } else {
                     throw new MappingException(\sprintf(
-                        'The innerType option of ArrayCollection type is missing in %s::%s mapping.',
+                        'The innerType option of ArrayList type is missing in %s::%s mapping.',
+                        $classMetadata->name,
+                        $fieldName
+                    ));
+                }
+            } elseif ($mapping['type'] === 'ArraySet') {
+                if (isset($mapping['innerType'])) {
+                    $type = $mapping['innerType'].'ArraySet';
+                    if (!Type::hasType($type)) {
+                        Type::addType($type, ArraySetType::class);
+                        Type::getType($type)->setInnerType($mapping['innerType']);
+                    }
+
+                    $classMetadata->fieldMappings[$fieldName]['type'] = $type;
+                    unset($classMetadata->fieldMappings[$fieldName]['innerType']);
+                } else {
+                    throw new MappingException(\sprintf(
+                        'The innerType option of ArraySet type is missing in %s::%s mapping.',
+                        $classMetadata->name,
+                        $fieldName
+                    ));
+                }
+            } elseif ($mapping['type'] === 'ArrayHashMap') {
+                if (isset($mapping['innerType'])) {
+                    $type = $mapping['innerType'].'ArrayHashMap';
+                    if (!Type::hasType($type)) {
+                        Type::addType($type, ArrayHashMapType::class);
+                        Type::getType($type)->setInnerType($mapping['innerType']);
+                    }
+
+                    $classMetadata->fieldMappings[$fieldName]['type'] = $type;
+                    unset($classMetadata->fieldMappings[$fieldName]['innerType']);
+                } else {
+                    throw new MappingException(\sprintf(
+                        'The innerType option of ArrayHashMap type is missing in %s::%s mapping.',
                         $classMetadata->name,
                         $fieldName
                     ));

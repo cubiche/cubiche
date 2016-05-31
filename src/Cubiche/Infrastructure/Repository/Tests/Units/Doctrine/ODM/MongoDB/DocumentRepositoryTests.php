@@ -8,12 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber;
+use Cubiche\Domain\Repository\Tests\Fixtures\Role;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
+use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentRepository;
 use Cubiche\Core\Comparable\Order;
@@ -32,6 +34,50 @@ class DocumentRepositoryTests extends RepositoryTestCase
     /**
      * {@inheritdoc}
      */
+    protected function randomValue()
+    {
+        $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100));
+
+        foreach (range(1, rand(1, 3)) as $key) {
+            $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
+        }
+
+        foreach (range(1, rand(1, 3)) as $key) {
+            $user->addRole($this->faker->randomElement(Role::values()));
+        }
+
+        $user->setLanguageLevel('english', $this->faker->randomDigit);
+        $user->setLanguageLevel('spanish', $this->faker->randomDigit);
+        $user->setLanguageLevel('french', $this->faker->randomDigit);
+
+        return $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function uniqueValue()
+    {
+        $user = new User(UserId::next(), 'Methuselah', 1000);
+
+        $user->addPhonenumber(new Phonenumber('+34 685 165 267'));
+        $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
+        $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
+
+        $user->addRole(Role::ROLE_ADMIN());
+        $user->addRole(Role::ROLE_ADMIN());
+        $user->addRole(Role::ROLE_USER());
+
+        $user->setLanguageLevel('english', 10);
+        $user->setLanguageLevel('spanish', 7);
+        $user->setLanguageLevel('french', 2.5);
+
+        return $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function emptyRepository()
     {
         return new DocumentRepository($this->dm()->getRepository(User::class), $this->documentDataSourceFactory());
@@ -43,5 +89,30 @@ class DocumentRepositoryTests extends RepositoryTestCase
     protected function comparator()
     {
         return Sort::by(Criteria::property('age'), Order::DESC());
+    }
+
+    /**
+     * Test get.
+     */
+    public function testGet()
+    {
+        parent::testGet();
+
+        $this
+            ->given($repository = $this->randomRepository())
+            ->and($unique = $this->uniqueValue())
+            ->and($repository->persist($unique))
+            ->when(
+                /** @var User $object */
+                $object = $repository->get($unique->id())
+            )
+            ->then()
+                ->integer($object->languagesLevel()->get('english'))
+                    ->isEqualTo(10)
+                ->array($object->roles()->toArray())
+                    ->contains(Role::ROLE_ADMIN)
+                ->array($object->phonenumbers()->toArray())
+                    ->contains('+34 685 165 267')
+        ;
     }
 }

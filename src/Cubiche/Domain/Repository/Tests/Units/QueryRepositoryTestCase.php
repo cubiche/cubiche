@@ -12,7 +12,8 @@ namespace Cubiche\Domain\Repository\Tests\Units;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Domain\Repository\RepositoryInterface;
+use Cubiche\Core\Collection\Tests\Units\CollectionTestCase;
+use Cubiche\Domain\Repository\QueryRepositoryInterface;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use mageekguy\atoum\adapter as Adapter;
@@ -22,12 +23,12 @@ use mageekguy\atoum\test\assertion\manager as Manager;
 use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
- * RepositoryTestCase Class.
+ * QueryRepositoryTestCase Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class RepositoryTestCase extends TestCase
+abstract class QueryRepositoryTestCase extends CollectionTestCase
 {
     /**
      * @param Adapter   $adapter
@@ -74,9 +75,17 @@ abstract class RepositoryTestCase extends TestCase
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function randomCollection($size = null)
+    {
+        return $this->randomRepository($size);
+    }
+
+    /**
      * @param int $size
      *
-     * @return RepositoryInterface
+     * @return QueryRepositoryInterface
      */
     protected function randomRepository($size = null)
     {
@@ -89,27 +98,17 @@ abstract class RepositoryTestCase extends TestCase
     }
 
     /**
-     * @return RepositoryInterface
+     * {@inheritdoc}
      */
-    abstract protected function emptyRepository();
+    protected function emptyCollection()
+    {
+        return $this->emptyRepository();
+    }
 
     /**
-     * @param int $size
-     *
-     * @return mixed[]
+     * @return QueryRepositoryInterface
      */
-    protected function randomValues($size = null)
-    {
-        $items = array();
-        if ($size === null) {
-            $size = \rand(10, 20);
-        }
-        foreach (\range(0, $size - 1) as $value) {
-            $items[$value] = $this->randomValue();
-        }
-
-        return $items;
-    }
+    abstract protected function emptyRepository();
 
     /**
      * {@inheritdoc}
@@ -186,7 +185,7 @@ abstract class RepositoryTestCase extends TestCase
                 $repository->persist($value);
             })
             ->then()
-                ->object($other = $repository->get($value->id()))
+                ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
                     ->integer($other->age())
                         ->isEqualTo($age + 1)
         ;
@@ -270,15 +269,17 @@ abstract class RepositoryTestCase extends TestCase
     }
 
     /**
-     * Test getIterator.
+     * Test findOne.
      */
-    public function testGetIterator()
+    public function testFindOne()
     {
         $this
-            ->given($collection = $this->randomRepository())
+            ->given($repository = $this->emptyRepository())
+            ->and($value = $this->randomValue())
+            ->when($repository->persist($value))
             ->then()
-                ->object($collection->getIterator())
-                    ->isInstanceOf(\Traversable::class)
+                ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
+                    ->isEqualTo($value)
         ;
     }
 }

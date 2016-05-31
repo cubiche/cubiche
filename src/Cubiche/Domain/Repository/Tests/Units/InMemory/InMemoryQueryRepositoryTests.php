@@ -7,26 +7,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Cubiche\Domain\Repository\Tests\Units\InMemory;
 
-namespace Cubiche\Domain\Repository\Tests\Units;
-
-use Cubiche\Domain\Repository\InMemoryRepository;
+use Cubiche\Domain\Repository\InMemory\InMemoryQueryRepository;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
+use Cubiche\Domain\Repository\Tests\Units\QueryRepositoryTestCase;
 
 /**
- * In Memory Repository Tests class.
+ * InMemoryQueryRepositoryTests class.
  *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class InMemoryRepositoryTests extends RepositoryTestCase
+class InMemoryQueryRepositoryTests extends QueryRepositoryTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function emptyRepository()
     {
-        return new InMemoryRepository(User::class);
+        return new InMemoryQueryRepository(User::class);
     }
 
     /**
@@ -36,7 +37,7 @@ class InMemoryRepositoryTests extends RepositoryTestCase
     {
         $this
             ->exception(function () {
-                new InMemoryRepository(UserId::class);
+                new InMemoryQueryRepository(UserId::class);
             })
             ->isInstanceOf(\LogicException::class)
         ;

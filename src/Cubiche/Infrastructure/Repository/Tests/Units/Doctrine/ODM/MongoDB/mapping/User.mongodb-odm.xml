@@ -7,7 +7,10 @@
         <field name="id" id="true" type="Identifier" strategy="none" target="Cubiche\Domain\Repository\Tests\Fixtures\UserId"/>
         <field fieldName="name" name="name" type="string" />
         <field fieldName="age" name="age" type="integer" />
-        <field fieldName="phonenumbers" name="phonenumbers" type="ArrayCollection" innerType="Phonenumber"/>
+
+        <field fieldName="phonenumbers" name="phonenumbers" type="ArrayList" innerType="Phonenumber"/>
+        <field fieldName="roles" name="roles" type="ArraySet" innerType="Role"/>
+        <field fieldName="languagesLevel" name="languagesLevel" type="ArrayHashMap" innerType="integer"/>
     </document>
     
 </doctrine-mongo-mapping>

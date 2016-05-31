@@ -39,6 +39,8 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function toArray();
 
     /**
+     * Returns a new collection sorted by the given criteria.
+     *
      * @param ComparatorInterface $criteria
      *
      * @return CollectionInterface

@@ -158,6 +158,43 @@ abstract class ListTestCase extends CollectionTestCase
     }
 
     /**
+     * Test find.
+     */
+    public function testFind()
+    {
+        parent::testFind();
+
+        $this
+            ->given(
+                $unique = $this->uniqueValue(),
+                $criteria = Criteria::same($unique),
+                $emptyCollection = $this->emptyCollection()
+            )
+            ->when($emptyCollection->add($unique))
+            ->and($findResult = $emptyCollection->find($criteria))
+            ->then()
+                ->list($findResult)
+                    ->size()
+                        ->isEqualTo(1)
+                ->array($findResult->toArray())
+                    ->contains($unique)
+        ;
+
+        $this
+            ->given(
+                $unique = $this->uniqueValue(),
+                $criteria = Criteria::same($unique),
+                $randomCollection = $this->randomCollection()
+            )
+            ->when($randomCollection->add($unique))
+            ->and($findResult = $randomCollection->find($criteria))
+            ->then()
+                ->array($findResult->toArray())
+                    ->contains($unique)
+        ;
+    }
+
+    /**
      * Test findOne.
      */
     public function testFindOne()

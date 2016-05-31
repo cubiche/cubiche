@@ -172,15 +172,6 @@ abstract class CollectionTestCase extends TestCase
             ->then()
                 ->collection($findResult)
                     ->isEmpty()
-            ->and()
-            ->when($emptyCollection->add($unique))
-            ->and($findResult = $emptyCollection->find($criteria))
-            ->then()
-                ->collection($findResult)
-                    ->size()
-                        ->isEqualTo(1)
-                ->array($findResult->toArray())
-                    ->contains($unique)
         ;
 
         $this
@@ -193,12 +184,6 @@ abstract class CollectionTestCase extends TestCase
             ->then()
                 ->collection($findResult)
                     ->isEmpty()
-            ->and()
-            ->when($randomCollection->add($unique))
-            ->and($findResult = $randomCollection->find($criteria))
-            ->then()
-                ->array($findResult->toArray())
-                    ->contains($unique)
         ;
     }
 
