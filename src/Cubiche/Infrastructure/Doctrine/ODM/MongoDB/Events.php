@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -8,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\Events as BaseEvents;
 
@@ -127,4 +126,11 @@ final class Events
      * @see \Doctrine\ODM\MongoDB\Events::onClear
      */
     const ON_CLEAR = BaseEvents::onClear;
+
+    /**
+     * @var string
+     *
+     * @see \Doctrine\ODM\MongoDB\Events::registerDriverMetadata
+     */
+    const REGISTER_DRIVER_METADATA = 'registerDriverMetadata';
 }

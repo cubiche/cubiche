@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
@@ -40,6 +39,6 @@ abstract class IdType extends NativeValueObjectType
     {
         $class = $this->targetClass();
 
-        return 'return $value !== null && $value instanceof '.$class.' ? '.$class.'::fromNative($value) : $value;';
+        return '$return = $value !== null && $value instanceof '.$class.' ? '.$class.'::fromNative($value) : $value;';
     }
 }

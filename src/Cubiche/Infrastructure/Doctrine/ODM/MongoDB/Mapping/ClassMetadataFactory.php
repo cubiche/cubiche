@@ -8,13 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping;
+namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping;
 
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory as BaseClassMetadataFactory;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Events;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Event\PreLoadClassMetadataEventArgs;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\PreLoadClassMetadataEventArgs;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
 
 /**

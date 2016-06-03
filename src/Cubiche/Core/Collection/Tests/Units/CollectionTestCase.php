@@ -107,9 +107,8 @@ abstract class CollectionTestCase extends TestCase
         $this
             ->given($collection = $this->randomCollection(5))
             ->then()
-                ->collection($collection)
-                    ->size()
-                        ->isEqualTo(5)
+                ->integer($collection->count())
+                    ->isEqualTo(5)
         ;
     }
 

@@ -8,17 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
 use Doctrine\Common\EventSubscriber as BaseEventSubscriber;
 
 /**
- * Event Subscriber Class.
+ * MetadataEventSubscriber class.
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventSubscriber extends EventListener implements BaseEventSubscriber
+class MetadataEventSubscriber extends MetadataEventListener implements BaseEventSubscriber
 {
     /**
      * {@inheritdoc}
@@ -26,7 +26,7 @@ class EventSubscriber extends EventListener implements BaseEventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            Events::POST_LOAD_CLASS_METADATA,
+            Events::LOAD_CLASS_METADATA,
         );
     }
 }

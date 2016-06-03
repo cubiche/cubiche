@@ -10,10 +10,11 @@
  */
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventSubscriber as CollectionsEventSubscriber;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as CollectionsEventSubscriber;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener\MetadataEventSubscriber;
 use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory;
@@ -62,9 +63,10 @@ trait DocumentManagerTestCaseTrait
             Type::addType('Phonenumber', PhonenumberType::class);
             Type::addType('Role', RoleType::class);
 
+            $this->dm->getEventManager()->addEventSubscriber(new MetadataEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
-            $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
         }
 
         return $this->dm;

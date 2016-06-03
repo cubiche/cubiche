@@ -8,10 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB;
 
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Events;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
 use Doctrine\Common\EventSubscriber as BaseEventSubscriber;
 
 /**

@@ -1,16 +1,33 @@
 <doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:cubiche="cubiche"
                 xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
                 http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
     <document name="Cubiche\Domain\Repository\Tests\Fixtures\User" collection="user">
-        <field name="id" id="true" type="Identifier" strategy="none" target="Cubiche\Domain\Repository\Tests\Fixtures\UserId"/>
+        <field name="id" id="true" type="Identifier" strategy="none" target="Cubiche\Domain\Repository\Tests\Fixtures\UserId" />
+            <!--<cubiche:id type="Cubiche\Domain\Repository\Tests\Fixtures\UserId" />-->
+        <!--</field>-->
+
         <field fieldName="name" name="name" type="string" />
         <field fieldName="age" name="age" type="integer" />
 
-        <field fieldName="phonenumbers" name="phonenumbers" type="ArrayList" innerType="Phonenumber"/>
-        <field fieldName="roles" name="roles" type="ArraySet" innerType="Role"/>
-        <field fieldName="languagesLevel" name="languagesLevel" type="ArrayHashMap" innerType="integer"/>
+        <field fieldName="phonenumbers" name="phonenumbers" type="collection">
+            <cubiche:collection type="ArrayList" of="Phonenumber" />
+        </field>
+        <field fieldName="roles" name="roles" type="collection">
+            <cubiche:collection type="ArraySet" of="Role" />
+        </field>
+        <field fieldName="languagesLevel" name="languagesLevel" type="collection">
+            <cubiche:collection type="ArrayHashMap" of="integer" />
+        </field>
+
+        <embed-many field="addresses" target-document="Cubiche\Domain\Repository\Tests\Fixtures\Address">
+            <cubiche:collection type="ArraySet" />
+        </embed-many>
+        <reference-many field="friends" target-document="Cubiche\Domain\Repository\Tests\Fixtures\User">
+            <cubiche:collection type="ArraySet" />
+        </reference-many>
     </document>
     
 </doctrine-mongo-mapping>

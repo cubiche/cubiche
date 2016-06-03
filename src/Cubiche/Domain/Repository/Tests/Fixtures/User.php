@@ -52,6 +52,16 @@ class User extends AggregateRoot
     protected $languagesLevel;
 
     /**
+     * @var ArraySetInterface
+     */
+    protected $addresses;
+
+    /**
+     * @var ArraySetInterface
+     */
+    protected $friends;
+
+    /**
      * @param UserId $id
      * @param string $name
      * @param int    $age
@@ -65,6 +75,8 @@ class User extends AggregateRoot
         $this->phonenumbers = new ArrayList();
         $this->roles = new ArraySet();
         $this->languagesLevel = new ArrayHashMap();
+        $this->addresses = new ArraySet();
+        $this->friends = new ArraySet();
     }
 
     /**
@@ -140,5 +152,37 @@ class User extends AggregateRoot
     public function setLanguageLevel($language, $level)
     {
         return $this->languagesLevel->set($language, $level);
+    }
+
+    /**
+     * @return ArraySetInterface
+     */
+    public function addresses()
+    {
+        return $this->addresses;
+    }
+
+    /**
+     * @param Address $address
+     */
+    public function addAddress(Address $address)
+    {
+        return $this->addresses->add($address);
+    }
+
+    /**
+     * @return ArraySetInterface
+     */
+    public function friends()
+    {
+        return $this->friends;
+    }
+
+    /**
+     * @param User $friend
+     */
+    public function addFriend(User $friend)
+    {
+        return $this->friends->add($friend);
     }
 }

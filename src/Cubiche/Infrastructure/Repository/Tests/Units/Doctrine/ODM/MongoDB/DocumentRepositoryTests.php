@@ -12,6 +12,8 @@ namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\Repository\Tests\Fixtures\Address;
+use Cubiche\Domain\Repository\Tests\Fixtures\AddressId;
 use Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber;
 use Cubiche\Domain\Repository\Tests\Fixtures\Role;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
@@ -38,13 +40,33 @@ class DocumentRepositoryTests extends RepositoryTestCase
     {
         $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100));
 
-        foreach (range(1, rand(1, 3)) as $key) {
+        foreach (range(1, 3) as $key) {
             $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
         }
 
-        foreach (range(1, rand(1, 3)) as $key) {
+        foreach (range(1, 3) as $key) {
             $user->addRole($this->faker->randomElement(Role::values()));
         }
+
+        $user->addAddress(
+            new Address(
+                AddressId::next(),
+                'Home',
+                $this->faker->streetAddress,
+                $this->faker->postcode,
+                $this->faker->city
+            )
+        );
+
+        $user->addAddress(
+            new Address(
+                AddressId::next(),
+                'Work',
+                $this->faker->streetAddress,
+                $this->faker->postcode,
+                $this->faker->city
+            )
+        );
 
         $user->setLanguageLevel('english', $this->faker->randomDigit);
         $user->setLanguageLevel('spanish', $this->faker->randomDigit);
@@ -71,6 +93,26 @@ class DocumentRepositoryTests extends RepositoryTestCase
         $user->setLanguageLevel('english', 10);
         $user->setLanguageLevel('spanish', 7);
         $user->setLanguageLevel('french', 2.5);
+
+        $user->addAddress(
+            new Address(
+                AddressId::next(),
+                'Home',
+                $this->faker->streetAddress,
+                $this->faker->postcode,
+                $this->faker->city
+            )
+        );
+
+        $user->addAddress(
+            new Address(
+                AddressId::next(),
+                'Work',
+                $this->faker->streetAddress,
+                $this->faker->postcode,
+                $this->faker->city
+            )
+        );
 
         return $user;
     }
@@ -101,6 +143,12 @@ class DocumentRepositoryTests extends RepositoryTestCase
         $this
             ->given($repository = $this->randomRepository())
             ->and($unique = $this->uniqueValue())
+            ->and($friend = new User(UserId::next(), 'Ivan', 32))
+            ->and($friend1 = new User(UserId::next(), 'Karel', 32))
+            ->and($repository->persist($friend))
+            ->and($repository->persist($friend1))
+            ->and($unique->addFriend($friend))
+            ->and($unique->addFriend($friend1))
             ->and($repository->persist($unique))
             ->when(
                 /** @var User $object */
@@ -113,6 +161,12 @@ class DocumentRepositoryTests extends RepositoryTestCase
                     ->contains(Role::ROLE_ADMIN)
                 ->array($object->phonenumbers()->toArray())
                     ->contains('+34 685 165 267')
+                ->array($object->addresses()->toArray())
+                    ->object[0]->isInstanceOf(Address::class)
+                ->string($object->addresses()->toArray()[0]->name())
+                    ->isEqualTo('Home')
+                ->integer($object->friends()->count())
+                    ->isEqualTo(2)
         ;
     }
 }

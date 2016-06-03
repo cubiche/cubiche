@@ -24,7 +24,8 @@
         "ramsey/uuid":                  "^3.2",
         "symfony/property-access":      "^3.0",
         "react/event-loop":             "^0.4.2",
-        "respect/validation":           "1.1.2"
+        "respect/validation":           "1.1.2",
+        "jms/metadata":                 "~1.1"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",

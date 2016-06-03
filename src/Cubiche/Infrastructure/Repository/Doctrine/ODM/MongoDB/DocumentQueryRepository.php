@@ -145,7 +145,9 @@ class DocumentQueryRepository extends QueryRepository
     public function persist($element)
     {
         $this->checkType($element);
+
         $this->dm()->persist($element);
+        $this->dm()->flush();
     }
 
     /**
@@ -154,7 +156,8 @@ class DocumentQueryRepository extends QueryRepository
     public function persistAll($elements)
     {
         foreach ($elements as $element) {
-            $this->persist($element);
+            $this->checkType($element);
+            $this->dm()->persist($element);
         }
 
         $this->dm()->flush();

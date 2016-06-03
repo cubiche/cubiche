@@ -81,9 +81,7 @@ abstract class RepositoryTestCase extends TestCase
     protected function randomRepository($size = null)
     {
         $repository = $this->emptyRepository();
-        foreach ($this->randomValues($size) as $randomValue) {
-            $repository->persist($randomValue);
-        }
+        $repository->persistAll($this->randomValues($size));
 
         return $repository;
     }

@@ -51,7 +51,9 @@ class DocumentRepository extends Repository
     public function persist($element)
     {
         $this->checkType($element);
+
         $this->dm()->persist($element);
+        $this->dm()->flush($element);
     }
 
     /**
@@ -60,7 +62,8 @@ class DocumentRepository extends Repository
     public function persistAll($elements)
     {
         foreach ($elements as $element) {
-            $this->persist($element);
+            $this->checkType($element);
+            $this->dm()->persist($element);
         }
 
         $this->dm()->flush();

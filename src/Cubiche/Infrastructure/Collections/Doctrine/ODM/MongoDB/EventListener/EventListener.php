@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -8,13 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Core\Collection\CollectionInterface;
-use Cubiche\Infrastructure\Collections\Doctrine\Common\Collections\PersistentArrayCollection;
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayHashMapType;
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArrayListType;
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types\ArraySetType;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
@@ -25,13 +22,21 @@ use Doctrine\ODM\MongoDB\PersistentCollection;
 use Doctrine\ODM\MongoDB\Types\Type;
 
 /**
- * Event Listener Class.
+ * EventListener class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class EventListener
 {
+    /**
+     * @param RegisterDriverMetadataEventArgs $eventArgs
+     */
+    public function registerDriverMetadata(RegisterDriverMetadataEventArgs $eventArgs)
+    {
+        $eventArgs->driverFactory()->registerXmlDriver(XmlDriver::class);
+    }
+
     /**
      * @param LifecycleEventArgs $eventArgs
      */
@@ -100,17 +105,15 @@ class EventListener
             $value = $reflectionProperty->getValue($document);
 
             if ((isset($mapping['association']) && $mapping['type'] === 'many') && $value !== null) {
-                if (!($value instanceof PersistentArrayCollection)) {
-                    $value = new PersistentArrayCollection($value);
+                if (isset($mapping['cubiche:collection'])) {
+                    $value = new $mapping['cubiche:collection']['persistenClassName']($value);
+                    if ($reflectionProperty->isPrivate()) {
+                        $reflectionProperty->setAccessible(true);
+                    }
+
                     $reflectionProperty->setValue($document, $value);
                 }
             }
-
-//            if ((isset($mapping['association']) && $mapping['type'] === 'many')
-//                && $value !== null && !($value instanceof PersistentArrayCollection)) {
-//                $value = new PersistentArrayCollection($value);
-//                $reflectionProperty->setValue($document, $value);
-//            }
         }
     }
 
@@ -122,57 +125,28 @@ class EventListener
     protected function checkArrayCollectionType(ClassMetadata $classMetadata)
     {
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
-            if ($mapping['type'] === 'ArrayList') {
-                if (isset($mapping['innerType'])) {
-                    $type = $mapping['innerType'].'ArrayList';
-                    if (!Type::hasType($type)) {
-                        Type::addType($type, ArrayListType::class);
-                        Type::getType($type)->setInnerType($mapping['innerType']);
-                    }
+            if (isset($mapping['embedded']) || isset($mapping['reference'])) {
+                continue;
+            }
 
-                    $classMetadata->fieldMappings[$fieldName]['type'] = $type;
-                    unset($classMetadata->fieldMappings[$fieldName]['innerType']);
-                } else {
+            if (isset($mapping['cubiche:collection'])) {
+                $collectionMapping = $mapping['cubiche:collection'];
+                if (!isset($mapping['type']) && !isset($collectionMapping['of'])) {
                     throw new MappingException(\sprintf(
-                        'The innerType option of ArrayList type is missing in %s::%s mapping.',
+                        'The "of" option in %s type is missing in %s::%s mapping.',
+                        $collectionMapping['type'],
                         $classMetadata->name,
                         $fieldName
                     ));
                 }
-            } elseif ($mapping['type'] === 'ArraySet') {
-                if (isset($mapping['innerType'])) {
-                    $type = $mapping['innerType'].'ArraySet';
-                    if (!Type::hasType($type)) {
-                        Type::addType($type, ArraySetType::class);
-                        Type::getType($type)->setInnerType($mapping['innerType']);
-                    }
 
-                    $classMetadata->fieldMappings[$fieldName]['type'] = $type;
-                    unset($classMetadata->fieldMappings[$fieldName]['innerType']);
-                } else {
-                    throw new MappingException(\sprintf(
-                        'The innerType option of ArraySet type is missing in %s::%s mapping.',
-                        $classMetadata->name,
-                        $fieldName
-                    ));
+                $type = $collectionMapping['of'].$collectionMapping['type'];
+                if (!Type::hasType($type)) {
+                    Type::addType($type, $collectionMapping['typeClassName']);
+                    Type::getType($type)->setInnerType($collectionMapping['of']);
                 }
-            } elseif ($mapping['type'] === 'ArrayHashMap') {
-                if (isset($mapping['innerType'])) {
-                    $type = $mapping['innerType'].'ArrayHashMap';
-                    if (!Type::hasType($type)) {
-                        Type::addType($type, ArrayHashMapType::class);
-                        Type::getType($type)->setInnerType($mapping['innerType']);
-                    }
 
-                    $classMetadata->fieldMappings[$fieldName]['type'] = $type;
-                    unset($classMetadata->fieldMappings[$fieldName]['innerType']);
-                } else {
-                    throw new MappingException(\sprintf(
-                        'The innerType option of ArrayHashMap type is missing in %s::%s mapping.',
-                        $classMetadata->name,
-                        $fieldName
-                    ));
-                }
+                $classMetadata->fieldMappings[$fieldName]['type'] = $type;
             }
         }
     }

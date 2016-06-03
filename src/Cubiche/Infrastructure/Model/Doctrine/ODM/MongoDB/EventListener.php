@@ -30,6 +30,10 @@ class EventListener
         /** @var \Doctrine\ODM\MongoDB\Mapping\ClassMetadata $classMetadata */
         $classMetadata = $eventArgs->getClassMetadata();
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
+            if (!isset($mapping['type'])) {
+                continue;
+            }
+
             if ($mapping['type'] === 'NativeValueObject' && (!isset($mapping['id']) || $mapping['id'] === false)) {
                 if (isset($mapping['target'])) {
                     $type = str_replace('\\', '.', $mapping['target']);
