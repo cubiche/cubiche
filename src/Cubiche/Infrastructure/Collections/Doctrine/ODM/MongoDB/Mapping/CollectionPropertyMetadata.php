@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
@@ -18,11 +19,6 @@ use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
  */
 class CollectionPropertyMetadata extends PropertyMetadata
 {
-    /**
-     * @var string
-     */
-    public $type;
-
     /**
      * @var string
      */
@@ -39,11 +35,6 @@ class CollectionPropertyMetadata extends PropertyMetadata
     public $of;
 
     /**
-     * @var string
-     */
-    public $namespace;
-
-    /**
      * CollectionPropertyMetadata constructor.
      *
      * @param string $class
@@ -52,6 +43,32 @@ class CollectionPropertyMetadata extends PropertyMetadata
     public function __construct($class, $name)
     {
         parent::__construct($class, $name, 'collection');
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        $this->typeClassName = sprintf(
+            'Cubiche\\Infrastructure\\Collections\\Doctrine\\ODM\\MongoDB\\Types\\%sType',
+            $type
+        );
+
+        $this->persistenClassName = sprintf(
+            'Cubiche\\Infrastructure\\Collections\\Doctrine\\Common\\Collections\\Persistent%s',
+            $type
+        );
+    }
+
+    /**
+     * @param string $of
+     */
+    public function setOf($of)
+    {
+        $this->of = $of;
     }
 
     /**

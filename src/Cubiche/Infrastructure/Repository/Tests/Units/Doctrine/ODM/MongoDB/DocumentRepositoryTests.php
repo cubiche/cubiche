@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Repository\Tests\Fixtures\Address;
 use Cubiche\Domain\Repository\Tests\Fixtures\AddressId;
 use Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber;
@@ -40,6 +42,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
     {
         $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100));
 
+        $user->setFax(new Phonenumber($this->faker->phoneNumber));
         foreach (range(1, 3) as $key) {
             $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
         }
@@ -54,7 +57,8 @@ class DocumentRepositoryTests extends RepositoryTestCase
                 'Home',
                 $this->faker->streetAddress,
                 $this->faker->postcode,
-                $this->faker->city
+                $this->faker->city,
+                Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
             )
         );
 
@@ -64,7 +68,8 @@ class DocumentRepositoryTests extends RepositoryTestCase
                 'Work',
                 $this->faker->streetAddress,
                 $this->faker->postcode,
-                $this->faker->city
+                $this->faker->city,
+                Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
             )
         );
 
@@ -82,6 +87,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
     {
         $user = new User(UserId::next(), 'Methuselah', 1000);
 
+        $user->setFax(new Phonenumber('+34-208-1234567'));
         $user->addPhonenumber(new Phonenumber('+34 685 165 267'));
         $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
         $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
@@ -100,7 +106,8 @@ class DocumentRepositoryTests extends RepositoryTestCase
                 'Home',
                 $this->faker->streetAddress,
                 $this->faker->postcode,
-                $this->faker->city
+                $this->faker->city,
+                Coordinate::fromLatLng(41.390205, 2.154007)
             )
         );
 
@@ -110,7 +117,8 @@ class DocumentRepositoryTests extends RepositoryTestCase
                 'Work',
                 $this->faker->streetAddress,
                 $this->faker->postcode,
-                $this->faker->city
+                $this->faker->city,
+                Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
             )
         );
 
@@ -161,10 +169,14 @@ class DocumentRepositoryTests extends RepositoryTestCase
                     ->contains(Role::ROLE_ADMIN)
                 ->array($object->phonenumbers()->toArray())
                     ->contains('+34 685 165 267')
+                ->string($object->fax()->number())
+                    ->isEqualTo('+34-208-1234567')
                 ->array($object->addresses()->toArray())
                     ->object[0]->isInstanceOf(Address::class)
                 ->string($object->addresses()->toArray()[0]->name())
                     ->isEqualTo('Home')
+                ->object($object->addresses()->toArray()[0]->coordinate())
+                    ->isEqualTo(Coordinate::fromLatLng(41.390205, 2.154007))
                 ->integer($object->friends()->count())
                     ->isEqualTo(2)
         ;

@@ -7,10 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\Driver;
 
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\CollectionPropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver as BaseXmlDriver;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Metadata\MergeableClassMetadata;
 
 /**
@@ -26,68 +28,68 @@ class XmlDriver extends BaseXmlDriver
     protected function addMetadataFor(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
     {
         foreach ($xmlRoot->xpath('//cubiche:collection') as $item) {
-            $mapping = array('of' => null);
-            foreach ($item->attributes() as $key => $value) {
-                $mapping[$key] = (string) $value;
+            // get the field tag
+            $field = $item->xpath('..')[0];
+            $fieldMapping = $this->getMappingAttributes($field);
+            $fieldName = isset($fieldMapping['name']) ? $fieldMapping['name'] : $fieldMapping['field'];
+
+            $itemMapping = $this->getMappingAttributes($item, array('of' => null));
+            if (!isset($itemMapping['type'])) {
+                throw MappingException::inField(
+                    'The cubiche:collection definition should have a "type" value',
+                    $classMetadata->name,
+                    $fieldName
+                );
             }
 
-            if (!isset($mapping['type'])) {
-                throw new \InvalidArgumentException('The cubiche:collection definition should have a "type" value.');
-            }
+            $collectionType = $itemMapping['type'];
+            $collectionOf = $itemMapping['of'];
 
-            $collectionType = $mapping['type'];
-            $collectionOf = $mapping['of'];
-
-            // get the parent tag
-            $tag = $item->xpath('..')[0];
-            $mapping = array();
-            foreach ($tag->attributes() as $key => $value) {
-                $mapping[$key] = (string) $value;
-            }
-
-            if ($tag->getName() == 'field') {
-                if (isset($mapping['name'])) {
-                    $name = $mapping['name'];
-                } else {
-                    throw new \InvalidArgumentException('Cannot infer a name from the mapping');
+            if ($field->getName() == 'field') {
+                if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
+                    throw MappingException::inField(
+                        'The cubiche:collection configuration is only for field tags that is not an id',
+                        $classMetadata->name,
+                        $fieldName
+                    );
                 }
 
-                $propertyMetadata = new CollectionPropertyMetadata($classMetadata->name, $name);
-                $propertyMetadata->type = $collectionType;
-                $propertyMetadata->of = $collectionOf;
+                if (!isset($fieldMapping['type']) ||
+                    (isset($fieldMapping['type']) && $fieldMapping['type'] !== 'CubicheType')
+                ) {
+                    throw MappingException::inField(
+                        'The cubiche:collection parent should have a "type" value equal to CubicheType',
+                        $classMetadata->name,
+                        $fieldName
+                    );
+                }
 
-                $propertyMetadata->typeClassName =
-                    'Cubiche\\Infrastructure\\Collections\\Doctrine\\ODM\\MongoDB\\Types\\'.
-                    $collectionType.'Type'
-                ;
-
-                $propertyMetadata->persistenClassName =
-                    'Cubiche\\Infrastructure\\Collections\\Doctrine\\Common\\Collections\\Persistent'.
-                    $collectionType
-                ;
+                $propertyMetadata = new CollectionPropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata->setType($collectionType);
+                $propertyMetadata->setOf($collectionOf);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
-            } elseif ($tag->getName() == 'embed-many' || $tag->getName() == 'reference-many') {
-                if (isset($mapping['field'])) {
-                    $field = $mapping['field'];
+            } elseif ($field->getName() == 'embed-many' || $field->getName() == 'reference-many') {
+                if (isset($fieldMapping['field'])) {
+                    $field = $fieldMapping['field'];
                 } else {
-                    throw new \InvalidArgumentException('Cannot infer a field from the mapping');
+                    throw MappingException::inField(
+                        'Cannot infer a field',
+                        $classMetadata->name,
+                        $fieldName
+                    );
                 }
 
                 $propertyMetadata = new CollectionPropertyMetadata($classMetadata->name, $field);
-                $propertyMetadata->type = $collectionType;
-
-                $propertyMetadata->typeClassName =
-                    'Cubiche\\Infrastructure\\Collections\\Doctrine\\ODM\\MongoDB\\Types\\'.
-                    $collectionType.'Type'
-                ;
-
-                $propertyMetadata->persistenClassName =
-                    'Cubiche\\Infrastructure\\Collections\\Doctrine\\Common\\Collections\\Persistent'.
-                    $collectionType
-                ;
+                $propertyMetadata->setType($collectionType);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
+            } else {
+                throw MappingException::inField(
+                    'The cubiche:collection configuration is only for field, embed-many or reference-many tags',
+                    $classMetadata->name,
+                    $fieldName
+                );
             }
         }
     }

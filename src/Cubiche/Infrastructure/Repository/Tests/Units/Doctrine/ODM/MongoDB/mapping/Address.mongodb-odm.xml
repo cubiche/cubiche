@@ -1,14 +1,22 @@
 <doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
-                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
+                xmlns:cubiche="cubiche">
 
     <embedded-document name="Cubiche\Domain\Repository\Tests\Fixtures\Address">
-        <field name="id" type="Identifier" target="Cubiche\Domain\Repository\Tests\Fixtures\AddressId"/>
+        <field name="id" id="true" type="Identifier" strategy="none">
+            <cubiche:id type="Cubiche\Domain\Repository\Tests\Fixtures\AddressId" />
+        </field>
+
         <field fieldName="name" name="name" type="string" />
         <field fieldName="street" name="street" type="string" />
         <field fieldName="zipcode" name="zipcode" type="string" />
         <field fieldName="city" name="city" type="string" />
+
+        <field fieldName="coordinate" name="coordinate" type="CubicheType">
+            <cubiche:coordinate />
+        </field>
     </embedded-document>
     
 </doctrine-mongo-mapping>

@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver;
 
 use Metadata\MergeableClassMetadata;
@@ -37,6 +38,22 @@ abstract class XmlDriver extends FileDriver
         $this->addMetadataFor($xmlRoot, $classMetadata);
 
         return $classMetadata;
+    }
+
+    /**
+     * @param \SimpleXMLElement $item
+     * @param array             $default
+     *
+     * @return array
+     */
+    protected function getMappingAttributes(\SimpleXMLElement $item, array $default = array())
+    {
+        $mapping = $default;
+        foreach ($item->attributes() as $key => $value) {
+            $mapping[$key] = (string) $value;
+        }
+
+        return $mapping;
     }
 
     /**

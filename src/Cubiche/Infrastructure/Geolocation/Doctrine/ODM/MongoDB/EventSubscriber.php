@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
 use Doctrine\Common\EventSubscriber as BaseEventSubscriber;
@@ -17,7 +17,7 @@ use Doctrine\Common\EventSubscriber as BaseEventSubscriber;
 /**
  * Event Subscriber Class.
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class EventSubscriber extends EventListener implements BaseEventSubscriber
 {

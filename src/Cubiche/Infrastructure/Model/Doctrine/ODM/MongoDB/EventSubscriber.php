@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
@@ -27,6 +28,7 @@ class EventSubscriber extends EventListener implements BaseEventSubscriber
     {
         return array(
             Events::POST_LOAD_CLASS_METADATA,
+            Events::REGISTER_DRIVER_METADATA,
         );
     }
 }

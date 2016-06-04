@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping;
 
 use Metadata\PropertyMetadata as BasePropertyMetadata;
@@ -16,12 +17,17 @@ use Metadata\PropertyMetadata as BasePropertyMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class PropertyMetadata extends BasePropertyMetadata
+class PropertyMetadata extends BasePropertyMetadata
 {
     /**
      * @var string
      */
     public $namespace;
+
+    /**
+     * @var string
+     */
+    public $type;
 
     /**
      * PropertyMetadata constructor.
@@ -38,7 +44,20 @@ abstract class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
      * @return array
      */
-    abstract public function toArray();
+    public function toArray()
+    {
+        return array(
+            'type' => $this->type,
+        );
+    }
 }

@@ -7,8 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
+use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Model\Entity;
 
 /**
@@ -39,15 +41,21 @@ class Address extends Entity
     protected $city;
 
     /**
+     * @var Coordinate
+     */
+    protected $coordinate;
+
+    /**
      * Address constructor.
      *
-     * @param AddressId $id
-     * @param string    $name
-     * @param string    $street
-     * @param string    $zipcode
-     * @param string    $city
+     * @param AddressId  $id
+     * @param string     $name
+     * @param string     $street
+     * @param string     $zipcode
+     * @param string     $city
+     * @param Coordinate $coordinate
      */
-    public function __construct(AddressId $id, $name, $street, $zipcode, $city)
+    public function __construct(AddressId $id, $name, $street, $zipcode, $city, Coordinate $coordinate)
     {
         parent::__construct($id);
 
@@ -55,6 +63,7 @@ class Address extends Entity
         $this->street = $street;
         $this->zipcode = $zipcode;
         $this->city = $city;
+        $this->coordinate = $coordinate;
     }
 
     /**
@@ -87,5 +96,13 @@ class Address extends Entity
     public function city()
     {
         return $this->city;
+    }
+
+    /**
+     * @return Coordinate
+     */
+    public function coordinate()
+    {
+        return $this->coordinate;
     }
 }

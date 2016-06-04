@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
 use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
@@ -40,6 +41,11 @@ class User extends AggregateRoot
      * @var ArrayListInterface
      */
     protected $phonenumbers;
+
+    /**
+     * @var Phonenumber
+     */
+    protected $fax;
 
     /**
      * @var ArraySetInterface
@@ -117,6 +123,22 @@ class User extends AggregateRoot
     public function addPhonenumber(Phonenumber $phonenumber)
     {
         return $this->phonenumbers->add($phonenumber);
+    }
+
+    /**
+     * @return Phonenumber
+     */
+    public function fax()
+    {
+        return $this->fax;
+    }
+
+    /**
+     * @param Phonenumber $fax
+     */
+    public function setFax(Phonenumber $fax)
+    {
+        $this->fax = $fax;
     }
 
     /**

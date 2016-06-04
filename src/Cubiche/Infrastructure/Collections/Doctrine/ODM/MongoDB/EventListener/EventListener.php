@@ -7,17 +7,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Core\Collection\CollectionInterface;
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
-use Doctrine\ODM\MongoDB\Mapping\MappingException;
 use Doctrine\ODM\MongoDB\PersistentCollection;
 use Doctrine\ODM\MongoDB\Types\Type;
 
@@ -131,13 +132,12 @@ class EventListener
 
             if (isset($mapping['cubiche:collection'])) {
                 $collectionMapping = $mapping['cubiche:collection'];
-                if (!isset($mapping['type']) && !isset($collectionMapping['of'])) {
-                    throw new MappingException(\sprintf(
-                        'The "of" option in %s type is missing in %s::%s mapping.',
-                        $collectionMapping['type'],
+                if ($collectionMapping['of'] === null) {
+                    throw MappingException::inField(
+                        'The "of" option in '.$collectionMapping['type'].' type is missing',
                         $classMetadata->name,
                         $fieldName
-                    ));
+                    );
                 }
 
                 $type = $collectionMapping['of'].$collectionMapping['type'];
