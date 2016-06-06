@@ -10,7 +10,7 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Locator;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 
 /**
  * InMemoryLocator class.

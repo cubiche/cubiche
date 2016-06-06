@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
 
-use Cubiche\Core\Collection\DataSource\IteratorDataSource;
-use Cubiche\Core\Collection\DataSourceSet;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSourceSet;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Model\IdInterface;

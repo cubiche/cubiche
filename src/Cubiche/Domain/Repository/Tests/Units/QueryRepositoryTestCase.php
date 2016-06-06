@@ -12,7 +12,7 @@ namespace Cubiche\Domain\Repository\Tests\Units;
 
 use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Core\Collection\Tests\Units\CollectionTestCase;
+use Cubiche\Core\Collections\Tests\Units\CollectionTestCase;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;

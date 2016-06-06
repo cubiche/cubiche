@@ -13,7 +13,7 @@ namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 
 /**
  * ChainResolver class.

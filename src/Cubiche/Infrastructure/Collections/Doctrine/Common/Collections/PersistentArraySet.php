@@ -9,12 +9,12 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
-use Cubiche\Core\Collection\ArrayCollection\ArraySetInterface;
-use Cubiche\Core\Collection\DataSourceSet;
+use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
+use Cubiche\Core\Collections\DataSourceSet;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Collection\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
 
 /**
  * PersistentArraySet Class.

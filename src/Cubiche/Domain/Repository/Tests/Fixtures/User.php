@@ -10,12 +10,12 @@
  */
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMapInterface;
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
-use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
-use Cubiche\Core\Collection\ArrayCollection\ArraySet;
-use Cubiche\Core\Collection\ArrayCollection\ArraySetInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArraySet;
+use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
 use Cubiche\Domain\Model\AggregateRoot;
 use Cubiche\Domain\System\StringLiteral;
 

@@ -9,11 +9,11 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMapInterface;
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
-use Cubiche\Core\Collection\ArrayCollection\ArraySet;
-use Cubiche\Core\Collection\DataSource\IteratorDataSource;
-use Cubiche\Core\Collection\DataSourceHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\ArraySet;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSourceHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
-use Cubiche\Core\Collection\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\PersistentCollection;
 

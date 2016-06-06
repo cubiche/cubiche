@@ -9,8 +9,8 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Collection\ArrayCollection\SortedArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
 
 /**
  * EventDispatcher interface.

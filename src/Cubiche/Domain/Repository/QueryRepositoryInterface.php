@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Domain\Repository;
 
-use Cubiche\Core\Collection\CollectionInterface;
+use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
 
 /**

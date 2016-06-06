@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Selector\Composite;
 use Cubiche\Core\Selector\Count;

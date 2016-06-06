@@ -9,12 +9,12 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\Common\Collections;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
-use Cubiche\Core\Collection\DataSourceList;
+use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
+use Cubiche\Core\Collections\DataSourceList;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Collection\DataSource\IteratorDataSource;
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
 
 /**
  * PersistentArrayList Class.

@@ -12,8 +12,8 @@ namespace Cubiche\Core\Bus;
 
 use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
-use Cubiche\Core\Collection\ArrayCollection\SortedArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Delegate\Delegate;

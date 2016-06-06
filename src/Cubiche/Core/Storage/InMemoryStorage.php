@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Storage;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 
 /**
  * InMemoryStorage class.

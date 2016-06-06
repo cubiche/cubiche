@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Collection\ArrayCollection\ArrayHashMapInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
 use Doctrine\ODM\MongoDB\Types\HashType;
 use Doctrine\ODM\MongoDB\Types\Type;
 

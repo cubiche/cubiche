@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Repository\InMemory;
 
-use Cubiche\Core\Collection\ArrayCollection\ArraySet;
+use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\Repository;

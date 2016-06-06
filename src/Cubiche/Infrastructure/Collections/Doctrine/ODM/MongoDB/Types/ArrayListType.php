@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Core\Collection\ArrayCollection\ArrayList;
-use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
 use Doctrine\ODM\MongoDB\Types\CollectionType;
 use Doctrine\ODM\MongoDB\Types\Type;
 
