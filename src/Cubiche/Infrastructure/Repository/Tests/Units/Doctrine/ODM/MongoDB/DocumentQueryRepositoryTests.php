@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -19,19 +18,19 @@ use Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber;
 use Cubiche\Domain\Repository\Tests\Fixtures\Role;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
-use Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase;
+use Cubiche\Domain\Repository\Tests\Units\QueryRepositoryTestCase;
 use Cubiche\Domain\System\StringLiteral;
-use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentRepository;
+use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentQueryRepository;
 use Cubiche\Core\Comparable\Order;
 
 /**
- * DocumentRepositoryTests class.
+ * DocumentQueryRepositoryTests class.
  *
  * @engine isolate
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DocumentRepositoryTests extends RepositoryTestCase
+class DocumentQueryRepositoryTests extends QueryRepositoryTestCase
 {
     use DocumentManagerTestCaseTrait;
 
@@ -132,7 +131,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
      */
     protected function emptyRepository()
     {
-        return new DocumentRepository($this->dm()->getRepository(User::class), $this->documentDataSourceFactory());
+        return new DocumentQueryRepository($this->dm()->getRepository(User::class), $this->documentDataSourceFactory());
     }
 
     /**
