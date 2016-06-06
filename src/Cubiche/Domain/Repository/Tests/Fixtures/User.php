@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
 use Cubiche\Core\Collection\ArrayCollection\ArrayHashMap;
@@ -18,6 +17,7 @@ use Cubiche\Core\Collection\ArrayCollection\ArrayListInterface;
 use Cubiche\Core\Collection\ArrayCollection\ArraySet;
 use Cubiche\Core\Collection\ArrayCollection\ArraySetInterface;
 use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * User Class.
@@ -33,6 +33,11 @@ class User extends AggregateRoot
     protected $name;
 
     /**
+     * @var StringLiteral
+     */
+    protected $fullName;
+
+    /**
      * @var int
      */
     protected $age;
@@ -46,6 +51,11 @@ class User extends AggregateRoot
      * @var Phonenumber
      */
     protected $fax;
+
+    /**
+     * @var Role
+     */
+    protected $mainRole;
 
     /**
      * @var ArraySetInterface
@@ -77,6 +87,7 @@ class User extends AggregateRoot
         parent::__construct($id);
 
         $this->name = $name;
+        $this->fullName = StringLiteral::fromNative($name);
         $this->age = $age;
         $this->phonenumbers = new ArrayList();
         $this->roles = new ArraySet();
@@ -110,6 +121,14 @@ class User extends AggregateRoot
     }
 
     /**
+     * @return StringLiteral
+     */
+    public function fullName()
+    {
+        return $this->fullName;
+    }
+
+    /**
      * @return ArrayListInterface
      */
     public function phonenumbers()
@@ -139,6 +158,22 @@ class User extends AggregateRoot
     public function setFax(Phonenumber $fax)
     {
         $this->fax = $fax;
+    }
+
+    /**
+     * @return Role
+     */
+    public function mainRole()
+    {
+        return $this->mainRole;
+    }
+
+    /**
+     * @param Role $mainRole
+     */
+    public function setMainRole(Role $mainRole)
+    {
+        $this->mainRole = $mainRole;
     }
 
     /**

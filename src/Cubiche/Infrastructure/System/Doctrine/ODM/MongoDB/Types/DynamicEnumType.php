@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -8,16 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types;
+namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Types\DynamicTypeTrait;
 
 /**
- * Dynamic Native Value Object Type Class.
+ * DynamicEnumType class.
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DynamicNativeValueObjectType extends NativeValueObjectType
+class DynamicEnumType extends EnumType
 {
     use DynamicTypeTrait;
 }

@@ -12,13 +12,22 @@
         <field fieldName="name" name="name" type="string" />
         <field fieldName="age" name="age" type="integer" />
 
+        <field fieldName="fullName" name="fullName" type="CubicheType">
+            <cubiche:string />
+        </field>
+
         <field fieldName="fax" name="fax" type="CubicheType">
             <cubiche:valueobject type="Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber" />
+        </field>
+
+        <field fieldName="mainRole" name="mainRole" type="CubicheType">
+            <cubiche:enum type="Cubiche\Domain\Repository\Tests\Fixtures\Role" />
         </field>
 
         <field fieldName="phonenumbers" name="phonenumbers" type="CubicheType">
             <cubiche:collection type="ArrayList" of="Phonenumber" />
         </field>
+
         <field fieldName="roles" name="roles" type="CubicheType">
             <cubiche:collection type="ArraySet" of="Role" />
         </field>

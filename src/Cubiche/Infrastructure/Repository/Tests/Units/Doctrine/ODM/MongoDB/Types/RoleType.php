@@ -23,7 +23,7 @@ class RoleType extends EnumType
     /**
      * {@inheritdoc}
      */
-    protected function enumClass()
+    public function targetClass()
     {
         return Role::class;
     }

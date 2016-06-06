@@ -10,41 +10,26 @@
  */
 namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Domain\System\Enum;
-use Doctrine\ODM\MongoDB\Types\StringType;
+use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
 
 /**
  * EnumType Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class EnumType extends StringType
+abstract class EnumType extends NativeValueObjectType
 {
     /**
      * {@inheritdoc}
      */
     public function convertToDatabaseValue($value)
     {
-        /* @var Enum $value */
-        return $value !== null ? $value->toNative() : null;
-    }
+        $class = $this->targetClass();
+        if (!$value instanceof $class) {
+            return $value;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToPHPValue($value)
-    {
-        $enumClass = $this->enumClass();
-
-        return $value !== null ? $enumClass::fromNative($value) : null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function closureToMongo()
-    {
-        return '$return = $value->toNative();';
+        return parent::convertToDatabaseValue($value);
     }
 
     /**
@@ -52,13 +37,8 @@ abstract class EnumType extends StringType
      */
     public function closureToPHP()
     {
-        $enumClass = $this->enumClass();
+        $class = $this->targetClass();
 
-        return '$return = '.$enumClass.'::fromNative($value);';
+        return '$return = $value !== null && $value instanceof '.$class.' ? '.$class.'::fromNative($value) : $value;';
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function enumClass();
 }

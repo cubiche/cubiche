@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as CollectionsEventSubscriber;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener\MetadataEventSubscriber;
-use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
-use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventSubscriber as GeolocationEventSubscriber;
+use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as IdentityEventSubscriber;
+use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as ModelEventSubscriber;
+use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as GeolocationEventSubscriber;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as SystemEventSubscriber;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
@@ -70,6 +70,7 @@ trait DocumentManagerTestCaseTrait
             $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new GeolocationEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new SystemEventSubscriber());
         }
 
         return $this->dm;

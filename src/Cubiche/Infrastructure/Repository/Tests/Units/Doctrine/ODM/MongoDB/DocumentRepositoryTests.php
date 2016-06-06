@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Sort;
@@ -21,6 +20,7 @@ use Cubiche\Domain\Repository\Tests\Fixtures\Role;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase;
+use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentRepository;
 use Cubiche\Core\Comparable\Order;
 
@@ -47,6 +47,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
             $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
         }
 
+        $user->setMainRole($this->faker->randomElement(Role::values()));
         foreach (range(1, 3) as $key) {
             $user->addRole($this->faker->randomElement(Role::values()));
         }
@@ -92,6 +93,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
         $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
         $user->addPhonenumber(new Phonenumber($this->faker->phoneNumber));
 
+        $user->setMainRole(Role::ROLE_ADMIN());
         $user->addRole(Role::ROLE_ADMIN());
         $user->addRole(Role::ROLE_ADMIN());
         $user->addRole(Role::ROLE_USER());
@@ -163,8 +165,12 @@ class DocumentRepositoryTests extends RepositoryTestCase
                 $object = $repository->get($unique->id())
             )
             ->then()
+                ->object($object->fullName())
+                    ->isEqualTo(StringLiteral::fromNative('Methuselah'))
                 ->integer($object->languagesLevel()->get('english'))
                     ->isEqualTo(10)
+                ->boolean($object->mainRole()->is(Role::ROLE_ADMIN))
+                    ->isTrue()
                 ->array($object->roles()->toArray())
                     ->contains(Role::ROLE_ADMIN)
                 ->array($object->phonenumbers()->toArray())

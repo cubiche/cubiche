@@ -7,12 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Mapping\Driver;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
-use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Mapping\CoordinatePropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver as BaseXmlDriver;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
 use Metadata\MergeableClassMetadata;
 
 /**
@@ -52,7 +51,7 @@ class XmlDriver extends BaseXmlDriver
                     );
                 }
 
-                $propertyMetadata = new CoordinatePropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName, 'coordinate');
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } else {
