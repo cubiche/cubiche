@@ -8,9 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Collections\Tests\Units;
 
+use Cubiche\Core\Collections\Tests\Asserters\CollectionAsserter;
+use Cubiche\Core\Collections\Tests\Asserters\HashMapAsserter;
+use Cubiche\Core\Collections\Tests\Asserters\ListAsserter;
+use Cubiche\Core\Collections\Tests\Asserters\SetAsserter;
 use Cubiche\Core\Collections\Tests\Asserters\Asserters;
 use Cubiche\Tests\TestCase as BaseTestCase;
 use mageekguy\atoum\adapter as Adapter;
@@ -21,6 +24,11 @@ use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * Abstract Test Case class.
+ *
+ * @method CollectionAsserter collection()
+ * @method ListAsserter list()
+ * @method SetAsserter set()
+ * @method HashMapAsserter hashmap()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
@@ -62,6 +70,9 @@ abstract class TestCase extends BaseTestCase
 
         $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');
         $this->getAssertionManager()->setAlias('collection', 'CollectionAsserter');
+        $this->getAssertionManager()->setAlias('list', 'ListAsserter');
+        $this->getAssertionManager()->setAlias('set', 'SetAsserter');
+        $this->getAssertionManager()->setAlias('hashmap', 'HashMapAsserter');
         $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
     }
 }

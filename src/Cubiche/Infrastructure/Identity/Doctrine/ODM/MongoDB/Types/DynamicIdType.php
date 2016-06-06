@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\DynamicTypeTrait;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Types\DynamicTypeTrait;
 
 /**
  * Dynamic Id Type Class.

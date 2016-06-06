@@ -22,48 +22,14 @@ use Cubiche\Core\Specification\SpecificationInterface;
 interface CollectionInterface extends \Countable, \IteratorAggregate
 {
     /**
-     * Adds an element at the end of the collection.
-     *
-     * @param mixed $item
-     */
-    public function add($item);
-
-    /**
-     * Adds elements at the end of the collection.
-     *
-     * @param array|\Traversable $items
-     */
-    public function addAll($items);
-
-    /**
-     * Removes an element from the collection.
-     *
-     * @param mixed $item
-     */
-    public function remove($item);
-
-    /**
      * Clears the collection, removing all elements.
      */
     public function clear();
 
     /**
-     * Find all elements that match with a given specification.
-     *
-     * @param SpecificationInterface $criteria
-     *
-     * @return \Cubiche\Core\Collections\CollectionInterface
+     * @return bool
      */
-    public function find(SpecificationInterface $criteria);
-
-    /**
-     * Find an element collection by a given specification.
-     *
-     * @param SpecificationInterface $criteria
-     *
-     * @return mixed
-     */
-    public function findOne(SpecificationInterface $criteria);
+    public function isEmpty();
 
     /**
      * Gets a native PHP array representation of the collection.
@@ -73,19 +39,30 @@ interface CollectionInterface extends \Countable, \IteratorAggregate
     public function toArray();
 
     /**
-     * Extracts a slice of $length elements starting at position $offset from the Collection.
+     * Returns a new collection sorted by the given criteria.
+     *
+     * @param ComparatorInterface $criteria
+     *
+     * @return CollectionInterface
+     */
+    public function sorted(ComparatorInterface $criteria);
+
+    /**
+     * Returns a view of the portion of this collection starting at the specified $offset, with size equals to $length.
      *
      * @param int $offset
      * @param int $length
      *
-     * @return \Cubiche\Core\Collections\CollectionInterface
+     * @return CollectionInterface
      */
     public function slice($offset, $length = null);
 
     /**
-     * @param ComparatorInterface $criteria
+     * Find all elements that match with a given specification in this collection.
      *
-     * @return \Cubiche\Core\Collections\CollectionInterface
+     * @param SpecificationInterface $criteria
+     *
+     * @return CollectionInterface
      */
-    public function sorted(ComparatorInterface $criteria);
+    public function find(SpecificationInterface $criteria);
 }
