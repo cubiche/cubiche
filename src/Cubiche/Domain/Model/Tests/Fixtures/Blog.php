@@ -11,15 +11,9 @@
 namespace Cubiche\Domain\Model\Tests\Fixtures;
 
 use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasPublished;
-use Cubiche\Domain\Model\Tests\Fixtures\Validator\PostValidator;
 
 /**
  * Blog class.
- *
- * @method static BlogValidator validator()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */

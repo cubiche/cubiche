@@ -10,15 +10,14 @@
 namespace Cubiche\Core\Bus\Tests\Fixtures\Command;
 
 use Cubiche\Core\Bus\Command\CommandNamedInterface;
-use Cubiche\Core\Bus\Command\CommandValidatableInterface;
-use Cubiche\Core\Validator\Validator;
+use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
  * LogoutUserCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserCommand implements CommandNamedInterface, CommandValidatableInterface
+class LogoutUserCommand implements CommandNamedInterface
 {
     /**
      * @var string
@@ -70,7 +69,7 @@ class LogoutUserCommand implements CommandNamedInterface, CommandValidatableInte
     /**
      * {@inheritdoc}
      */
-    public function addValidationConstraints(Validator $validator)
+    public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
     }
 }
