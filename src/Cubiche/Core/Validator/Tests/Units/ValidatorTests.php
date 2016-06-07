@@ -12,6 +12,8 @@ namespace Cubiche\Core\Validator\Tests\Units;
 
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Exception\ValidationException;
+use Cubiche\Core\Validator\Tests\Fixtures\Blog;
+use Cubiche\Core\Validator\Tests\Fixtures\Post;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Core\Validator\ValidatorInterface;
 
@@ -23,12 +25,20 @@ use Cubiche\Core\Validator\ValidatorInterface;
 class ValidatorTests extends TestCase
 {
     /**
+     * @return Validator
+     */
+    public function creaateValidator()
+    {
+        return Validator::create();
+    }
+
+    /**
      * Test create method.
      */
     public function testCreate()
     {
         $this
-            ->given($validator = Validator::create())
+            ->given($validator = $this->creaateValidator())
             ->then()
                 ->object($validator)
                     ->isInstanceOf(ValidatorInterface::class)
@@ -36,49 +46,163 @@ class ValidatorTests extends TestCase
     }
 
     /**
-     * Test constraints method.
+     * Test assert method.
      */
-    public function testConstraints()
+    public function testAssertExplicitConstraints()
     {
         $this
-            ->given($validator = Validator::create())
-            ->and($validator->addConstraint(Assert::alnum()->notBlank()))
+            ->given($validator = $this->creaateValidator())
             ->then()
-                ->array($validator->constraints()->getRules())
-                    ->hasSize(2)
+                ->boolean($validator->assert('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
+                    ->isTrue()
+                ->boolean($validator->assert('ivannis', Assert::alnum()->noWhitespace()->length(1, 15), 'foo'))
+                    ->isTrue()
+                ->exception(function () use ($validator) {
+                    $validator->assert('some tests', Assert::alnum()->noWhitespace()->length(1, 15));
+                })->isInstanceOf(ValidationException::class)
+                ->exception(function () use ($validator) {
+                    $validator->assert('value');
+                })->isInstanceOf(\RuntimeException::class)
         ;
     }
 
     /**
      * Test assert method.
      */
-    public function testAssert()
+    public function testAssertObject()
     {
         $this
-            ->given($validator = Validator::create())
-            ->and($validator->addConstraint(Assert::alnum()->noWhitespace()->length(1, 15)))
+            ->given($validator = $this->creaateValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($post1 = new Post())
+            ->and($post2 = new Post(3, 10))
+            ->and($blog = new Blog())
             ->then()
-                ->boolean($validator->assert('ivannis'))
+                ->boolean($validator->assert($post))
                     ->isTrue()
-                ->exception(function () use ($validator) {
-                    $validator->assert('some tests');
+                ->boolean($validator->assert($post, null, 'bar'))
+                    ->isTrue()
+                ->exception(function () use ($validator, $post1) {
+                    $validator->assert($post1);
                 })->isInstanceOf(ValidationException::class)
+                ->exception(function () use ($validator, $post2) {
+                    $validator->assert($post2);
+                })->isInstanceOf(ValidationException::class)
+                ->boolean($validator->assert($post2, null, 'foo'))
+                    ->isTrue()
+                ->boolean($validator->assert($blog))
+                    ->isTrue()
+                ->boolean($validator->assert($blog, null, 'foo'))
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test assert method.
+     */
+    public function testAssertArrayObject()
+    {
+        $this
+            ->given($validator = $this->creaateValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($post1 = new Post())
+            ->and($post2 = new Post(3, 10))
+            ->and($blog = new Blog())
+            ->and($blog1 = new Blog())
+            ->then()
+                ->boolean($validator->assert([$post, [$blog, $blog1]]))
+                    ->isTrue()
+                ->boolean($validator->assert([$post, $blog], null, 'bar'))
+                    ->isTrue()
+                ->exception(function () use ($validator, $post1, $blog) {
+                    $validator->assert([$post1, $blog, 300]);
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($validator, $post1, $blog) {
+                    $validator->assert([$post1, $blog]);
+                })->isInstanceOf(ValidationException::class)
+                ->exception(function () use ($validator, $post2, $blog) {
+                    $validator->assert([$post2, $blog]);
+                })->isInstanceOf(ValidationException::class)
+                ->boolean($validator->assert([$post2, $blog], null, 'foo'))
+                    ->isTrue()
         ;
     }
 
     /**
      * Test validate method.
      */
-    public function testValidate()
+    public function testValidateExplicitConstraints()
     {
         $this
-            ->given($validator = Validator::create())
-            ->and($validator->addConstraint(Assert::alnum()->noWhitespace()->length(4, 15)))
+            ->given($validator = $this->creaateValidator())
             ->then()
-                ->boolean($validator->validate('ivannis'))
+                ->boolean($validator->validate('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
                     ->isTrue()
-                ->boolean($validator->validate(17))
+                ->boolean($validator->validate('ivannis', Assert::alnum()->noWhitespace()->length(1, 15), 'foo'))
+                    ->isTrue()
+                ->boolean($validator->validate('some tests', Assert::alnum()->noWhitespace()->length(1, 15)))
                     ->isFalse()
+                ->exception(function () use ($validator) {
+                    $validator->validate('value');
+                })->isInstanceOf(\RuntimeException::class)
+        ;
+    }
+
+    /**
+     * Test validate method.
+     */
+    public function testValidateObject()
+    {
+        $this
+            ->given($validator = $this->creaateValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($post1 = new Post())
+            ->and($post2 = new Post(3, 10))
+            ->and($blog = new Blog())
+            ->then()
+                ->boolean($validator->validate($post))
+                    ->isTrue()
+                ->boolean($validator->validate($post, null, 'bar'))
+                    ->isTrue()
+                ->boolean($validator->validate($post1))
+                    ->isFalse()
+                ->boolean($validator->validate($post2))
+                    ->isFalse()
+                ->boolean($validator->validate($post2, null, 'foo'))
+                    ->isTrue()
+                ->boolean($validator->validate($blog))
+                    ->isTrue()
+                ->boolean($validator->validate($blog, null, 'foo'))
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test validate method.
+     */
+    public function testValidateArrayObject()
+    {
+        $this
+            ->given($validator = $this->creaateValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($post1 = new Post())
+            ->and($post2 = new Post(3, 10))
+            ->and($blog = new Blog())
+            ->and($blog1 = new Blog())
+            ->then()
+                ->boolean($validator->validate([$post, [$blog, $blog1]]))
+                    ->isTrue()
+                ->boolean($validator->validate([$post, $blog], null, 'bar'))
+                    ->isTrue()
+                ->exception(function () use ($validator, $post1, $blog) {
+                    $validator->validate([$post1, $blog, 300]);
+                })->isInstanceOf(\RuntimeException::class)
+                ->boolean($validator->validate([$post1, $blog]))
+                    ->isFalse()
+                ->boolean($validator->validate([$post2, $blog]))
+                    ->isFalse()
+                ->boolean($validator->validate([$post2, $blog], null, 'foo'))
+                    ->isTrue()
         ;
     }
 }

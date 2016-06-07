@@ -9,8 +9,9 @@
  */
 namespace Cubiche\Core\Bus\Tests\Fixtures\Command;
 
-use Cubiche\Core\Bus\Command\CommandValidatableInterface;
+use Cubiche\Core\Bus\Command\CommandInterface;
 use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Mapping\ClassMetadata;
 use Cubiche\Core\Validator\Validator;
 
 /**
@@ -18,7 +19,7 @@ use Cubiche\Core\Validator\Validator;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserCommand implements CommandValidatableInterface
+class LoginUserCommand implements CommandInterface
 {
     /**
      * @var string
@@ -98,13 +99,29 @@ class LoginUserCommand implements CommandValidatableInterface
     /**
      * {@inheritdoc}
      */
-    public function addValidationConstraints(Validator $validator)
+    public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $assert = Assert::create()
-            ->attribute('email', Assert::email())
-            ->attribute('password', Assert::stringType()->notBlank())
-        ;
+        $classMetadata->addPropertyConstraint(
+            'email',
+            Assert::email()
+        );
 
-        $validator->addConstraint($assert);
+        $classMetadata->addPropertyConstraint(
+            'password',
+            Assert::stringType()->notBlank()
+        );
     }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function addValidationConstraints(Validator $validator)
+//    {
+//        $assert = Assert::create()
+//            ->attribute('email', Assert::email())
+//            ->attribute('password', Assert::stringType()->notBlank())
+//        ;
+//
+//        $validator->addConstraint($assert);
+//    }
 }

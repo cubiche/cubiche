@@ -19,7 +19,8 @@
     ],
     "require": {
         "php":                  "^5.5.9|^7.0",
-        "respect/validation":   "1.1.2"
+        "respect/validation":   "1.1.2",
+        "jms/metadata":         "~1.1"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"

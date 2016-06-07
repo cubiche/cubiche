@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,19 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Model\Tests\Fixtures\Event;
+namespace Cubiche\Core\Validator\Tests\Fixtures;
 
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
-use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
- * PostWasCreated class.
+ * Post class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostWasCreated extends EntityDomainEvent
+class Post
 {
     /**
      * @var string
@@ -32,26 +31,15 @@ class PostWasCreated extends EntityDomainEvent
     protected $content;
 
     /**
-     * PostWasCreated constructor.
+     * Post constructor.
      *
-     * @param PostId $id
      * @param string $title
      * @param string $content
      */
-    public function __construct(PostId $id, $title, $content)
+    public function __construct($title = null, $content = null)
     {
-        parent::__construct($id);
-
         $this->title = $title;
         $this->content = $content;
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
     }
 
     /**
@@ -73,9 +61,23 @@ class PostWasCreated extends EntityDomainEvent
     /**
      * {@inheritdoc}
      */
+    public function equals($other)
+    {
+        return parent::equals($other) &&
+            $this->title() == $other->title() &&
+            $this->content() == $other->content()
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
         $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
         $classMetadata->addPropertyConstraint('content', Assert::stringType());
+
+        $classMetadata->addPropertyConstraint('title', Assert::intType()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('content', Assert::intType()->notBlank(), 'foo');
     }
 }

@@ -19,6 +19,11 @@ use Respect\Validation\Validator as Constraints;
 class Assert extends Constraints
 {
     /**
+     * @var string
+     */
+    const DEFAULT_GROUP = 'Default';
+
+    /**
      * Create a constraints instance.
      *
      * @return Constraints

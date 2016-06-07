@@ -22,41 +22,24 @@ interface ValidatorInterface
     /**
      * Validates a value against a rule or a list of rules.
      *
-     * @param mixed $value
+     * @param mixed  $value
+     * @param mixed  $constraints
+     * @param string $group
      *
      * @return bool
      */
-    public function validate($value);
+    public static function validate($value, $constraints = null, $group = null);
 
     /**
      * Validates a value against a rule or a list of rules.
      *
-     * @param mixed $value
+     * @param mixed  $value
+     * @param mixed  $constraints
+     * @param string $group
      *
      * @return bool
      *
      * @throws ValidationException
      */
-    public function assert($value);
-
-    /**
-     * Get the constraints list.
-     *
-     * @return Assert
-     */
-    public function constraints();
-
-    /**
-     * Add an assert to the constraints list.
-     *
-     * @param Assert $assert
-     */
-    public function addConstraint(Assert $assert);
-
-    /**
-     * Create a validator instance.
-     *
-     * @return Validator
-     */
-    public static function create();
+    public static function assert($value, $constraints = null, $group = null);
 }

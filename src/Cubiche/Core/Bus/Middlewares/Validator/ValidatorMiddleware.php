@@ -10,7 +10,6 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Validator;
 
-use Cubiche\Core\Bus\MessageValidatableInterface;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 use Cubiche\Core\Validator\Validator;
 
@@ -26,13 +25,7 @@ class ValidatorMiddleware implements MiddlewareInterface
      */
     public function handle($message, callable $next)
     {
-        if ($message instanceof MessageValidatableInterface) {
-            $validator = Validator::create();
-
-            $message->addValidationConstraints($validator);
-
-            $validator->assert($message);
-        }
+        Validator::assert($message);
 
         $next($message);
     }
