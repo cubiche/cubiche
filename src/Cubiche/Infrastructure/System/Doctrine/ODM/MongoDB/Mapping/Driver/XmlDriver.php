@@ -27,7 +27,11 @@ class XmlDriver extends BaseXmlDriver
     protected function addMetadataFor(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
     {
         $this->addMetadataForEnum($xmlRoot, $classMetadata);
-        $this->addMetadataForString($xmlRoot, $classMetadata);
+
+        $this->addMetadataForType('decimal', $xmlRoot, $classMetadata);
+        $this->addMetadataForType('integer', $xmlRoot, $classMetadata);
+        $this->addMetadataForType('real', $xmlRoot, $classMetadata);
+        $this->addMetadataForType('string', $xmlRoot, $classMetadata);
     }
 
     /**
@@ -92,9 +96,9 @@ class XmlDriver extends BaseXmlDriver
     /**
      * {@inheritdoc}
      */
-    protected function addMetadataForString(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
+    protected function addMetadataForType($type, \SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
     {
-        foreach ($xmlRoot->xpath('//cubiche:string') as $item) {
+        foreach ($xmlRoot->xpath('//cubiche:'.$type) as $item) {
             // get the field tag
             $field = $item->xpath('..')[0];
             $fieldMapping = $this->getMappingAttributes($field);
@@ -103,7 +107,7 @@ class XmlDriver extends BaseXmlDriver
             if ($field->getName() == 'field') {
                 if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
                     throw MappingException::inField(
-                        'The cubiche:string configuration is only for field tags that is not an id',
+                        'The cubiche:'.$type.' configuration is only for field tags that is not an id',
                         $classMetadata->name,
                         $fieldName
                     );
@@ -113,18 +117,18 @@ class XmlDriver extends BaseXmlDriver
                     (isset($fieldMapping['type']) && $fieldMapping['type'] !== 'CubicheType')
                 ) {
                     throw MappingException::inField(
-                        'The cubiche:string parent should have a "type" value equal to CubicheType',
+                        'The cubiche:'.$type.' parent should have a "type" value equal to CubicheType',
                         $classMetadata->name,
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName, 'string');
+                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName, $type);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } else {
                 throw MappingException::inField(
-                    'The cubiche:string configuration is only for id fields',
+                    'The cubiche:'.$type.' configuration is only for id fields',
                     $classMetadata->name,
                     $fieldName
                 );

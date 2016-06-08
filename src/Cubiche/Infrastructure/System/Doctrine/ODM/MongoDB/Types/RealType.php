@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -10,21 +9,21 @@
  */
 namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types;
 
-use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\System\Real;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\NativeValueObjectType;
 
 /**
- * StringLiteralType Class.
+ * RealType Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class StringLiteralType extends NativeValueObjectType
+class RealType extends NativeValueObjectType
 {
     /**
      * {@inheritdoc}
      */
     public function targetClass()
     {
-        return StringLiteral::class;
+        return Real::class;
     }
 }

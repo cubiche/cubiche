@@ -47,6 +47,24 @@ abstract class SetTestCase extends CollectionTestCase
     }
 
     /**
+     * Test count.
+     */
+    public function testCount()
+    {
+        $this
+            ->given($collection = $this->emptyCollection())
+            ->then()
+                ->integer($collection->count())
+                    ->isEqualTo(0)
+            ->and()
+            ->when($collection->add($this->uniqueValue()))
+            ->then()
+                ->integer($collection->count())
+                    ->isEqualTo(1)
+        ;
+    }
+
+    /**
      * Test add.
      */
     public function testAdd()

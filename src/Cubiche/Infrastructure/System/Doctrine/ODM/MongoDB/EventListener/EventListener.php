@@ -12,7 +12,10 @@ namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\DecimalType;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\DynamicEnumType;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\IntegerType;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\RealType;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\StringLiteralType;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
@@ -28,6 +31,16 @@ use Doctrine\ODM\MongoDB\Types\Type;
 class EventListener
 {
     /**
+     * @var array
+     */
+    protected $typeMapping = array(
+        'decimal' => DecimalType::class,
+        'integer' => IntegerType::class,
+        'real' => RealType::class,
+        'string' => StringLiteralType::class,
+    );
+
+    /**
      * @param RegisterDriverMetadataEventArgs $eventArgs
      */
     public function registerDriverMetadata(RegisterDriverMetadataEventArgs $eventArgs)
@@ -41,7 +54,7 @@ class EventListener
     public function postLoadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $this->checkEnumType($eventArgs->getClassMetadata());
-        $this->checkStringType($eventArgs->getClassMetadata());
+        $this->checkTypes($eventArgs->getClassMetadata());
     }
 
     /**
@@ -69,16 +82,24 @@ class EventListener
     /**
      * @param ClassMetadata $classMetadata
      */
-    protected function checkStringType(ClassMetadata $classMetadata)
+    protected function checkTypes(ClassMetadata $classMetadata)
     {
+        $types = array_keys($this->typeMapping);
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
-            if (isset($mapping['cubiche:string'])) {
-                $type = 'StringLiteral';
-                if (!Type::hasType($type)) {
-                    Type::registerType($type, StringLiteralType::class);
-                }
+            foreach ($types as $type) {
+                if (isset($mapping['cubiche:'.$type])) {
+                    $typeName = substr(
+                        $this->typeMapping[$type],
+                        strrpos($this->typeMapping[$type], '\\') + 1
+                    );
 
-                $classMetadata->fieldMappings[$fieldName]['type'] = $type;
+                    if (!Type::hasType($typeName)) {
+                        Type::registerType($typeName, $this->typeMapping[$type]);
+                    }
+
+                    $classMetadata->fieldMappings[$fieldName]['type'] = $typeName;
+                    break;
+                }
             }
         }
     }

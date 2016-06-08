@@ -111,17 +111,4 @@ class LoginUserCommand implements CommandInterface
             Assert::stringType()->notBlank()
         );
     }
-//
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function addValidationConstraints(Validator $validator)
-//    {
-//        $assert = Assert::create()
-//            ->attribute('email', Assert::email())
-//            ->attribute('password', Assert::stringType()->notBlank())
-//        ;
-//
-//        $validator->addConstraint($assert);
-//    }
 }
