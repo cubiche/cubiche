@@ -1,0 +1,2 @@
+# Cubiche - Console
+[![Build Status](https://travis-ci.org/cubiche/console.svg?branch=master)](https://travis-ci.org/cubiche/console) [![Coverage Status](https://coveralls.io/repos/github/cubiche/console/badge.svg?branch=master)](https://coveralls.io/github/cubiche/console?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/console/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/console/?branch=master) 

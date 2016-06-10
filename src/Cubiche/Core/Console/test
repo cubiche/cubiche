@@ -1,0 +1,503 @@
+#!/usr/bin/env php
+<?php
+
+use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Bus\Command\CommandBus;
+use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\Identity\UUID;
+use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
+use Cubiche\Core\Console\ConsoleApplication;
+use Cubiche\Core\Console\Config\DefaultApplicationConfig;
+//use Webmozart\Console\Config\DefaultApplicationConfig;
+use Webmozart\Console\Api\Args\Format\Argument;
+
+if (file_exists($autoload = __DIR__.'/../../../autoload.php')) {
+    require_once $autoload;
+} else {
+    require_once __DIR__.'/../../../../vendor/autoload.php';
+}
+
+/**
+ * CreateBlogCommand class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class CreateBlogCommand implements CommandInterface
+{
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * CreateBlogCommand constructor.
+     *
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+}
+
+/**
+ * BlogHandler class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class BlogHandler
+{
+    public function createBlog(CreateBlogCommand $command)
+    {
+        print_r("-----------------------\n");
+        print_r(
+            sprintf(
+                "blog was created with name: %s\n",
+                $command->name()
+            )
+        );
+        print_r("-----------------------\n");
+    }
+}
+
+/**
+ * Post class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class Post extends AggregateRoot
+{
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var bool
+     */
+    protected $published = false;
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function content()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return bool
+     */
+    public function published()
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param string $title
+     * @param string $content
+     *
+     * @return Post
+     */
+    public static function create($title, $content)
+    {
+        $post = new self(PostId::next());
+
+        $post->recordApplyAndPublishEvent(
+            new PostWasCreated($post->id(), $title, $content)
+        );
+
+        return $post;
+    }
+
+    /**
+     * @param $newTitle
+     */
+    public function changeTitle($newTitle)
+    {
+        $this->recordApplyAndPublishEvent(
+            new PostTitleWasChanged($this->id, $newTitle)
+        );
+    }
+
+    /**
+     * Publish a post.
+     */
+    public function publish()
+    {
+        $this->recordApplyAndPublishEvent(
+            new PostWasPublished($this->id())
+        );
+    }
+
+    /**
+     * @param PostWasCreated $event
+     */
+    protected function applyPostWasCreated(PostWasCreated $event)
+    {
+        $this->title = $event->title();
+        $this->content = $event->content();
+    }
+
+    /**
+     * @param PostTitleWasChanged $event
+     */
+    protected function applyPostTitleWasChanged(PostTitleWasChanged $event)
+    {
+        $this->title = $event->title();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals($other)
+    {
+        return parent::equals($other) &&
+            $this->title() == $other->title() &&
+            $this->content() == $other->content() &&
+            $this->published() == $other->published()
+        ;
+    }
+}
+
+/**
+ * PostId class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostId extends UUID
+{
+}
+
+
+/**
+ * PostWasCreated class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostWasCreated extends EntityDomainEvent
+{
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * PostWasCreated constructor.
+     *
+     * @param PostId $id
+     * @param string $title
+     * @param string $content
+     */
+    public function __construct(PostId $id, $title, $content)
+    {
+        parent::__construct($id);
+
+        $this->title = $title;
+        $this->content = $content;
+    }
+
+    /**
+     * @return PostId
+     */
+    public function id()
+    {
+        return $this->aggregateId();
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function content()
+    {
+        return $this->content;
+    }
+}
+
+/**
+ * PostTitleWasChanged class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostTitleWasChanged extends EntityDomainEvent
+{
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * PostTitleWasChanged constructor.
+     *
+     * @param PostId $id
+     * @param string $title
+     */
+    public function __construct(PostId $id, $title)
+    {
+        parent::__construct($id);
+
+        $this->title = $title;
+    }
+
+    /**
+     * @return PostId
+     */
+    public function id()
+    {
+        return $this->aggregateId();
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+}
+
+/**
+ * PostWasPublished class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostWasPublished extends EntityDomainEvent
+{
+}
+
+/**
+ * CreatePostCommand class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class CreatePostCommand implements CommandInterface
+{
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * CreatePostCommand constructor.
+     *
+     * @param string $title
+     * @param string $content
+     */
+    public function __construct($title, $content = null)
+    {
+        $this->title = $title;
+        $this->content = $content;
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function content()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+}
+
+/**
+ * ChangePostTitleCommand class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class ChangePostTitleCommand implements CommandInterface
+{
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * ChangePostTitleCommand constructor.
+     *
+     * @param string $title
+     */
+    public function __construct($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+}
+
+/**
+ * PostService class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostService
+{
+    public function createPost(CreatePostCommand $command)
+    {
+        $post = Post::create($command->title(), $command->content());
+        print_r("-----------------------\n");
+        print_r(
+            sprintf(
+                "post %s was created with title: %s, content: %s\n",
+                $post->id()->toNative(),
+                $post->title(),
+                $post->content()
+            )
+        );
+        print_r("-----------------------\n");
+    }
+
+    public function changePostTitle(ChangePostTitleCommand $command)
+    {
+        // fake post
+        $post = Post::create('fake', 'post');
+        $post->changeTitle($command->title());
+
+        print_r("-----------------------\n");
+        print_r(
+            sprintf(
+                "post %s title was changed for: %s\n",
+                $post->id()->toNative(),
+                $post->title()
+            )
+        );
+        print_r("-----------------------\n");
+    }
+}
+
+$commandBus = CommandBus::create();
+
+$postService = new PostService();
+$commandBus->addHandler(CreateBlogCommand::class, new BlogHandler());
+$commandBus->addHandler(CreatePostCommand::class, $postService);
+$commandBus->addHandler(ChangePostTitleCommand::class, $postService);
+
+
+$eventBus = EventBus::create();
+
+/**
+ * SampleApplicationConfig class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class SampleApplicationConfig extends DefaultApplicationConfig
+{
+    protected function configure()
+    {
+        parent::configure();
+
+        $this
+            ->setName('test')
+            ->setVersion('1.0.0')
+            ->beginCommand(CreateBlogCommand::class)
+                ->setDescription('Create a new blog')
+                ->addAlias('createBlog')
+                ->addArgument('name', Argument::REQUIRED | Argument::STRING, 'The blog name')
+            ->end()
+            ->beginCommand('posts')
+                ->setDescription('Manage posts')
+                ->beginSubCommand(CreatePostCommand::class)
+                    ->setDescription('Create a new post')
+                    ->addAlias('create')
+                    ->addArgument('title', Argument::REQUIRED | Argument::STRING, 'The post title')
+                    ->addArgument('content', Argument::OPTIONAL, 'The post content')
+                    ->addEventListener('foo', function() {
+
+                    })
+                ->end()
+                ->beginSubCommand(ChangePostTitleCommand::class)
+                    ->setDescription('Change the post title')
+                    ->addAlias('change')
+                    ->addArgument('title', Argument::REQUIRED | Argument::STRING, 'The new post title')
+                ->end()
+            ->end()
+        ;
+    }
+}
+
+$cli = new ConsoleApplication(new SampleApplicationConfig(), $commandBus, $eventBus);
+$cli->run();

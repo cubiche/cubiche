@@ -10,8 +10,6 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\MessageInterface;
-
 /**
  * MethodWithObjectNameResolver class.
  *
@@ -26,15 +24,13 @@ class MethodWithObjectNameResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve($className)
     {
-        $messageName = get_class($message);
-
         // If class name has a namespace separator, only take last portion
-        if (strpos($messageName, '\\') !== false) {
-            $messageName = substr($messageName, strrpos($messageName, '\\') + 1);
+        if (strpos($className, '\\') !== false) {
+            $className = substr($className, strrpos($className, '\\') + 1);
         }
 
-        return lcfirst($messageName);
+        return lcfirst($className);
     }
 }

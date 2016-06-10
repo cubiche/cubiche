@@ -12,12 +12,9 @@ namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface
-    as HandlerClassLocatorInterface;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ResolverInterface
-    as HandlerMethodNameResolverInterface;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ResolverInterface
-    as NameOfMessageResolverInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface as HandlerClassLocatorInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ResolverInterface as HandlerMethodNameResolverInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ResolverInterface as NameOfMessageResolverInterface;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
@@ -67,7 +64,7 @@ class HandlerClassResolver implements ResolverInterface
         $nameOfMessage = $this->nameOfMessageResolver->resolve($message);
         $handler = $this->getHandlerFor($nameOfMessage);
 
-        $handlerMethodName = $this->handlerMethodNameResolver->resolve($message);
+        $handlerMethodName = $this->getHandlerMethodFor($nameOfMessage);
         if (!method_exists($handler, $handlerMethodName)) {
             throw NotFoundException::methodForObject($message, $handlerMethodName);
         }
@@ -76,19 +73,24 @@ class HandlerClassResolver implements ResolverInterface
     }
 
     /**
-     * @param $nameOfMessage
-     *
-     * @return object
+     * {@inheritdoc}
      */
-    protected function getHandlerFor($nameOfMessage)
+    public function getHandlerFor($className)
     {
         /* @var HandlerClassLocatorInterface $handlerClassLocator */
-        return $this->handlerClassLocator->locate($nameOfMessage);
+        return $this->handlerClassLocator->locate($className);
     }
 
     /**
-     * @param string $className
-     * @param mixed  $handler
+     * {@inheritdoc}
+     */
+    public function getHandlerMethodFor($className)
+    {
+        return $this->handlerMethodNameResolver->resolve($className);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function addHandler($className, $handler)
     {

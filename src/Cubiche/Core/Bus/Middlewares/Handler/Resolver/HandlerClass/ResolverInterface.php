@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
-use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
+use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
 use InvalidArgumentException;
 
@@ -40,4 +40,18 @@ interface ResolverInterface
      * @param mixed  $handler
      */
     public function addHandler($className, $handler);
+
+    /**
+     * @param string $className
+     *
+     * @return object
+     */
+    public function getHandlerFor($className);
+
+    /**
+     * @param string $className
+     *
+     * @return string
+     */
+    public function getHandlerMethodFor($className);
 }
