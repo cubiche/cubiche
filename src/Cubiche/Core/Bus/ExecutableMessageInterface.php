@@ -11,16 +11,10 @@
 namespace Cubiche\Core\Bus;
 
 /**
- * MessageNamed interface.
+ * ExecutableMessage interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface MessageNamedInterface extends MessageInterface
+interface ExecutableMessageInterface extends MessageInterface
 {
-    /**
-     * Return the message name.
-     *
-     * @return string
-     */
-    public function name();
 }

@@ -14,7 +14,7 @@ use Cubiche\Core\Bus\Middlewares\Handler\QueryHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery\FromQueryNamedResolver;
 use Cubiche\Core\Bus\Tests\Fixtures\Query\NearbyVenuesQuery;
 use Cubiche\Core\Bus\Tests\Fixtures\Query\VenuesQueryHandler;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
@@ -34,7 +34,7 @@ class QueryHandlerMiddlewareTests extends TestCase
         $this
             ->given(
                 $resolver = new HandlerClassResolver(
-                    new FromClassNameResolver(),
+                    new FromQueryNamedResolver(),
                     new MethodWithShortObjectNameResolver('Query'),
                     new InMemoryLocator()
                 )
@@ -42,7 +42,7 @@ class QueryHandlerMiddlewareTests extends TestCase
             ->and($middleware = new QueryHandlerMiddleware($resolver))
             ->and($query = new NearByVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($resolver->addHandler(NearByVenuesQuery::class, $queryHandler))
+            ->and($resolver->addHandler($query->queryName(), $queryHandler))
             ->and($callable = function (array $result) {
                 return json_encode($result);
             })
@@ -50,7 +50,7 @@ class QueryHandlerMiddlewareTests extends TestCase
             ->then()
                 ->string($result)
                     ->isNotEmpty()
-                    ->isEqualTo(json_encode($queryHandler->nearbyVenues($query)))
+                    ->isEqualTo(json_encode($queryHandler->aroundVenues($query)))
                 ->exception(function () use ($middleware, $callable) {
                     $middleware->handle(new \StdClass(), $callable);
                 })->isInstanceOf(\InvalidArgumentException::class)
@@ -65,7 +65,7 @@ class QueryHandlerMiddlewareTests extends TestCase
         $this
             ->given(
                 $resolver = new HandlerClassResolver(
-                    new FromClassNameResolver(),
+                    new FromQueryNamedResolver(),
                     new MethodWithShortObjectNameResolver('Query'),
                     new InMemoryLocator([NearByVenuesQuery::class => new VenuesQueryHandler()])
                 )

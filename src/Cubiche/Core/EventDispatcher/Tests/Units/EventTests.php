@@ -26,7 +26,7 @@ class EventTests extends TestCase
     {
         $this
             ->given($event = new Event())
-            ->when($name = $event->name())
+            ->when($name = $event->eventName())
             ->then()
                 ->string($name)
                     ->isEqualTo(Event::class)
@@ -34,7 +34,7 @@ class EventTests extends TestCase
 
         $this
             ->given($event = new Event('foo.event'))
-            ->when($name = $event->name())
+            ->when($name = $event->eventName())
             ->then()
                 ->string($name)
                     ->isEqualTo('foo.event')
@@ -48,7 +48,7 @@ class EventTests extends TestCase
     {
         $this
             ->given($event = Event::named('foo.event'))
-            ->when($name = $event->name())
+            ->when($name = $event->eventName())
             ->then()
                 ->string($name)
                     ->isEqualTo('foo.event')

@@ -9,13 +9,13 @@
  */
 namespace Cubiche\Core\Bus\Query;
 
-use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\ExecutableMessageInterface;
 
 /**
  * Query interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryInterface extends MessageInterface
+interface QueryInterface extends ExecutableMessageInterface
 {
 }

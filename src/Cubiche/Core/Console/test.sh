@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\EventDispatcher\EventInterface;
 use Cubiche\Core\Bus\Command\CommandInterface;
 use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Domain\Model\AggregateRoot;
@@ -9,13 +9,112 @@ use Cubiche\Domain\Identity\UUID;
 use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Core\Console\Config\DefaultApplicationConfig;
-//use Webmozart\Console\Config\DefaultApplicationConfig;
 use Webmozart\Console\Api\Args\Format\Argument;
+use Webmozart\Console\Api\IO\IO;
 
 if (file_exists($autoload = __DIR__.'/../../../autoload.php')) {
     require_once $autoload;
 } else {
     require_once __DIR__.'/../../../../vendor/autoload.php';
+}
+
+/**
+ * Blog class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class Blog extends AggregateRoot
+{
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Blog
+     */
+    public static function create($name)
+    {
+        $blog = new self(BlogId::next());
+
+        $blog->recordApplyAndPublishEvent(
+            new BlogWasCreated($blog->id(), $name)
+        );
+
+        return $blog;
+    }
+
+    /**
+     * @param BlogWasCreated $event
+     */
+    protected function applyBlogWasCreated(BlogWasCreated $event)
+    {
+        $this->name = $event->name();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals($other)
+    {
+        return parent::equals($other) &&
+            $this->name() == $other->name()
+        ;
+    }
+}
+
+/**
+ * BlogId class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class BlogId extends UUID
+{
+}
+
+
+/**
+ * BlogWasCreated class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class BlogWasCreated extends EntityDomainEvent
+{
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * BlogWasCreated constructor.
+     *
+     * @param BlogId $id
+     * @param string $name
+     */
+    public function __construct(BlogId $id, $name)
+    {
+        parent::__construct($id);
+
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->name;
+    }
 }
 
 /**
@@ -66,14 +165,7 @@ class BlogHandler
 {
     public function createBlog(CreateBlogCommand $command)
     {
-        print_r("-----------------------\n");
-        print_r(
-            sprintf(
-                "blog was created with name: %s\n",
-                $command->name()
-            )
-        );
-        print_r("-----------------------\n");
+        Blog::create($command->name());
     }
 }
 
@@ -418,17 +510,7 @@ class PostService
 {
     public function createPost(CreatePostCommand $command)
     {
-        $post = Post::create($command->title(), $command->content());
-        print_r("-----------------------\n");
-        print_r(
-            sprintf(
-                "post %s was created with title: %s, content: %s\n",
-                $post->id()->toNative(),
-                $post->title(),
-                $post->content()
-            )
-        );
-        print_r("-----------------------\n");
+        Post::create($command->title(), $command->content());
     }
 
     public function changePostTitle(ChangePostTitleCommand $command)
@@ -436,16 +518,6 @@ class PostService
         // fake post
         $post = Post::create('fake', 'post');
         $post->changeTitle($command->title());
-
-        print_r("-----------------------\n");
-        print_r(
-            sprintf(
-                "post %s title was changed for: %s\n",
-                $post->id()->toNative(),
-                $post->title()
-            )
-        );
-        print_r("-----------------------\n");
     }
 }
 
@@ -455,9 +527,6 @@ $postService = new PostService();
 $commandBus->addHandler(CreateBlogCommand::class, new BlogHandler());
 $commandBus->addHandler(CreatePostCommand::class, $postService);
 $commandBus->addHandler(ChangePostTitleCommand::class, $postService);
-
-
-$eventBus = EventBus::create();
 
 /**
  * SampleApplicationConfig class.
@@ -485,19 +554,22 @@ class SampleApplicationConfig extends DefaultApplicationConfig
                     ->addAlias('create')
                     ->addArgument('title', Argument::REQUIRED | Argument::STRING, 'The post title')
                     ->addArgument('content', Argument::OPTIONAL, 'The post content')
-                    ->addEventListener('foo', function() {
-
+                    ->onPreDispatch(function(EventInterface $event, IO $io) {
+                        $io->writeLine($event->eventName());
                     })
                 ->end()
                 ->beginSubCommand(ChangePostTitleCommand::class)
                     ->setDescription('Change the post title')
                     ->addAlias('change')
                     ->addArgument('title', Argument::REQUIRED | Argument::STRING, 'The new post title')
+                    ->onPostDispatch(function(EventInterface $event, IO $io) {
+                        $io->writeLine($event->eventName());
+                    })
                 ->end()
             ->end()
         ;
     }
 }
 
-$cli = new ConsoleApplication(new SampleApplicationConfig(), $commandBus, $eventBus);
+$cli = new ConsoleApplication(new SampleApplicationConfig(), $commandBus);
 $cli->run();

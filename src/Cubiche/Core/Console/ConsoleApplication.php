@@ -7,20 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Console;
 
+use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\Command\CommandBus;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Webmozart\Console\Api\Args\Args;
-use Webmozart\Console\Api\Command\Command;
+use Cubiche\Core\Console\Api\Config\CommandConfig;
+use Cubiche\Core\Console\Converter\ConsoleArgsToCommand;
+use Cubiche\Core\Console\Handler\DefaultEventHandler;
+use Webmozart\Assert\Assert;
 use Webmozart\Console\Api\Config\ApplicationConfig;
 use Webmozart\Console\Api\Event\ConsoleEvents;
 use Webmozart\Console\Api\Event\PreHandleEvent;
 use Webmozart\Console\ConsoleApplication as BaseConsoleApplication;
-use Webmozart\Assert\Assert;
 
 /**
  * ConsoleApplication class.
@@ -40,16 +39,26 @@ class ConsoleApplication extends BaseConsoleApplication
     protected $eventBus;
 
     /**
+     * @var DefaultEventHandler
+     */
+    protected $defaultHandler;
+
+    /**
+     * @var ConsoleArgsToCommand
+     */
+    protected $commandConverter;
+
+    /**
      * ConsoleApplication constructor.
      *
      * @param callable|ApplicationConfig $config
      * @param CommandBus                 $commandBus
-     * @param EventBus                   $eventBus
      */
-    public function __construct($config, CommandBus $commandBus, EventBus $eventBus = null)
+    public function __construct($config, CommandBus $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->eventBus = $eventBus;
+        $this->defaultHandler = new DefaultEventHandler();
+        $this->commandConverter = new ConsoleArgsToCommand();
 
         parent::__construct($this->normalizeConfig($config));
     }
@@ -75,32 +84,9 @@ class ConsoleApplication extends BaseConsoleApplication
         );
 
         // add listener
-        $configuration->addEventListener(ConsoleEvents::PRE_HANDLE, function(PreHandleEvent $event) {
+        $configuration->addEventListener(ConsoleEvents::PRE_HANDLE, function (PreHandleEvent $event) {
             $this->onPreHandle($event);
         });
-//
-//        foreach ($configuration->getCommandConfigs() as $commandConfig) {
-////            print_r($commandConfig->getName()."\n");
-//
-//            try {
-//                $handler = $this->commandBus->getHandlerFor($commandConfig->getName());
-//                $handlerMethod = $this->commandBus->getHandlerMethodFor($commandConfig->getName());
-//            } catch (NotFoundException $e) {
-//                $handler = $commandConfig->getHandler();
-//                $handlerMethod = $commandConfig->getHandlerMethod();
-//            }
-//
-//            // replace the handler and handlerMethod for the correct registered in the command bus
-//            $commandConfig->setHandler($handler);
-//            $commandConfig->setHandlerMethod($handlerMethod);
-//
-////            print_r(get_class($handler)."\n");
-////            print_r($handlerMethod."\n");
-////            foreach ($commandConfig->getSubCommandConfigs() as $subCommandConfig) {
-////                die(var_export($subCommandConfig));
-////            }
-////            //die(var_export($commandConfig->getName()));
-//        }
 
         return $configuration;
     }
@@ -110,7 +96,28 @@ class ConsoleApplication extends BaseConsoleApplication
      */
     protected function onPreHandle(PreHandleEvent $event)
     {
-        $command = $this->createBusCommand($event->getCommand(), $event->getArgs());
+        // convert console args to command
+        $this->commandConverter->setArgs($event->getArgs());
+        $this->commandConverter->setFormat($event->getCommand()->getArgsFormat());
+
+        $command = $this->commandConverter->getCommandFrom($event->getCommand()->getName());
+
+        /** @var CommandConfig $commandConfig */
+        $commandConfig = $event->getCommand()->getConfig();
+
+        $this->defaultHandler->clearHandlers();
+        if ($commandConfig->preDispatchHandler() !== null) {
+            $this->defaultHandler->addPreDispatchHandler($commandConfig->preDispatchHandler());
+        }
+
+        if ($commandConfig->postDispatchHandler()) {
+            $this->defaultHandler->addPostDispatchHandler($commandConfig->postDispatchHandler());
+        }
+
+        $this->defaultHandler->setIo($event->getIO());
+
+        $commandConfig->addEventSubscriber($this->defaultHandler);
+
         if ($command !== null) {
             try {
                 $this->commandBus->dispatch($command);
@@ -118,7 +125,6 @@ class ConsoleApplication extends BaseConsoleApplication
                 $event->setHandled(true);
                 $event->setStatusCode(0);
             } catch (NotFoundException $e) {
-
             }
         } else {
             if ($event->getCommand()->getName() !== 'help') {
@@ -139,38 +145,5 @@ class ConsoleApplication extends BaseConsoleApplication
                 $event->setStatusCode(0);
             }
         }
-    }
-
-    /**
-     * @param Command $command
-     * @param Args    $args
-     *
-     * @return object
-     */
-    protected function createBusCommand(Command $command, Args $args)
-    {
-        $className = $command->getName();
-
-        if (class_exists($className)) {
-            $accessor = PropertyAccess::createPropertyAccessor();
-            $reflector = new \ReflectionClass($className);
-            $instance = $reflector->newInstanceWithoutConstructor();
-
-            foreach ($reflector->getProperties() as $property) {
-                if (!$command->getArgsFormat()->hasArgument($property->getName())) {
-                    throw new \InvalidArgumentException(sprintf(
-                        "There is not '%s' argument defined in the %s command",
-                        $property->getName(),
-                        $className
-                    ));
-                }
-
-                $accessor->setValue($instance, $property->getName(), $args->getArgument($property->getName()));
-            }
-
-            return $instance;
-        }
-
-        return null;
     }
 }

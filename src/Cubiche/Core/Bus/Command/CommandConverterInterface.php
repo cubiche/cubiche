@@ -9,13 +9,17 @@
  */
 namespace Cubiche\Core\Bus\Command;
 
-use Cubiche\Core\Bus\ExecutableMessageInterface;
-
 /**
- * Command interface.
+ * CommandConverterInterface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface CommandInterface extends ExecutableMessageInterface
+interface CommandConverterInterface
 {
+    /**
+     * @param string $className
+     *
+     * @return CommandInterface
+     */
+    public function getCommandFrom($className);
 }

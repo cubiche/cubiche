@@ -61,7 +61,7 @@ class ChainResolverTests extends TestCase
             )
             ->then()
                 ->string($result)
-                    ->isEqualTo('nearby_venues')
+                    ->isEqualTo('aroundVenues')
         ;
 
         $this

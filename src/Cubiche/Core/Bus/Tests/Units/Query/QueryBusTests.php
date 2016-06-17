@@ -51,7 +51,7 @@ class QueryBusTests extends TestCase
             ->given($queryBus = QueryBus::create())
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($queryBus->addHandler($query->name(), $queryHandler))
+            ->and($queryBus->addHandler($query->queryName(), $queryHandler))
             ->and($result = $queryBus->dispatch($query))
             ->then()
                 ->array($result)
@@ -63,12 +63,12 @@ class QueryBusTests extends TestCase
             ->and($queryBus->addMiddlewareAfter(new JsonEncodeMiddleware(), $queryBus->handlerMiddleware()))
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($queryBus->addHandler($query->name(), $queryHandler))
+            ->and($queryBus->addHandler($query->queryName(), $queryHandler))
             ->and($result = $queryBus->dispatch($query))
             ->then()
                 ->string($result)
                     ->isNotEmpty()
-                    ->isEqualTo(json_encode($queryHandler->nearbyVenues($query)))
+                    ->isEqualTo(json_encode($queryHandler->aroundVenues($query)))
         ;
     }
 

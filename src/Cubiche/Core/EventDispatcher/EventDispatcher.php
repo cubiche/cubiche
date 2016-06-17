@@ -43,9 +43,24 @@ class EventDispatcher implements EventDispatcherInterface
     {
         $event = $this->ensureEvent($event);
 
-        $eventName = $event->name();
+        // pre dispatch event
+        $preDispatchEvent = new PreDispatchEvent($event);
+        $eventName = $preDispatchEvent->eventName();
+        if ($listeners = $this->eventListeners($eventName)) {
+            $this->doDispatch($listeners, $preDispatchEvent);
+        }
+
+        // dispatch event
+        $eventName = $event->eventName();
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $event);
+        }
+
+        // post dispatch event
+        $postDispatchEvent = new PostDispatchEvent($event);
+        $eventName = $postDispatchEvent->eventName();
+        if ($listeners = $this->eventListeners($eventName)) {
+            $this->doDispatch($listeners, $postDispatchEvent);
         }
 
         return $event;

@@ -35,7 +35,7 @@ class FromQueryNamedResolverTests extends TestCase
             )
             ->then()
                 ->string($result)
-                    ->isEqualTo('nearby_venues')
+                    ->isEqualTo('aroundVenues')
         ;
 
         $this

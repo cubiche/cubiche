@@ -11,14 +11,13 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Bus\MessageNamedInterface;
 
 /**
  * FromMessageNamedResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FromMessageNamedResolver implements ResolverInterface
+abstract class FromMessageNamedResolver implements ResolverInterface
 {
     /**
      * {@inheritdoc}
@@ -27,7 +26,7 @@ class FromMessageNamedResolver implements ResolverInterface
     {
         $type = $this->getType();
         if ($message instanceof $type) {
-            return $message->name();
+            return $this->getName($message);
         }
 
         throw new \InvalidArgumentException(sprintf(
@@ -40,8 +39,12 @@ class FromMessageNamedResolver implements ResolverInterface
     /**
      * @return mixed
      */
-    protected function getType()
-    {
-        return MessageNamedInterface::class;
-    }
+    abstract protected function getType();
+
+    /**
+     * @param MessageInterface $message
+     *
+     * @return string
+     */
+    abstract protected function getName(MessageInterface $message);
 }

@@ -8,11 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Console\Api\Config;
 
-use Cubiche\Core\Bus\Event\EventBus;
-use Cubiche\Core\Bus\Event\EventSubscriberInterface;
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
 
 /**
  * CommandConfig trait.
@@ -22,116 +21,81 @@ use Cubiche\Core\Bus\Event\EventSubscriberInterface;
 trait CommandConfigTrait
 {
     /**
-     * @var EventBus
+     * @var callback
      */
-    private $eventBus;
+    protected $preDispatchHandler;
 
     /**
-     * Returns the event eventBus used to dispatch the console events.
-     *
-     * @return EventBus The event eventBus.
+     * @var callback
      */
-    public function getEventBus()
-    {
-        return $this->eventBus;
-    }
+    protected $postDispatchHandler;
 
     /**
-     * Sets the event eventBus for dispatching the console events.
+     * @param callable $handler
      *
-     * @param EventBus $eventBus The event eventBus.
+     * @return $this
      *
-     * @return static The current instance.
+     * @throws \InvalidArgumentException
      */
-    public function setEventBus(EventBus $eventBus = null)
+    public function onPreDispatch($handler)
     {
-        $this->eventBus = $eventBus;
+        if (!is_callable($handler)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected a callable. Got: %s',
+                is_object($handler) ? get_class($handler) : gettype($handler)
+            ));
+        }
+
+        $this->preDispatchHandler = $handler;
 
         return $this;
     }
 
     /**
-     * Adds a listener for the given event name.
+     * @param callable $handler
      *
-     * See {@link ConsoleEvents} for the supported event names.
+     * @return $this
      *
-     * @param string   $eventName The event to listen to.
-     * @param callable $listener  The callback to execute when the event is
-     *                            dispatched.
-     * @param int      $priority  The event priority.
-     *
-     * @return static The current instance.
-     *
-     * @see EventBus::addListener()
+     * @throws \InvalidArgumentException
      */
-    public function addEventListener($eventName, $listener, $priority = 0)
+    public function onPostDispatch($handler)
     {
-        if (!$this->eventBus) {
-            $this->eventBus = EventBus::create();
+        if (!is_callable($handler)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected a callable. Got: %s',
+                is_object($handler) ? get_class($handler) : gettype($handler)
+            ));
         }
 
-        $this->eventBus->addListener($eventName, $listener, $priority);
+        $this->postDispatchHandler = $handler;
 
         return $this;
     }
 
     /**
-     * Adds an event subscriber to the eventBus.
-     *
-     * @param EventSubscriberInterface $subscriber The subscriber to add.
-     *
-     * @return static The current instance.
-     *
-     * @see EventBus::addSubscriber()
+     * @return callable
      */
-    public function addEventSubscriber(EventSubscriberInterface $subscriber)
+    public function preDispatchHandler()
     {
-        if (!$this->eventBus) {
-            $this->eventBus = EventBus::create();
-        }
-
-        $this->eventBus->addSubscriber($subscriber);
-
-        return $this;
+        return $this->preDispatchHandler;
     }
 
     /**
-     * Removes an event listener for the given event name.
-     *
-     * @param string   $eventName The event name.
-     * @param callable $listener  The callback to remove.
-     *
-     * @return static The current instance.
-     *
-     * @see EventBus::removeListener()
+     * @return callable
      */
-    public function removeEventListener($eventName, $listener)
+    public function postDispatchHandler()
     {
-        if (!$this->eventBus) {
-            $this->eventBus = EventBus::create();
-        }
-
-        $this->eventBus->removeListener($eventName, $listener);
-
-        return $this;
+        return $this->postDispatchHandler;
     }
 
     /**
-     * Removes an event subscriber from the eventBus.
+     * @param DomainEventSubscriberInterface $subscriber
      *
-     * @param EventSubscriberInterface $subscriber The subscriber to remove.
-     *
-     * @return static The current instance.
-     *
-     * @see EventBus::removeSubscriber()
+     * @return $this
      */
-    public function removeEventSubscriber(EventSubscriberInterface $subscriber)
+    public function addEventSubscriber(DomainEventSubscriberInterface $subscriber)
     {
-        if (!$this->eventBus) {
-            $this->eventBus = EventBus::create();
-        }
-
-        $this->eventBus->removeSubscriber($subscriber);
+        DomainEventPublisher::subscribe($subscriber);
 
         return $this;
     }

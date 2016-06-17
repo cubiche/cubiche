@@ -22,7 +22,7 @@ class InvalidHandlerMethodNameResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve($message)
     {
         throw new \Exception('Method name not found');
     }

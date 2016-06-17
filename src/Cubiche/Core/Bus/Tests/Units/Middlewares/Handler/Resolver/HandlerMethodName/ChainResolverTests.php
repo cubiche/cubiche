@@ -52,7 +52,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver2 = new MethodWithShortObjectNameResolver('Command'))
             ->and($resolver3 = new DefaultResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3]))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(LoginUserCommand::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUser')

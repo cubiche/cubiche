@@ -13,7 +13,8 @@ namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface as HandlerClassLocatorInterface;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ResolverInterface as HandlerMethodNameResolverInterface;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ResolverInterface as
+    HandlerMethodNameResolverInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ResolverInterface as NameOfMessageResolverInterface;
 use Cubiche\Core\Delegate\Delegate;
 
@@ -66,7 +67,7 @@ class HandlerClassResolver implements ResolverInterface
 
         $handlerMethodName = $this->getHandlerMethodFor($nameOfMessage);
         if (!method_exists($handler, $handlerMethodName)) {
-            throw NotFoundException::methodForObject($message, $handlerMethodName);
+            throw NotFoundException::methodForObject($handler, $handlerMethodName);
         }
 
         return Delegate::fromMethod($handler, $handlerMethodName);

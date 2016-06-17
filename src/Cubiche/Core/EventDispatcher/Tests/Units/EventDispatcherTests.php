@@ -141,8 +141,8 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->name(), array(new LoginUserEventListener(), 'onLogin')))
-            ->and($dispatcher->addListener($event->name(), function (LoginUserEvent $event) {
+            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener($event->eventName(), function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())
                         ->isEqualTo('info@cubiche.org')
@@ -193,7 +193,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->name();
+                return $event->eventName();
             })
             ->and($listener3 = function (Event $event) {
 
@@ -222,7 +222,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->name();
+                return $event->eventName();
             })
             ->and($listener3 = function (Event $event) {
 
@@ -249,7 +249,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->name();
+                return $event->eventName();
             })
             ->and($listener3 = function (Event $event) {
 

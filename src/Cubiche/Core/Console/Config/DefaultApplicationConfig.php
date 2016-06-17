@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Console\Config;
 
 use Cubiche\Core\Console\Api\Config\ApplicationConfig;
@@ -35,11 +34,9 @@ use Webmozart\Console\IO\OutputStream\StandardOutputStream;
 use Webmozart\Console\UI\Component\NameVersion;
 
 /**
- * The default application configuration.
+ * DefaultApplicationConfig class.
  *
- * @since  1.0
- *
- * @author Bernhard Schussek <bschussek@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class DefaultApplicationConfig extends ApplicationConfig
 {
@@ -55,7 +52,15 @@ class DefaultApplicationConfig extends ApplicationConfig
 
             ->addOption('help', 'h', Option::NO_VALUE, 'Display help about the command')
             ->addOption('quiet', 'q', Option::NO_VALUE, 'Do not output any message')
-            ->addOption('verbose', 'v', Option::OPTIONAL_VALUE, 'Increase the verbosity of messages: "-v" for normal output, "-vv" for more verbose output and "-vvv" for debug', null, 'level')
+            ->addOption(
+                'verbose',
+                'v',
+                Option::OPTIONAL_VALUE,
+                'Increase the verbosity of messages: "-v" for normal output, "-vv"
+                for more verbose output and "-vvv" for debug',
+                null,
+                'level'
+            )
             ->addOption('version', 'V', Option::NO_VALUE, 'Display this application version')
             ->addOption('ansi', null, Option::NO_VALUE, 'Force ANSI output')
             ->addOption('no-ansi', null, Option::NO_VALUE, 'Disable ANSI output')
@@ -70,13 +75,29 @@ class DefaultApplicationConfig extends ApplicationConfig
                 ->addOption('text', 't', Option::NO_VALUE, 'Output the help as plain text')
                 ->addOption('xml', 'x', Option::NO_VALUE, 'Output the help as XML')
                 ->addOption('json', 'j', Option::NO_VALUE, 'Output the help as JSON')
-                ->setHandler(function () { return new HelpHandler(); })
+                ->setHandler(function () {
+                    return new HelpHandler();
+                })
             ->end()
         ;
     }
 
-    public function createIO(Application $application, RawArgs $args, InputStream $inputStream = null, OutputStream $outputStream = null, OutputStream $errorStream = null)
-    {
+    /**
+     * @param Application       $application
+     * @param RawArgs           $args
+     * @param InputStream|null  $inputStream
+     * @param OutputStream|null $outputStream
+     * @param OutputStream|null $errorStream
+     *
+     * @return ConsoleIO
+     */
+    public function createIO(
+        Application $application,
+        RawArgs $args,
+        InputStream $inputStream = null,
+        OutputStream $outputStream = null,
+        OutputStream $errorStream = null
+    ) {
         $inputStream = $inputStream ?: new StandardInputStream();
         $outputStream = $outputStream ?: new StandardOutputStream();
         $errorStream = $errorStream ?: new ErrorOutputStream();
@@ -87,8 +108,15 @@ class DefaultApplicationConfig extends ApplicationConfig
         } elseif ($args->hasToken('--ansi')) {
             $outputFormatter = $errorFormatter = new AnsiFormatter($styleSet);
         } else {
-            $outputFormatter = $outputStream->supportsAnsi() ? new AnsiFormatter($styleSet) : new PlainFormatter($styleSet);
-            $errorFormatter = $errorStream->supportsAnsi() ? new AnsiFormatter($styleSet) : new PlainFormatter($styleSet);
+            $outputFormatter = $outputStream->supportsAnsi()
+                ? new AnsiFormatter($styleSet)
+                : new PlainFormatter($styleSet)
+            ;
+
+            $errorFormatter = $errorStream->supportsAnsi()
+                ? new AnsiFormatter($styleSet)
+                : new PlainFormatter($styleSet)
+            ;
         }
 
         $io = new ConsoleIO(
@@ -116,6 +144,9 @@ class DefaultApplicationConfig extends ApplicationConfig
         return $io;
     }
 
+    /**
+     * @param PreResolveEvent $event
+     */
     public function resolveHelpCommand(PreResolveEvent $event)
     {
         $args = $event->getRawArgs();
@@ -131,6 +162,9 @@ class DefaultApplicationConfig extends ApplicationConfig
         }
     }
 
+    /**
+     * @param PreHandleEvent $event
+     */
     public function printVersion(PreHandleEvent $event)
     {
         if ($event->getArgs()->isOptionSet('version')) {
