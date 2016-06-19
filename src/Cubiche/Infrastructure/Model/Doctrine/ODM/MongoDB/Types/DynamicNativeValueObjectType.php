@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types;
 
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Types\DynamicTypeTrait;
+
 /**
  * Dynamic Native Value Object Type Class.
  *

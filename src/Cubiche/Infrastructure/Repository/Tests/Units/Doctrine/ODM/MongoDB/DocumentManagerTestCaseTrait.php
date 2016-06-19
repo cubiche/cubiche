@@ -10,15 +10,19 @@
  */
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventSubscriber as CollectionsEventSubscriber;
-use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventSubscriber as IdentityEventSubscriber;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventSubscriber as ModelEventSubscriber;
-use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as CollectionsEventSubscriber;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener\MetadataEventSubscriber;
+use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as IdentityEventSubscriber;
+use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as ModelEventSubscriber;
+use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as GeolocationEventSubscriber;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as SystemEventSubscriber;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactory;
 use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
+use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\RoleType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -59,10 +63,14 @@ trait DocumentManagerTestCaseTrait
             $this->uow = $this->dm->getUnitOfWork();
 
             Type::addType('Phonenumber', PhonenumberType::class);
+            Type::addType('Role', RoleType::class);
 
+            $this->dm->getEventManager()->addEventSubscriber(new MetadataEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new ModelEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
-            $this->dm->getEventManager()->addEventSubscriber(new CollectionsEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new GeolocationEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new SystemEventSubscriber());
         }
 
         return $this->dm;

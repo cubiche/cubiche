@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Collections\Tests\Asserters;
 
 use Cubiche\Core\Collections\CollectionInterface;
@@ -74,7 +73,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isEmpty($failMessage = null)
     {
-        if (($actual = $this->valueAsCollection()->count()) === 0) {
+        if (($actual = $this->valueAsCollection()->isEmpty()) === true) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->getLocale()->_('%s is not empty', $this, $actual));
@@ -90,7 +89,7 @@ class CollectionAsserter extends ObjectAsserter
      */
     public function isNotEmpty($failMessage = null)
     {
-        if ($this->valueAsCollection()->count() > 0) {
+        if (!$this->valueAsCollection()->isEmpty()) {
             $this->pass();
         } else {
             $this->fail($failMessage ?: $this->_('%s is empty', $this));
@@ -245,54 +244,6 @@ class CollectionAsserter extends ObjectAsserter
         }
 
         return array(null, null);
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function contains($value)
-    {
-        $collection = $this->valueAsCollection();
-        if ($collection->findOne(Criteria::eq($value)) !== null) {
-            $this->pass();
-        } else {
-            $this->fail($this->getLocale()->_('The collection not contain the value %s', $value));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array|\Traversable $values
-     *
-     * @return mixed
-     */
-    public function containsValues($values)
-    {
-        foreach ($values as $value) {
-            $this->contains($value);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function notContains($value)
-    {
-        $collection = $this->valueAsCollection();
-        if ($collection->findOne(Criteria::eq($value)) !== null) {
-            $this->fail($this->getLocale()->_('The collection contain an element with this value %s', $value));
-        } else {
-            $this->pass();
-        }
-
-        return $this;
     }
 
     /**

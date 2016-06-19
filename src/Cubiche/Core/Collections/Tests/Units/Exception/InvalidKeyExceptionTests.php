@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -38,7 +37,7 @@ class InvalidKeyExceptionTests extends TestCase
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = InvalidKeyException::forKey('foo', $cause))
+            ->when($exception = InvalidKeyException::forKey('foo', '', $cause))
             ->then
                 ->object($exception)
                     ->isInstanceOf(InvalidKeyException::class)

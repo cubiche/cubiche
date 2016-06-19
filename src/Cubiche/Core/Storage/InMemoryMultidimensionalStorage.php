@@ -8,10 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage;
 
-use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 
 /**
  * InMemoryMultidimensionalStorage class.
@@ -21,7 +21,7 @@ use Cubiche\Core\Collections\ArrayCollection;
 class InMemoryMultidimensionalStorage extends AbstractStorage implements MultidimensionalStorageInterface
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayHashMap
      */
     protected $store;
 
@@ -30,7 +30,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
      */
     public function __construct()
     {
-        $this->store = new ArrayCollection();
+        $this->store = new ArrayHashMap();
     }
 
     /**
@@ -49,10 +49,10 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
     public function push($key, $value)
     {
         if (!$this->has($key)) {
-            $this->store->set($key, new ArrayCollection());
+            $this->store->set($key, new ArrayList());
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
         $collection->add($value);
     }
@@ -66,7 +66,7 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             return;
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         // get the last element and remove from the collection
@@ -79,21 +79,51 @@ class InMemoryMultidimensionalStorage extends AbstractStorage implements Multidi
             $this->store->removeAt($key);
         }
 
-        return $sliced->get($index);
+        return $sliced[$index];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAll($key)
+    public function all($key)
     {
         if (!$this->has($key)) {
             return array();
         }
 
-        /** @var ArrayCollection $collection */
+        /** @var ArrayList $collection */
         $collection = $this->store->get($key);
 
         return $collection->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count($key)
+    {
+        if (!$this->has($key)) {
+            return 0;
+        }
+
+        /** @var ArrayList $collection */
+        $collection = $this->store->get($key);
+
+        return $collection->count();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($key, $offset, $length = null)
+    {
+        if (!$this->has($key)) {
+            return array();
+        }
+
+        /** @var ArrayList $collection */
+        $collection = $this->store->get($key);
+
+        return $collection->slice($offset, $length)->toArray();
     }
 }

@@ -10,24 +10,42 @@
  */
 namespace Cubiche\Domain\Repository;
 
-use Cubiche\Core\Collections\CollectionInterface;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * Repository Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface RepositoryInterface extends CollectionInterface
+interface RepositoryInterface extends \IteratorAggregate
 {
     /**
-     * @param mixed $item
-     */
-    public function update($item);
-
-    /**
-     * @param mixed $id
+     * Find one element by a given id in the collection.
+     *
+     * @param IdInterface $id
      *
      * @return mixed
      */
-    public function get($id);
+    public function get(IdInterface $id);
+
+    /**
+     * Persist the element in the collection.
+     *
+     * @param mixed $element
+     */
+    public function persist($element);
+
+    /**
+     * Persist all elements in the collection.
+     *
+     * @param array|\Traversable $elements
+     */
+    public function persistAll($elements);
+
+    /**
+     * Remove a given element from the collection.
+     *
+     * @param mixed $element
+     */
+    public function remove($element);
 }

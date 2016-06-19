@@ -1,0 +1,2 @@
+# Cubiche - Validator
+[![Build Status](https://travis-ci.org/cubiche/validator.svg?branch=master)](https://travis-ci.org/cubiche/validator) [![Coverage Status](https://coveralls.io/repos/github/cubiche/validator/badge.svg?branch=master)](https://coveralls.io/github/cubiche/validator?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/validator/?branch=master) 

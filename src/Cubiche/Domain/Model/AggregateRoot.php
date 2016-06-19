@@ -11,8 +11,9 @@
 
 namespace Cubiche\Domain\Model;
 
-use Cubiche\Domain\Event\DomainEventPublisher;
-use Cubiche\Domain\EventSourcing\EntityDomainEventInterface;
+use Cubiche\Core\Validator\Validator;
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\Model\EventSourcing\EntityDomainEventInterface;
 use Cubiche\Domain\Model\EventSourcing\EventStream;
 
 /**
@@ -21,20 +22,42 @@ use Cubiche\Domain\Model\EventSourcing\EventStream;
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+abstract class AggregateRoot implements AggregateRootInterface
 {
+    /**
+     * @var IdInterface
+     */
+    protected $id;
+
     /**
      * @var EntityDomainEventInterface[]
      */
     private $recordedEvents = [];
 
     /**
+     * @param IdInterface $id
+     */
+    protected function __construct(IdInterface $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function id()
+    {
+        return $this->id;
+    }
+
+    /**
      * @param EntityDomainEventInterface $event
      */
-    protected function applyAndPublishEvent(EntityDomainEventInterface $event)
+    protected function recordApplyAndPublishEvent(EntityDomainEventInterface $event)
     {
-        $this->recordedEvents[] = $event;
+        Validator::assert($event);
 
+        $this->recordEvent($event);
         $this->applyEvent($event);
         $this->publishEvent($event);
     }
@@ -65,6 +88,14 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     }
 
     /**
+     * @param EntityDomainEventInterface $event
+     */
+    protected function recordEvent(EntityDomainEventInterface $event)
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    /**
      * @return EntityDomainEventInterface[]
      */
     public function recordedEvents()
@@ -87,21 +118,37 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
      */
     public static function loadFromHistory(EventStream $history)
     {
-        if (static::class !== $history->className()->toNative()) {
+        $aggregateRoot = new static($history->aggregateId());
+        $aggregateRoot->replay($history);
+
+        return $aggregateRoot;
+    }
+
+    /**
+     * @param EventStream $history
+     */
+    public function replay(EventStream $history)
+    {
+        if (get_class($this) !== $history->className()) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'You cannot load an AggregateRoot of type %s from an EventStream for object of type %s',
-                    static::class,
-                    $history->className()->toNative()
+                    'You cannot replay an AggregateRoot of type %s from an EventStream for object of type %s',
+                    get_class($this),
+                    $history->className()
                 )
             );
         }
 
-        $aggregateRoot = new static($history->aggregateId());
         foreach ($history->events() as $event) {
-            $aggregateRoot->applyEvent($event);
+            $this->applyEvent($event);
         }
+    }
 
-        return $aggregateRoot;
+    /**
+     * {@inheritdoc}
+     */
+    public function equals($other)
+    {
+        return $other instanceof static && $this->id()->equals($other->id());
     }
 }

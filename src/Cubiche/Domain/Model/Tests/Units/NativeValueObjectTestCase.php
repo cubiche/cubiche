@@ -11,7 +11,6 @@
 namespace Cubiche\Domain\Model\Tests\Units;
 
 use Cubiche\Domain\Model\NativeValueObjectInterface;
-use Cubiche\Tests\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
