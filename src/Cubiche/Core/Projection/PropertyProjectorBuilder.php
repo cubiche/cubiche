@@ -12,20 +12,21 @@ namespace Cubiche\Core\Projection;
 
 use Cubiche\Core\Selector\SelectorInterface;
 use Cubiche\Core\Selector\NamedSelectorInterface;
+use Cubiche\Core\Selector\Selectors;
 
 /**
- * Property Projection Builder Class.
+ * Property Projector Builder Class.
  *
- * @method PropertyProjectionBuilder as(string $name)
+ * @method Cubiche\Core\Projection\PropertyProjectorBuilder as(string $name);
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class PropertyProjectionBuilder extends ExtendedProjection
+class PropertyProjectorBuilder extends ExtendedProjector
 {
     /**
-     * @var PropertyProjection
+     * @var PropertyProjector
      */
-    protected $projection;
+    protected $projector;
 
     /**
      * @var Selector
@@ -35,7 +36,7 @@ class PropertyProjectionBuilder extends ExtendedProjection
     /**
      * @var int
      */
-    private $nonameCount;
+    private $nonameCount = 0;
 
     /**
      * @param SelectorInterface $selector
@@ -44,8 +45,8 @@ class PropertyProjectionBuilder extends ExtendedProjection
     {
         parent::__construct($this);
 
-        $this->projection = new PropertyProjection();
-        $this->currentSelector = $selector;
+        $this->projector = new PropertyProjector();
+        $this->select($selector);
     }
 
     /**
@@ -64,13 +65,13 @@ class PropertyProjectionBuilder extends ExtendedProjection
     }
 
     /**
-     * @return \Cubiche\Core\Projection\PropertyProjection
+     * @return \Cubiche\Core\Projection\PropertyProjector
      */
-    public function projection()
+    public function projector()
     {
         $this->addCurrentSelector();
 
-        return $this->projection;
+        return $this->projector;
     }
 
     /**
@@ -80,7 +81,20 @@ class PropertyProjectionBuilder extends ExtendedProjection
      */
     public function select(SelectorInterface $selector)
     {
-        $this->currentSelector = $selector;
+        $this->addCurrentSelector();
+        $this->currentSelector = $selector instanceof Selectors ? $selector->selector() : $selector;
+
+        return $this;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return $this
+     */
+    public function castTo($class)
+    {
+        $this->projector()->setClass($class);
 
         return $this;
     }
@@ -90,21 +104,13 @@ class PropertyProjectionBuilder extends ExtendedProjection
      */
     public function project($value)
     {
-        return $this->projection()->project($value);
-    }
-
-    /**
-     * @return Property[]
-     */
-    public function properties()
-    {
-        return $this->projection()->properties();
+        return $this->projector()->project($value);
     }
 
     /**
      * @param string $name
      *
-     * @return \Cubiche\Core\Projection\PropertyProjectionBuilder
+     * @return $this
      */
     private function asName($name)
     {
@@ -133,7 +139,7 @@ class PropertyProjectionBuilder extends ExtendedProjection
             ;
         }
 
-        $this->projection->add(new Property($name, $this->currentSelector));
+        $this->projector->add(new Property($this->currentSelector, $name));
         $this->currentSelector = null;
     }
 

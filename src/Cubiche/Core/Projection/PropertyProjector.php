@@ -13,24 +13,29 @@ namespace Cubiche\Core\Projection;
 use Cubiche\Core\Collections\ArrayCollection;
 
 /**
- * Property Projection Class.
+ * Property Projector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class PropertyProjection implements ProjectionInterface
+class PropertyProjector implements ProjectorInterface
 {
+    /**
+     * @var string
+     */
+    protected $class;
+
     /**
      * @var ArrayCollection
      */
     protected $properties;
 
     /**
-     * @param Property[] $properties
+     * @param string $class
      */
-    public function __construct($properties = array())
+    public function __construct($class = null)
     {
+        $this->class = $class;
         $this->properties = new ArrayCollection();
-        $this->addAll($properties);
     }
 
     /**
@@ -38,13 +43,13 @@ class PropertyProjection implements ProjectionInterface
      */
     public function project($value)
     {
-        $item = new ProjectionItem();
+        $builder = $this->class === null ? new DefaultProjectionBuilder() : new ClassProjectionBuilder($this->class);
         /** @var \Cubiche\Core\Projection\Property $property */
         foreach ($this->properties as $property) {
-            $item->set($property->name(), $property->selector()->apply($value));
+            $builder->set($property->name(), $property->selector()->apply($value));
         }
 
-        yield $item;
+        yield $builder;
     }
 
     /**
@@ -83,5 +88,21 @@ class PropertyProjection implements ProjectionInterface
     public function properties()
     {
         return $this->properties->toArray();
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param string $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
     }
 }

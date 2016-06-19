@@ -13,11 +13,11 @@ namespace Cubiche\Core\Projection;
 use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
- * Where Projection Class.
+ * Where Projector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class WhereProjection implements ProjectionInterface
+class WhereProjector implements ProjectorInterface
 {
     /**
      * @var SpecificationInterface
@@ -25,18 +25,18 @@ class WhereProjection implements ProjectionInterface
     protected $criteria;
 
     /**
-     * @var ProjectionInterface
+     * @var ProjectorInterface
      */
-    protected $projection;
+    protected $projector;
 
     /**
      * @param SpecificationInterface $criteria
-     * @param ProjectionInterface    $projection
+     * @param ProjectorInterface     $projector
      */
-    public function __construct(SpecificationInterface $criteria, ProjectionInterface $projection)
+    public function __construct(SpecificationInterface $criteria, ProjectorInterface $projector)
     {
         $this->criteria = $criteria;
-        $this->projection = $projection;
+        $this->projector = $projector;
     }
 
     /**
@@ -44,8 +44,9 @@ class WhereProjection implements ProjectionInterface
      */
     public function project($value)
     {
-        foreach ($this->projection()->project($value) as $item) {
-            if ($this->criteria->evaluate($item)) {
+        /** @var \Cubiche\Core\Projection\ProjectionWrapperInterface $item */
+        foreach ($this->projector()->project($value) as $item) {
+            if ($this->criteria()->evaluate($item->projection())) {
                 yield $item;
             }
         }
@@ -60,10 +61,10 @@ class WhereProjection implements ProjectionInterface
     }
 
     /**
-     * @return \Cubiche\Core\Projection\ProjectionInterface
+     * @return \Cubiche\Core\Projection\ProjectorInterface
      */
-    public function projection()
+    public function projector()
     {
-        return $this->projection;
+        return $this->projector;
     }
 }

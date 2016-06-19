@@ -11,16 +11,16 @@
 namespace Cubiche\Core\Projection;
 
 /**
- * Projection Interface.
+ * Projector Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ProjectionInterface
+interface ProjectorInterface
 {
     /**
      * @param mixed $value
      *
-     * @return \Iterator<ProjectionItem>
+     * @return \Iterator<ProjectionWrapperInterface>
      */
     public function project($value);
 }

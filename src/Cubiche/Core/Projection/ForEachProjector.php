@@ -13,11 +13,11 @@ namespace Cubiche\Core\Projection;
 use Cubiche\Core\Selector\SelectorInterface;
 
 /**
- * For Each Projection Class.
+ * For Each Projector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ForEachProjection implements ProjectionInterface
+class ForEachProjector implements ProjectorInterface
 {
     /**
      * @var SelectorInterface
@@ -25,18 +25,18 @@ class ForEachProjection implements ProjectionInterface
     protected $selector;
 
     /**
-     * @var ProjectionInterface
+     * @var ProjectorInterface
      */
-    protected $projection;
+    protected $projector;
 
     /**
-     * @param SelectorInterface   $selector
-     * @param ProjectionInterface $projection
+     * @param SelectorInterface  $selector
+     * @param ProjectorInterface $projector
      */
-    public function __construct(SelectorInterface $selector, ProjectionInterface $projection)
+    public function __construct(SelectorInterface $selector, ProjectorInterface $projector)
     {
         $this->selector = $selector;
-        $this->projection = $projection;
+        $this->projector = $projector;
     }
 
     /**
@@ -51,7 +51,7 @@ class ForEachProjection implements ProjectionInterface
 
         foreach ($values as $value) {
             //yield from $this->projection()->project($value); in PHP 7
-            foreach ($this->projection()->project($value) as $item) {
+            foreach ($this->projector()->project($value) as $item) {
                 yield $item;
             }
         }
@@ -66,10 +66,10 @@ class ForEachProjection implements ProjectionInterface
     }
 
     /**
-     * @return \Cubiche\Core\Projection\ProjectionInterface
+     * @return \Cubiche\Core\Projection\ProjectorInterface
      */
-    public function projection()
+    public function projector()
     {
-        return $this->projection;
+        return $this->projector;
     }
 }
