@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Core\Projection;
 
-use Cubiche\Core\Collections\ArrayCollection;
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 
 /**
  * Property Projector Class.
@@ -25,7 +25,7 @@ class PropertyProjector implements ProjectorInterface
     protected $class;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayHashMap
      */
     protected $properties;
 
@@ -35,7 +35,7 @@ class PropertyProjector implements ProjectorInterface
     public function __construct($class = null)
     {
         $this->class = $class;
-        $this->properties = new ArrayCollection();
+        $this->properties = new ArrayHashMap();
     }
 
     /**
