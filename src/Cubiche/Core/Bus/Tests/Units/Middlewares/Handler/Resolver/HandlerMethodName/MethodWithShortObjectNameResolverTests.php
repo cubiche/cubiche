@@ -29,7 +29,7 @@ class MethodWithShortObjectNameResolverTests extends TestCase
     {
         $this
             ->given($resolver = new MethodWithShortObjectNameResolver('Command'))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(LoginUserCommand::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUser')
@@ -37,7 +37,7 @@ class MethodWithShortObjectNameResolverTests extends TestCase
 
         $this
             ->given($resolver = new MethodWithShortObjectNameResolver('Query'))
-            ->when($result = $resolver->resolve(new PublishedPostsQuery(new \DateTime())))
+            ->when($result = $resolver->resolve(PublishedPostsQuery::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('publishedPosts')
@@ -45,7 +45,7 @@ class MethodWithShortObjectNameResolverTests extends TestCase
 
         $this
             ->given($resolver = new MethodWithShortObjectNameResolver('Service'))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(LoginUserCommand::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUserCommand')

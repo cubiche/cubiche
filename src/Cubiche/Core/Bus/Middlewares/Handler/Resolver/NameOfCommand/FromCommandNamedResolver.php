@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand;
 
 use Cubiche\Core\Bus\Command\CommandNamedInterface;
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 
 /**
@@ -26,5 +27,14 @@ class FromCommandNamedResolver extends FromMessageNamedResolver implements Resol
     protected function getType()
     {
         return CommandNamedInterface::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getName(MessageInterface $message)
+    {
+        /* @var CommandNamedInterface $message */
+        return $message->commandName();
     }
 }

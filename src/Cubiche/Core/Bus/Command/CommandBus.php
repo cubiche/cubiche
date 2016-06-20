@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Bus\Command;
 
-use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Bus;
+use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\CommandHandlerMiddleware;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
@@ -115,5 +115,29 @@ class CommandBus extends Bus
         $this->ensureCommandHandlerMiddleware();
 
         $this->commandHandlerMiddleware->resolver()->addHandler($commandName, $commandHandler);
+    }
+
+    /**
+     * @param string $commandName
+     *
+     * @return object
+     */
+    public function getHandlerFor($commandName)
+    {
+        $this->ensureCommandHandlerMiddleware();
+
+        return $this->commandHandlerMiddleware->resolver()->getHandlerFor($commandName);
+    }
+
+    /**
+     * @param string $commandName
+     *
+     * @return string
+     */
+    public function getHandlerMethodFor($commandName)
+    {
+        $this->ensureCommandHandlerMiddleware();
+
+        return $this->commandHandlerMiddleware->resolver()->getHandlerMethodFor($commandName);
     }
 }

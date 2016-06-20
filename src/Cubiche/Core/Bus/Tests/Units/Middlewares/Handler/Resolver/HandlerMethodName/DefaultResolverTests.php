@@ -28,7 +28,7 @@ class DefaultResolverTests extends TestCase
     {
         $this
             ->given($resolver = new DefaultResolver())
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(LoginUserCommand::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('handle')

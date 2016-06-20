@@ -10,8 +10,6 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\MessageInterface;
-
 /**
  * MethodWithShortObjectNameResolver class.
  *
@@ -45,9 +43,9 @@ class MethodWithShortObjectNameResolver extends MethodWithObjectNameResolver
     /**
      * {@inheritdoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve($className)
     {
-        $methodName = parent::resolve($message);
+        $methodName = parent::resolve($className);
         if (substr($methodName, $this->suffixLength * -1) !== $this->suffix) {
             return $methodName;
         }

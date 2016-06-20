@@ -10,8 +10,6 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\MessageInterface;
-
 /**
  * DefaultResolver class.
  *
@@ -26,7 +24,7 @@ class DefaultResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve($className)
     {
         return 'handle';
     }

@@ -21,7 +21,7 @@ class VenuesQueryHandler
      *
      * @return array
      */
-    public function nearbyVenues(NearbyVenuesQuery $query)
+    public function aroundVenues(NearbyVenuesQuery $query)
     {
         return array(
             array(

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\EventDispatcher;
 
 /**
@@ -23,7 +22,7 @@ class Event implements EventInterface
      *
      * @var string
      */
-    protected $name;
+    protected $eventName;
 
     /**
      * Has propagation stopped?
@@ -35,19 +34,19 @@ class Event implements EventInterface
     /**
      * Create a new event instance.
      *
-     * @param string $name
+     * @param string $eventName
      */
-    public function __construct($name = null)
+    public function __construct($eventName = null)
     {
-        $this->name = $name;
+        $this->eventName = $eventName;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function name()
+    public function eventName()
     {
-        return $this->name ? $this->name : get_class($this);
+        return $this->eventName ? $this->eventName : get_class($this);
     }
 
     /**

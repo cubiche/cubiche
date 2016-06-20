@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\EventDispatcher;
 
 use Cubiche\Core\Bus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
@@ -33,8 +32,8 @@ class EventDispatcherMiddlewareTests extends TestCase
             ->given($dispatcher = new EventDispatcher())
             ->and($middleware = new EventDispatcherMiddleware($dispatcher))
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->name(), array(new LoginUserEventListener(), 'onLogin')))
-            ->and($dispatcher->addListener($event->name(), function (LoginUserEvent $event) {
+            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener($event->eventName(), function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())
                     ->isEqualTo('info@cubiche.org')

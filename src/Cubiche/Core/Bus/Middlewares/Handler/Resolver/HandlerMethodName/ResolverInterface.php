@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * Resolver interface.
@@ -21,13 +20,13 @@ use Cubiche\Core\Bus\MessageInterface;
 interface ResolverInterface
 {
     /**
-     * Resolve the handler method name for a given message.
+     * Resolve the handler method name for a given class name.
      *
-     * @param MessageInterface $message
+     * @param string $className
      *
      * @return string
      *
      * @throws NotFoundException
      */
-    public function resolve(MessageInterface $message);
+    public function resolve($className);
 }

@@ -7,16 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Command;
 
-use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\ExecutableMessageInterface;
 
 /**
  * Command interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface CommandInterface extends MessageInterface
+interface CommandInterface extends ExecutableMessageInterface
 {
 }

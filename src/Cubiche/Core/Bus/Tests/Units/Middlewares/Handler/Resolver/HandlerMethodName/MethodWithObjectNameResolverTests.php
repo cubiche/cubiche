@@ -29,7 +29,7 @@ class MethodWithObjectNameResolverTests extends TestCase
     {
         $this
             ->given($resolver = new MethodWithObjectNameResolver())
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(LoginUserCommand::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUserCommand')
@@ -37,7 +37,7 @@ class MethodWithObjectNameResolverTests extends TestCase
 
         $this
             ->given($resolver = new MethodWithObjectNameResolver())
-            ->when($result = $resolver->resolve(new PublishedPostsQuery(new \DateTime())))
+            ->when($result = $resolver->resolve(PublishedPostsQuery::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('publishedPostsQuery')

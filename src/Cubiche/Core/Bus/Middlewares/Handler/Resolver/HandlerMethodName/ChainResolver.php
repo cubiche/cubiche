@@ -10,9 +10,8 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
+use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 
 /**
@@ -42,16 +41,16 @@ class ChainResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(MessageInterface $message)
+    public function resolve($className)
     {
         foreach ($this->resolvers as $resolver) {
             try {
                 /* @var ResolverInterface $resolver */
-                return $resolver->resolve($message);
+                return $resolver->resolve($className);
             } catch (\Exception $exception) {
             }
         }
 
-        throw NotFoundException::methodNameForObject($message);
+        throw NotFoundException::methodNameForObject($className);
     }
 }

@@ -9,13 +9,17 @@
  */
 namespace Cubiche\Core\Bus\Query;
 
-use Cubiche\Core\Bus\MessageNamedInterface;
-
 /**
  * QueryNamed interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryNamedInterface extends QueryInterface, MessageNamedInterface
+interface QueryNamedInterface extends QueryInterface
 {
+    /**
+     * Return the query name.
+     *
+     * @return string
+     */
+    public function queryName();
 }

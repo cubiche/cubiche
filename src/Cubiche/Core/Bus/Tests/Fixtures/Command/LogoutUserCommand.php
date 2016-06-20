@@ -61,7 +61,7 @@ class LogoutUserCommand implements CommandNamedInterface
     /**
      * {@inheritdoc}
      */
-    public function name()
+    public function commandName()
     {
         return 'logout_user';
     }

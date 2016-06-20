@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfQuery;
 
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 use Cubiche\Core\Bus\Query\QueryNamedInterface;
 
@@ -26,5 +27,14 @@ class FromQueryNamedResolver extends FromMessageNamedResolver implements Resolve
     protected function getType()
     {
         return QueryNamedInterface::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getName(MessageInterface $message)
+    {
+        /* @var QueryNamedInterface $message */
+        return $message->queryName();
     }
 }
