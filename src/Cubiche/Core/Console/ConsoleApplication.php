@@ -100,12 +100,20 @@ class ConsoleApplication extends BaseConsoleApplication
         $this->commandConverter->setArgs($event->getArgs());
         $this->commandConverter->setFormat($event->getCommand()->getArgsFormat());
 
-        $command = $this->commandConverter->getCommandFrom($event->getCommand()->getName());
-
         /** @var CommandConfig $commandConfig */
         $commandConfig = $event->getCommand()->getConfig();
+        if ($event->getCommand()->getName() !== 'help') {
+            if ($commandConfig->className() === null && count($commandConfig->getSubCommandConfigs()) === 0) {
+                throw new \RuntimeException(sprintf(
+                    'The command %s definition must set the className using ->setClass() method',
+                    $event->getCommand()->getName()
+                ));
+            }
+        }
 
+        $command = $this->commandConverter->getCommandFrom($commandConfig->className());
         $this->defaultHandler->clearHandlers();
+
         if ($commandConfig->preDispatchHandler() !== null) {
             $this->defaultHandler->addPreDispatchHandler($commandConfig->preDispatchHandler());
         }
@@ -115,7 +123,6 @@ class ConsoleApplication extends BaseConsoleApplication
         }
 
         $this->defaultHandler->setIo($event->getIO());
-
         $commandConfig->addEventSubscriber($this->defaultHandler);
 
         if ($command !== null) {

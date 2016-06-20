@@ -31,6 +31,31 @@ trait CommandConfigTrait
     protected $postDispatchHandler;
 
     /**
+     * @var string
+     */
+    protected $className;
+
+    /**
+     * @param string $className
+     *
+     * @return $this
+     */
+    public function setClass($className)
+    {
+        $this->className = $className;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function className()
+    {
+        return $this->className;
+    }
+
+    /**
      * @param callable $handler
      *
      * @return $this

@@ -167,7 +167,14 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
      */
     protected function eventToString(DomainEventInterface $event)
     {
-        return strtolower(trim(preg_replace('([A-Z])', ' $0', $event->eventName())));
+        $pos = strrpos($event->eventName(), '\\');
+        if ($pos !== false) {
+            $className = substr($event->eventName(), strrpos($event->eventName(), '\\') + 1);
+        } else {
+            $className = $event->eventName();
+        }
+
+        return strtolower(trim(preg_replace('([A-Z])', ' $0', $className)));
     }
 
     /**

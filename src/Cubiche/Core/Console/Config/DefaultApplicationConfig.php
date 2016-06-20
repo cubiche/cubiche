@@ -49,7 +49,6 @@ class DefaultApplicationConfig extends ApplicationConfig
             ->setIOFactory(array($this, 'createIO'))
             ->addEventListener(ConsoleEvents::PRE_RESOLVE, array($this, 'resolveHelpCommand'))
             ->addEventListener(ConsoleEvents::PRE_HANDLE, array($this, 'printVersion'))
-
             ->addOption('help', 'h', Option::NO_VALUE, 'Display help about the command')
             ->addOption('quiet', 'q', Option::NO_VALUE, 'Do not output any message')
             ->addOption(
@@ -65,7 +64,6 @@ class DefaultApplicationConfig extends ApplicationConfig
             ->addOption('ansi', null, Option::NO_VALUE, 'Force ANSI output')
             ->addOption('no-ansi', null, Option::NO_VALUE, 'Disable ANSI output')
             ->addOption('no-interaction', 'n', Option::NO_VALUE, 'Do not ask any interactive question')
-
             ->beginCommand('help')
                 ->markDefault()
                 ->setDescription('Display the manual of a command')
