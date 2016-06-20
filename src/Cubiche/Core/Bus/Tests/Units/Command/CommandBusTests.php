@@ -58,6 +58,36 @@ class CommandBusTests extends TestCase
     }
 
     /**
+     * Test getHandlerFor.
+     */
+    public function testGetHandlerFor()
+    {
+        $this
+            ->given($commandBus = CommandBus::create())
+            ->and($command = new EncodePasswordCommand('plainpassword'))
+            ->and($commandHandler = new EncodePasswordHandler('md5'))
+            ->and($commandBus->addHandler(EncodePasswordCommand::class, $commandHandler))
+            ->then()
+                ->object($commandBus->getHandlerFor(EncodePasswordCommand::class))
+                    ->isEqualTo($commandHandler)
+        ;
+    }
+
+    /**
+     * Test getHandlerMethodFor.
+     */
+    public function testGetHandlerMethodFor()
+    {
+        $this
+            ->given($commandBus = CommandBus::create())
+            ->and($command = new EncodePasswordCommand('plainpassword'))
+            ->then()
+                ->string($commandBus->getHandlerMethodFor(EncodePasswordCommand::class))
+                    ->isEqualTo('encodePassword')
+        ;
+    }
+
+    /**
      * Test dispatch with invalid command.
      */
     public function testDispatchWithInvalidCommand()

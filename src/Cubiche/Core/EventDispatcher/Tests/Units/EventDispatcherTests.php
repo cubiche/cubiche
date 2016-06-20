@@ -13,6 +13,8 @@ namespace Cubiche\Core\EventDispatcher\Tests\Units;
 use Cubiche\Core\EventDispatcher\EventDispatcher;
 use Cubiche\Core\EventDispatcher\Event;
 use Cubiche\Core\EventDispatcher\EventInterface;
+use Cubiche\Core\EventDispatcher\PostDispatchEvent;
+use Cubiche\Core\EventDispatcher\PreDispatchEvent;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\InvalidEvent;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\LoginUserEvent;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\LoginUserEventListener;
@@ -164,7 +166,26 @@ class EventDispatcherTests extends TestCase
     {
         $this
             ->given($dispatcher = $this->createEventDispatcher())
-            ->and($dispatcher->addListener('event.foo', array(new LoginUserEventListener(), 'onLogin')))
+            ->and($predispatch = 0)
+            ->and($postdispatch = 0)
+            ->and(
+                $dispatcher->addListener(
+                    PreDispatchEvent::class,
+                    function (PreDispatchEvent $event) use (&$predispatch) {
+                        ++$predispatch;
+                    }
+                )
+            )
+            ->and(
+                $dispatcher->addListener(
+                    PostDispatchEvent::class,
+                    function (PostDispatchEvent $event) use (&$postdispatch) {
+                        ++$postdispatch;
+                    }
+                )
+            )
+            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
             ->and($dispatcher->addListener('event.foo', function (Event $event) {
 
             }))
@@ -174,13 +195,18 @@ class EventDispatcherTests extends TestCase
             ->when($listeners = $dispatcher->listeners())
                 ->then()
                     ->array($listeners->toArray())
+                        ->hasKey($event->eventName())
                         ->hasKey('event.foo')
                         ->hasKey('event.bar')
                     ->array($listeners->toArray())
-                        ->hasSize(2)
-                    ->array($listeners->toArray())
-                        ->array['event.foo']
-                            ->hasSize(2)
+                        ->hasSize(5)
+            ->and()
+            ->when($dispatcher->dispatch('event.foo'))
+            ->and($dispatcher->dispatch('event.bar'))
+            ->then()
+                ->integer($predispatch)
+                    ->isEqualTo($postdispatch)
+                    ->isEqualTo(2)
         ;
     }
 

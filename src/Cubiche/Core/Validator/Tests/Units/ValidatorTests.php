@@ -12,10 +12,13 @@ namespace Cubiche\Core\Validator\Tests\Units;
 
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Exception\ValidationException;
+use Cubiche\Core\Validator\Mapping\Driver\StaticDriver;
 use Cubiche\Core\Validator\Tests\Fixtures\Blog;
 use Cubiche\Core\Validator\Tests\Fixtures\Post;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Core\Validator\ValidatorInterface;
+use Metadata\Driver\DriverChain;
+use Metadata\MetadataFactory;
 
 /**
  * ValidatorTests class.
@@ -42,6 +45,35 @@ class ValidatorTests extends TestCase
             ->then()
                 ->object($validator)
                     ->isInstanceOf(ValidatorInterface::class)
+        ;
+    }
+
+    /**
+     * Test setDefaultGroup method.
+     */
+    public function testSetDefaultGroup()
+    {
+        $this
+            ->given($validator = $this->creaateValidator())
+            ->when($validator->setDefaultGroup('foo'))
+            ->then()
+                ->boolean(true)
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test setMetadataFactory method.
+     */
+    public function testSetMetadataFactory()
+    {
+        $this
+            ->given($validator = $this->creaateValidator())
+            ->and($metadataFactory = new MetadataFactory(new DriverChain(array(new StaticDriver()))))
+            ->when($validator->setMetadataFactory($metadataFactory))
+            ->then()
+                ->boolean(true)
+                    ->isTrue()
         ;
     }
 
