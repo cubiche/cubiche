@@ -52,6 +52,14 @@ class DomainEventPublisher
     }
 
     /**
+     * @return EventBus $eventBus
+     */
+    public static function eventBus()
+    {
+        return static::instance()->getEventBus();
+    }
+
+    /**
      * @param DomainEventInterface $event
      */
     public static function publish(DomainEventInterface $event)
@@ -89,5 +97,13 @@ class DomainEventPublisher
     protected function setEventBus(EventBus $eventBus)
     {
         $this->eventBus = $eventBus;
+    }
+
+    /**
+     * @return EventBus
+     */
+    protected function getEventBus()
+    {
+        return $this->eventBus;
     }
 }

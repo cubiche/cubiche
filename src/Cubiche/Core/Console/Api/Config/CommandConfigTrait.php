@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Console\Api\Config;
 
-use Cubiche\Domain\EventPublisher\DomainEventPublisher;
-use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
+use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\Bus\Event\EventSubscriberInterface;
 
 /**
  * CommandConfig trait.
@@ -21,19 +21,32 @@ use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
 trait CommandConfigTrait
 {
     /**
-     * @var callback
+     * @var EventBus
      */
-    protected $preDispatchHandler;
+    protected $eventBus;
 
     /**
      * @var callback
      */
-    protected $postDispatchHandler;
+    protected $preDispatchHandler = null;
+
+    /**
+     * @var callback
+     */
+    protected $postDispatchHandler = null;
 
     /**
      * @var string
      */
     protected $className;
+
+    /**
+     * @param EventBus $eventBus
+     */
+    public function setEventBus(EventBus $eventBus)
+    {
+        $this->eventBus = $eventBus;
+    }
 
     /**
      * @param string $className
@@ -62,7 +75,7 @@ trait CommandConfigTrait
      *
      * @throws \InvalidArgumentException
      */
-    public function onPreDispatch($handler)
+    public function onPreDispatchEvent($handler)
     {
         if (!is_callable($handler)) {
             throw new \InvalidArgumentException(sprintf(
@@ -83,7 +96,7 @@ trait CommandConfigTrait
      *
      * @throws \InvalidArgumentException
      */
-    public function onPostDispatch($handler)
+    public function onPostDispatchEvent($handler)
     {
         if (!is_callable($handler)) {
             throw new \InvalidArgumentException(sprintf(
@@ -100,7 +113,7 @@ trait CommandConfigTrait
     /**
      * @return callable
      */
-    public function preDispatchHandler()
+    public function preDispatchEventHandler()
     {
         return $this->preDispatchHandler;
     }
@@ -108,19 +121,23 @@ trait CommandConfigTrait
     /**
      * @return callable
      */
-    public function postDispatchHandler()
+    public function postDispatchEventHandler()
     {
         return $this->postDispatchHandler;
     }
 
     /**
-     * @param DomainEventSubscriberInterface $subscriber
+     * @param EventSubscriberInterface $subscriber
      *
      * @return $this
      */
-    public function addEventSubscriber(DomainEventSubscriberInterface $subscriber)
+    public function addEventSubscriber(EventSubscriberInterface $subscriber)
     {
-        DomainEventPublisher::subscribe($subscriber);
+        if ($this->eventBus === null) {
+            throw new \RuntimeException('The event bus should not be null');
+        }
+
+        $this->eventBus->addSubscriber($subscriber);
 
         return $this;
     }

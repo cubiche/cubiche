@@ -10,10 +10,10 @@
  */
 namespace Cubiche\Core\Console\Handler;
 
+use Cubiche\Core\Bus\Event\EventInterface;
+use Cubiche\Core\Bus\Event\EventSubscriberInterface;
 use Cubiche\Core\EventDispatcher\PostDispatchEvent;
 use Cubiche\Core\EventDispatcher\PreDispatchEvent;
-use Cubiche\Domain\EventPublisher\DomainEventInterface;
-use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
 use Webmozart\Console\Api\IO\IO;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
@@ -23,7 +23,7 @@ use Webmozart\Console\UI\Style\TableStyle;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandlerInterface
+class DefaultEventHandler implements EventSubscriberInterface, EventHandlerInterface
 {
     /**
      * @var callback
@@ -38,7 +38,7 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
     /**
      * @var IO
      */
-    private $io;
+    protected $io;
 
     /**
      * @param IO $io
@@ -53,7 +53,7 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
      *
      * @return $this
      */
-    public function addPreDispatchHandler($handler)
+    public function addPreDispatchEventHandler($handler)
     {
         if (!is_callable($handler)) {
             throw new \InvalidArgumentException(sprintf(
@@ -72,7 +72,7 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
      *
      * @return $this
      */
-    public function addPostDispatchHandler($handler)
+    public function addPostDispatchEventHandler($handler)
     {
         if (!is_callable($handler)) {
             throw new \InvalidArgumentException(sprintf(
@@ -89,7 +89,7 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
     /**
      * @return $this
      */
-    public function clearHandlers()
+    public function clearEventHandlers()
     {
         $this->preDispatchHandler = null;
         $this->postDispatchHandler = null;
@@ -134,11 +134,11 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
     }
 
     /**
-     * @param DomainEventInterface $event
+     * @param EventInterface $event
      *
      * @return array
      */
-    protected function objectToPropertyArray(DomainEventInterface $event)
+    protected function objectToPropertyArray(EventInterface $event)
     {
         $properties = array();
         $reflection = new \ReflectionClass(get_class($event));
@@ -161,11 +161,11 @@ class DefaultEventHandler implements DomainEventSubscriberInterface, EventHandle
     }
 
     /**
-     * @param DomainEventInterface $event
+     * @param EventInterface $event
      *
      * @return array
      */
-    protected function eventToString(DomainEventInterface $event)
+    protected function eventToString(EventInterface $event)
     {
         $pos = strrpos($event->eventName(), '\\');
         if ($pos !== false) {
