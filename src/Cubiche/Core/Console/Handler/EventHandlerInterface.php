@@ -29,17 +29,17 @@ interface EventHandlerInterface
      *
      * @return $this
      */
-    public function addPreDispatchHandler($handler);
+    public function addPreDispatchEventHandler($handler);
 
     /**
      * @param callable $handler
      *
      * @return $this
      */
-    public function addPostDispatchHandler($handler);
+    public function addPostDispatchEventHandler($handler);
 
     /**
      * @return $this
      */
-    public function clearHandlers();
+    public function clearEventHandlers();
 }

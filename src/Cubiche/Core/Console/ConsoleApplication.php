@@ -53,10 +53,12 @@ class ConsoleApplication extends BaseConsoleApplication
      *
      * @param callable|ApplicationConfig $config
      * @param CommandBus                 $commandBus
+     * @param EventBus                   $eventBus
      */
-    public function __construct($config, CommandBus $commandBus)
+    public function __construct($config, CommandBus $commandBus, EventBus $eventBus)
     {
         $this->commandBus = $commandBus;
+        $this->eventBus = $eventBus;
         $this->defaultHandler = new DefaultEventHandler();
         $this->commandConverter = new ConsoleArgsToCommand();
 
@@ -112,17 +114,19 @@ class ConsoleApplication extends BaseConsoleApplication
         }
 
         $command = $this->commandConverter->getCommandFrom($commandConfig->className());
-        $this->defaultHandler->clearHandlers();
-
-        if ($commandConfig->preDispatchHandler() !== null) {
-            $this->defaultHandler->addPreDispatchHandler($commandConfig->preDispatchHandler());
-        }
-
-        if ($commandConfig->postDispatchHandler()) {
-            $this->defaultHandler->addPostDispatchHandler($commandConfig->postDispatchHandler());
-        }
 
         $this->defaultHandler->setIo($event->getIO());
+        $this->defaultHandler->clearEventHandlers();
+
+        if ($commandConfig->preDispatchEventHandler() !== null) {
+            $this->defaultHandler->addPreDispatchEventHandler($commandConfig->preDispatchEventHandler());
+        }
+
+        if ($commandConfig->postDispatchEventHandler()) {
+            $this->defaultHandler->addPostDispatchEventHandler($commandConfig->postDispatchEventHandler());
+        }
+
+        $commandConfig->setEventBus($this->eventBus);
         $commandConfig->addEventSubscriber($this->defaultHandler);
 
         if ($command !== null) {
