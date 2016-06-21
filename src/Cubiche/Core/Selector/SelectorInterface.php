@@ -29,7 +29,7 @@ interface SelectorInterface extends VisiteeInterface
     /**
      * @param SelectorInterface $selector
      *
-     * @return SelectorInterface $selector
+     * @return SelectorInterface
      */
     public function select(SelectorInterface $selector);
 

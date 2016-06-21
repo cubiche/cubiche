@@ -65,7 +65,7 @@ abstract class Quantifier extends Specification implements QuantifierInterface
     protected function evaluationIterator($value)
     {
         $items = $this->selector()->apply($value);
-        if (!is_array($items) && !$value instanceof \Traversable) {
+        if (!\is_array($items) && !$value instanceof \Traversable) {
             $items = array($items);
         }
 

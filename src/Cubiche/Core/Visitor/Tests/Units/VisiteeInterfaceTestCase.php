@@ -42,10 +42,10 @@ abstract class VisiteeInterfaceTestCase extends TestCase
      *
      * @dataProvider acceptVisitorDataProvider
      */
-    public function testAcceptVisitor($visitorMock, $shouldVisitMethod, $acceptVisitorMethod)
+    public function testAcceptVisitor($visitorMock, $shouldVisitMethod)
     {
         $this
-            ->given($visitorMock, $shouldVisitMethod, $acceptVisitorMethod)
+            ->given($visitorMock, $shouldVisitMethod)
             ->calling($visitorMock)
                 ->methods(
                     function ($method) use ($shouldVisitMethod) {
@@ -75,8 +75,8 @@ abstract class VisiteeInterfaceTestCase extends TestCase
     protected function acceptVisitorDataProvider()
     {
         return array(
-            array($this->newMockVisitorInterface(), $this->shouldVisitMethod(), $this->acceptActualVisitorMethod()),
-            array($this->newMockInstance(VisitorInterface::class), 'visit', 'accept'),
+            array($this->newMockVisitorInterface(), $this->shouldVisitMethod()),
+            array($this->newMockInstance(VisitorInterface::class), 'visit'),
         );
     }
 
@@ -94,14 +94,6 @@ abstract class VisiteeInterfaceTestCase extends TestCase
     protected function shouldVisitMethod()
     {
         return 'visit';
-    }
-
-    /**
-     * @return string
-     */
-    protected function acceptActualVisitorMethod()
-    {
-        return 'accept';
     }
 
     /**
