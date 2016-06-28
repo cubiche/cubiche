@@ -282,4 +282,17 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
                     ->isEqualTo($value)
         ;
     }
+
+    /**
+     * Test getIterator.
+     */
+    public function testGetIterator()
+    {
+        $this
+            ->given($collection = $this->randomRepository())
+            ->then()
+                ->object($collection->getIterator())
+                    ->isInstanceOf(\Traversable::class)
+        ;
+    }
 }

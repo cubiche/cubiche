@@ -7,19 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Model\Tests\Fixtures\Event;
+namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
-use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
+use Cubiche\Domain\EventSourcing\DomainEvent;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
- * PostWasCreated class.
+ * PostTitleWasChanged class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostWasCreated extends EntityDomainEvent
+class PostTitleWasChanged extends DomainEvent
 {
     /**
      * @var string
@@ -27,23 +27,16 @@ class PostWasCreated extends EntityDomainEvent
     protected $title;
 
     /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * PostWasCreated constructor.
+     * PostTitleWasChanged constructor.
      *
      * @param PostId $id
      * @param string $title
-     * @param string $content
      */
-    public function __construct(PostId $id, $title, $content)
+    public function __construct(PostId $id, $title)
     {
         parent::__construct($id);
 
         $this->title = $title;
-        $this->content = $content;
     }
 
     /**
@@ -63,19 +56,10 @@ class PostWasCreated extends EntityDomainEvent
     }
 
     /**
-     * @return string
-     */
-    public function content()
-    {
-        return $this->content;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
         $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assert::stringType());
     }
 }

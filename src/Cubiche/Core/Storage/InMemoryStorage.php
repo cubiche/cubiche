@@ -10,6 +10,7 @@
 namespace Cubiche\Core\Storage;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Core\Serializer\SerializerInterface;
 
 /**
  * InMemoryStorage class.
@@ -26,11 +27,17 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
     /**
      * Creates a new store.
      *
-     * @param array $elements
+     * @param SerializerInterface $serializer
+     * @param array               $elements
      */
-    public function __construct(array $elements = array())
+    public function __construct(SerializerInterface $serializer, array $elements = array())
     {
-        $this->store = new ArrayHashMap($elements);
+        parent::__construct($serializer);
+
+        $this->store = new ArrayHashMap();
+        foreach ($elements as $key => $value) {
+            $this->set($key, $value);
+        }
     }
 
     /**
@@ -40,7 +47,7 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
     {
         $this->validateKey($key);
 
-        $this->store->set($key, $value);
+        $this->store->set($key, $this->serializer->serialize($value));
     }
 
     /**
@@ -53,7 +60,7 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
             return $default;
         }
 
-        return $this->store->get($key);
+        return $this->serializer->deserialize($this->store->get($key));
     }
 
     /**

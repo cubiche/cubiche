@@ -10,11 +10,6 @@
  */
 namespace Cubiche\Domain\Model\Tests\Units;
 
-use Cubiche\Core\Validator\Exception\ValidationException;
-use Cubiche\Domain\Model\EventSourcing\EventStream;
-use Cubiche\Domain\Model\Tests\Fixtures\Category;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
@@ -26,140 +21,44 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 class AggregateRootTests extends TestCase
 {
     /**
-     * Test recordApplyAndPublishEvent method.
+     * Test id method.
      */
-    public function testRecordApplyAndPublishEvent()
+    public function testId()
     {
         $this
-            ->given(
-                $post = Post::create(
-                    $this->faker->sentence,
-                    $this->faker->paragraph
-                )
-            )
+            ->given($id = PostId::fromNative($this->faker->ean13()))
+            ->and($aggregateRoot = new Post($id, $this->faker->sentence(), $this->faker->paragraph()))
             ->then()
-                ->array($post->recordedEvents())
-                    ->hasSize(1)
-        ;
-    }
-
-    /**
-     * Test applyEvent method.
-     */
-    public function testApplyEventWithoutApplyMethod()
-    {
-        $this
-            ->given(
-                $post = Post::create(
-                    $this->faker->sentence,
-                    $this->faker->paragraph
-                )
-            )
-            ->then()
-                ->exception(function () use ($post) {
-                    $post->publish();
-                })->isInstanceOf(\BadMethodCallException::class)
-        ;
-    }
-
-    /**
-     * Test ClearEvents method.
-     */
-    public function testClearEvents()
-    {
-        $this
-            ->given(
-                $post = Post::create(
-                    $this->faker->sentence(),
-                    $this->faker->paragraph()
-                )
-            )
-            ->then()
-                ->array($post->recordedEvents())
-                    ->hasSize(1)
-            ->and()
-            ->when($post->clearEvents())
-            ->then()
-                ->array($post->recordedEvents())
-                    ->isEmpty()
-        ;
-    }
-
-    /**
-     * Test LoadFromHistory method.
-     */
-    public function testLoadFromHistory()
-    {
-        $this
-            ->given($title = $this->faker->sentence())
-            ->and($content = $this->faker->paragraph())
-            ->and($newTitle = $this->faker->sentence())
-            ->and($post = Post::create($title, $content))
-            ->and($post->changeTitle($newTitle))
-            ->and(
-                $eventStream = new EventStream(
-                    Post::class,
-                    $post->id(),
-                    [
-                        new PostWasCreated($post->id(), $title, $content),
-                        new PostTitleWasChanged($post->id(), $newTitle),
-                    ]
-                )
-            )
-            ->when($other = Post::loadFromHistory($eventStream))
-            ->then()
-                ->boolean($post->equals($other))
+                ->boolean($aggregateRoot->id()->equals($id))
                     ->isTrue()
         ;
     }
 
     /**
-     * Test Replay method.
+     * Test equals method.
      */
-    public function testReplayWithInvalidEventStream()
+    public function testEquals()
     {
         $this
-            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
+            ->given(
+                $aggregateRoot1 = new Post(
+                    PostId::fromNative($this->faker->unique()->uuid()),
+                    $this->faker->sentence(),
+                    $this->faker->paragraph()
+                )
+            )
             ->and(
-                $eventStream = new EventStream(
-                    Category::class,
-                    PostId::fromNative('123'),
-                    [
-                        new PostTitleWasChanged(PostId::fromNative('123'), $this->faker->sentence()),
-                    ]
+                $aggregateRoot2 = new Post(
+                    PostId::fromNative($this->faker->ean13()),
+                    $this->faker->sentence(),
+                    $this->faker->paragraph()
                 )
             )
             ->then()
-                ->exception(function () use ($post, $eventStream) {
-                    $post->replay($eventStream);
-                })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-    }
-
-    /**
-     * Test validation.
-     */
-    public function testValidation()
-    {
-        $this
-            ->given($post = Post::create($this->faker->sentence(), $this->faker->paragraph()))
-            ->when($post->changeTitle($this->faker->sentence()))
-            ->then()
-                ->array($post->recordedEvents())
-                    ->hasSize(2)
-            ->and()
-                ->exception(function () use ($post) {
-                    $post->changeTitle('');
-                })->isInstanceOf(ValidationException::class)
-                ->exception(function () use ($post) {
-                    $post->changeTitle(10);
-                })->isInstanceOf(ValidationException::class)
-        ;
-
-        $this
-            ->exception(function () {
-                Post::create('', $this->faker->paragraph());
-            })->isInstanceOf(ValidationException::class)
+                ->boolean($aggregateRoot1->equals($aggregateRoot1))
+                    ->isTrue()
+                ->boolean($aggregateRoot1->equals($aggregateRoot2))
+                    ->isFalse()
         ;
     }
 }

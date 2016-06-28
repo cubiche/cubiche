@@ -266,17 +266,4 @@ abstract class RepositoryTestCase extends TestCase
                 })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }
-
-    /**
-     * Test getIterator.
-     */
-    public function testGetIterator()
-    {
-        $this
-            ->given($collection = $this->randomRepository())
-            ->then()
-                ->object($collection->getIterator())
-                    ->isInstanceOf(\Traversable::class)
-        ;
-    }
 }

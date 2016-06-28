@@ -10,14 +10,14 @@
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
 use Cubiche\Core\Console\Tests\Fixtures\BlogId;
-use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
+use Cubiche\Domain\EventSourcing\DomainEvent;
 
 /**
  * BlogWasCreated class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class BlogWasCreated extends EntityDomainEvent
+class BlogWasCreated extends DomainEvent
 {
     /**
      * @var string
