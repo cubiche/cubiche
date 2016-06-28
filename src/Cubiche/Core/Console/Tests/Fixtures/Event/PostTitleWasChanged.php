@@ -10,14 +10,14 @@
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
 use Cubiche\Core\Console\Tests\Fixtures\PostId;
-use Cubiche\Domain\Model\EventSourcing\EntityDomainEvent;
+use Cubiche\Domain\EventSourcing\DomainEvent;
 
 /**
  * PostTitleWasChanged class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostTitleWasChanged extends EntityDomainEvent
+class PostTitleWasChanged extends DomainEvent
 {
     /**
      * @var string

@@ -73,12 +73,4 @@ class InMemoryRepository extends Repository
         $this->checkType($element);
         $this->collection->remove($element);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIterator()
-    {
-        return $this->collection->getIterator();
-    }
 }

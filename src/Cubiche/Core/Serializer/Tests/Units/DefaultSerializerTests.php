@@ -28,6 +28,24 @@ class DefaultSerializerTests extends TestCase
     {
         $this
             ->given($serializer = new DefaultSerializer())
+            ->when($data = $serializer->serialize(10.32))
+            ->then()
+                ->float($serializer->deserialize($data))
+                    ->isEqualTo(10.32)
+            ->and()
+            ->when($data = $serializer->serialize('test'))
+            ->then()
+                ->string($serializer->deserialize($data))
+                    ->isEqualTo('test')
+            ->and()
+            ->when($data = $serializer->serialize(array('foo' => 'bar')))
+            ->then()
+                ->array($serializer->deserialize($data))
+                    ->isEqualTo(array('foo' => 'bar'))
+        ;
+
+        $this
+            ->given($serializer = new DefaultSerializer())
             ->and($address = new Address('Avinguda Vilares, 5, Montgar', '08390', 'Barcelona'))
             ->and($person = new Person('Ivannis Suarez Jerez', $address))
             ->and($person1 = new Person('Carla Fernandez Couso', $address))

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,22 +8,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Model\EventSourcing;
+namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventPublisher\DomainEvent;
+use Cubiche\Domain\EventPublisher\DomainEvent as BaseDomainEvent;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
- * EntityDomainEvent class.
+ * DomainEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EntityDomainEvent extends DomainEvent implements EntityDomainEventInterface
+class DomainEvent extends BaseDomainEvent implements DomainEventInterface
 {
     /**
      * @var IdInterface
      */
     protected $aggregateId;
+
+    /**
+     * @var int
+     */
+    protected $version;
 
     /**
      * EntityDomainEvent constructor.
@@ -42,5 +48,21 @@ class EntityDomainEvent extends DomainEvent implements EntityDomainEventInterfac
     public function aggregateId()
     {
         return $this->aggregateId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function version()
+    {
+        return $this->version;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
     }
 }

@@ -10,9 +10,6 @@
 namespace Cubiche\Domain\Model\Tests\Fixtures;
 
 use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostTitleWasChanged;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasCreated;
-use Cubiche\Domain\Model\Tests\Fixtures\Event\PostWasPublished;
 
 /**
  * Post class.
@@ -37,9 +34,19 @@ class Post extends AggregateRoot
     protected $published = false;
 
     /**
-     * @var Category[]
+     * Post constructor.
+     *
+     * @param PostId $id
+     * @param string $title
+     * @param string $content
      */
-    protected $categories = [];
+    public function __construct(PostId $id, $title, $content)
+    {
+        parent::__construct($id);
+
+        $this->title = $title;
+        $this->content = $content;
+    }
 
     /**
      * @return string
@@ -66,38 +73,11 @@ class Post extends AggregateRoot
     }
 
     /**
-     * @return Category[]
-     */
-    public function categories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @param string $title
-     * @param string $content
-     *
-     * @return Post
-     */
-    public static function create($title, $content)
-    {
-        $post = new self(PostId::fromNative(md5(rand())));
-
-        $post->recordApplyAndPublishEvent(
-            new PostWasCreated($post->id(), $title, $content)
-        );
-
-        return $post;
-    }
-
-    /**
      * @param $newTitle
      */
     public function changeTitle($newTitle)
     {
-        $this->recordApplyAndPublishEvent(
-            new PostTitleWasChanged($this->id, $newTitle)
-        );
+        $this->title = $newTitle;
     }
 
     /**
@@ -105,26 +85,7 @@ class Post extends AggregateRoot
      */
     public function publish()
     {
-        $this->recordApplyAndPublishEvent(
-            new PostWasPublished($this->id())
-        );
-    }
-
-    /**
-     * @param PostWasCreated $event
-     */
-    protected function applyPostWasCreated(PostWasCreated $event)
-    {
-        $this->title = $event->title();
-        $this->content = $event->content();
-    }
-
-    /**
-     * @param PostTitleWasChanged $event
-     */
-    protected function applyPostTitleWasChanged(PostTitleWasChanged $event)
-    {
-        $this->title = $event->title();
+        $this->published = true;
     }
 
     /**

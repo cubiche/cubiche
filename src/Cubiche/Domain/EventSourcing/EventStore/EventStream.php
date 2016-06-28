@@ -7,10 +7,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Cubiche\Domain\EventSourcing\EventStore;
 
-namespace Cubiche\Domain\Model\EventSourcing;
-
-use Cubiche\Core\Serializer\SerializableInterface;
+use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -18,12 +17,12 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventStream implements SerializableInterface
+class EventStream
 {
     /**
      * @var string
      */
-    protected $className;
+    protected $streamName;
 
     /**
      * @var IdInterface
@@ -31,31 +30,30 @@ class EventStream implements SerializableInterface
     protected $aggregateId;
 
     /**
-     * @var EntityDomainEventInterface[]
+     * @var DomainEventInterface[]
      */
     protected $events = [];
 
     /**
      * EntityDomainEvent constructor.
      *
-     * @param string                       $className
-     * @param IdInterface                  $aggregateId
-     * @param EntityDomainEventInterface[] $events
+     * @param string                 $streamName
+     * @param IdInterface            $aggregateId
+     * @param DomainEventInterface[] $events
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct(
-        $className,
-        IdInterface $aggregateId,
-        array $events
-    ) {
-        $this->className = $className;
+    public function __construct($streamName, IdInterface $aggregateId, array $events)
+    {
+        $this->streamName = $streamName;
         $this->aggregateId = $aggregateId;
 
         foreach ($events as $event) {
-            if (!$event instanceof EntityDomainEventInterface) {
+            if (!$event instanceof DomainEventInterface) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'The event must be an instance of %s. Instance of %s given',
-                        EntityDomainEventInterface::class,
+                        DomainEventInterface::class,
                         is_object($event) ? get_class($event) : gettype($event)
                     )
                 );
@@ -68,9 +66,9 @@ class EventStream implements SerializableInterface
     /**
      * @return string
      */
-    public function className()
+    public function streamName()
     {
-        return $this->className;
+        return $this->streamName;
     }
 
     /**
@@ -82,7 +80,7 @@ class EventStream implements SerializableInterface
     }
 
     /**
-     * @return EntityDomainEventInterface[]
+     * @return DomainEventInterface[]
      */
     public function events()
     {
@@ -90,10 +88,22 @@ class EventStream implements SerializableInterface
     }
 
     /**
-     * @param EntityDomainEventInterface $event
+     * @param DomainEventInterface $event
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function addEvent(EntityDomainEventInterface $event)
+    protected function addEvent(DomainEventInterface $event)
     {
+        if (!$event->aggregateId()->equals($this->aggregateId)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Event-stream can only contain events for identifier %s, but got %s',
+                    $this->aggregateId->toNative(),
+                    $event->aggregateId()->toNative()
+                )
+            );
+        }
+
         $this->events[] = $event;
     }
 }

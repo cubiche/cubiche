@@ -17,7 +17,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface RepositoryInterface extends \IteratorAggregate
+interface RepositoryInterface
 {
     /**
      * Find one element by a given id in the collection.

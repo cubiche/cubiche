@@ -20,7 +20,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 class InMemoryLocator implements LocatorInterface
 {
     /**
-     * @var ArrayCollection
+     * @var ArrayHashMap
      */
     protected $handlers;
 

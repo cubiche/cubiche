@@ -12,6 +12,8 @@ namespace Cubiche\Core\Console\Tests\Fixtures;
 use Cubiche\Core\Console\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Core\Console\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Core\Console\Tests\Fixtures\Event\PostWasPublished;
+use Cubiche\Domain\EventSourcing\EventSourcedAggregateRoot;
+use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\Model\AggregateRoot;
 
 /**
@@ -19,8 +21,10 @@ use Cubiche\Domain\Model\AggregateRoot;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Post extends AggregateRoot
+class Post extends AggregateRoot implements EventSourcedAggregateRootInterface
 {
+    use EventSourcedAggregateRoot;
+
     /**
      * @var string
      */

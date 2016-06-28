@@ -10,6 +10,8 @@
 namespace Cubiche\Core\Console\Tests\Fixtures;
 
 use Cubiche\Core\Console\Tests\Fixtures\Event\BlogWasCreated;
+use Cubiche\Domain\EventSourcing\EventSourcedAggregateRoot;
+use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\Model\AggregateRoot;
 
 /**
@@ -17,8 +19,10 @@ use Cubiche\Domain\Model\AggregateRoot;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Blog extends AggregateRoot
+class Blog extends AggregateRoot implements EventSourcedAggregateRootInterface
 {
+    use EventSourcedAggregateRoot;
+
     /**
      * @var string
      */

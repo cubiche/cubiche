@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage;
 
+use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\Exception\InvalidKeyException;
 
 /**
@@ -20,6 +20,21 @@ use Cubiche\Core\Storage\Exception\InvalidKeyException;
  */
 abstract class AbstractStorage
 {
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
+     * AbstractStorage constructor.
+     *
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     /**
      * Validates that a key is valid.
      *

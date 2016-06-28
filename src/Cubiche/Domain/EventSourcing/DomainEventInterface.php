@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,20 +8,30 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\Model\EventSourcing;
+namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventPublisher\DomainEventInterface;
+use Cubiche\Domain\EventPublisher\DomainEventInterface as BaseDomainEventInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
- * EntityDomainEvent interface.
+ * DomainEvent interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EntityDomainEventInterface extends DomainEventInterface
+interface DomainEventInterface extends BaseDomainEventInterface
 {
     /**
      * @return IdInterface
      */
     public function aggregateId();
+
+    /**
+     * @return int
+     */
+    public function version();
+
+    /**
+     * @param int $version
+     */
+    public function setVersion($version);
 }

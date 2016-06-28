@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Storage\Tests\Units;
 
+use Cubiche\Core\Serializer\DefaultSerializer;
 use Cubiche\Core\Storage\AbstractStorage;
+use Cubiche\Core\Storage\InMemoryStorage;
 use Cubiche\Core\Storage\StorageInterface;
 
 /**
@@ -39,9 +40,9 @@ class InMemoryStorageTests extends TestCase
     public function testConstruct()
     {
         $this
-            ->given($this->newTestedInstance())
+            ->given($storage = new InMemoryStorage(new DefaultSerializer()))
             ->then()
-                ->array($this->testedInstance->keys())
+                ->array($storage->keys())
                     ->isEmpty()
         ;
     }
@@ -52,10 +53,10 @@ class InMemoryStorageTests extends TestCase
     public function testSet()
     {
         $this
-            ->given($this->newTestedInstance())
-            ->if($this->testedInstance->set('foo', 'bar'))
+            ->given($storage = new InMemoryStorage(new DefaultSerializer()))
+            ->if($storage->set('foo', 'bar'))
             ->then()
-                ->boolean($this->testedInstance->has('foo'))
+                ->boolean($storage->has('foo'))
                     ->isTrue()
         ;
     }
@@ -66,11 +67,11 @@ class InMemoryStorageTests extends TestCase
     public function testGet()
     {
         $this
-            ->given($this->newTestedInstance(array('foo' => 'bar')))
+            ->given($storage = new InMemoryStorage(new DefaultSerializer(), array('foo' => 'bar')))
             ->then()
-                ->string($this->testedInstance->get('foo'))
+                ->string($storage->get('foo'))
                     ->isEqualTo('bar')
-                ->integer($this->testedInstance->get('baz', 15))
+                ->integer($storage->get('baz', 15))
                     ->isEqualTo(15)
         ;
     }
@@ -81,11 +82,11 @@ class InMemoryStorageTests extends TestCase
     public function testRemove()
     {
         $this
-            ->given($this->newTestedInstance(array('a' => 'red', 'b' => 'blue')))
+            ->given($storage = new InMemoryStorage(new DefaultSerializer(), array('a' => 'red', 'b' => 'blue')))
             ->then()
-                ->boolean($this->testedInstance->remove('a'))
+                ->boolean($storage->remove('a'))
                     ->isTrue()
-                ->boolean($this->testedInstance->remove('c'))
+                ->boolean($storage->remove('c'))
                     ->isFalse()
         ;
     }
@@ -96,13 +97,13 @@ class InMemoryStorageTests extends TestCase
     public function testClear()
     {
         $this
-            ->given($this->newTestedInstance(array('a' => 'red', 'b' => 'blue')))
+            ->given($storage = new InMemoryStorage(new DefaultSerializer(), array('a' => 'red', 'b' => 'blue')))
             ->then()
-                ->array($this->testedInstance->keys())
+                ->array($storage->keys())
                     ->isNotEmpty()
-                ->when($this->testedInstance->clear())
+                ->when($storage->clear())
                 ->then()
-                    ->array($this->testedInstance->keys())
+                    ->array($storage->keys())
                         ->isEmpty()
         ;
     }
