@@ -12,16 +12,16 @@
 namespace Cubiche\Core\Delegate;
 
 /**
- * Delegate.
+ * Delegate class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Delegate
+class Delegate extends AbstractDelegate
 {
     /**
-     * @var \Closure
+     * @var \ReflectionFunction|\ReflectionMethod
      */
-    protected $closure;
+    private $reflection = null;
 
     /**
      * @param Closure $closure
@@ -45,6 +45,17 @@ class Delegate
     }
 
     /**
+     * @param string $class
+     * @param string $method
+     *
+     * @return static
+     */
+    public static function fromStaticMethod($class, $method)
+    {
+        return new static(array($class, $method));
+    }
+
+    /**
      * @param string $function
      *
      * @return static
@@ -55,36 +66,20 @@ class Delegate
     }
 
     /**
-     * @param callable $callable
+     * @return \ReflectionFunction|\ReflectionMethod
      */
-    public function __construct($callable)
+    public function reflection()
     {
-        if (\is_object($callable) && ($callable instanceof \Closure)) {
-            $this->closure = $callable;
-        } elseif (\is_callable($callable)) {
-            $this->closure = function () use ($callable) {
-                return \call_user_func_array($callable, \func_get_args());
-            };
-        } else {
-            throw new \InvalidArgumentException('The function must be a \Closure instance or a callable.');
+        if ($this->reflection === null) {
+            if (\is_array($this->callable)) {
+                $this->reflection = new \ReflectionMethod($this->callable[0], $this->callable[1]);
+            } elseif (\is_object($this->callable) && !$this->callable instanceof \Closure) {
+                $this->reflection = new \ReflectionMethod($this->callable, '__invoke');
+            } else {
+                $this->reflection = new \ReflectionFunction($this->callable);
+            }
         }
-    }
 
-    /**
-     * @return mixed
-     */
-    public function __invoke()
-    {
-        return $this->invokeWith(\func_get_args());
-    }
-
-    /**
-     * @param array $args
-     *
-     * @return mixed
-     */
-    public function invokeWith(array $args)
-    {
-        return \call_user_func_array($this->closure, $args);
+        return $this->reflection;
     }
 }
