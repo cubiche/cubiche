@@ -16,7 +16,7 @@ namespace Cubiche\Core\Delegate;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class AbstractDelegate implements CallableInterface
+abstract class AbstractDelegate implements DelegateInterface
 {
     /**
      * @var callable
@@ -48,9 +48,7 @@ abstract class AbstractDelegate implements CallableInterface
     }
 
     /**
-     * @param array $args
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function invokeWith(array $args)
     {

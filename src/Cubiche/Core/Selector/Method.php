@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector;
 
 use Cubiche\Core\Delegate\Delegate;
@@ -37,11 +36,11 @@ class Method extends Field
     }
 
     /**
-     * @return \Cubiche\Domain\Specification\MethodSelector
+     * @return $this
      */
     public function with()
     {
-        $this->args = func_get_args();
+        $this->args = \func_get_args();
 
         return $this;
     }
@@ -57,14 +56,6 @@ class Method extends Field
     /**
      * {@inheritdoc}
      */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
-    {
-        return $visitor->visitMethod($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function apply($value)
     {
         if (!is_object($value)) {
@@ -75,13 +66,13 @@ class Method extends Field
             throw new \RuntimeException(\sprintf('Undefined method %s::%s', \get_class($value), $this->name));
         }
 
-        $reflection = new \ReflectionMethod(\get_class($value), $this->name);
-        if ($reflection->isPrivate() || $reflection->isProtected()) {
+        $method = Delegate::fromMethod($value, $this->name);
+        if ($method->reflection()->isPrivate() || $method->reflection()->isProtected()) {
             throw new \RuntimeException(
                 \sprintf('Trying to call non-public method %s::%s', \get_class($value), $this->name)
             );
         }
 
-        return Delegate::fromMethod($value, $this->name)->invokeWith($this->args());
+        return $method->invokeWith($this->args());
     }
 }

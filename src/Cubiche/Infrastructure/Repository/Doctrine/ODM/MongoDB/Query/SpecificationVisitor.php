@@ -20,7 +20,6 @@ use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\SelectorInterface;
-use Cubiche\Core\Selector\SelectorVisitorInterface;
 use Cubiche\Core\Selector\This;
 use Cubiche\Core\Selector\Value;
 use Cubiche\Core\Specification\AndSpecification;
@@ -40,8 +39,7 @@ use Cubiche\Core\Specification\Quantifier\All;
 use Cubiche\Core\Specification\Quantifier\AtLeast;
 use Cubiche\Core\Specification\Selector;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Specification\SpecificationVisitor as BaseSpecificationVisitor;
-use Cubiche\Core\Visitor\VisiteeInterface;
+use Cubiche\Core\Visitor\Visitor;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -49,7 +47,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorVisitorInterface
+class SpecificationVisitor extends Visitor
 {
     use VisitorTrait;
 
@@ -58,25 +56,15 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
      */
     public function __construct(QueryBuilder $queryBuilder)
     {
+        parent::__construct();
+
         $this->queryBuilder = $queryBuilder;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function visit(VisiteeInterface $visitee)
-    {
-        if ($visitee instanceof SelectorInterface) {
-            return $visitee->acceptSelectorVisitor($this);
-        }
-
-        return parent::visit($visitee);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function visitAnd(AndSpecification $specification)
+    public function visitAndSpecification(AndSpecification $specification)
     {
         $leftQueryBuilder = $this->queryBuilderFromSpecification($specification->left());
         $rightQueryBuilder = $this->queryBuilderFromSpecification($specification->right());
@@ -93,7 +81,7 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
     /**
      * {@inheritdoc}
      */
-    public function visitOr(OrSpecification $specification)
+    public function visitOrSpecification(OrSpecification $specification)
     {
         $leftQueryBuilder = $this->queryBuilderFromSpecification($specification->left());
         $rightQueryBuilder = $this->queryBuilderFromSpecification($specification->right());
@@ -105,7 +93,7 @@ class SpecificationVisitor extends BaseSpecificationVisitor implements SelectorV
     /**
      * {@inheritdoc}
      */
-    public function visitNot(NotSpecification $specification)
+    public function visitNotSpecification(NotSpecification $specification)
     {
         $specificationQueryBuilder = $this->queryBuilderFromSpecification($specification->specification());
         $this->queryBuilder->not($specificationQueryBuilder->getExpr());

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable;
 
 use Cubiche\Core\Selector\SelectorInterface;
@@ -70,13 +69,5 @@ class SelectorComparator extends AbstractComparator
     public function reverse()
     {
         return new self($this->selector(), new Order(-1 * $this->order()->getValue()));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
-    {
-        return $visitor->visitSelectorComparator($this);
     }
 }

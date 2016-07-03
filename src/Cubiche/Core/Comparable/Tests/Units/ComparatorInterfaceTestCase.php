@@ -12,7 +12,6 @@ namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
-use Cubiche\Core\Comparable\ComparatorVisitorInterface;
 use Cubiche\Core\Comparable\MultiComparator;
 use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 
@@ -25,15 +24,13 @@ use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 abstract class ComparatorInterfaceTestCase extends VisiteeInterfaceTestCase
 {
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
         $this
-            ->given($comparator = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(ComparatorInterface::class)
+            ->testedClass
+                ->implements(ComparatorInterface::class)
         ;
     }
 
@@ -108,14 +105,6 @@ abstract class ComparatorInterfaceTestCase extends VisiteeInterfaceTestCase
                         ->withArguments($comparator)
                         ->once()
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function visitorInterface()
-    {
-        return ComparatorVisitorInterface::class;
     }
 
     /**

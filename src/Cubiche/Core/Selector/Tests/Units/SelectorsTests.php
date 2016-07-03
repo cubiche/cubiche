@@ -36,16 +36,6 @@ class SelectorsTests extends SelectorTestCase
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function acceptVisitorDataProvider()
-    {
-        return array(
-            array($this->newMockInstance(VisitorInterface::class), 'visit', 'accept'),
-        );
-    }
-
-    /**
      * Test apply.
      */
     public function testSelector()
@@ -125,39 +115,6 @@ class SelectorsTests extends SelectorTestCase
     }
 
     /**
-     * Test acceptSelectorVisitor.
-     */
-    public function testAcceptSelectorVisitor()
-    {
-        $this
-            ->given(
-                $visitorMock = $this->newMockVisitorInterface(),
-                $shouldVisitMethod = 'visitComposite'
-            )
-            ->calling($visitorMock)
-                ->methods(
-                    function ($method) use ($shouldVisitMethod) {
-                        return $method === \strtolower($shouldVisitMethod);
-                    }
-                )
-                ->return = 25
-            ;
-
-        $this
-                /* @var \Cubiche\Core\Selector\Selectors $builder */
-                ->given($builder = $this->newDefaultTestedInstance())
-                ->when($result = $builder->acceptSelectorVisitor($visitorMock))
-                ->then()
-                    ->mock($visitorMock)
-                        ->call($shouldVisitMethod)
-                        ->withArguments($builder->selector())
-                    ->once()
-                    ->integer($result)
-                        ->isEqualTo(25)
-            ;
-    }
-
-    /**
      * Test __staticCall.
      *
      * @dataProvider staticCallDataProvider
@@ -190,6 +147,19 @@ class SelectorsTests extends SelectorTestCase
                 Selectors::value(array()),
                 Selectors::count()
             ), Composite::class),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function acceptVisitorDataProvider()
+    {
+        /** @var \Cubiche\Core\Selector\Selectors $visitee */
+        $visitee = $this->newDefaultTestedInstance();
+
+        return array(
+            array($visitee, $this->newMockInstance(VisitorInterface::class), 'visit', $visitee->selector()),
         );
     }
 }

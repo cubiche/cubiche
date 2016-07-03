@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Core\Selector;
 
+use Cubiche\Core\Visitor\VisitorInterface;
+
 /**
  * Selector Builder Class.
  *
@@ -114,7 +116,7 @@ class Selectors extends Selector
     /**
      * {@inheritdoc}
      */
-    public function select(SelectorInterface $selector)
+    public function select(callable $selector)
     {
         $this->selector = $this->selector()->select($selector);
 
@@ -122,13 +124,11 @@ class Selectors extends Selector
     }
 
     /**
-     * @param SelectorVisitorInterface $visitor
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
+    public function accept(VisitorInterface $visitor)
     {
-        return $this->selector()->acceptSelectorVisitor($visitor);
+        return $this->delegateAccept($this->selector(), $visitor, \func_get_args());
     }
 
     /**

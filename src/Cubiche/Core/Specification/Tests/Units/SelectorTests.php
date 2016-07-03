@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Selector\Key;
@@ -26,14 +25,6 @@ class SelectorTests extends SpecificationTestCase
     public function defaultConstructorArguments()
     {
         return array(new Key('foo'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitSelector';
     }
 
     /**

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable;
 
 use Cubiche\Core\Delegate\Delegate;
@@ -39,13 +38,5 @@ class Custom extends AbstractComparator
     public function compare($a, $b)
     {
         return $this->delegate->__invoke($a, $b);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
-    {
-        return $visitor->visitCustomComparator($this);
     }
 }

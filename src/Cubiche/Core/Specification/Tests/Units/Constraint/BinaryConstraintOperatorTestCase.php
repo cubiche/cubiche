@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Tests\Units\Constraint;
 
 use Cubiche\Core\Selector\SelectorInterface;
@@ -33,17 +32,13 @@ abstract class BinaryConstraintOperatorTestCase extends SpecificationTestCase
     }
 
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
-        parent::testCreate();
-
         $this
-            ->given($constraint = $this->newDefaultTestedInstance())
-            ->then
-                ->object($constraint)
-                    ->isInstanceOf(BinaryConstraintOperator::class)
+            ->testedClass
+                ->isSubClassOf(BinaryConstraintOperator::class)
         ;
     }
 

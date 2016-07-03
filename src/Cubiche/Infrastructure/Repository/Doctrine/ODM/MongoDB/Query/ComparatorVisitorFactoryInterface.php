@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
-use Cubiche\Core\Comparable\ComparatorVisitorInterface;
+use Cubiche\Core\Visitor\VisitorInterface;
 
 /**
  * Comparator Visitor Factory Interface.
@@ -22,7 +22,7 @@ interface ComparatorVisitorFactoryInterface
     /**
      * @param QueryBuilder $queryBuilder
      *
-     * @return ComparatorVisitorInterface
+     * @return VisitorInterface
      */
     public function create(QueryBuilder $queryBuilder);
 }

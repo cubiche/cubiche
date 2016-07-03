@@ -21,28 +21,27 @@ use Cubiche\Tests\TestCase;
 abstract class VisiteeInterfaceTestCase extends TestCase
 {
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
         $this
-            ->given($visitee = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($visitee)
-                    ->isInstanceOf(VisiteeInterface::class)
+            ->testedClass
+                ->implements(VisiteeInterface::class)
         ;
     }
 
     /**
      * Test accept.
      *
+     * @param VisiteeInterface $visitee
      * @param VisitorInterface $visitorMock
      * @param string           $shouldVisitMethod
-     * @param string           $acceptVisitorMethod
+     * @param VisiteeInterface $withVisitee
      *
      * @dataProvider acceptVisitorDataProvider
      */
-    public function testAcceptVisitor($visitorMock, $shouldVisitMethod)
+    public function testAcceptVisitor(VisiteeInterface $visitee, $visitorMock, $shouldVisitMethod, $withVisitee = null)
     {
         $this
             ->given($visitorMock, $shouldVisitMethod)
@@ -56,13 +55,12 @@ abstract class VisiteeInterfaceTestCase extends TestCase
             ;
 
         $this
-            /* @var \Cubiche\Core\Visitor\VisiteeInterface $visitee */
-            ->given($visitee = $this->newDefaultTestedInstance())
+            ->given($visitee, $withVisitee = $withVisitee === null ? $visitee : $withVisitee)
             ->when($result = $visitee->accept($visitorMock))
             ->then()
                 ->mock($visitorMock)
                     ->call($shouldVisitMethod)
-                        ->withArguments($visitee)
+                        ->withArguments($withVisitee)
                         ->once()
                 ->integer($result)
                     ->isEqualTo(25)
@@ -74,33 +72,10 @@ abstract class VisiteeInterfaceTestCase extends TestCase
      */
     protected function acceptVisitorDataProvider()
     {
+        $visitee = $this->newDefaultTestedInstance();
+
         return array(
-            array($this->newMockVisitorInterface(), $this->shouldVisitMethod()),
-            array($this->newMockInstance(VisitorInterface::class), 'visit'),
+            array($visitee, $this->newMockInstance(VisitorInterface::class), 'visit'),
         );
-    }
-
-    /**
-     * @return string
-     */
-    protected function visitorInterface()
-    {
-        return VisitorInterface::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visit';
-    }
-
-    /**
-     * @return object
-     */
-    protected function newMockVisitorInterface()
-    {
-        return $this->newMockInstance($this->visitorInterface());
     }
 }

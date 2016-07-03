@@ -8,10 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Quantifier;
-
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 
 /**
  * All Quantifier Class.
@@ -33,13 +30,5 @@ class All extends Quantifier
         }
 
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitAll($this);
     }
 }

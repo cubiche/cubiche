@@ -10,6 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
+use Cubiche\Core\Visitor\VisitorInterface;
+
 /**
  * Specification Visitor Factory Interface.
  *
@@ -20,7 +22,7 @@ interface SpecificationVisitorFactoryInterface
     /**
      * @param QueryBuilder $queryBuilder
      *
-     * @return SpecificationVisitorInterface
+     * @return VisitorInterface
      */
     public function create(QueryBuilder $queryBuilder);
 }

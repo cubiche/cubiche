@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Domain\Geolocation\Specification\Constraint;
 
 use Cubiche\Core\Selector\SelectorInterface;
 use Cubiche\Core\Specification\Specification;
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Geolocation\Distance;
 use Cubiche\Domain\Geolocation\DistanceUnit;
 use Cubiche\Domain\Geolocation\GeolocalizableInterface;
 use Cubiche\Domain\System\Real;
-use Cubiche\Domain\Geolocation\Specification\GeoSpecificationVisitorInterface;
 
 /**
  * Near Specification Class.
@@ -100,17 +97,5 @@ class Near extends Specification
 
         return $geolocalizable->coordinate() !== null &&
             $geolocalizable->coordinate()->distance($this->coordinate())->compareTo($this->radius()) <= 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        if ($visitor instanceof GeoSpecificationVisitorInterface) {
-            return $visitor->visitNear($this);
-        }
-
-        return parent::acceptSpecificationVisitor($visitor);
     }
 }

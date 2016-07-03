@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Core\Selector;
 
+use Cubiche\Core\Delegate\CallableInterface;
 use Cubiche\Core\Visitor\VisiteeInterface;
 
 /**
@@ -17,7 +18,7 @@ use Cubiche\Core\Visitor\VisiteeInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface SelectorInterface extends VisiteeInterface
+interface SelectorInterface extends CallableInterface, VisiteeInterface
 {
     /**
      * @param mixed $value
@@ -27,16 +28,9 @@ interface SelectorInterface extends VisiteeInterface
     public function apply($value);
 
     /**
-     * @param SelectorInterface $selector
+     * @param callable $selector
      *
-     * @return SelectorInterface
+     * @return \Cubiche\Core\Selector\SelectorInterface
      */
-    public function select(SelectorInterface $selector);
-
-    /**
-     * @param SelectorVisitorInterface $visitor
-     *
-     * @return mixed
-     */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor);
+    public function select(callable $selector);
 }

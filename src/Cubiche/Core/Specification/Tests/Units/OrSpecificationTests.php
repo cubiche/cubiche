@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Tests\Units;
 
 use Cubiche\Core\Specification\Criteria;
@@ -26,14 +25,6 @@ class OrSpecificationTests extends SpecificationTestCase
     public function defaultConstructorArguments()
     {
         return array(Criteria::lte(25), Criteria::gt(30));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitOr';
     }
 
     /**

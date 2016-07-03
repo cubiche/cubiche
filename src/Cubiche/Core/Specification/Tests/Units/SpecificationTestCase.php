@@ -20,17 +20,13 @@ use Cubiche\Core\Specification\Specification;
 abstract class SpecificationTestCase extends SpecificationInterfaceTestCase
 {
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
-        parent::testCreate();
-
         $this
-            ->given($specification = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($specification)
-                    ->isInstanceOf(Specification::class)
+            ->testedClass
+                ->isSubClassOf(Specification::class)
         ;
     }
 

@@ -10,7 +10,6 @@
  */
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Query;
 
-use Cubiche\Domain\Geolocation\Specification\GeoSpecificationVisitorInterface;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitor;
 
 /**
@@ -18,7 +17,7 @@ use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVi
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class GeoSpecificationVisitor extends SpecificationVisitor implements GeoSpecificationVisitorInterface
+class GeoSpecificationVisitor extends SpecificationVisitor
 {
     use GeoSpecificationVisitorTrait;
 }

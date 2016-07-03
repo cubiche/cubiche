@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Selector;
 
 use Cubiche\Core\Visitor\Visitee;
-use Cubiche\Core\Visitor\VisitorInterface;
 
 /**
  * Abstract Selector Class.
@@ -21,22 +20,32 @@ use Cubiche\Core\Visitor\VisitorInterface;
 abstract class Selector extends Visitee implements SelectorInterface
 {
     /**
-     * {@inheritdoc}
+     * @param callable $selector
+     *
+     * @return \Cubiche\Core\Selector\SelectorInterface
      */
-    public function select(SelectorInterface $selector)
+    public static function from(callable $selector)
     {
-        return new Composite($this, $selector);
+        if ($selector instanceof SelectorInterface) {
+            return $selector;
+        }
+
+        return new Custom($selector);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function accept(VisitorInterface $visitor)
+    public function __invoke()
     {
-        if ($visitor instanceof SelectorVisitorInterface) {
-            return $this->acceptSelectorVisitor($visitor);
-        }
+        return \call_user_func_array(array($this, 'apply'), \func_get_args());
+    }
 
-        return parent::accept($visitor);
+    /**
+     * {@inheritdoc}
+     */
+    public function select(callable $selector)
+    {
+        return new Composite($this, self::from($selector));
     }
 }
