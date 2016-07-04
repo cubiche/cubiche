@@ -9,12 +9,14 @@
  */
 namespace Cubiche\Core\Visitor\Tests\Units;
 
+use Cubiche\Core\Visitor\Tests\Fixtures\Value;
+
 /**
- * Visitor Tests Class.
+ * Null Visitor Tests Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class VisitorTests extends LinkedVisitorTestCase
+class NullVisitorTests extends LinkedVisitorTestCase
 {
     /**
      * {@inheritdoc}
@@ -30,5 +32,17 @@ class VisitorTests extends LinkedVisitorTestCase
     protected function visitNextDataProvider()
     {
         return array();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function canHandlerVisiteeDataProvider()
+    {
+        $data = parent::canHandlerVisiteeDataProvider();
+    
+        return \array_merge($data, array(
+            array($this->newDefaultTestedInstance(), new Value(1), false),
+        ));
     }
 }

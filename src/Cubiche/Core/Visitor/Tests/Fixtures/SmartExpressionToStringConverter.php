@@ -17,7 +17,7 @@ use Cubiche\Core\Visitor\Visitor;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SmartExpressionToStringConverter extends Visitor
+class SmartExpressionToStringConverter extends ExpressionToStringConverter
 {
     /**
      * @param Operator $op
@@ -31,26 +31,6 @@ class SmartExpressionToStringConverter extends Visitor
             $currentOperator.$op->secondOperand()->accept($this, $currentOperator);
 
         return $this->requireParentheses($currentOperator, $parentOperator) ? '('.$expression.')' : $expression;
-    }
-
-    /**
-     * @param Value $value
-     *
-     * @return string
-     */
-    public function visitValue(Value $value)
-    {
-        return (string) $value->value();
-    }
-
-    /**
-     * @param Variable $variable
-     *
-     * @return string
-     */
-    public function visitVariable(Variable $variable)
-    {
-        return $variable->name();
     }
 
     /**

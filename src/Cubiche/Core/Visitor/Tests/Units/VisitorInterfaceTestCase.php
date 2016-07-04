@@ -21,73 +21,29 @@ use Cubiche\Core\Visitor\VisiteeInterface;
 abstract class VisitorInterfaceTestCase extends TestCase
 {
     /**
-     * @return string
+     * Test class.
      */
-    protected function visiteeInterface()
-    {
-        return VisiteeInterface::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function shouldVisitMethod()
-    {
-        return;
-    }
-
-    /**
-     * Test create.
-     */
-    public function testCreate()
+    public function testClass()
     {
         $this
-            ->given($visitor = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($visitor)
-                    ->isInstanceOf(VisitorInterface::class)
+            ->testedClass
+                ->implements(VisitorInterface::class)
         ;
     }
 
     /**
-     * Test visit.
+     * Test visit method.
      */
-    public function testVisit()
+    public function testVisitUnsupportedVisitee()
     {
-        $shouldVisitMethod = $this->shouldVisitMethod();
-        if ($shouldVisitMethod !== null) {
-            $this
-                ->given($visiteeMock = $this->newMockVisiteeInterface())
-                    ->calling($visiteeMock)
-                        ->methods(
-                            function ($method) use ($shouldVisitMethod) {
-                                return $method === \strtolower($shouldVisitMethod);
-                            }
-                        )
-                        ->return = 25
-                ;
-
-            $this
-                /* @var \Cubiche\Core\Visitor\VisitorInterface $visitorMock */
-                ->given($visitorMock = $this->newDefaultMockTestedInstance())
-                ->when($result = $visitorMock->visit($visiteeMock))
-                    ->mock($visiteeMock)
-                        ->call($shouldVisitMethod)
-                            ->withArguments($visitorMock)
-                            ->once()
-                    ->integer($result)
-                        ->isEqualTo(25)
-                ;
-        } else {
-            $this->skip(self::class.'::testVisit() skipped');
-        }
-    }
-
-    /**
-     * @return object
-     */
-    protected function newMockVisiteeInterface()
-    {
-        return $this->newMockInstance($this->visiteeInterface());
+        $this
+            ->given($visiteeMock = $this->newMockInstance(VisiteeInterface::class))
+            /* @var \Cubiche\Core\Visitor\VisitorInterface $visitor */
+            ->given($visitor = $this->newDefaultTestedInstance())
+            ->exception(function () use ($visitor, $visiteeMock) {
+                $visitor->visit($visiteeMock);
+            })
+                ->isInstanceOf(\LogicException::class)
+        ;
     }
 }
