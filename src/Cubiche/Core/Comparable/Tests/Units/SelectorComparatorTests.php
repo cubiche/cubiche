@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Selector\Key;
@@ -21,14 +20,6 @@ use Cubiche\Core\Comparable\Order;
  */
 class SelectorComparatorTests extends AbstractComparatorTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitSelectorComparator';
-    }
-
     /**
      * {@inheritdoc}
      */

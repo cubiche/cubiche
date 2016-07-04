@@ -23,17 +23,13 @@ use Cubiche\Core\Specification\Tests\Units\SpecificationTestCase;
 abstract class QuantifierTestCase extends SpecificationTestCase
 {
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
-        parent::testCreate();
-
         $this
-            ->given($quantifier = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($quantifier)
-                    ->isInstanceOf(Quantifier::class)
+            ->testedClass
+                ->isSubClassOf(Quantifier::class)
         ;
     }
 

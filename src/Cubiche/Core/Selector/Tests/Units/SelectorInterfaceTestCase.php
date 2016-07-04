@@ -10,7 +10,6 @@
 namespace Cubiche\Core\Selector\Tests\Units;
 
 use Cubiche\Core\Selector\SelectorInterface;
-use Cubiche\Core\Selector\SelectorVisitorInterface;
 use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 
 /**
@@ -21,25 +20,13 @@ use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 abstract class SelectorInterfaceTestCase extends VisiteeInterfaceTestCase
 {
     /**
-     * {@inheritdoc}
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
-        parent::testCreate();
-
         $this
-            ->given($selector = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($selector)
-                    ->isInstanceOf(SelectorInterface::class)
+            ->testedClass
+                ->implements(SelectorInterface::class)
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function visitorInterface()
-    {
-        return SelectorVisitorInterface::class;
     }
 }

@@ -14,7 +14,6 @@ use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\OrSpecification;
 use Cubiche\Core\Specification\Specification;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 
 /**
@@ -26,17 +25,13 @@ use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
 {
     /**
-     * Test create.
+     * Test class.
      */
-    public function testCreate()
+    public function testClass()
     {
-        parent::testCreate();
-
         $this
-            ->given($specification = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($specification)
-                    ->isInstanceOf(SpecificationInterface::class)
+            ->testedClass
+                ->implements(SpecificationInterface::class)
         ;
     }
 
@@ -166,14 +161,6 @@ abstract class SpecificationInterfaceTestCase extends VisiteeInterfaceTestCase
      * @return array
      */
     abstract protected function evaluateFailureDataProvider();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function visitorInterface()
-    {
-        return SpecificationVisitorInterface::class;
-    }
 
     /**
      * @return \Cubiche\Core\Specification\SpecificationInterface

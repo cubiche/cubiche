@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification;
 
 /**
@@ -37,14 +36,6 @@ class NotSpecification extends Specification
     public function evaluate($value)
     {
         return !$this->specification()->evaluate($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitNot($this);
     }
 
     /**

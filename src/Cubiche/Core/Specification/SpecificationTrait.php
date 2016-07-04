@@ -10,8 +10,6 @@
  */
 namespace Cubiche\Core\Specification;
 
-use Cubiche\Core\Visitor\VisitorInterface;
-
 /**
  * Specification Trait.
  *
@@ -56,17 +54,5 @@ trait SpecificationTrait
     public function not()
     {
         return new NotSpecification($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function accept(VisitorInterface $visitor)
-    {
-        if ($visitor instanceof SpecificationVisitorInterface) {
-            return $this->acceptSpecificationVisitor($visitor);
-        }
-
-        return parent::accept($visitor);
     }
 }

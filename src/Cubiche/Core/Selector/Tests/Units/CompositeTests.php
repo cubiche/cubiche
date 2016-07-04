@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector\Tests\Units;
 
 use Cubiche\Core\Selector\Key;
@@ -26,14 +25,6 @@ class CompositeTests extends SelectorTestCase
     public function newDefaultTestedInstance()
     {
         return $this->newTestedInstance(new Key('foo'), new Key('bar'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitComposite';
     }
 
     /**

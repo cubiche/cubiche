@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Quantifier;
 
 use Cubiche\Core\Selector\SelectorInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 
 /**
  * At Least Quantifier Class.
@@ -68,13 +66,5 @@ class AtLeast extends Quantifier
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitAtLeast($this);
     }
 }

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable;
 
 /**
@@ -70,13 +69,5 @@ class MultiComparator extends AbstractComparator
     public function reverse()
     {
         return new self($this->firstComparator()->reverse(), $this->secondComparator()->reverse());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor)
-    {
-        return $visitor->visitMultiComparator($this);
     }
 }

@@ -8,10 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Constraint;
-
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 
 /**
  * Not Same Specification Class.
@@ -26,14 +23,6 @@ class NotSame extends BinaryConstraintOperator
     public function evaluate($value)
     {
         return $this->left()->apply($value) !== $this->right()->apply($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitNotSame($this);
     }
 
     /**

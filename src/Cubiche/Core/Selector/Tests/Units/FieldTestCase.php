@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector\Tests\Units;
 
 use Cubiche\Core\Selector\Field;
@@ -25,21 +24,6 @@ abstract class FieldTestCase extends SelectorTestCase
     public function newDefaultTestedInstance()
     {
         return $this->newTestedInstance('foo');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function testCreate()
-    {
-        parent::testCreate();
-
-        $this
-            ->given($field = $this->newTestedInstance('foo'))
-            ->then()
-                ->object($field)
-                    ->isInstanceOf(Field::class)
-        ;
     }
 
     /**

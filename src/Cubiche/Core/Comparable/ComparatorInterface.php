@@ -40,11 +40,4 @@ interface ComparatorInterface extends VisiteeInterface
      * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     public function orX(ComparatorInterface $other);
-
-    /**
-     * @param ComparatorVisitorInterface $visitor
-     *
-     * @return mixed
-     */
-    public function acceptComparatorVisitor(ComparatorVisitorInterface $visitor);
 }

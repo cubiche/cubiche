@@ -40,21 +40,13 @@ class Property extends Field
     /**
      * {@inheritdoc}
      */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
-    {
-        return $visitor->visitProperty($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function apply($value)
     {
-        if (!is_object($value)) {
+        if (!\is_object($value)) {
             throw new \RuntimeException('Trying to get property of non-object');
         }
 
-        if (!property_exists($value, $this->name)) {
+        if (!\property_exists($value, $this->name)) {
             throw new \RuntimeException(\sprintf('Undefined property %s::%s', \get_class($value), $this->name));
         }
 

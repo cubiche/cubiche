@@ -39,7 +39,7 @@ abstract class RelationalOperator extends BinaryConstraintOperator
     }
 
     /**
-     * @return \Cubiche\Domain\Comparable\ComparatorInterface
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     protected static function comparator()
     {

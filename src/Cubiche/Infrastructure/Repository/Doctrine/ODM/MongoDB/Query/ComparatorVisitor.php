@@ -8,22 +8,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\ComparatorVisitor as BaseComparatorVisitor;
 use Cubiche\Core\Comparable\Custom;
 use Cubiche\Core\Comparable\MultiComparator;
 use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Comparable\SelectorComparator;
+use Cubiche\Core\Visitor\Visitor;
 
 /**
  * Comparator Visitor Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ComparatorVisitor extends BaseComparatorVisitor
+class ComparatorVisitor extends Visitor
 {
     use VisitorTrait;
 
@@ -32,6 +31,8 @@ class ComparatorVisitor extends BaseComparatorVisitor
      */
     public function __construct(QueryBuilder $queryBuilder)
     {
+        parent::__construct();
+
         $this->queryBuilder = $queryBuilder;
     }
 

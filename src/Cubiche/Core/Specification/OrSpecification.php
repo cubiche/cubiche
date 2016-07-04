@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification;
 
 /**
@@ -24,13 +23,5 @@ class OrSpecification extends BinarySpecification
     public function evaluate($value)
     {
         return $this->left()->evaluate($value) || $this->right()->evaluate($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitOr($this);
     }
 }

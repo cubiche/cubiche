@@ -7,7 +7,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector\Tests\Units;
 
 /**
@@ -23,14 +22,6 @@ class ValueTests extends SelectorTestCase
     public function newDefaultTestedInstance()
     {
         return $this->newTestedInstance(5);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitValue';
     }
 
     /**

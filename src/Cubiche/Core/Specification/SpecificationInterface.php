@@ -47,11 +47,4 @@ interface SpecificationInterface extends VisiteeInterface
      * @return \Cubiche\Domain\Specification\SpecificationInterface
      */
     public function not();
-
-    /**
-     * @param SpecificationVisitorInterface $visitor
-     *
-     * @return mixed
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor);
 }

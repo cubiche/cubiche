@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification;
 
 use Cubiche\Core\Selector\Count;
@@ -17,7 +16,6 @@ use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\SelectorInterface;
-use Cubiche\Core\Selector\SelectorVisitorInterface;
 use Cubiche\Core\Selector\Value;
 use Cubiche\Core\Specification\Constraint\Equal;
 use Cubiche\Core\Specification\Constraint\GreaterThan;
@@ -69,6 +67,14 @@ class Selector extends Specification implements SelectorInterface
     /**
      * {@inheritdoc}
      */
+    public function __invoke()
+    {
+        return $this->selector()->__invoke(\func_get_args());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function apply($value)
     {
         return $this->selector()->apply($value);
@@ -77,27 +83,9 @@ class Selector extends Specification implements SelectorInterface
     /**
      * {@inheritdoc}
      */
-    public function select(SelectorInterface $selector)
+    public function select(callable $selector)
     {
         return new self($this->selector()->select($selector));
-    }
-
-    /**
-     * @param SelectorVisitorInterface $visitor
-     *
-     * @return mixed
-     */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
-    {
-        return $this->selector()->acceptSelectorVisitor($visitor);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitSelector($this);
     }
 
     /**

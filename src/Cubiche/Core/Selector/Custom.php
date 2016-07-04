@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector;
 
 use Cubiche\Core\Delegate\Delegate;
@@ -39,13 +38,5 @@ class Custom extends Selector
     public function apply($value)
     {
         return $this->delegate->__invoke($value);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSelectorVisitor(SelectorVisitorInterface $visitor)
-    {
-        return $visitor->visitCustom($this);
     }
 }

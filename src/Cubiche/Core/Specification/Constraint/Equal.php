@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Specification\Constraint;
 
 use Cubiche\Core\Equatable\EquatableInterface;
-use Cubiche\Core\Specification\SpecificationVisitorInterface;
 
 /**
  * Equal Specification Class.
@@ -34,14 +32,6 @@ class Equal extends BinaryConstraintOperator
         }
 
         return $leftValue == $rightValue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function acceptSpecificationVisitor(SpecificationVisitorInterface $visitor)
-    {
-        return $visitor->visitEqual($this);
     }
 
     /**
