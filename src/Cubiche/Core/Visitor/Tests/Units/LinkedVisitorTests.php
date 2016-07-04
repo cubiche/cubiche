@@ -44,7 +44,7 @@ class LinkedVisitorTests extends LinkedVisitorTestCase
             ),
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -59,14 +59,14 @@ class LinkedVisitorTests extends LinkedVisitorTestCase
             ),
         );
     }
-    
+
     /**
      * {@inheritdoc}
      */
     protected function canHandlerVisiteeDataProvider()
     {
         $data = parent::canHandlerVisiteeDataProvider();
-    
+
         return \array_merge($data, array(
             array(new Calculator(), new Sum(new Value(1), new Value(2)), true),
             array(new Calculator(), new Variable('x'), false),

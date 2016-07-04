@@ -25,7 +25,7 @@ class NullVisitorTests extends LinkedVisitorTestCase
     {
         return array();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -33,14 +33,14 @@ class NullVisitorTests extends LinkedVisitorTestCase
     {
         return array();
     }
-    
+
     /**
      * {@inheritdoc}
      */
     protected function canHandlerVisiteeDataProvider()
     {
         $data = parent::canHandlerVisiteeDataProvider();
-    
+
         return \array_merge($data, array(
             array($this->newDefaultTestedInstance(), new Value(1), false),
         ));

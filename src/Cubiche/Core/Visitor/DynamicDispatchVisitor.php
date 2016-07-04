@@ -93,18 +93,29 @@ abstract class DynamicDispatchVisitor implements DynamicDispatchVisitorInterface
     private function handlerMethod(VisiteeInterface $visitee)
     {
         $class = new \ReflectionClass(\get_class($visitee));
-        if (isset($this->handlerMethods[$class->getName()])) {
-            return $this->handlerMethods[$class->getName()];
+        if (isset($this->handlerMethods[$class->name])) {
+            return $this->handlerMethods[$class->name];
         }
         if ($this->visitorMethods === null) {
             $this->visitorMethods = $this->visitorMethods();
         }
+
+        return $this->findHandlerMethod($class);
+    }
+
+    /**
+     * @param \ReflectionClass $class
+     *
+     * @return \ReflectionMethod|null
+     */
+    private function findHandlerMethod(\ReflectionClass $class)
+    {
         $current = $class;
         while ($current !== false) {
-            if (isset($this->visitorMethods[$current->getName()])) {
-                $this->handlerMethods[$class->getName()] = $this->visitorMethods[$current->getName()];
+            if (isset($this->visitorMethods[$current->name])) {
+                $this->handlerMethods[$class->name] = $this->visitorMethods[$current->name];
 
-                return $this->handlerMethods[$class->getName()];
+                return $this->handlerMethods[$class->name];
             }
 
             $current = $current->getParentClass();
@@ -114,7 +125,7 @@ abstract class DynamicDispatchVisitor implements DynamicDispatchVisitorInterface
     }
 
     /**
-     * @return ReflectionMethod[]
+     * @return \ReflectionMethod[]
      */
     private function visitorMethods()
     {

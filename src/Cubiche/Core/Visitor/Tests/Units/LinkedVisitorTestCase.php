@@ -22,11 +22,11 @@ abstract class LinkedVisitorTestCase extends DynamicDispatchVisitorTestCase
     /**
      * Test visit method.
      *
-     * @param LinkedVisitor $visitor
-     * @param LinkedVisitor $next
+     * @param LinkedVisitor    $visitor
+     * @param LinkedVisitor    $next
      * @param VisiteeInterface $visitee
-     * @param string $visitorMethod
-     * @param mixed $expected
+     * @param string           $visitorMethod
+     * @param mixed            $expected
      *
      * @dataProvider visitNextDataProvider
      */
@@ -49,7 +49,7 @@ abstract class LinkedVisitorTestCase extends DynamicDispatchVisitorTestCase
                     ->isEqualTo($expected)
         ;
     }
-    
+
     /**
      * @return array
      */

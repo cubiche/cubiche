@@ -23,7 +23,7 @@ class VisitorTests extends LinkedVisitorTestCase
     {
         return array();
     }
-    
+
     /**
      * {@inheritdoc}
      */
