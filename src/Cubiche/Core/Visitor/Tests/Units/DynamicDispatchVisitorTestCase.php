@@ -9,26 +9,22 @@
  */
 namespace Cubiche\Core\Visitor\Tests\Units;
 
+use Cubiche\Core\Visitor\VisiteeInterface;
+
 /**
- * Visitor Tests Class.
+ * Dynamic Dispatch Visitor Test Case Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class VisitorTests extends LinkedVisitorTestCase
+abstract class DynamicDispatchVisitorTestCase extends DynamicDispatchVisitorInterfaceTestCase
 {
     /**
      * {@inheritdoc}
      */
-    protected function visitDataProvider()
+    protected function canHandlerVisiteeDataProvider()
     {
-        return array();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function visitNextDataProvider()
-    {
-        return array();
+        return array(
+            array($this->newDefaultTestedInstance(), $this->newMockInstance(VisiteeInterface::class), false),
+        );
     }
 }

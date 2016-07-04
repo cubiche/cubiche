@@ -35,7 +35,7 @@ abstract class LinkedVisitor extends DynamicDispatchVisitor
         LinkedVisitor $next = null,
         ResolverVisitorMethodInterface $resolver = null
     ) {
-        $this->next = $next === null ? NullVisitor::create() : $next;
+        $this->next = $next === null ? new NullVisitor() : $next;
         $this->next->parent = $this;
         $this->parent = null;
         $this->resolver = $resolver === null ? new ResolverVisitorMethod() : $resolver;
@@ -73,5 +73,17 @@ abstract class LinkedVisitor extends DynamicDispatchVisitor
         }
 
         return $this->next->doVisit($visitee, $args, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function notSupportedVisiteeException(VisiteeInterface $visitee)
+    {
+        if ($this->parent !== null) {
+            return $this->parent->notSupportedVisiteeException($visitee);
+        }
+
+        return parent::notSupportedVisiteeException($visitee);
     }
 }

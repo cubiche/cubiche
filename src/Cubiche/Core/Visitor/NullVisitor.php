@@ -17,23 +17,6 @@ namespace Cubiche\Core\Visitor;
  */
 final class NullVisitor extends LinkedVisitor
 {
-    /**
-     * @var NullVisitor
-     */
-    private static $instance = null;
-
-    /**
-     * @return \Cubiche\Core\Visitor\NullVisitor
-     */
-    public static function create()
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
     public function __construct()
     {
     }
