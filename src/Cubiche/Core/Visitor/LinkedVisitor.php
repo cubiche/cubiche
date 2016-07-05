@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Abstract Linked Visitor Class.
+ * Abstract Linked Visitor class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

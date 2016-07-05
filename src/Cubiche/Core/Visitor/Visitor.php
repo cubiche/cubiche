@@ -11,17 +11,10 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Abstract Visitor Class.
+ * Abstract Visitor class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 abstract class Visitor extends LinkedVisitor
 {
-    /**
-     * @param ResolverVisitorMethodInterface $resolver
-     */
-    public function __construct(ResolverVisitorMethodInterface $resolver = null)
-    {
-        parent::__construct(null, $resolver);
-    }
 }

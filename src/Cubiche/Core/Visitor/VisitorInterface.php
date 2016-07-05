@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Visitor Interface.
+ * Visitor interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

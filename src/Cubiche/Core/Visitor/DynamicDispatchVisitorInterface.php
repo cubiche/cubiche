@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Dynamic Dispatch Visitor Interface.
+ * Dynamic Dispatch Visitor interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

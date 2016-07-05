@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Resolver Visitor Method Interface.
+ * Resolver Visitor Method interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
