@@ -22,4 +22,11 @@ interface CallableInterface
      * @return mixed
      */
     public function __invoke();
+
+    /**
+     * @param array $args
+     *
+     * @return mixed
+     */
+    public function invokeWith(array $args);
 }

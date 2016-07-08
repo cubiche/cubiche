@@ -12,21 +12,11 @@
 namespace Cubiche\Core\Delegate;
 
 /**
- * Delegate Interface.
+ * Abstract Callable class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface DelegateInterface extends CallableInterface
+abstract class AbstractCallable implements CallableInterface
 {
-    /**
-     * @return mixed
-     */
-    public function __invoke();
-
-    /**
-     * @param array $args
-     *
-     * @return mixed
-     */
-    public function invokeWith(array $args);
+    use CallableTrait;
 }

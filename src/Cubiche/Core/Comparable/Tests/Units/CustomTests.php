@@ -10,25 +10,21 @@
  */
 namespace Cubiche\Core\Comparable\Tests\Units;
 
-use Cubiche\Core\Comparable\Comparator;
-
 /**
  * Custom Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class CustomTests extends AbstractComparatorTestCase
+class CustomTests extends ComparatorTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function defaultConstructorArguments()
     {
-        $comparator = new Comparator();
-
-        return array(function ($a, $b) use ($comparator) {
-            return $comparator->compare($a % 2, $b % 2);
+        return array(function () {
+            return -1;
         });
     }
 
@@ -38,8 +34,8 @@ class CustomTests extends AbstractComparatorTestCase
     protected function compareDataProvider()
     {
         return array(
-            array(1, 2, 1),
-            array(1, 3, 0),
+            array(1, 2, -1),
+            array(1, 3, -1),
             array(4, 1, -1),
         );
     }

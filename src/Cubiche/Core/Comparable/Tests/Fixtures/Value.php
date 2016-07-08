@@ -7,17 +7,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable\Tests\Fixtures;
 
 use Cubiche\Core\Comparable\ComparableInterface;
 
 /**
- * Comparable Object class.
+ * Comparable Value class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ComparableObject implements ComparableInterface
+class Value implements ComparableInterface
 {
     /**
      * @var mixed
@@ -25,8 +24,6 @@ class ComparableObject implements ComparableInterface
     protected $value;
 
     /**
-     * Comparable Object constructor.
-     *
      * @param mixed $value
      */
     public function __construct($value)
@@ -47,18 +44,18 @@ class ComparableObject implements ComparableInterface
      */
     public function compareTo($other)
     {
-        if (!$other instanceof self) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "%s".',
-                $other,
-                self::class
-            ));
+        if ($other instanceof self) {
+            return $this->value() - $other->value();
         }
 
-        if ($this->value() instanceof ComparableInterface) {
-            return $this->value()->compareTo($other->value());
+        if (\is_numeric($other)) {
+            return $this->compareTo(new self($other));
         }
 
-        return $this->value() == $other->value() ? 0 : ($this->value() > $other->value() ? 1 : -1);
+        throw new \InvalidArgumentException(sprintf(
+            'Argument "%s" is invalid. Allowed types for argument are "%s" or numeric values.',
+            $other,
+            self::class
+        ));
     }
 }

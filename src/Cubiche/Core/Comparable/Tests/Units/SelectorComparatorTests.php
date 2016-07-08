@@ -9,7 +9,6 @@
  */
 namespace Cubiche\Core\Comparable\Tests\Units;
 
-use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Comparable\Order;
 
 /**
@@ -18,14 +17,19 @@ use Cubiche\Core\Comparable\Order;
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SelectorComparatorTests extends AbstractComparatorTestCase
+class SelectorComparatorTests extends ComparatorTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function defaultConstructorArguments()
     {
-        return array(new Key('foo'), Order::ASC());
+        return array(
+            function ($value) {
+                return $value['foo'];
+            },
+            Order::ASC(),
+        );
     }
 
     /**
@@ -34,9 +38,19 @@ class SelectorComparatorTests extends AbstractComparatorTestCase
     protected function compareDataProvider()
     {
         return array(
-            array(array('foo' => 1), array('foo' => 2), -1),
-            array(array('foo' => 1), array('foo' => 1), 0),
-            array(array('foo' => 1), array('foo' => 0), 1),
+            array(array('foo' => 1, 'bar' => 2), array('foo' => 2, 'bar' => 1), -1),
+            array(array('foo' => 1, 'bar' => 0), array('foo' => 1, 'bar' => 2), 0),
+            array(array('foo' => 1, 'bar' => 2), array('foo' => 0, 'bar' => 1), 1),
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function newDefaultOtherwiseComparator()
+    {
+        return function ($value) {
+            return $value['bar'];
+        };
     }
 }

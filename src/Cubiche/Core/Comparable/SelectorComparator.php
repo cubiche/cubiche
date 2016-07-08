@@ -10,17 +10,17 @@
  */
 namespace Cubiche\Core\Comparable;
 
-use Cubiche\Core\Selector\SelectorInterface;
+use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Selector Comparator Class.
+ * Selector Comparator class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class SelectorComparator extends AbstractComparator
+class SelectorComparator extends Comparator
 {
     /**
-     * @var SelectorInterface
+     * @var Delegate
      */
     protected $selector;
 
@@ -30,21 +30,21 @@ class SelectorComparator extends AbstractComparator
     protected $order;
 
     /**
-     * @param SelectorInterface $selector
-     * @param Order             $order
+     * @param callable $selector
+     * @param Order    $order
      */
-    public function __construct(SelectorInterface $selector, Order $order)
+    public function __construct(callable $selector, Order $order)
     {
-        $this->selector = $selector;
+        $this->selector = new Delegate($selector);
         $this->order = $order;
     }
 
     /**
-     * @return \Cubiche\Core\Selector\SelectorInterface
+     * @return callable
      */
     public function selector()
     {
-        return $this->selector;
+        return $this->selector->getCallable();
     }
 
     /**
@@ -60,7 +60,10 @@ class SelectorComparator extends AbstractComparator
      */
     public function compare($a, $b)
     {
-        return parent::compare($this->selector->apply($a), $this->selector->apply($b)) * $this->order()->getValue();
+        return $this->order()->getValue() * parent::compare(
+            $this->selector->__invoke($a),
+            $this->selector->__invoke($b)
+        );
     }
 
     /**

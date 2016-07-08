@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -7,23 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Delegate\Tests\Fixtures;
 
-use Cubiche\Core\Delegate\CallableInterface;
+namespace Cubiche\Core\Delegate;
 
 /**
- * Foo Callable class.
+ * Callable trait.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class FooCallable implements CallableInterface
+trait CallableTrait
 {
     /**
      * {@inheritdoc}
      */
     public function __invoke()
     {
-        return 'foo';
+        return $this->invokeWith(\func_get_args());
     }
 
     /**
@@ -31,6 +31,11 @@ class FooCallable implements CallableInterface
      */
     public function invokeWith(array $args)
     {
-        return \call_user_func_array($this, $args);
+        return \call_user_func_array($this->innerCallable(), $args);
     }
+
+    /**
+     * @return callable
+     */
+    abstract protected function innerCallable();
 }

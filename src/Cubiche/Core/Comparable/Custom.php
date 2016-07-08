@@ -13,11 +13,11 @@ namespace Cubiche\Core\Comparable;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Custom Comparator Class.
+ * Custom Comparator class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Custom extends AbstractComparator
+class Custom extends Comparator
 {
     /**
      * @var Delegate
@@ -25,11 +25,11 @@ class Custom extends AbstractComparator
     protected $delegate;
 
     /**
-     * @param callable $callable
+     * @param callable $comparator
      */
-    public function __construct(callable $callable)
+    public function __construct(callable $comparator)
     {
-        $this->delegate = new Delegate($callable);
+        $this->delegate = new Delegate($comparator);
     }
 
     /**

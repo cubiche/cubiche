@@ -14,7 +14,7 @@ namespace Cubiche\Core\Comparable;
 use Cubiche\Core\Enum\Enum;
 
 /**
- * Sorting Order Enum.
+ * Sorting Order enum.
  *
  * @method Order ASC()
  * @method Order DESC()

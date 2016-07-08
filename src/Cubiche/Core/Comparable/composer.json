@@ -18,7 +18,6 @@
         "php":                      "^5.5.9|^7.0",
         "cubiche/delegate":         "dev-master",
         "cubiche/enum":             "dev-master",
-        "cubiche/selector":         "dev-master",
         "cubiche/visitor":          "dev-master"
     },
     "require-dev": {

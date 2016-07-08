@@ -16,7 +16,7 @@ namespace Cubiche\Core\Comparable;
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ReverseComparator extends AbstractComparator
+class ReverseComparator extends Comparator
 {
     /**
      * @var ComparatorInterface
@@ -24,21 +24,11 @@ class ReverseComparator extends AbstractComparator
     protected $comparator;
 
     /**
-     * Reverse Comparator constructor.
-     *
-     * @param ComparatorInterface $comparator
+     * @param callable $comparator
      */
-    public function __construct(ComparatorInterface $comparator)
+    public function __construct(callable $comparator)
     {
-        $this->comparator = $comparator;
-    }
-
-    /**
-     * @return \Cubiche\Core\Comparable\ComparatorInterface
-     */
-    public function comparator()
-    {
-        return $this->comparator;
+        $this->comparator = self::from($comparator);
     }
 
     /**
@@ -46,7 +36,7 @@ class ReverseComparator extends AbstractComparator
      */
     public function compare($a, $b)
     {
-        return -1 * $this->comparator->compare($a, $b);
+        return -1 * $this->reverse()->compare($a, $b);
     }
 
     /**
@@ -54,6 +44,6 @@ class ReverseComparator extends AbstractComparator
      */
     public function reverse()
     {
-        return $this->comparator();
+        return $this->comparator;
     }
 }
