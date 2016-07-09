@@ -67,14 +67,6 @@ class Selector extends Specification implements SelectorInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke()
-    {
-        return $this->selector()->__invoke(\func_get_args());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function apply($value)
     {
         return $this->selector()->apply($value);

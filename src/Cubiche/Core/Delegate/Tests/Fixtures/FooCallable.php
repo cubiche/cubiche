@@ -25,4 +25,12 @@ class FooCallable implements CallableInterface
     {
         return 'foo';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function invokeWith(array $args)
+    {
+        return \call_user_func_array($this, $args);
+    }
 }

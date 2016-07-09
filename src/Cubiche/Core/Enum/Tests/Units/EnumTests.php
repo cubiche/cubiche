@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Enum\Tests\Units;
 
-use Cubiche\Core\Enum\Tests\Units\Fixtures\EnumFixture;
+use Cubiche\Core\Enum\Tests\Fixtures\EnumFixture;
+use Cubiche\Core\Enum\Tests\Fixtures\DefaultEnumFixture;
+use Cubiche\Core\Enum\Tests\Fixtures\BadDefaultEnumFixture;
 
 /**
  * Enum Tests Class.
@@ -40,6 +41,40 @@ class EnumTests extends EnumTestCase
                     ->isTrue()
                 ->boolean($enum->is(EnumFixture::BAR))
                     ->isFalse()
+        ;
+    }
+
+    /**
+     * Test __DEFAULT method.
+     */
+    public function testDefault()
+    {
+        $this
+            ->when($default = EnumFixture::__DEFAULT())
+            ->then()
+                ->object($default)
+                    ->isEqualTo(EnumFixture::FOO())
+        ;
+
+        $this
+            ->when($default = DefaultEnumFixture::__DEFAULT())
+                ->then()
+                    ->object($default)
+                        ->isEqualTo(DefaultEnumFixture::BAR())
+        ;
+
+        $this
+            ->exception(function () {
+                BadDefaultEnumFixture::__DEFAULT();
+            })
+                ->isInstanceof(\UnexpectedValueException::class)
+        ;
+
+        $this
+            ->exception(function () {
+                BadDefaultEnumFixture::BAZ();
+            })
+                ->isInstanceof(\BadMethodCallException::class)
         ;
     }
 }

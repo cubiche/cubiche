@@ -10,22 +10,20 @@
  */
 namespace Cubiche\Core\Comparable;
 
-use Cubiche\Core\Selector\SelectorInterface;
-
 /**
- * Sort Class.
+ * Sort class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 class Sort
 {
     /**
-     * @var Comparator
+     * @var ComparatorInterface
      */
     protected static $comparator = null;
 
     /**
-     * @return \Cubiche\Core\Comparable\Comparator
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     public static function comparator()
     {
@@ -37,22 +35,12 @@ class Sort
     }
 
     /**
-     * @param callable $callable
-     *
-     * @return \Cubiche\Core\Comparable\Custom
-     */
-    public static function custom(callable $callable)
-    {
-        return new Custom($callable);
-    }
-
-    /**
-     * @param SelectorInterface $selector
-     * @param Order             $order
+     * @param callable $selector
+     * @param Order    $order
      *
      * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
-    public static function by(SelectorInterface $selector, Order $order = null)
+    public static function by(callable $selector, Order $order = null)
     {
         return new SelectorComparator($selector, $order === null ? Order::ASC() : $order);
     }

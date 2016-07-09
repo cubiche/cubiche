@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Null Visitor Class.
+ * Null Visitor class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

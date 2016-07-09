@@ -8,31 +8,26 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\Custom;
 
 /**
- * MultiComparatorTests class.
+ * Multi Comparator Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class MultiComparatorTests extends AbstractComparatorTestCase
+class MultiComparatorTests extends ComparatorTestCase
 {
     /**
      * {@inheritdoc}
      */
     protected function defaultConstructorArguments()
     {
-        $comparator = new Comparator();
-        $custom = new Custom(function ($a, $b) use ($comparator) {
-            return $comparator->compare($a % 2, $b % 2);
+        return array(new Comparator(), function ($a, $b) {
+            return 1;
         });
-
-        return array($custom, $comparator);
     }
 
     /**
@@ -40,20 +35,9 @@ class MultiComparatorTests extends AbstractComparatorTestCase
      */
     protected function compareDataProvider()
     {
-        return array(
-            array(1, 2, 1),
-            array(4, 1, -1),
-            array(1, 3, -1),
-            array(4, 2, 1),
-            array(1, 1, 0),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitMultiComparator';
+        foreach (parent::compareDataProvider() as $key => $data) {
+            $data[2] = $data[2] == 0 ? 1 : $data[2];
+            yield $key => $data;
+        }
     }
 }

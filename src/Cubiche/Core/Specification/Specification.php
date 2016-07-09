@@ -10,14 +10,24 @@
  */
 namespace Cubiche\Core\Specification;
 
-use Cubiche\Core\Visitor\Visitee;
+use Cubiche\Core\Delegate\AbstractCallable;
+use Cubiche\Core\Visitor\VisiteeTrait;
 
 /**
  * Abstract Specification Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Specification extends Visitee implements SpecificationInterface
+abstract class Specification extends AbstractCallable implements SpecificationInterface
 {
+    use VisiteeTrait;
     use SpecificationTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function innerCallable()
+    {
+        return array($this, 'evaluate');
+    }
 }

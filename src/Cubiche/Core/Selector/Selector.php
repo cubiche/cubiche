@@ -10,15 +10,18 @@
  */
 namespace Cubiche\Core\Selector;
 
-use Cubiche\Core\Visitor\Visitee;
+use Cubiche\Core\Delegate\AbstractCallable;
+use Cubiche\Core\Visitor\VisiteeTrait;
 
 /**
  * Abstract Selector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Selector extends Visitee implements SelectorInterface
+abstract class Selector extends AbstractCallable implements SelectorInterface
 {
+    use VisiteeTrait;
+
     /**
      * @param callable $selector
      *
@@ -36,16 +39,16 @@ abstract class Selector extends Visitee implements SelectorInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke()
+    public function select(callable $selector)
     {
-        return \call_user_func_array(array($this, 'apply'), \func_get_args());
+        return new Composite($this, self::from($selector));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function select(callable $selector)
+    protected function innerCallable()
     {
-        return new Composite($this, self::from($selector));
+        return array($this, 'apply');
     }
 }

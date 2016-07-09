@@ -25,11 +25,11 @@ class Custom extends Selector
     protected $delegate;
 
     /**
-     * @param callable $callable
+     * @param callable $selector
      */
-    public function __construct(callable $callable)
+    public function __construct(callable $selector)
     {
-        $this->delegate = new Delegate($callable);
+        $this->delegate = new Delegate($selector);
     }
 
     /**

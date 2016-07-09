@@ -10,12 +10,11 @@
  */
 namespace Cubiche\Core\Comparable\Tests\Units;
 
-use Cubiche\Core\Comparable\Sort;
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\Custom;
-use Cubiche\Core\Selector\Property;
-use Cubiche\Core\Comparable\SelectorComparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Comparable\Order;
+use Cubiche\Core\Comparable\SelectorComparator;
+use Cubiche\Core\Comparable\Sort;
 
 /**
  * Sort Tests Class.
@@ -33,22 +32,7 @@ class SortTests extends TestCase
             ->given($comparator = Sort::comparator())
             ->then()
                 ->object($comparator)
-                    ->isInstanceOf(Comparator::class)
-        ;
-    }
-
-    /**
-     * Test custom comparator.
-     */
-    public function testCustomComparator()
-    {
-        $this
-            ->given($comparator = Sort::custom(function ($a, $b) {
-                return 0;
-            }))
-            ->then()
-                ->object($comparator)
-                    ->isInstanceOf(Custom::class)
+                    ->isInstanceOf(ComparatorInterface::class)
         ;
     }
 
@@ -58,17 +42,19 @@ class SortTests extends TestCase
     public function testBy()
     {
         $this
-            ->given($property = new Property('foo'))
+            ->given($selector = function ($value) {
+                return $value['foo'];
+            })
             /* @var \Cubiche\Core\Comparable\SelectorComparator $comparator */
-            ->when($comparator = Sort::by($property))
+            ->when($comparator = Sort::by($selector))
             ->then()
                 ->object($comparator)
                     ->isInstanceOf(SelectorComparator::class)
                 ->object($comparator->selector())
-                    ->isIdenticalTo($property)
+                    ->isIdenticalTo($selector)
                 ->object($comparator->order())
                     ->isEqualTo(Order::ASC())
-            ->when($comparator = Sort::by($property, Order::DESC()))
+            ->when($comparator = Sort::by($selector, Order::DESC()))
             ->then()
                 ->object($comparator->order())
                     ->isEqualTo(Order::DESC())

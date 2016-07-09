@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -8,21 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Cubiche\Core\Comparable;
+namespace Cubiche\Core\Enum\Tests\Fixtures;
 
 use Cubiche\Core\Enum\Enum;
 
 /**
- * Sorting Order enum.
+ * Test Enum.
  *
- * @method Order ASC()
- * @method Order DESC()
+ * @method static DefaultEnumFixture FOO()
+ * @method static DefaultEnumFixture BAR()
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-final class Order extends Enum
+final class BadDefaultEnumFixture extends Enum
 {
-    const ASC = 1;
-    const DESC = -1;
+    const __DEFAULT = 'baz';
+
+    const FOO = 'foo';
+    const BAR = 'bar';
 }

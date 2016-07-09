@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Visitor;
 
 /**
- * Visitee Trait.
+ * Visitee trait.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */

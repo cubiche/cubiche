@@ -10,16 +10,15 @@
  */
 namespace Cubiche\Core\Comparable;
 
+use Cubiche\Core\Delegate\CallableInterface;
 use Cubiche\Core\Visitor\VisiteeInterface;
 
 /**
- * Comparator Interface.
- *
- * @method ComparatorInterface or(ComparatorInterface $other)
+ * Comparator interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface ComparatorInterface extends VisiteeInterface
+interface ComparatorInterface extends CallableInterface, VisiteeInterface
 {
     /**
      * @param mixed $a
@@ -30,14 +29,14 @@ interface ComparatorInterface extends VisiteeInterface
     public function compare($a, $b);
 
     /**
-     * @return ComparatorInterface
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     public function reverse();
 
     /**
-     * @param ComparatorInterface $other
+     * @param callable $comparator
      *
      * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
-    public function orX(ComparatorInterface $other);
+    public function otherwise(callable $comparator);
 }

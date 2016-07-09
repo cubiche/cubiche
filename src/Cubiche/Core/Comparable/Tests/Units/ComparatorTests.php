@@ -18,6 +18,6 @@ use Cubiche\Core\Comparable\Comparator;
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ComparatorTests extends AbstractComparatorTestCase
+class ComparatorTests extends ComparatorTestCase
 {
 }

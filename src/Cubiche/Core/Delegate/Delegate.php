@@ -16,12 +16,17 @@ namespace Cubiche\Core\Delegate;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Delegate extends AbstractDelegate
+class Delegate extends AbstractCallable
 {
     /**
      * @var \ReflectionFunction|\ReflectionMethod
      */
     private $reflection = null;
+
+    /**
+     * @var callable
+     */
+    protected $callable;
 
     /**
      * @param Closure $closure
@@ -66,6 +71,22 @@ class Delegate extends AbstractDelegate
     }
 
     /**
+     * @param callable $callable
+     */
+    public function __construct($callable)
+    {
+        if (!\is_callable($callable)) {
+            throw new \InvalidArgumentException('The $callable argument must be a callable.');
+        }
+
+        if (\is_string($callable) && \strpos($callable, '::')) {
+            $callable = explode('::', $callable);
+        }
+
+        $this->callable = $callable;
+    }
+
+    /**
      * @return \ReflectionFunction|\ReflectionMethod
      */
     public function reflection()
@@ -81,5 +102,21 @@ class Delegate extends AbstractDelegate
         }
 
         return $this->reflection;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getCallable()
+    {
+        return $this->callable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function innerCallable()
+    {
+        return $this->getCallable();
     }
 }

@@ -11,11 +11,11 @@
 namespace Cubiche\Core\Comparable;
 
 /**
- * Multi Comparator Class.
+ * Multi Comparator class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class MultiComparator extends AbstractComparator
+class MultiComparator extends Comparator
 {
     /**
      * @var ComparatorInterface
@@ -28,13 +28,13 @@ class MultiComparator extends AbstractComparator
     protected $secondComparator;
 
     /**
-     * @param ComparatorInterface $firstComparator
-     * @param ComparatorInterface $secondComparator
+     * @param callable $firstComparator
+     * @param callable $secondComparator
      */
-    public function __construct(ComparatorInterface $firstComparator, ComparatorInterface $secondComparator)
+    public function __construct(callable $firstComparator, callable $secondComparator)
     {
-        $this->firstComparator = $firstComparator;
-        $this->secondComparator = $secondComparator;
+        $this->firstComparator = self::from($firstComparator);
+        $this->secondComparator = self::from($secondComparator);
     }
 
     /**

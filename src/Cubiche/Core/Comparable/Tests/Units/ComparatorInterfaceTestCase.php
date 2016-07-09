@@ -12,7 +12,6 @@ namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
-use Cubiche\Core\Comparable\MultiComparator;
 use Cubiche\Core\Visitor\Tests\Units\VisiteeInterfaceTestCase;
 
 /**
@@ -35,20 +34,6 @@ abstract class ComparatorInterfaceTestCase extends VisiteeInterfaceTestCase
     }
 
     /**
-     * Test reverse.
-     */
-    public function testReverse()
-    {
-        $this
-            /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
-            ->given($comparator = $this->newDefaultTestedInstance())
-            ->then()
-                ->object($comparator->reverse())
-                    ->isInstanceOf(ComparatorInterface::class)
-        ;
-    }
-
-    /**
      * Test compare.
      *
      * @param mixed $a
@@ -60,50 +45,74 @@ abstract class ComparatorInterfaceTestCase extends VisiteeInterfaceTestCase
     public function testCompare($a, $b, $expected)
     {
         $this
-            /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
-            ->given($comparator = $this->newDefaultTestedInstance())
-            ->then()
-                ->integer($comparator->compare($a, $b))
-                    ->isEqualTo($expected)
+            ->assert('The comparision is right')
+                /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
+                ->given($comparator = $this->newDefaultTestedInstance())
+                ->then($this->comparision($comparator, $a, $b, $expected));
+
+        $this
+            ->assert('The comparator is a callable')
+                ->given($result1 = $comparator->compare($a, $b))
+                ->when($result2 = $comparator($a, $b))
+                ->then()
+                    ->variable($result1)
+                        ->isEqualTo($result2);
+    }
+
+    /**
+     * Test reverse method.
+     *
+     * @param mixed $a
+     * @param mixed $b
+     * @param int   $expected
+     *
+     * @dataProvider compareDataProvider
+     */
+    public function testReverse($a, $b, $expected)
+    {
+        $this
+            ->assert('Reverse is a comparator')
+                /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
+                ->given($comparator = $this->newDefaultTestedInstance())
+                ->when($reverse = $comparator->reverse())
+                    ->then()
+                        ->object($reverse)
+                            ->isInstanceOf(ComparatorInterface::class)
         ;
 
         $this
-            ->given($reverse = $comparator->reverse())
-            ->then()
-                ->integer($reverse->compare($a, $b))
-                    ->isEqualTo(-1 * $expected)
+            ->assert('Reverse result is the inverse result')
+                ->then($this->comparision($reverse, $a, $b, -1 * $expected))
         ;
     }
 
     /**
-     * Test orX.
+     * Test otherwise method.
+     *
+     * @param callable $otherwise
+     * @param mixed    $a
+     * @param mixed    $b
+     * @param int      $expected
+     *
+     * @dataProvider otherwiseDataProvider
      */
-    public function testOrX()
+    public function testOtherwise(callable $otherwise, $a, $b, $expected)
     {
         $this
-            /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
-            ->given($comparator = $this->newDefaultTestedInstance())
-            ->then()
-            ->when($result = $comparator->orX($comparator->reverse()))
-                ->object($result)
-                    ->isInstanceOf(MultiComparator::class)
+            ->assert('The otherwise result is a comparator')
+                /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparator */
+                ->given($comparator = $this->newDefaultTestedInstance())
+                ->when($otherwiseComparator = $comparator->otherwise($otherwise))
+                    ->object($otherwiseComparator)
+                        ->isInstanceOf(ComparatorInterface::class)
         ;
-    }
 
-    /*
-     * Test __call.
-     */
-    public function testMagicCall()
-    {
         $this
-            /* @var \Cubiche\Core\Comparable\ComparatorInterface $comparatorMock */
-            ->given($comparatorMock = $this->newDefaultMockTestedInstance())
-            ->given($comparator = $this->newDefaultTestedInstance())
-            ->when($comparatorMock->or($comparator))
-                ->mock($comparatorMock)
-                    ->call('orX')
-                        ->withArguments($comparator)
-                        ->once()
+            ->assert('The otherwise comparator result is right')
+                ->let($expected = $this->sign($expected))
+                ->then(
+                    $this->comparision($otherwiseComparator, $a, $b, $expected == 0 ? $otherwise($a, $b) : $expected)
+                )
         ;
     }
 
@@ -111,4 +120,46 @@ abstract class ComparatorInterfaceTestCase extends VisiteeInterfaceTestCase
      * @return array
      */
     abstract protected function compareDataProvider();
+
+    /**
+     * @return array
+     */
+    protected function otherwiseDataProvider()
+    {
+        foreach ($this->compareDataProvider() as $key => $data) {
+            yield $key => \array_merge(array($this->newDefaultOtherwiseComparator()), $data);
+        }
+    }
+
+    /**
+     * @return callable
+     */
+    abstract protected function newDefaultOtherwiseComparator();
+
+    /**
+     * @param ComparatorInterface $comparator
+     * @param mixed               $a
+     * @param mixed               $b
+     * @param int                 $expected
+     */
+    protected function comparision(ComparatorInterface $comparator, $a, $b, $expected)
+    {
+        $this
+            ->given($comparator)
+            ->when($result = $comparator->compare($a, $b))
+            ->then()
+                ->integer($this->sign($result))
+                    ->isEqualTo($this->sign($expected))
+        ;
+    }
+
+    /**
+     * @param float|int $number
+     *
+     * @return int
+     */
+    protected function sign($number)
+    {
+        return $number >= 0 ? ($number == 0 ? 0 : 1) : -1;
+    }
 }

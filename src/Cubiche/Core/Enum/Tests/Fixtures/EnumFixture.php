@@ -8,17 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Comparable;
+namespace Cubiche\Core\Enum\Tests\Fixtures;
 
-use Cubiche\Core\Visitor\Visitee;
+use Cubiche\Core\Enum\Enum;
 
 /**
- * Abstract Comparator Class.
+ * Test Enum.
+ *
+ * @method static EnumFixture FOO()
+ * @method static EnumFixture BAR()
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AbstractComparator extends Visitee implements ComparatorInterface
+final class EnumFixture extends Enum
 {
-    use ComparatorTrait;
+    const FOO = 'foo';
+    const BAR = 'bar';
 }

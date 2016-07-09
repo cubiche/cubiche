@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -10,31 +11,34 @@
 namespace Cubiche\Core\Comparable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\Tests\Fixtures\Value;
 
 /**
- * Reverse Comparator Tests class.
+ * Comparator Test Case Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class ReverseComparatorTests extends ComparatorTestCase
+abstract class ComparatorTestCase extends ComparatorInterfaceTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function defaultConstructorArguments()
-    {
-        return array(new Comparator());
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function compareDataProvider()
     {
-        foreach (parent::compareDataProvider() as $key => $data) {
-            $data[2] *= -1;
-            yield $key => $data;
-        }
+        return array(
+            array(1, 2, -1),
+            array(new Value(1), 1, 0),
+            array(1, new Value(0), 1),
+            array(new Value(1), new Value(2), -1),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function newDefaultOtherwiseComparator()
+    {
+        return new Comparator();
     }
 }
