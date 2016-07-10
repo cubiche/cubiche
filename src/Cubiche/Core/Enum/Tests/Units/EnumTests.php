@@ -10,9 +10,10 @@
  */
 namespace Cubiche\Core\Enum\Tests\Units;
 
-use Cubiche\Core\Enum\Tests\Fixtures\EnumFixture;
-use Cubiche\Core\Enum\Tests\Fixtures\DefaultEnumFixture;
+use Cubiche\Core\Enum\Enum;
 use Cubiche\Core\Enum\Tests\Fixtures\BadDefaultEnumFixture;
+use Cubiche\Core\Enum\Tests\Fixtures\DefaultEnumFixture;
+use Cubiche\Core\Enum\Tests\Fixtures\EnumFixture;
 
 /**
  * Enum Tests Class.
@@ -49,32 +50,50 @@ class EnumTests extends EnumTestCase
      */
     public function testDefault()
     {
-        $this
-            ->when($default = EnumFixture::__DEFAULT())
-            ->then()
-                ->object($default)
-                    ->isEqualTo(EnumFixture::FOO())
-        ;
-
-        $this
-            ->when($default = DefaultEnumFixture::__DEFAULT())
-                ->then()
-                    ->object($default)
-                        ->isEqualTo(DefaultEnumFixture::BAR())
-        ;
+        $this->equalityTest(EnumFixture::__DEFAULT(), EnumFixture::FOO());
+        $this->equalityTest(DefaultEnumFixture::__DEFAULT(), DefaultEnumFixture::BAR());
 
         $this
             ->exception(function () {
                 BadDefaultEnumFixture::__DEFAULT();
             })
                 ->isInstanceof(\UnexpectedValueException::class)
-        ;
-
-        $this
             ->exception(function () {
                 BadDefaultEnumFixture::BAZ();
             })
                 ->isInstanceof(\BadMethodCallException::class)
+        ;
+    }
+
+    /**
+     * Test ensure method.
+     */
+    public function testEnsure()
+    {
+        $this->equalityTest(EnumFixture::ensure(EnumFixture::FOO()), EnumFixture::FOO());
+        $this->equalityTest(EnumFixture::ensure(EnumFixture::FOO(), EnumFixture::BAR()), EnumFixture::FOO());
+        $this->equalityTest(EnumFixture::ensure(), EnumFixture::__DEFAULT());
+        $this->equalityTest(EnumFixture::ensure(null, EnumFixture::BAR()), EnumFixture::BAR());
+
+        $this
+            ->exception(function () {
+                EnumFixture::ensure(DefaultEnumFixture::FOO());
+            })
+                ->isInstanceof(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * @param Enum $enum1
+     * @param Enum $enum2
+     */
+    protected function equalityTest(Enum $enum1, Enum $enum2)
+    {
+        $this
+            ->given($enum1, $enum2)
+            ->then()
+                ->boolean($enum1->equals($enum2))
+                    ->isTrue()
         ;
     }
 }

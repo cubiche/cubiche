@@ -47,6 +47,26 @@ abstract class Enum extends BaseEnum implements EquatableInterface
     }
 
     /**
+     * @param Enum $enum
+     * @param Enum $default
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return static
+     */
+    public static function ensure(Enum $enum = null, Enum $default = null)
+    {
+        if ($enum instanceof static) {
+            return $enum;
+        }
+        if ($enum === null) {
+            return $default === null ? static::__DEFAULT() : static::ensure($default);
+        }
+
+        throw new \InvalidArgumentException(\sprintf('The enum parameter must be a %s instance', static::class));
+    }
+
+    /**
      * @param string $name
      * @param array  $arguments
      *
@@ -74,7 +94,7 @@ abstract class Enum extends BaseEnum implements EquatableInterface
     public static function toArray()
     {
         if (!isset(static::$cache[static::class])) {
-            static::$cache[static::class] = static::constants();
+            static::$cache[static::class] = self::constants(static::class);
             if (!isset(static::$defaultCache[static::class]) && !empty(static::$cache[static::class])) {
                 static::$defaultCache[static::class] = \array_values(static::$cache[static::class])[0];
             }
@@ -84,15 +104,17 @@ abstract class Enum extends BaseEnum implements EquatableInterface
     }
 
     /**
+     * @param string $class
+     *
      * @return array
      */
-    private static function constants()
+    private static function constants($class)
     {
-        $reflection = new \ReflectionClass(static::class);
+        $reflection = new \ReflectionClass($class);
         $constants = $reflection->getConstants();
         foreach ($constants as $name => $value) {
             if (\strtoupper($name) === '__DEFAULT') {
-                static::$defaultCache[static::class] = $value;
+                static::$defaultCache[$class] = $value;
                 unset($constants[$name]);
             }
         }
