@@ -23,6 +23,8 @@ use Cubiche\Core\Enum\Enum;
  */
 final class Order extends Enum
 {
+    const __DEFAULT = self::ASC;
+
     const ASC = 1;
     const DESC = -1;
 }

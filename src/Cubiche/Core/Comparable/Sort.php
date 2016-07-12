@@ -42,6 +42,6 @@ class Sort
      */
     public static function by(callable $selector, Order $order = null)
     {
-        return new SelectorComparator($selector, $order === null ? Order::ASC() : $order);
+        return new SelectorComparator($selector, $order);
     }
 }

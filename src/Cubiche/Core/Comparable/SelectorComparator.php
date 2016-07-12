@@ -33,10 +33,10 @@ class SelectorComparator extends Comparator
      * @param callable $selector
      * @param Order    $order
      */
-    public function __construct(callable $selector, Order $order)
+    public function __construct(callable $selector, Order $order = null)
     {
         $this->selector = new Delegate($selector);
-        $this->order = $order;
+        $this->order = Order::ensure($order);
     }
 
     /**
