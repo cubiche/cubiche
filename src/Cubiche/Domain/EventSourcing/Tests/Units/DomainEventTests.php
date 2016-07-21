@@ -10,6 +10,9 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+
 /**
  * DomainEventTests class.
  *
@@ -22,7 +25,19 @@ class DomainEventTests extends TestCase
      */
     public function testAggregateId()
     {
-        // todo: Implement testAggregateId().
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->when(
+                $event = new PostWasCreated(
+                    $postId,
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->then()
+                ->object($event->aggregateId())
+                    ->isEqualTo($postId)
+        ;
     }
 
     /**
@@ -30,14 +45,23 @@ class DomainEventTests extends TestCase
      */
     public function testVersion()
     {
-        // todo: Implement testVersion().
-    }
-
-    /**
-     * Test SetVersion method.
-     */
-    public function testSetVersion()
-    {
-        // todo: Implement testSetVersion().
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->when(
+                $event = new PostWasCreated(
+                    $postId,
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->then()
+                ->integer($event->version())
+                    ->isEqualTo(0)
+                ->and()
+                ->when($event->setVersion(165))
+                ->then()
+                    ->integer($event->version())
+                        ->isEqualTo(165)
+        ;
     }
 }

@@ -10,7 +10,11 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
+use Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore;
+use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * InMemorySnapshotStoreTests class.
@@ -20,11 +24,32 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class InMemorySnapshotStoreTests extends TestCase
 {
     /**
+     * @return InMemorySnapshotStore
+     */
+    protected function createStore()
+    {
+        return new InMemorySnapshotStore();
+    }
+
+    /**
      * Test Persist method.
      */
     public function testPersist()
     {
-        // todo: Implement testPersist().
+        $this
+            ->given($store = $this->createStore())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->when($store->persist($snapshot))
+            ->then()
+                ->object($store->load('posts', $post->id(), $post->version()))
+                    ->isEqualTo($snapshot)
+        ;
     }
 
     /**
@@ -32,7 +57,22 @@ class InMemorySnapshotStoreTests extends TestCase
      */
     public function testLoad()
     {
-        // todo: Implement testLoad().
+        $this
+            ->given($store = $this->createStore())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->when($store->persist($snapshot))
+            ->then()
+                ->variable($store->load('blogs', $post->id(), $post->version()))
+                    ->isNull()
+                ->variable($store->load('posts', PostId::fromNative(md5(rand())), $post->version()))
+                    ->isNull()
+        ;
     }
 
     /**
@@ -40,6 +80,25 @@ class InMemorySnapshotStoreTests extends TestCase
      */
     public function testRemove()
     {
-        // todo: Implement testRemove().
+        $this
+            ->given($store = $this->createStore())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->when($store->persist($snapshot))
+            ->and($store->remove('blogs', $post->id(), $post->version()))
+            ->then()
+                ->object($store->load('posts', $post->id(), $post->version()))
+                    ->isEqualTo($snapshot)
+                ->and()
+                ->when($store->remove('posts', $post->id(), $post->version()))
+                ->then()
+                    ->variable($store->load('posts', $post->id(), $post->version()))
+                        ->isNull()
+        ;
     }
 }
