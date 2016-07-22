@@ -12,6 +12,9 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore;
+use Cubiche\Domain\EventSourcing\Snapshot\Policy\EventsBasedSnapshottingPolicy;
+use Cubiche\Domain\EventSourcing\Snapshot\Policy\NoSnapshottingPolicy;
+use Cubiche\Domain\EventSourcing\Snapshot\Policy\SnapshottingPolicyInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotAggregateRepository;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
@@ -28,15 +31,19 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTests
 {
     /**
-     * @param SnapshotStoreInterface|null $snapshotStore
+     * @param SnapshotStoreInterface      $snapshotStore
+     * @param SnapshottingPolicyInterface $snapshottingPolicy
      *
      * @return SnapshotAggregateRepository
      */
-    protected function createRepository(SnapshotStoreInterface $snapshotStore = null)
-    {
+    protected function createRepository(
+        SnapshotStoreInterface $snapshotStore = null,
+        SnapshottingPolicyInterface $snapshottingPolicy = null
+    ) {
         return new SnapshotAggregateRepository(
             new InMemoryEventStore(),
             $snapshotStore ? $snapshotStore : new InMemorySnapshotStore(),
+            $snapshottingPolicy ? $snapshottingPolicy : new NoSnapshottingPolicy(),
             PostEventSourced::class
         );
     }
@@ -61,6 +68,36 @@ class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTe
             ->and($snapshot = new Snapshot($repository->aggregateName(), $post, new \DateTimeImmutable()))
             ->when($repository->persist($post))
             ->and($store->persist($snapshot))
+            ->then()
+                ->object($repository->get($post->id()))
+                    ->isEqualTo($post)
+        ;
+    }
+
+    /**
+     * Test Persist method.
+     */
+    public function testPersist()
+    {
+        parent::testPersist();
+
+        $this
+            ->given(
+                $repository = $this->createRepository(
+                    new InMemorySnapshotStore(),
+                    new EventsBasedSnapshottingPolicy()
+                )
+            )
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = new Version(0, 231))
+            ->and($post->setVersion($version))
+            ->and($post->changeTitle($this->faker->sentence))
+            ->when($repository->persist($post))
             ->then()
                 ->object($repository->get($post->id()))
                     ->isEqualTo($post)

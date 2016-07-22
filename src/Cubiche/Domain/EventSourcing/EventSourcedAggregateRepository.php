@@ -10,6 +10,9 @@
  */
 namespace Cubiche\Domain\EventSourcing;
 
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
@@ -57,8 +60,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
      */
     public function get(IdInterface $id)
     {
-        $version = VersionManager::versionOfClass($this->aggregateClassName);
-        $eventStream = $this->eventStore->load($this->aggregateName, $id, $version);
+        $eventStream = $this->loadHistory($id);
 
         return call_user_func(
             array($this->aggregateClassName, 'loadFromHistory'),
@@ -79,13 +81,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             ));
         }
 
-        $recordedEvents = $element->recordedEvents();
-        if (count($recordedEvents) > 0) {
-            $element->clearEvents();
-
-            $eventStream = new EventStream($this->aggregateName, $element->id(), $recordedEvents);
-            $this->eventStore->persist($eventStream, $element->version());
-        }
+        $this->saveHistory($element);
     }
 
     /**
@@ -112,6 +108,39 @@ class EventSourcedAggregateRepository implements RepositoryInterface
         }
 
         $this->eventStore->remove($this->aggregateName, $element->id(), $element->version());
+    }
+
+    /**
+     * Load a aggregate history from the storage.
+     *
+     * @param IdInterface $id
+     *
+     * @return EventStream
+     */
+    protected function loadHistory(IdInterface $id)
+    {
+        $version = VersionManager::versionOfClass($this->aggregateClassName);
+
+        return $this->eventStore->load($this->aggregateName, $id, $version);
+    }
+
+    /**
+     * Save the aggregate history.
+     *
+     * @param EventSourcedAggregateRootInterface $aggregateRoot
+     */
+    protected function saveHistory(EventSourcedAggregateRootInterface $aggregateRoot)
+    {
+        $recordedEvents = $aggregateRoot->recordedEvents();
+        if (count($recordedEvents) > 0) {
+            DomainEventPublisher::publish(new PrePersistEvent($aggregateRoot));
+
+            $aggregateRoot->clearEvents();
+            $eventStream = new EventStream($this->aggregateName, $aggregateRoot->id(), $recordedEvents);
+            $this->eventStore->persist($eventStream, $aggregateRoot->version());
+
+            DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot));
+        }
     }
 
     /**
