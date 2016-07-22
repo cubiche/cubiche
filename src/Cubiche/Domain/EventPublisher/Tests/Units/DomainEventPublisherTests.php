@@ -73,4 +73,18 @@ class DomainEventPublisherTests extends TestCase
                     ->isEqualTo(7)
         ;
     }
+
+    /**
+     * Test eventBus method.
+     */
+    public function testEventBus()
+    {
+        $this
+            ->given($eventBus = EventBus::create())
+            ->when(DomainEventPublisher::set($eventBus))
+            ->then()
+                ->object(DomainEventPublisher::eventBus())
+                    ->isEqualTo($eventBus)
+        ;
+    }
 }
