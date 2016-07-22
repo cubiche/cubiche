@@ -10,6 +10,13 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
+use Cubiche\Domain\EventSourcing\EventSourcedAggregateRepository;
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
+use Cubiche\Domain\Model\Tests\Fixtures\Post;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+
 /**
  * EventSourcedAggregateRepositoryTests class.
  *
@@ -18,11 +25,11 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units;
 class EventSourcedAggregateRepositoryTests extends TestCase
 {
     /**
-     * Test Get method.
+     * @return EventSourcedAggregateRepository
      */
-    public function testGet()
+    protected function createRepository()
     {
-        // todo: Implement testGet().
+        return new EventSourcedAggregateRepository(new InMemoryEventStore(), PostEventSourced::class);
     }
 
     /**
@@ -30,7 +37,53 @@ class EventSourcedAggregateRepositoryTests extends TestCase
      */
     public function testPersist()
     {
-        // todo: Implement testPersist().
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($post->changeTitle($this->faker->sentence))
+            ->when($repository->persist($post))
+            ->then()
+                ->object($repository->get($post->id()))
+                    ->isEqualTo($post)
+        ;
+
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($post->clearEvents())
+            ->when($repository->persist($post))
+            ->then()
+                ->exception(function () use ($repository, $post) {
+                    $repository->get($post->id());
+                })
+                ->isInstanceOf(\RuntimeException::class)
+        ;
+
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = new Post(
+                    PostId::fromNative(md5(rand())),
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->then()
+                ->exception(function () use ($repository, $post) {
+                    $repository->persist($post);
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
     }
 
     /**
@@ -38,7 +91,30 @@ class EventSourcedAggregateRepositoryTests extends TestCase
      */
     public function testPersistAll()
     {
-        // todo: Implement testPersistAll().
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post1 = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and(
+                $post2 = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($post1->changeTitle($this->faker->sentence))
+            ->and($post2->changeTitle($this->faker->sentence))
+            ->when($repository->persistAll(array($post1, $post2)))
+            ->then()
+                ->object($repository->get($post1->id()))
+                    ->isEqualTo($post1)
+                ->and()
+                ->object($repository->get($post2->id()))
+                    ->isEqualTo($post2)
+        ;
     }
 
     /**
@@ -46,6 +122,54 @@ class EventSourcedAggregateRepositoryTests extends TestCase
      */
     public function testRemove()
     {
-        // todo: Implement testRemove().
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($post->changeTitle($this->faker->sentence))
+            ->when($repository->persist($post))
+            ->then()
+                ->object($repository->get($post->id()))
+                    ->isEqualTo($post)
+                ->and()
+                ->when($repository->remove($post))
+                ->then()
+                    ->exception(function () use ($repository, $post) {
+                        $repository->get($post->id());
+                    })->isInstanceOf(\RuntimeException::class)
+        ;
+
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = new Post(
+                    PostId::fromNative(md5(rand())),
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->then()
+                ->exception(function () use ($repository, $post) {
+                    $repository->remove($post);
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
+
+    /**
+     * Test aggregateName method.
+     */
+    public function testAggregateName()
+    {
+        $this
+            ->given($repository = new EventSourcedAggregateRepository(new InMemoryEventStore(), 'PostEventSourced'))
+            ->then()
+                ->string($this->invoke($repository)->aggregateName())
+                    ->isEqualTo('post_event_sourced')
+        ;
     }
 }

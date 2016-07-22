@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\VersionManager;
+use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRepository;
 use Cubiche\Domain\Model\IdInterface;
 
@@ -50,9 +51,9 @@ class SnapshotAggregateRepository extends EventSourcedAggregateRepository
     {
         $version = VersionManager::versionOfClass($this->aggregateClassName);
         $snapshot = $this->snapshotStore->load($this->aggregateName, $id, $version);
-        $version = $snapshot->version();
 
         if ($snapshot !== null) {
+            $version = $snapshot->version();
             $eventStream = $this->eventStore->load($this->aggregateName, $id, $version);
 
             $eventSourcedAggregateRoot = $snapshot->aggregate();

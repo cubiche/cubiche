@@ -10,7 +10,12 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
+use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Storage\InMemoryStorage;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
  * VersionManagerTests class.
@@ -20,11 +25,22 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class VersionManagerTests extends TestCase
 {
     /**
-     * Test Create method.
+     * Test testVersionOf method.
      */
-    public function testCreate()
+    public function testVersionOf()
     {
-        // todo: Implement testCreate().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = VersionManager::versionOf($post))
+            ->then()
+                ->object($version)
+                    ->isEqualTo(new Version())
+        ;
     }
 
     /**
@@ -32,22 +48,38 @@ class VersionManagerTests extends TestCase
      */
     public function testSetStorage()
     {
-        // todo: Implement testSetStorage().
+        $this
+            ->given($manager = VersionManager::create())
+            ->when($manager->setStorage(new InMemoryStorage(new DefaultSerializer())))
+            ->then()
+                ->boolean(true)
+                    ->isTrue()
+        ;
     }
 
     /**
-     * Test VersionOf method.
+     * Test persistVersionOf method.
      */
-    public function testVersionOf()
+    public function testPersistVersionOf()
     {
-        // todo: Implement testVersionOf().
-    }
-
-    /**
-     * Test VersionOfClass method.
-     */
-    public function testVersionOfClass()
-    {
-        // todo: Implement testVersionOfClass().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = VersionManager::versionOf($post))
+            ->then()
+                ->object($version)
+                    ->isEqualTo(new Version())
+                ->and()
+                ->when($post->version()->setModelVersion(23))
+                ->and($post->version()->setAggregateVersion(45))
+                ->and(VersionManager::persistVersionOf($post))
+                ->then()
+                    ->object(VersionManager::versionOf($post))
+                        ->isEqualTo(new Version(23, 45))
+        ;
     }
 }

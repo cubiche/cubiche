@@ -10,7 +10,12 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\EventStore;
 
+use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * InMemoryEventStoreTests class.
@@ -20,11 +25,28 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class InMemoryEventStoreTests extends TestCase
 {
     /**
+     * @return InMemoryEventStore
+     */
+    protected function createStore()
+    {
+        return new InMemoryEventStore();
+    }
+
+    /**
      * Test Persist method.
      */
     public function testPersist()
     {
-        // todo: Implement testPersist().
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and($version = new Version())
+            ->when($store->persist($eventStream, $version))
+            ->then()
+                ->object($store->load('posts', $postId, $version))
+                    ->isEqualTo($eventStream)
+        ;
     }
 
     /**
@@ -32,7 +54,23 @@ class InMemoryEventStoreTests extends TestCase
      */
     public function testLoad()
     {
-        // todo: Implement testLoad().
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and($version = new Version())
+            ->when($store->persist($eventStream, $version))
+            ->then()
+                ->exception(function () use ($store, $postId, $version) {
+                    $store->load('blogs', $postId, $version);
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($store, $postId) {
+                    $store->load('posts', $postId, new Version(10, 456));
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($store, $version) {
+                    $store->load('posts', PostId::fromNative(md5(rand())), $version);
+                })->isInstanceOf(\RuntimeException::class)
+        ;
     }
 
     /**
@@ -40,6 +78,23 @@ class InMemoryEventStoreTests extends TestCase
      */
     public function testRemove()
     {
-        // todo: Implement testRemove().
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and($version = new Version())
+            ->when($store->persist($eventStream, $version))
+            ->and($store->remove('posts', $postId, $version))
+            ->then()
+                ->exception(function () use ($store, $postId, $version) {
+                    $store->load('posts', $postId, $version);
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($store, $postId, $version) {
+                    $store->remove('blogs', $postId, $version);
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($store, $postId) {
+                    $store->remove('posts', $postId, new Version(10, 456));
+                })->isInstanceOf(\RuntimeException::class)
+        ;
     }
 }
