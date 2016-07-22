@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\VersionManager;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\IdInterface;
@@ -61,8 +61,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
         $eventStream = $this->eventStore->load($this->aggregateName, $id, $version);
 
         return call_user_func(
-            $this->aggregateClassName,
-            'loadFromHistory',
+            array($this->aggregateClassName, 'loadFromHistory'),
             $eventStream
         );
     }
@@ -118,7 +117,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
     /**
      * @return string
      */
-    protected function aggregateName()
+    public function aggregateName()
     {
         $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $this->shortClassName())));
 

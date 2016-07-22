@@ -10,7 +10,10 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
+use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * SnapshotTests class.
@@ -24,7 +27,18 @@ class SnapshotTests extends TestCase
      */
     public function testAggregateType()
     {
-        // todo: Implement testAggregateType().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->then()
+                ->string($snapshot->aggregateType())
+                    ->isEqualTo('posts')
+        ;
     }
 
     /**
@@ -32,7 +46,18 @@ class SnapshotTests extends TestCase
      */
     public function testAggregateId()
     {
-        // todo: Implement testAggregateId().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->then()
+                ->object($snapshot->aggregateId())
+                    ->isEqualTo($post->id())
+        ;
     }
 
     /**
@@ -40,7 +65,18 @@ class SnapshotTests extends TestCase
      */
     public function testAggregate()
     {
-        // todo: Implement testAggregate().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->then()
+                ->object($snapshot->aggregate())
+                    ->isEqualTo($post)
+        ;
     }
 
     /**
@@ -48,7 +84,20 @@ class SnapshotTests extends TestCase
      */
     public function testVersion()
     {
-        // todo: Implement testVersion().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = new Version(5, 345))
+            ->and($post->setVersion($version))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->then()
+                ->object($snapshot->version())
+                    ->isEqualTo($post->version())
+        ;
     }
 
     /**
@@ -56,6 +105,18 @@ class SnapshotTests extends TestCase
      */
     public function testCreatedAt()
     {
-        // todo: Implement testCreatedAt().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($createdAt = new \DateTimeImmutable())
+            ->and($snapshot = new Snapshot('posts', $post, $createdAt))
+            ->then()
+                ->object($snapshot->createdAt())
+                    ->isEqualTo($createdAt)
+        ;
     }
 }

@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\Model\IdInterface;
 
 /**

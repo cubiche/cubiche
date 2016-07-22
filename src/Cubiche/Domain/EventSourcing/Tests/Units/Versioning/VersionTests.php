@@ -11,6 +11,7 @@
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * VersionTests class.
@@ -20,50 +21,37 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class VersionTests extends TestCase
 {
     /**
-     * Test ModelVersion method.
+     * Test version.
      */
-    public function testModelVersion()
+    public function testVersion()
     {
-        // todo: Implement testModelVersion().
-    }
-
-    /**
-     * Test SetModelVersion method.
-     */
-    public function testSetModelVersion()
-    {
-        // todo: Implement testSetModelVersion().
-    }
-
-    /**
-     * Test IncModelVersion method.
-     */
-    public function testIncModelVersion()
-    {
-        // todo: Implement testIncModelVersion().
-    }
-
-    /**
-     * Test AggregateVersion method.
-     */
-    public function testAggregateVersion()
-    {
-        // todo: Implement testAggregateVersion().
-    }
-
-    /**
-     * Test SetAggregateVersion method.
-     */
-    public function testSetAggregateVersion()
-    {
-        // todo: Implement testSetAggregateVersion().
-    }
-
-    /**
-     * Test IncAggregateVersion method.
-     */
-    public function testIncAggregateVersion()
-    {
-        // todo: Implement testIncAggregateVersion().
+        $this
+            ->given($version = new Version(145, 324))
+            ->then()
+                ->integer($version->modelVersion())
+                    ->isEqualTo(145)
+                ->integer($version->aggregateVersion())
+                    ->isEqualTo(324)
+                ->and()
+                ->when($version->incModelVersion())
+                ->then()
+                    ->integer($version->modelVersion())
+                        ->isEqualTo(146)
+                ->and()
+                ->when($version->incAggregateVersion())
+                ->then()
+                    ->integer($version->aggregateVersion())
+                        ->isEqualTo(325)
+                ->and()
+                ->when($version->setModelVersion(657))
+                ->then()
+                    ->integer($version->modelVersion())
+                        ->isEqualTo(657)
+                ->and()
+                ->when($version->setAggregateVersion(54))
+                ->then()
+                    ->integer($version->aggregateVersion())
+                        ->isEqualTo(54)
+        ;
     }
 }

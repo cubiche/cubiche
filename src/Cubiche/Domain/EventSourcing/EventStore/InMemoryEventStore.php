@@ -10,10 +10,10 @@
  */
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\Version;
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -64,21 +64,21 @@ class InMemoryEventStore implements EventStoreInterface
      */
     public function load($streamName, IdInterface $aggregateId, Version $version)
     {
-        $streamName = $this->getKey($streamName, $version);
-        if (!$this->store->containsKey($streamName)) {
+        $key = $this->getKey($streamName, $version);
+        if (!$this->store->containsKey($key)) {
             throw new \RuntimeException(sprintf(
                 'The stream name %s not found in the event store.',
-                $streamName
+                $key
             ));
         }
 
         /** @var ArrayHashMap $streamNameCollection */
-        $streamNameCollection = $this->store->get($streamName);
+        $streamNameCollection = $this->store->get($key);
         if (!$streamNameCollection->containsKey($aggregateId->toNative())) {
             throw new \RuntimeException(sprintf(
                 'Aggregate id %s of %s not found in the event store.',
                 $aggregateId->toNative(),
-                $streamName
+                $key
             ));
         }
 
@@ -97,16 +97,16 @@ class InMemoryEventStore implements EventStoreInterface
      */
     public function remove($streamName, IdInterface $aggregateId, Version $version)
     {
-        $streamName = $this->getKey($streamName, $version);
-        if (!$this->store->containsKey($streamName)) {
+        $key = $this->getKey($streamName, $version);
+        if (!$this->store->containsKey($key)) {
             throw new \RuntimeException(sprintf(
                 'The stream name %s not found in the event store.',
-                $streamName
+                $key
             ));
         }
 
         /** @var ArrayHashMap $streamNameCollection */
-        $streamNameCollection = $this->store->get($streamName);
+        $streamNameCollection = $this->store->get($key);
         $streamNameCollection->removeAt($aggregateId->toNative());
     }
 

@@ -28,7 +28,7 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
     /**
      * @var int
      */
-    protected $version;
+    protected $version = 0;
 
     /**
      * EntityDomainEvent constructor.

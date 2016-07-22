@@ -73,6 +73,14 @@ class VersionManager
     }
 
     /**
+     * @param EventSourcedAggregateRootInterface $aggregate
+     */
+    public static function persistVersionOf(EventSourcedAggregateRootInterface $aggregate)
+    {
+        static::persistVersionOfClass(get_class($aggregate), $aggregate->version());
+    }
+
+    /**
      * @param string $className
      *
      * @return Version
@@ -83,20 +91,48 @@ class VersionManager
     }
 
     /**
-     * @param $aggregateClassName
+     * @param string  $className
+     * @param Version $version
+     */
+    public static function persistVersionOfClass($className, Version $version)
+    {
+        static::create()->setVersion($className, $version);
+    }
+
+    /**
+     * @param string $aggregateClassName
      *
      * @return Version
      */
     protected function getVersion($aggregateClassName)
     {
-        $key = strtolower(str_replace('\\', '_', $aggregateClassName));
+        $key = $this->getKey($aggregateClassName);
 
         $version = $this->storage->get($key);
         if ($version === null) {
             $version = new Version();
-            $this->storage->set($key, $version);
+            $this->setVersion($aggregateClassName, $version);
         }
 
         return $version;
+    }
+
+    /**
+     * @param string  $aggregateClassName
+     * @param Version $version
+     */
+    protected function setVersion($aggregateClassName, Version $version)
+    {
+        $this->storage->set($this->getKey($aggregateClassName), $version);
+    }
+
+    /**
+     * @param string $aggregateClassName
+     *
+     * @return string
+     */
+    protected function getKey($aggregateClassName)
+    {
+        return strtolower(str_replace('\\', '_', $aggregateClassName));
     }
 }
