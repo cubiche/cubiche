@@ -13,7 +13,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
 use Cubiche\Core\Collections\Exception\InvalidKeyException;
 use Cubiche\Core\Collections\Tests\Units\ListTestCase;
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 
 /**
  * ArrayListTests class.
@@ -37,7 +37,7 @@ class ArrayListTests extends ListTestCase
      */
     protected function randomValue()
     {
-        return new EquatableObject(\rand(0, 100));
+        return new Value(\rand(0, 100));
     }
 
     /**
@@ -45,7 +45,7 @@ class ArrayListTests extends ListTestCase
      */
     protected function uniqueValue()
     {
-        return new EquatableObject(1000);
+        return new Value(1000);
     }
 
     /*
@@ -149,7 +149,6 @@ class ArrayListTests extends ListTestCase
         $this
             ->given(
                 $key = 0,
-                $unique = $this->uniqueValue(),
                 $collection = $this->emptyCollection()
             )
             ->then()

@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Enumerable;
 
 /**
- * Enumerable Interface.
+ * Enumerable interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -22,7 +22,7 @@ interface EnumerableInterface extends \Countable, \IteratorAggregate
      *
      * @param callable $predicate
      *
-     * @return EnumerableInterface
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
      */
     public function where(callable $predicate);
 
@@ -31,9 +31,9 @@ interface EnumerableInterface extends \Countable, \IteratorAggregate
      *
      * @param callable $comparator
      *
-     * @return EnumerableInterface
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
      */
-    public function sorted(callable $comparator);
+    public function sorted(callable $comparator = null);
 
     /**
      * Returns a view of the portion of this enumerable starting at the specified $offset, with size equals to $length.
@@ -41,14 +41,111 @@ interface EnumerableInterface extends \Countable, \IteratorAggregate
      * @param int $offset
      * @param int $length
      *
-     * @return EnumerableInterface
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
      */
     public function slice($offset, $length = null);
 
     /**
+     * Skips elements up to a specified position in a sequence.
+     *
+     * @param int $count
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function skip($count);
+
+    /**
+     * Takes elements up to a specified position in a sequence.
+     *
+     * @param int $length
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function limit($length);
+
+    /**
+     * Determines whether all the elements in a sequence satisfy a condition.
+     *
+     * @param callable $predicate
+     *
+     * @return bool
+     */
+    public function all(callable $predicate);
+
+    /**
+     * Determines whether any elements in a sequence satisfy a condition.
+     *
+     * @param callable $predicate
+     *
+     * @return bool
+     */
+    public function any(callable $predicate);
+
+    /**
+     * Determines whether at least a numbers of elements in a sequence satisfy a condition.
+     *
+     * @param int      $count
+     * @param callable $predicate
+     *
+     * @return bool
+     */
+    public function atLeast($count, callable $predicate);
+
+    /**
+     * Determines whether a sequence contains a specified element.
+     *
+     * @param mixed    $value
+     * @param callable $equalityComparer
+     *
+     * @return bool
+     */
+    public function contains($value, callable $equalityComparer = null);
+
+    /**
+     * Removes duplicate values from a sequence.
+     *
+     * @param callable $equalityComparer
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function distinct(callable $equalityComparer = null);
+
+    /**
+     * Returns the set difference, which means the elements of one sequence that do not appear in a second sequence.
+     *
+     * @param array|\Traversable $enumerable
+     * @param callable           $equalityComparer
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function except($enumerable, callable $equalityComparer = null);
+
+    /**
+     * Returns the set intersection, which means elements that appear in each of two sequences.
+     *
+     * @param array|\Traversable $enumerable
+     * @param callable           $equalityComparer
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function intersect($enumerable, callable $equalityComparer = null);
+
+    /**
+     * Returns the set union, which means unique elements that appear in either of two sequences.
+     *
+     * @param array|\Traversable $enumerable
+     * @param callable           $equalityComparer
+     *
+     * @return \Cubiche\Core\Enumerable\EnumerableInterface
+     */
+    public function union($enumerable, callable $equalityComparer = null);
+
+    /**
      * Gets a native PHP array representation of the enumerable.
+     *
+     * @param bool $associative
      *
      * @return array
      */
-    public function toArray();
+    public function toArray($associative = false);
 }

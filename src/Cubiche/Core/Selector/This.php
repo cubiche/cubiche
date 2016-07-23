@@ -28,7 +28,7 @@ class This extends Selector
     /**
      * {@inheritdoc}
      */
-    public function select(callable $selector)
+    public function select($selector)
     {
         return self::from($selector);
     }

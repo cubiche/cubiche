@@ -24,6 +24,11 @@ class Comparator extends AbstractCallable implements ComparatorInterface
     use VisiteeTrait;
 
     /**
+     * @var ComparatorInterface
+     */
+    private static $default = null;
+
+    /**
      * @param callable $comparator
      *
      * @return \Cubiche\Core\Comparable\ComparatorInterface
@@ -34,7 +39,42 @@ class Comparator extends AbstractCallable implements ComparatorInterface
             return $comparator;
         }
 
-        return new Custom($comparator);
+        return new CallbackComparator($comparator);
+    }
+
+    /**
+     * @param callable  $selector
+     * @param Direction $direction
+     *
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
+     */
+    public static function by(callable $selector, Direction $direction = null)
+    {
+        return new SelectorComparator($selector, $direction);
+    }
+
+    /**
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
+     */
+    public static function defaultComparator()
+    {
+        if (self::$default === null) {
+            self::$default = new self();
+        }
+
+        return self::$default;
+    }
+
+    /**
+     * @param callable $comparator
+     * @param callable $default
+     *
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
+     */
+    public static function ensure(callable $comparator = null, callable $default = null)
+    {
+        return $comparator !== null || $default !== null ?
+            self::from($comparator !== null ? $comparator : $default) : self::defaultComparator();
     }
 
     /**
@@ -72,7 +112,7 @@ class Comparator extends AbstractCallable implements ComparatorInterface
     /**
      * {@inheritdoc}
      */
-    protected function innerCallable()
+    protected function innerCallback()
     {
         return array($this, 'compare');
     }

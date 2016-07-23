@@ -31,11 +31,11 @@ trait CallableTrait
      */
     public function invokeWith(array $args)
     {
-        return \call_user_func_array($this->innerCallable(), $args);
+        return \call_user_func_array($this->innerCallback(), $args);
     }
 
     /**
      * @return callable
      */
-    abstract protected function innerCallable();
+    abstract protected function innerCallback();
 }

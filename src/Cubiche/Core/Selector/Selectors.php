@@ -18,7 +18,7 @@ use Cubiche\Core\Visitor\VisitorInterface;
  * @method static Selectors key(string $name)
  * @method static Selectors property(string $name)
  * @method static Selectors method(string $name)
- * @method static Selectors custom(callable $callable)
+ * @method static Selectors callback(callable $callback)
  * @method static Selectors value($value)
  * @method static Selectors count()
  * @method static Selectors composite(SelectorInterface $x, SelectorInterface $y)
@@ -44,18 +44,10 @@ class Selectors extends Selector
     protected static function factory()
     {
         if (self::$factory === null) {
-            self::setFactory(new SelectorFactory(__NAMESPACE__));
+            self::$factory = new SelectorFactory(__NAMESPACE__);
         }
 
         return self::$factory;
-    }
-
-    /**
-     * @param SelectorFactoryInterface $factory
-     */
-    public static function setFactory(SelectorFactoryInterface $factory)
-    {
-        self::$factory = $factory;
     }
 
     /**
@@ -73,6 +65,16 @@ class Selectors extends Selector
     public static function addNamespace($namespace)
     {
         self::factory()->addNamespace($namespace);
+    }
+
+    /**
+     * @param callable|mixed $selector
+     *
+     * @return \Cubiche\Core\Selector\Selectors
+     */
+    public static function from($selector)
+    {
+        return new static(Selector::from($selector));
     }
 
     /**
@@ -116,7 +118,7 @@ class Selectors extends Selector
     /**
      * {@inheritdoc}
      */
-    public function select(callable $selector)
+    public function select($selector)
     {
         $this->selector = $this->selector()->select($selector);
 
@@ -137,5 +139,29 @@ class Selectors extends Selector
     public function selector()
     {
         return $this->selector;
+    }
+
+    /**
+     * @return \Cubiche\Core\Selector\Selectors
+     */
+    public static function false()
+    {
+        return self::value(false);
+    }
+
+    /**
+     * @return \Cubiche\Core\Selector\Selectors
+     */
+    public static function true()
+    {
+        return self::value(true);
+    }
+
+    /**
+     * @return \Cubiche\Core\Selector\Selectors
+     */
+    public static function null()
+    {
+        return self::value(null);
     }
 }

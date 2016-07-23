@@ -46,4 +46,12 @@ abstract class Entity implements EntityInterface
     {
         return $other instanceof static && $this->id()->equals($other->id());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hashCode()
+    {
+        return $this->id()->hashCode();
+    }
 }

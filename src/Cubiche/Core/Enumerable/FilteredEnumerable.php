@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Enumerable;
 
 /**
- * Filtered Enumerable Class.
+ * Filtered Enumerable class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -23,10 +23,10 @@ class FilteredEnumerable extends EnumerableDecorator
     protected $predicate;
 
     /**
-     * @param EnumerableInterface $enumerable
-     * @param callable            $predicate
+     * @param array|\Traversable $enumerable
+     * @param callable           $predicate
      */
-    public function __construct(EnumerableInterface $enumerable, callable $predicate)
+    public function __construct($enumerable, callable $predicate)
     {
         parent::__construct($enumerable);
 

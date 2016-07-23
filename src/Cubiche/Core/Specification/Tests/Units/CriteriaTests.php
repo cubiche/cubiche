@@ -9,13 +9,14 @@
  */
 namespace Cubiche\Core\Specification\Tests\Units;
 
+use Cubiche\Core\Selector\Callback;
 use Cubiche\Core\Selector\Count;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\This;
 use Cubiche\Core\Selector\Value;
+use Cubiche\Core\Specification\Constraint\BinaryConstraintOperator;
 use Cubiche\Core\Specification\Constraint\Equal;
 use Cubiche\Core\Specification\Constraint\GreaterThan;
 use Cubiche\Core\Specification\Constraint\GreaterThanEqual;
@@ -27,11 +28,10 @@ use Cubiche\Core\Specification\Constraint\Same;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\Quantifier\All;
 use Cubiche\Core\Specification\Quantifier\AtLeast;
-use Cubiche\Core\Specification\Selector;
-use Cubiche\Tests\TestCase;
-use Cubiche\Core\Specification\Constraint\BinaryConstraintOperator;
 use Cubiche\Core\Specification\Quantifier\Quantifier;
+use Cubiche\Core\Specification\Selector;
 use Cubiche\Core\Specification\SpecificationInterface;
+use Cubiche\Tests\TestCase;
 
 /**
  * Criteria Tests Class.
@@ -105,19 +105,19 @@ class CriteriaTests extends TestCase
     }
 
     /**
-     * Test custom.
+     * Test callback.
      */
-    public function testCustom()
+    public function testCallback()
     {
         $this
-            ->given($criteria = Criteria::custom(function () {
+            ->given($criteria = Criteria::callback(function () {
 
             }))
             ->then()
                 ->object($criteria)
                     ->isInstanceOf(Selector::class)
                 ->object($criteria->selector())
-                    ->isInstanceOf(Custom::class)
+                    ->isInstanceOf(Callback::class)
         ;
     }
 

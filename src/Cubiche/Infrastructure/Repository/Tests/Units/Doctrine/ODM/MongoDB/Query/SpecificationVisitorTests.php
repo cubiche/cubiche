@@ -11,7 +11,6 @@
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Selector\Composite;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Field;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Specification\AndSpecification;
@@ -138,11 +137,11 @@ class SpecificationVisitorTests extends TestCase
     }
 
     /**
-     * Test visitCustom.
+     * Test visitCallback.
      */
-    public function testVisitCustom()
+    public function testVisitCallback()
     {
-        $this->notSupportedOperationTest(Criteria::custom(function () {
+        $this->notSupportedOperationTest(Criteria::callback(function () {
 
         })->selector());
     }
@@ -236,7 +235,7 @@ class SpecificationVisitorTests extends TestCase
         });
 
         $this->logicExceptionTest(
-            Criteria::custom(function () {
+            Criteria::callback(function () {
 
             })->eq(10)
         );

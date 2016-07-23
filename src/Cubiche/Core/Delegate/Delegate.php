@@ -26,7 +26,7 @@ class Delegate extends AbstractCallable
     /**
      * @var callable
      */
-    protected $callable;
+    protected $target;
 
     /**
      * @param Closure $closure
@@ -71,19 +71,19 @@ class Delegate extends AbstractCallable
     }
 
     /**
-     * @param callable $callable
+     * @param callable $target
      */
-    public function __construct($callable)
+    public function __construct($target)
     {
-        if (!\is_callable($callable)) {
-            throw new \InvalidArgumentException('The $callable argument must be a callable.');
+        if (!\is_callable($target)) {
+            throw new \InvalidArgumentException('The $target argument must be a callable.');
         }
 
-        if (\is_string($callable) && \strpos($callable, '::')) {
-            $callable = explode('::', $callable);
+        if (\is_string($target) && \strpos($target, '::')) {
+            $target = explode('::', $target);
         }
 
-        $this->callable = $callable;
+        $this->target = $target;
     }
 
     /**
@@ -92,12 +92,12 @@ class Delegate extends AbstractCallable
     public function reflection()
     {
         if ($this->reflection === null) {
-            if (\is_array($this->callable)) {
-                $this->reflection = new \ReflectionMethod($this->callable[0], $this->callable[1]);
-            } elseif (\is_object($this->callable) && !$this->callable instanceof \Closure) {
-                $this->reflection = new \ReflectionMethod($this->callable, '__invoke');
+            if (\is_array($this->target)) {
+                $this->reflection = new \ReflectionMethod($this->target[0], $this->target[1]);
+            } elseif (\is_object($this->target) && !$this->target instanceof \Closure) {
+                $this->reflection = new \ReflectionMethod($this->target, '__invoke');
             } else {
-                $this->reflection = new \ReflectionFunction($this->callable);
+                $this->reflection = new \ReflectionFunction($this->target);
             }
         }
 
@@ -107,16 +107,16 @@ class Delegate extends AbstractCallable
     /**
      * @return callable
      */
-    public function getCallable()
+    public function target()
     {
-        return $this->callable;
+        return $this->target;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function innerCallable()
+    protected function innerCallback()
     {
-        return $this->getCallable();
+        return $this->target();
     }
 }

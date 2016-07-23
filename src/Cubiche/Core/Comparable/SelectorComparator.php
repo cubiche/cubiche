@@ -25,18 +25,18 @@ class SelectorComparator extends Comparator
     protected $selector;
 
     /**
-     * @var Order
+     * @var Direction
      */
-    protected $order;
+    protected $direction;
 
     /**
-     * @param callable $selector
-     * @param Order    $order
+     * @param callable  $selector
+     * @param Direction $direction
      */
-    public function __construct(callable $selector, Order $order = null)
+    public function __construct(callable $selector, Direction $direction = null)
     {
         $this->selector = new Delegate($selector);
-        $this->order = Order::ensure($order);
+        $this->direction = Direction::ensure($direction);
     }
 
     /**
@@ -44,15 +44,15 @@ class SelectorComparator extends Comparator
      */
     public function selector()
     {
-        return $this->selector->getCallable();
+        return $this->selector->target();
     }
 
     /**
-     * @return \Cubiche\Core\Comparable\Order
+     * @return \Cubiche\Core\Comparable\Direction
      */
-    public function order()
+    public function direction()
     {
-        return $this->order;
+        return $this->direction;
     }
 
     /**
@@ -60,7 +60,7 @@ class SelectorComparator extends Comparator
      */
     public function compare($a, $b)
     {
-        return $this->order()->getValue() * parent::compare(
+        return $this->direction()->getValue() * parent::compare(
             $this->selector->__invoke($a),
             $this->selector->__invoke($b)
         );
@@ -71,6 +71,6 @@ class SelectorComparator extends Comparator
      */
     public function reverse()
     {
-        return new self($this->selector(), new Order(-1 * $this->order()->getValue()));
+        return new self($this->selector(), $this->direction()->reverse());
     }
 }

@@ -13,23 +13,23 @@ namespace Cubiche\Core\Comparable;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Custom Comparator class.
+ * Callback Comparator class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Custom extends Comparator
+class CallbackComparator extends Comparator
 {
     /**
      * @var Delegate
      */
-    protected $delegate;
+    protected $callbackDelegate;
 
     /**
-     * @param callable $comparator
+     * @param callable $callback
      */
-    public function __construct(callable $comparator)
+    public function __construct(callable $callback)
     {
-        $this->delegate = new Delegate($comparator);
+        $this->callbackDelegate = new Delegate($callback);
     }
 
     /**
@@ -37,6 +37,14 @@ class Custom extends Comparator
      */
     public function compare($a, $b)
     {
-        return $this->delegate->__invoke($a, $b);
+        return $this->callbackDelegate->__invoke($a, $b);
+    }
+
+    /**
+     * @return callable
+     */
+    public function target()
+    {
+        return $this->callbackDelegate->target();
     }
 }

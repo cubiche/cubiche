@@ -10,9 +10,9 @@
  */
 namespace Cubiche\Domain\Repository\Tests\Units;
 
-use Cubiche\Core\Comparable\Sort;
-use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Collections\Tests\Units\CollectionTestCase;
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
@@ -131,7 +131,7 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
      */
     protected function comparator()
     {
-        return Sort::by(Criteria::property('age'));
+        return Comparator::by(Criteria::property('age'));
     }
 
     /**
@@ -278,7 +278,7 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
             ->and($value = $this->randomValue())
             ->when($repository->persist($value))
             ->then()
-                ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
+                ->object($repository->findOne(Criteria::property('id')->eq($value->id())))
                     ->isEqualTo($value)
         ;
     }

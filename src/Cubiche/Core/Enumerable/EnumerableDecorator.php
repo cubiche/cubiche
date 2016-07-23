@@ -11,7 +11,7 @@
 namespace Cubiche\Core\Enumerable;
 
 /**
- * Abstract Enumerable Decorator Class.
+ * Abstract Enumerable Decorator class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
@@ -23,11 +23,11 @@ abstract class EnumerableDecorator extends AbstractEnumerable
     protected $enumerable;
 
     /**
-     * @param EnumerableInterface $enumerable
+     * @param array|\Traversable $enumerable
      */
-    public function __construct(EnumerableInterface $enumerable)
+    public function __construct($enumerable)
     {
-        $this->enumerable = $enumerable;
+        $this->enumerable = Enumerable::from($enumerable);
     }
 
     /**

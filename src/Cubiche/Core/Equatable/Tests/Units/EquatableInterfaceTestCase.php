@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Core\Equatable\Tests\Units;
 
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 use Cubiche\Tests\TestCase;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
@@ -67,7 +67,7 @@ abstract class EquatableInterfaceTestCase extends TestCase
             ->given($equalatable1 = $this->newDefaultTestedInstance())
             /* @var \Cubiche\Core\Equatable\EquatableInterface $equalatable2 */
             ->given($equalatable2 = $this->newDefaultTestedInstance())
-            ->given($equalatableObject = new EquatableObject(\uniqid()))
+            ->given($equalatableObject = new Value(\uniqid()))
             ->then()
                 ->boolean($equalatable1->equals($equalatable2))
                     ->isTrue()

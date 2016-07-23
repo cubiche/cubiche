@@ -26,7 +26,7 @@ abstract class Specification extends AbstractCallable implements SpecificationIn
     /**
      * {@inheritdoc}
      */
-    protected function innerCallable()
+    protected function innerCallback()
     {
         return array($this, 'evaluate');
     }

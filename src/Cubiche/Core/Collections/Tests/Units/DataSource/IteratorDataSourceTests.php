@@ -10,13 +10,13 @@
  */
 namespace Cubiche\Core\Collections\Tests\Units\DataSource;
 
+use Cubiche\Core\Collections\DataSource\IteratorDataSource;
+use Cubiche\Core\Comparable\CallbackComparator;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\ComparatorInterface;
-use Cubiche\Core\Comparable\Custom;
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\SpecificationInterface;
-use Cubiche\Core\Collections\DataSource\IteratorDataSource;
 
 /**
  * Iterator Data Source Tests Class.
@@ -57,7 +57,7 @@ class IteratorDataSourceTests extends DataSourceTestCase
      */
     protected function uniqueValue()
     {
-        return new EquatableObject(1000);
+        return new Value(1000);
     }
 
     /**
@@ -69,7 +69,7 @@ class IteratorDataSourceTests extends DataSourceTestCase
     {
         if ($count > 0) {
             foreach (range(0, $count) as $value) {
-                yield new EquatableObject($value);
+                yield new Value($value);
             }
         }
     }
@@ -121,7 +121,7 @@ class IteratorDataSourceTests extends DataSourceTestCase
         $this
             ->given(
                 $comparator = new Comparator(),
-                $sortCriteria = new Custom(function ($a, $b) use ($comparator) {
+                $sortCriteria = new CallbackComparator(function ($a, $b) use ($comparator) {
                     return -1 * $comparator->compare($a, $b);
                 }),
                 $datasource = $this->randomDataSource(Criteria::method('value')->lt(10), $sortCriteria)

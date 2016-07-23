@@ -19,4 +19,9 @@ namespace Cubiche\Core\Delegate;
 abstract class AbstractCallable implements CallableInterface
 {
     use CallableTrait;
+
+    /**
+     * @return callable
+     */
+    abstract protected function innerCallback();
 }

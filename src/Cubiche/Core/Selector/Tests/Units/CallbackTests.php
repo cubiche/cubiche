@@ -7,17 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Selector\Tests\Units;
 
-use Cubiche\Core\Selector\Custom;
-
 /**
- * Custom Tests Class.
+ * Callback Tests Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CustomTests extends SelectorTestCase
+class CallbackTests extends SelectorTestCase
 {
     /**
      * {@inheritdoc}
@@ -30,23 +27,15 @@ class CustomTests extends SelectorTestCase
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function shouldVisitMethod()
-    {
-        return 'visitCustom';
-    }
-
-    /**
      * Test apply.
      */
     public function testApply()
     {
         $this
-            /* @var \Cubiche\Core\Selector\Custom $custom */
-            ->given($custom = $this->newDefaultTestedInstance())
+            /* @var \Cubiche\Core\Selector\Callback $callback */
+            ->given($callback = $this->newDefaultTestedInstance())
             ->then()
-                ->integer($custom->apply(1))
+                ->integer($callback->apply(1))
                     ->isEqualTo(2)
         ;
     }

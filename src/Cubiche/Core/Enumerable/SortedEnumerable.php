@@ -10,6 +10,9 @@
  */
 namespace Cubiche\Core\Enumerable;
 
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\ComparatorInterface;
+
 /**
  * Sorted Enumerable Class.
  *
@@ -28,19 +31,19 @@ class SortedEnumerable extends EnumerableDecorator
     private $sortedIterator;
 
     /**
-     * @param EnumerableInterface $enumerable
-     * @param callable            $predicate
+     * @param array|\Traversable $enumerable
+     * @param callable           $predicate
      */
-    public function __construct(EnumerableInterface $enumerable, callable $comparator)
+    public function __construct($enumerable, callable $comparator = null)
     {
         parent::__construct($enumerable);
 
-        $this->comparator = $comparator;
+        $this->comparator = Comparator::ensure($comparator);
         $this->sortedIterator = null;
     }
 
     /**
-     * @return callable
+     * @return ComparatorInterface
      */
     public function comparator()
     {
@@ -53,7 +56,7 @@ class SortedEnumerable extends EnumerableDecorator
     public function getIterator()
     {
         if ($this->sortedIterator === null) {
-            $this->sortedIterator = new \ArrayIterator($this->enumerable()->toArray());
+            $this->sortedIterator = new \ArrayIterator($this->enumerable()->toArray(true));
             $this->sortedIterator->uasort($this->comparator());
         }
 

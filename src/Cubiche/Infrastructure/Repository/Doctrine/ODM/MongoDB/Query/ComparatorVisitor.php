@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
+use Cubiche\Core\Comparable\CallbackComparator;
 use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\Custom;
 use Cubiche\Core\Comparable\MultiComparator;
 use Cubiche\Core\Comparable\ReverseComparator;
 use Cubiche\Core\Comparable\SelectorComparator;
@@ -60,7 +60,7 @@ class ComparatorVisitor extends Visitor
     /**
      * {@inheritdoc}
      */
-    public function visitCustomComparator(Custom $comparator)
+    public function visitCallbackComparator(CallbackComparator $comparator)
     {
         $this->notSupportedException($comparator);
     }
@@ -80,6 +80,6 @@ class ComparatorVisitor extends Visitor
     public function visitSelectorComparator(SelectorComparator $comparator)
     {
         $field = $this->createField($comparator->selector());
-        $this->queryBuilder->sort($field->name(), $comparator->order()->getValue());
+        $this->queryBuilder->sort($field->name(), $comparator->direction()->getValue());
     }
 }

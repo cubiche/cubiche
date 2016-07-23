@@ -46,6 +46,10 @@ class Enumerable extends AbstractEnumerable
             return new self($iterator);
         }
 
+        if ($enumerable instanceof \Closure) {
+            return self::from($enumerable());
+        }
+
         throw new \InvalidArgumentException('The enumerable must be array or \\Traversable.');
     }
 
@@ -71,13 +75,5 @@ class Enumerable extends AbstractEnumerable
     public function getIterator()
     {
         return $this->iterator;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return \iterator_to_array($this->getIterator(), true);
     }
 }

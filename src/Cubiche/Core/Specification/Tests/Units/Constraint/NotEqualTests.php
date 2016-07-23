@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Specification\Tests\Units\Constraint;
 
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 use Cubiche\Core\Specification\Criteria;
 
 /**
@@ -48,11 +48,11 @@ class NotEqualTests extends BinaryConstraintOperatorTestCase
     public function testEvaluateEquatable()
     {
         $this
-            ->given($neq = Criteria::neq(new EquatableObject(5)))
+            ->given($neq = Criteria::neq(new Value(5)))
             ->then()
-                ->boolean($neq->evaluate(new EquatableObject(5)))
+                ->boolean($neq->evaluate(new Value(5)))
                     ->isFalse()
-                ->boolean($neq->evaluate(new EquatableObject(4)))
+                ->boolean($neq->evaluate(new Value(4)))
                     ->isTrue();
     }
 }

@@ -11,12 +11,12 @@
 namespace Cubiche\Core\Specification;
 
 use Cubiche\Core\Selector\Count;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\This;
 use Cubiche\Core\Selector\Value;
+use Cubiche\Core\Selector\Callback;
 
 /**
  * Criteria Class.
@@ -128,9 +128,9 @@ class Criteria
      *
      * @return \Cubiche\Core\Specification\Selector
      */
-    public static function custom(callable $callable)
+    public static function callback(callable $callable)
     {
-        return new Selector(new Custom($callable));
+        return new Selector(new Callback($callable));
     }
 
     /**
