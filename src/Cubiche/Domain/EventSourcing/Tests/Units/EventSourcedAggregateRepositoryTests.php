@@ -10,8 +10,11 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PostPersistSubscriber;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PrePersistSubscriber;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
@@ -83,6 +86,25 @@ class EventSourcedAggregateRepositoryTests extends TestCase
                     $repository->persist($post);
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($post->changeTitle($this->faker->sentence))
+            ->and($prePersistSubscriber = new PrePersistSubscriber(42))
+            ->and($postPersistSubscriber = new PostPersistSubscriber())
+            ->and(DomainEventPublisher::subscribe($prePersistSubscriber))
+            ->and(DomainEventPublisher::subscribe($postPersistSubscriber))
+            ->when($repository->persist($post))
+            ->then()
+                ->integer($post->version()->aggregateVersion())
+                    ->isEqualTo(84)
         ;
     }
 
@@ -157,19 +179,6 @@ class EventSourcedAggregateRepositoryTests extends TestCase
                     $repository->remove($post);
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
-        ;
-    }
-
-    /**
-     * Test aggregateName method.
-     */
-    public function testAggregateName()
-    {
-        $this
-            ->given($repository = new EventSourcedAggregateRepository(new InMemoryEventStore(), 'PostEventSourced'))
-            ->then()
-                ->string($this->invoke($repository)->aggregateName())
-                    ->isEqualTo('post_event_sourced')
         ;
     }
 }

@@ -21,6 +21,7 @@ use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\EventSourcedAggregateRepositoryTests;
+use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
@@ -65,7 +66,7 @@ class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTe
             ->and($version = new Version(0, 231))
             ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
-            ->and($snapshot = new Snapshot($repository->aggregateName(), $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, new \DateTimeImmutable()))
             ->when($repository->persist($post))
             ->and($store->persist($snapshot))
             ->then()

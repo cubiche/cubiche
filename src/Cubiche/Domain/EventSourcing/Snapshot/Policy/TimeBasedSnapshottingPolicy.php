@@ -12,6 +12,7 @@ namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
+use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 
@@ -38,11 +39,6 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
     protected $aggregateClassName;
 
     /**
-     * @var string
-     */
-    protected $aggregateName;
-
-    /**
      * TimeBasedSnapshottingPolicy constructor.
      *
      * @param SnapshotStoreInterface $snapshotStore
@@ -55,7 +51,6 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
         $this->threshold = $threshold;
 
         $this->aggregateClassName = $aggregateClassName;
-        $this->aggregateName = $this->aggregateName();
     }
 
     /**
@@ -69,7 +64,7 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
             $lastSnapshot = $this->loadSnapshot($eventSourcedAggregateRoot->id());
             $threshold = new \DateTimeImmutable(date('c', strtotime('-'.$this->threshold)));
 
-            if ($lastSnapshot !== null && $lastSnapshot->createdAt() > $threshold) {
+            if ($lastSnapshot !== null && $lastSnapshot->createdAt() < $threshold) {
                 return true;
             }
         }
@@ -88,29 +83,14 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
     {
         $version = VersionManager::versionOfClass($this->aggregateClassName);
 
-        return $this->snapshotStore->load($this->aggregateName, $id, $version);
+        return $this->snapshotStore->load($this->streamName(), $id, $version);
     }
 
     /**
      * @return string
      */
-    public function aggregateName()
+    protected function streamName()
     {
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $this->shortClassName())));
-
-        return strtolower(implode('_', $pieces));
-    }
-
-    /**
-     * @return string
-     */
-    protected function shortClassName()
-    {
-        // If class name has a namespace separator, only take last portion
-        if (strpos($this->aggregateClassName, '\\') !== false) {
-            return substr($this->aggregateClassName, strrpos($this->aggregateClassName, '\\') + 1);
-        }
-
-        return $this->aggregateClassName;
+        return NameResolver::resolve($this->aggregateClassName);
     }
 }
