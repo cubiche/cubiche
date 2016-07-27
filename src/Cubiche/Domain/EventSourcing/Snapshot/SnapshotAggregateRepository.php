@@ -108,7 +108,7 @@ class SnapshotAggregateRepository extends EventSourcedAggregateRepository
      */
     protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
     {
-        $snapshot = new Snapshot($this->streamName(), $aggregateRoot, new \DateTimeImmutable());
+        $snapshot = new Snapshot($this->streamName(), $aggregateRoot, new \DateTime());
 
         $this->snapshotStore->persist($snapshot);
     }

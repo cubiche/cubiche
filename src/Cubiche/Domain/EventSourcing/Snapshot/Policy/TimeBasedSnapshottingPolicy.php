@@ -62,7 +62,7 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
 
         if (count($recordedEvents) > 0) {
             $lastSnapshot = $this->loadSnapshot($eventSourcedAggregateRoot->id());
-            $threshold = new \DateTimeImmutable(date('c', strtotime('-'.$this->threshold)));
+            $threshold = new \DateTime(date('c', strtotime('-'.$this->threshold)));
 
             if ($lastSnapshot !== null && $lastSnapshot->createdAt() < $threshold) {
                 return true;

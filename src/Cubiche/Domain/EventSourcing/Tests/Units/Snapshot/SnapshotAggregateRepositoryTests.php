@@ -66,7 +66,7 @@ class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTe
             ->and($version = new Version(0, 231))
             ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
-            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, new \DateTime()))
             ->when($repository->persist($post))
             ->and($store->persist($snapshot))
             ->then()

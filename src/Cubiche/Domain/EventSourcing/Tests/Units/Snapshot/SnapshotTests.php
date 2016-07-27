@@ -34,7 +34,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->then()
                 ->string($snapshot->aggregateType())
                     ->isEqualTo('posts')
@@ -53,7 +53,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->then()
                 ->object($snapshot->aggregateId())
                     ->isEqualTo($post->id())
@@ -72,7 +72,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->then()
                 ->object($snapshot->aggregate())
                     ->isEqualTo($post)
@@ -93,7 +93,7 @@ class SnapshotTests extends TestCase
             )
             ->and($version = new Version(5, 345))
             ->and($post->setVersion($version))
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->then()
                 ->object($snapshot->version())
                     ->isEqualTo($post->version())
@@ -112,7 +112,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($createdAt = new \DateTimeImmutable())
+            ->and($createdAt = new \DateTime())
             ->and($snapshot = new Snapshot('posts', $post, $createdAt))
             ->then()
                 ->object($snapshot->createdAt())

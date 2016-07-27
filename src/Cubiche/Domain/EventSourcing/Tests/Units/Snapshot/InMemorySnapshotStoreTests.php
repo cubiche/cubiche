@@ -44,7 +44,7 @@ class InMemorySnapshotStoreTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->when($store->persist($snapshot))
             ->then()
                 ->object($store->load('posts', $post->id(), $post->version()))
@@ -65,7 +65,7 @@ class InMemorySnapshotStoreTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->when($store->persist($snapshot))
             ->then()
                 ->variable($store->load('blogs', $post->id(), $post->version()))
@@ -88,7 +88,7 @@ class InMemorySnapshotStoreTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTimeImmutable()))
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->when($store->persist($snapshot))
             ->and($store->remove('blogs', $post->id(), $post->version()))
             ->then()

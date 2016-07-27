@@ -44,7 +44,7 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                 $snapshot = new Snapshot(
                     NameResolver::resolve(get_class($post)),
                     $post,
-                    \DateTimeImmutable::createFromMutable($createdAt)
+                    $createdAt
                 )
             )
             ->and($snapshotStore->persist($snapshot))
@@ -67,7 +67,7 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($createdAt = new \DateTimeImmutable())
+            ->and($createdAt = new \DateTime())
             ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, $createdAt))
             ->and($snapshotStore->persist($snapshot))
             ->then()
