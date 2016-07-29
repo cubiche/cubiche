@@ -10,10 +10,9 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
-use Cubiche\Core\Serializer\DefaultSerializer;
-use Cubiche\Core\Storage\InMemoryStorage;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\InMemoryVersionStore;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
@@ -39,18 +38,18 @@ class VersionManagerTests extends TestCase
             ->and($version = VersionManager::versionOf($post))
             ->then()
                 ->object($version)
-                    ->isEqualTo(new Version())
+                    ->isEqualTo(Version::fromString('0.0.0'))
         ;
     }
 
     /**
-     * Test SetStorage method.
+     * Test SetVersionStore method.
      */
-    public function testSetStorage()
+    public function testSetVersionStore()
     {
         $this
             ->given($manager = VersionManager::create())
-            ->when($manager->setStorage(new InMemoryStorage(new DefaultSerializer())))
+            ->when($manager->setVersionStore(new InMemoryVersionStore()))
             ->then()
                 ->boolean(true)
                     ->isTrue()
@@ -72,14 +71,30 @@ class VersionManagerTests extends TestCase
             ->and($version = VersionManager::versionOf($post))
             ->then()
                 ->object($version)
-                    ->isEqualTo(new Version())
+                    ->isEqualTo(Version::fromString('0.0.0'))
                 ->and()
-                ->when($post->version()->setModelVersion(23))
-                ->and($post->version()->setAggregateVersion(45))
+                ->when($post->version()->setMinor(23))
+                ->and($post->version()->setPatch(45))
                 ->and(VersionManager::persistVersionOf($post))
                 ->then()
                     ->object(VersionManager::versionOf($post))
-                        ->isEqualTo(new Version(23, 45))
+                        ->isEqualTo(new Version(0, 23, 45))
+        ;
+    }
+
+    /**
+     * Test setCurrentApplicationVersion method.
+     */
+    public function testSetCurrentApplicationVersion()
+    {
+        $this
+            ->given(
+                $applicationVersion = Version::fromString('3.2.0')
+            )
+            ->and(VersionManager::setCurrentApplicationVersion($applicationVersion))
+            ->then()
+                ->object(VersionManager::currentApplicationVersion())
+                    ->isEqualTo($applicationVersion)
         ;
     }
 }

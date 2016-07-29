@@ -103,7 +103,7 @@ class EventSourcedAggregateRepositoryTests extends TestCase
             ->and(DomainEventPublisher::subscribe($postPersistSubscriber))
             ->when($repository->persist($post))
             ->then()
-                ->integer($post->version()->aggregateVersion())
+                ->integer($post->version()->patch())
                     ->isEqualTo(84)
         ;
     }

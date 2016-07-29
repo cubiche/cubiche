@@ -39,6 +39,6 @@ class PrePersistListener
      */
     public function onPrePersist(PrePersistEvent $event)
     {
-        $event->aggregate()->version()->setAggregateVersion($this->version);
+        $event->aggregate()->version()->setPatch($this->version);
     }
 }

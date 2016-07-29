@@ -14,6 +14,8 @@ use Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
@@ -49,6 +51,11 @@ class InMemorySnapshotStoreTests extends TestCase
             ->then()
                 ->object($store->load('posts', $post->id(), $post->version()))
                     ->isEqualTo($snapshot)
+                ->and()
+                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.0.0')))
+                ->then()
+                    ->variable($store->load('posts', $post->id(), $post->version()))
+                        ->isNull()
         ;
     }
 
@@ -96,6 +103,35 @@ class InMemorySnapshotStoreTests extends TestCase
                     ->isEqualTo($snapshot)
                 ->and()
                 ->when($store->remove('posts', $post->id(), $post->version()))
+                ->then()
+                    ->variable($store->load('posts', $post->id(), $post->version()))
+                        ->isNull()
+        ;
+
+        $this
+            ->given($store = $this->createStore())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
+            ->and($currentApplicationVersion = VersionManager::currentApplicationVersion())
+            ->when($store->persist($snapshot))
+            ->then()
+                ->object($store->load('posts', $post->id(), $post->version()))
+                    ->isEqualTo($snapshot)
+                ->and()
+                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.0.0')))
+                ->and($store->remove('posts', $post->id(), $post->version()))
+                ->and(VersionManager::setCurrentApplicationVersion($currentApplicationVersion))
+                ->then()
+                    ->object($store->load('posts', $post->id(), $post->version()))
+                        ->isEqualTo($snapshot)
+                ->and()
+                ->when(VersionManager::setCurrentApplicationVersion($currentApplicationVersion))
+                ->and($store->remove('posts', $post->id(), $post->version()))
                 ->then()
                     ->variable($store->load('posts', $post->id(), $post->version()))
                         ->isNull()

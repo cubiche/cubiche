@@ -23,8 +23,8 @@ class PostPersistListener
      */
     public function onPostPersist(PostPersistEvent $event)
     {
-        $event->aggregate()->version()->setAggregateVersion(
-            $event->aggregate()->version()->aggregateVersion() * 2
+        $event->aggregate()->version()->setPatch(
+            $event->aggregate()->version()->patch() * 2
         );
     }
 }

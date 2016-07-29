@@ -63,7 +63,7 @@ class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTe
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(0, 231))
+            ->and($version = new Version(0, 0, 231))
             ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
             ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, new \DateTime()))
@@ -95,7 +95,7 @@ class SnapshotAggregateRepositoryTests extends EventSourcedAggregateRepositoryTe
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(0, 231))
+            ->and($version = new Version(0, 0, 231))
             ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
             ->when($repository->persist($post))

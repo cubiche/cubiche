@@ -91,7 +91,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(5, 345))
+            ->and($version = new Version(0, 5, 345))
             ->and($post->setVersion($version))
             ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
             ->then()

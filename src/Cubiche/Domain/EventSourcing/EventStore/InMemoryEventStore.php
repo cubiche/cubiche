@@ -14,6 +14,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -41,19 +42,29 @@ class InMemoryEventStore implements EventStoreInterface
      */
     public function persist(EventStream $eventStream, Version $version)
     {
-        $streamName = $this->getKey($eventStream->streamName(), $version);
-        if (!$this->store->containsKey($streamName)) {
-            $this->store->set($streamName, new ArrayHashMap());
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
+            $this->store->set($applicationKey, new ArrayHashMap());
         }
 
-        /** @var ArrayHashMap $streamNameCollection */
-        $streamNameCollection = $this->store->get($streamName);
-        if (!$streamNameCollection->containsKey($eventStream->aggregateId()->toNative())) {
-            $streamNameCollection->set($eventStream->aggregateId()->toNative(), new ArrayList());
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $streamKey = $this->getStreamKey($eventStream->streamName(), $version);
+
+        if (!$applicationCollection->containsKey($streamKey)) {
+            $applicationCollection->set($streamKey, new ArrayHashMap());
+        }
+
+        /** @var ArrayHashMap $streamCollection */
+        $streamCollection = $applicationCollection->get($streamKey);
+        $aggregateKey = $eventStream->aggregateId()->toNative();
+
+        if (!$streamCollection->containsKey($aggregateKey)) {
+            $streamCollection->set($aggregateKey, new ArrayList());
         }
 
         /** @var ArrayList $aggregateIdCollection */
-        $aggregateIdCollection = $streamNameCollection->get($eventStream->aggregateId()->toNative());
+        $aggregateIdCollection = $streamCollection->get($aggregateKey);
         foreach ($eventStream->events() as $event) {
             $aggregateIdCollection->add($event);
         }
@@ -64,31 +75,46 @@ class InMemoryEventStore implements EventStoreInterface
      */
     public function load($streamName, IdInterface $aggregateId, Version $version)
     {
-        $key = $this->getKey($streamName, $version);
-        if (!$this->store->containsKey($key)) {
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
-                'The stream name %s not found in the event store.',
-                $key
+                'The application %s not found in the event store.',
+                $applicationKey
             ));
         }
 
-        /** @var ArrayHashMap $streamNameCollection */
-        $streamNameCollection = $this->store->get($key);
-        if (!$streamNameCollection->containsKey($aggregateId->toNative())) {
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $streamKey = $this->getStreamKey($streamName, $version);
+
+        if (!$applicationCollection->containsKey($streamKey)) {
             throw new \RuntimeException(sprintf(
-                'Aggregate id %s of %s not found in the event store.',
-                $aggregateId->toNative(),
-                $key
+                'The stream name %s of application %s not found in the event store.',
+                $streamKey,
+                $applicationKey
+            ));
+        }
+
+        /** @var ArrayHashMap $streamCollection */
+        $streamCollection = $applicationCollection->get($streamKey);
+        $aggregateKey = $aggregateId->toNative();
+
+        if (!$streamCollection->containsKey($aggregateKey)) {
+            throw new \RuntimeException(sprintf(
+                'Aggregate id %s of the stream %s in the application %s not found in the event store.',
+                $aggregateKey,
+                $streamKey,
+                $applicationKey
             ));
         }
 
         /** @var ArrayList $aggregateIdCollection */
-        $aggregateIdCollection = $streamNameCollection->get($aggregateId->toNative());
+        $aggregateIdCollection = $streamCollection->get($aggregateKey);
 
         return new EventStream(
             $streamName,
             $aggregateId,
-            $aggregateIdCollection->find(Criteria::method('version')->gte($version->aggregateVersion()))->toArray()
+            $aggregateIdCollection->find(Criteria::method('version')->gte($version->patch()))->toArray()
         );
     }
 
@@ -97,17 +123,37 @@ class InMemoryEventStore implements EventStoreInterface
      */
     public function remove($streamName, IdInterface $aggregateId, Version $version)
     {
-        $key = $this->getKey($streamName, $version);
-        if (!$this->store->containsKey($key)) {
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
-                'The stream name %s not found in the event store.',
-                $key
+                'The application %s not found in the event store.',
+                $applicationKey
             ));
         }
 
-        /** @var ArrayHashMap $streamNameCollection */
-        $streamNameCollection = $this->store->get($key);
-        $streamNameCollection->removeAt($aggregateId->toNative());
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $streamKey = $this->getStreamKey($streamName, $version);
+
+        if (!$applicationCollection->containsKey($streamKey)) {
+            throw new \RuntimeException(sprintf(
+                'The stream name %s of application %s not found in the event store.',
+                $streamKey,
+                $applicationKey
+            ));
+        }
+
+        /** @var ArrayHashMap $streamCollection */
+        $streamCollection = $applicationCollection->get($streamKey);
+        $streamCollection->removeAt($aggregateId->toNative());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getApplicationKey()
+    {
+        return str_replace('.', '_', VersionManager::currentApplicationVersion()->__toString());
     }
 
     /**
@@ -116,8 +162,8 @@ class InMemoryEventStore implements EventStoreInterface
      *
      * @return string
      */
-    protected function getKey($streamName, Version $version)
+    protected function getStreamKey($streamName, Version $version)
     {
-        return sprintf('%s_%s', $streamName, $version->modelVersion());
+        return sprintf('%s_%s_%s', $streamName, $version->major(), $version->minor());
     }
 }
