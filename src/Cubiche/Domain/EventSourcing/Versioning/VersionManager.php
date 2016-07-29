@@ -10,9 +10,6 @@
  */
 namespace Cubiche\Domain\EventSourcing\Versioning;
 
-use Cubiche\Core\Serializer\DefaultSerializer;
-use Cubiche\Core\Storage\InMemoryStorage;
-use Cubiche\Core\Storage\StorageInterface;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 
 /**
@@ -28,18 +25,23 @@ class VersionManager
     private static $instance = null;
 
     /**
-     * @var StorageInterface
+     * @var VersionStoreInterface
      */
-    protected $storage;
+    protected $versionStore;
+
+    /**
+     * @var Version
+     */
+    protected $currentApplicationVersion;
 
     /**
      * VersionManager constructor.
      *
-     * @param StorageInterface $storage
+     * @param VersionStoreInterface $versionStore
      */
-    private function __construct(StorageInterface $storage)
+    private function __construct(VersionStoreInterface $versionStore)
     {
-        $this->storage = $storage;
+        $this->versionStore = $versionStore;
     }
 
     /**
@@ -48,18 +50,26 @@ class VersionManager
     public static function create()
     {
         if (static::$instance === null) {
-            static::$instance = new static(new InMemoryStorage(new DefaultSerializer()));
+            static::$instance = new static(new InMemoryVersionStore());
         }
 
         return static::$instance;
     }
 
     /**
-     * @param StorageInterface $storage
+     * @param VersionStoreInterface $versionStore
      */
-    public static function setStorage(StorageInterface $storage)
+    public static function setVersionStore(VersionStoreInterface $versionStore)
     {
-        static::create()->storage = $storage;
+        static::create()->versionStore = $versionStore;
+    }
+
+    /**
+     * @param Version $applicationVersion
+     */
+    public static function setCurrentApplicationVersion(Version $applicationVersion)
+    {
+        static::create()->currentApplicationVersion = $applicationVersion;
     }
 
     /**
@@ -81,13 +91,21 @@ class VersionManager
     }
 
     /**
+     * @return Version
+     */
+    public static function currentApplicationVersion()
+    {
+        return static::create()->getCurrentApplicationVersion();
+    }
+
+    /**
      * @param string $className
      *
      * @return Version
      */
     public static function versionOfClass($className)
     {
-        return static::create()->getVersion($className);
+        return static::create()->getAggregateRootVersion($className);
     }
 
     /**
@@ -96,7 +114,7 @@ class VersionManager
      */
     public static function persistVersionOfClass($className, Version $version)
     {
-        static::create()->setVersion($className, $version);
+        static::create()->setAggregateRootVersion($className, $version);
     }
 
     /**
@@ -104,35 +122,36 @@ class VersionManager
      *
      * @return Version
      */
-    protected function getVersion($aggregateClassName)
+    protected function getAggregateRootVersion($aggregateClassName)
     {
-        $key = $this->getKey($aggregateClassName);
-
-        $version = $this->storage->get($key);
-        if ($version === null) {
-            $version = new Version();
-            $this->setVersion($aggregateClassName, $version);
-        }
-
-        return $version;
+        return $this->versionStore->loadAggregateRootVersion(
+            $aggregateClassName,
+            $this->getCurrentApplicationVersion()
+        );
     }
 
     /**
      * @param string  $aggregateClassName
      * @param Version $version
      */
-    protected function setVersion($aggregateClassName, Version $version)
+    protected function setAggregateRootVersion($aggregateClassName, Version $version)
     {
-        $this->storage->set($this->getKey($aggregateClassName), $version);
+        $this->versionStore->persistAggregateRootVersion(
+            $aggregateClassName,
+            $version,
+            $this->getCurrentApplicationVersion()
+        );
     }
 
     /**
-     * @param string $aggregateClassName
-     *
-     * @return string
+     * @return Version
      */
-    protected function getKey($aggregateClassName)
+    protected function getCurrentApplicationVersion()
     {
-        return strtolower(str_replace('\\', '_', $aggregateClassName));
+        if ($this->currentApplicationVersion !== null) {
+            return $this->currentApplicationVersion;
+        }
+
+        return $this->versionStore->loadApplicationVersion();
     }
 }

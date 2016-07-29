@@ -13,6 +13,7 @@ namespace Cubiche\Domain\EventSourcing;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 
@@ -40,8 +41,8 @@ trait EventSourcedAggregateRoot
     {
         Validator::assert($event);
 
-        $this->version()->incAggregateVersion();
-        $event->setVersion($this->version()->aggregateVersion());
+        $this->version()->increment(VersionIncrementType::PATCH());
+        $event->setVersion($this->version()->patch());
 
         $this->recordEvent($event);
         $this->applyEvent($event);
@@ -63,7 +64,7 @@ trait EventSourcedAggregateRoot
         }
 
         $this->$method($event);
-        $this->version()->setAggregateVersion($event->version());
+        $this->version()->setPatch($event->version());
     }
 
     /**

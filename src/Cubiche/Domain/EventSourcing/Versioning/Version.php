@@ -22,70 +22,117 @@ class Version implements SerializableInterface
     /**
      * @var int
      */
-    protected $modelVersion;
+    protected $major;
 
     /**
      * @var int
      */
-    protected $aggregateVersion;
+    protected $minor;
+
+    /**
+     * @var int
+     */
+    protected $patch;
 
     /**
      * Version constructor.
      *
-     * @param int $modelVersion
-     * @param int $aggregateVersion
+     * @param int $major
+     * @param int $minor
+     * @param int $patch
      */
-    public function __construct($modelVersion = 0, $aggregateVersion = 0)
+    public function __construct($major = 0, $minor = 0, $patch = 0)
     {
-        $this->setModelVersion($modelVersion);
-        $this->setAggregateVersion($aggregateVersion);
+        $this->setMajor($major);
+        $this->setMinor($minor);
+        $this->setPatch($patch);
     }
 
     /**
      * @return int
      */
-    public function modelVersion()
+    public function major()
     {
-        return $this->modelVersion;
+        return $this->major;
     }
 
     /**
-     * @param int $modelVersion
+     * @param int $major
      */
-    public function setModelVersion($modelVersion)
+    public function setMajor($major)
     {
-        $this->modelVersion = $modelVersion;
-    }
-
-    /**
-     * Increment the model version.
-     */
-    public function incModelVersion()
-    {
-        ++$this->modelVersion;
+        $this->major = $major;
     }
 
     /**
      * @return int
      */
-    public function aggregateVersion()
+    public function minor()
     {
-        return $this->aggregateVersion;
+        return $this->minor;
     }
 
     /**
-     * @param int $aggregateVersion
+     * @param int $minor
      */
-    public function setAggregateVersion($aggregateVersion)
+    public function setMinor($minor)
     {
-        $this->aggregateVersion = $aggregateVersion;
+        $this->minor = $minor;
     }
 
     /**
-     * Increment the aggregate version.
+     * @return int
      */
-    public function incAggregateVersion()
+    public function patch()
     {
-        ++$this->aggregateVersion;
+        return $this->patch;
+    }
+
+    /**
+     * @param int $patch
+     */
+    public function setPatch($patch)
+    {
+        $this->patch = $patch;
+    }
+
+    /**
+     * Increment the patch version.
+     *
+     * @param VersionIncrementType $type
+     */
+    public function increment(VersionIncrementType $type)
+    {
+        switch ($type) {
+            case VersionIncrementType::MAJOR():
+                ++$this->major;
+                break;
+            case VersionIncrementType::MINOR():
+                ++$this->minor;
+                break;
+            default:
+                ++$this->patch;
+                break;
+        }
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \Cubiche\Domain\EventSourcing\Versioning\Version
+     */
+    public static function fromString($value)
+    {
+        list($major, $minor, $patch) = array_pad(explode('.', $value), 3, 0);
+
+        return new static(intval($major), intval($minor), intval($patch));
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s.%s.%s', $this->major, $this->minor, $this->patch);
     }
 }

@@ -132,9 +132,9 @@ class EventSourcedAggregateRootTests extends TestCase
             )
             ->when($post->changeTitle($this->faker->sentence))
             ->then()
-                ->integer($post->version()->modelVersion())
+                ->integer($post->version()->minor())
                     ->isEqualTo(0)
-                ->integer($post->version()->aggregateVersion())
+                ->integer($post->version()->patch())
                     ->isEqualTo(2)
         ;
 
@@ -145,12 +145,14 @@ class EventSourcedAggregateRootTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(10, 125))
+            ->and($version = new Version(1, 10, 125))
             ->when($post->setVersion($version))
             ->then()
-                ->integer($post->version()->modelVersion())
+                ->integer($post->version()->major())
+                    ->isEqualTo(1)
+                ->integer($post->version()->minor())
                     ->isEqualTo(10)
-                ->integer($post->version()->aggregateVersion())
+                ->integer($post->version()->patch())
                     ->isEqualTo(125)
         ;
     }
