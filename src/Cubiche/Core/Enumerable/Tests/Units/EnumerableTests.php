@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Enumerable\Tests\Units;
 
 use Cubiche\Core\Enumerable\Enumerable;
+use Cubiche\Core\Enumerable\Tests\Fixtures\Value;
 
 /**
  * Enumerable Tests class.
@@ -32,7 +33,7 @@ class EnumerableTests extends AbstractEnumerableTestCase
      */
     protected function defaultTestedInstanceIterator()
     {
-        return new \ArrayIterator(array(1, 2, 3));
+        return new \ArrayIterator(array(new Value(1), new Value(2), new Value(3)));
     }
 
     /**

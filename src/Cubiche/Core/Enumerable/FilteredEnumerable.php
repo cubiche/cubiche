@@ -10,6 +10,9 @@
  */
 namespace Cubiche\Core\Enumerable;
 
+use Cubiche\Core\Predicate\Predicate;
+use Cubiche\Core\Predicate\PredicateInterface;
+
 /**
  * Filtered Enumerable class.
  *
@@ -18,7 +21,7 @@ namespace Cubiche\Core\Enumerable;
 class FilteredEnumerable extends EnumerableDecorator
 {
     /**
-     * @var callable
+     * @var PredicateInterface
      */
     protected $predicate;
 
@@ -30,11 +33,11 @@ class FilteredEnumerable extends EnumerableDecorator
     {
         parent::__construct($enumerable);
 
-        $this->predicate = $predicate;
+        $this->predicate = Predicate::from($predicate);
     }
 
     /**
-     * @return callable
+     * @return \Cubiche\Core\Predicate\PredicateInterface
      */
     public function predicate()
     {
@@ -47,5 +50,13 @@ class FilteredEnumerable extends EnumerableDecorator
     public function getIterator()
     {
         return new \CallbackFilterIterator(parent::getIterator(), $this->predicate());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function where(callable $predicate)
+    {
+        return new self($this->enumerable(), $this->predicate()->andPredicate($predicate));
     }
 }

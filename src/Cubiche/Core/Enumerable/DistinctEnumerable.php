@@ -60,6 +60,14 @@ class DistinctEnumerable extends FilteredEnumerable
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function where(callable $predicate)
+    {
+        return new FilteredEnumerable($this, $predicate);
+    }
+
+    /**
      * @param mixed                     $value
      * @param EqualityComparerInterface $equalityComparer
      * @param bool                      $add

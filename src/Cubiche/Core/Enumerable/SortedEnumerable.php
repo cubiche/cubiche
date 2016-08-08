@@ -21,7 +21,7 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 class SortedEnumerable extends EnumerableDecorator
 {
     /**
-     * @var callable
+     * @var ComparatorInterface
      */
     protected $comparator;
 
@@ -32,7 +32,7 @@ class SortedEnumerable extends EnumerableDecorator
 
     /**
      * @param array|\Traversable $enumerable
-     * @param callable           $predicate
+     * @param callable           $comparator
      */
     public function __construct($enumerable, callable $comparator = null)
     {
@@ -43,7 +43,7 @@ class SortedEnumerable extends EnumerableDecorator
     }
 
     /**
-     * @return ComparatorInterface
+     * @return \Cubiche\Core\Comparable\ComparatorInterface
      */
     public function comparator()
     {
@@ -61,5 +61,13 @@ class SortedEnumerable extends EnumerableDecorator
         }
 
         return $this->sortedIterator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sorted(callable $comparator = null)
+    {
+        return new static($this->enumerable(), $comparator);
     }
 }

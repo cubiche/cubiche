@@ -1573,24 +1573,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "52b0b0a9565e67d3908f4aa4340985da9326055a"
+                "reference": "c4c46b5b99d74d4f3f028e0bf27bc508f34e7891"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/52b0b0a9565e67d3908f4aa4340985da9326055a",
-                "reference": "52b0b0a9565e67d3908f4aa4340985da9326055a",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/c4c46b5b99d74d4f3f028e0bf27bc508f34e7891",
+                "reference": "c4c46b5b99d74d4f3f028e0bf27bc508f34e7891",
                 "shasum": ""
             },
             "require": {
                 "atoum/atoum": "~2.5",
                 "atoum/stubs": "~2.5",
                 "atoum/visibility-extension": "~1.0",
+                "fzaninotto/faker": "^1.6",
                 "php": "^5.5.9|^7.0",
                 "symfony/console": "~2.4"
             },
             "require-dev": {
-                "cubiche/cqt": "dev-master",
-                "fzaninotto/faker": "^1.6"
+                "cubiche/cqt": "dev-master"
             },
             "bin": [
                 "test-generator"
@@ -1622,7 +1622,7 @@
                 "test",
                 "test generator"
             ],
-            "time": "2016-05-03 16:35:14"
+            "time": "2016-08-08 10:43:23"
         },
         {
             "name": "fabpot/php-cs-fixer",

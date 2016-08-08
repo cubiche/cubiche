@@ -45,7 +45,7 @@ final class EqualityComparer extends AbstractEqualityComparer
             return $equalityComparer;
         }
 
-        return new CustomEqualityComparer($equalityComparer);
+        return new CallbackEqualityComparer($equalityComparer);
     }
 
     /**

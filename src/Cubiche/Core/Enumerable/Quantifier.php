@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Enumerable;
 
-use Cubiche\Core\Predicate\Predicate;
 use Cubiche\Core\Predicate\Criteria;
+use Cubiche\Core\Predicate\Predicate;
 
 /**
  * Quantifier Operations trait.

@@ -14,26 +14,26 @@ use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Hashable\HashCoderInterface;
 
 /**
- * Custom Equality Comparer class.
+ * Callback Equality Comparer class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class CustomEqualityComparer extends AbstractEqualityComparer
+class CallbackEqualityComparer extends AbstractEqualityComparer
 {
     /**
      * @var Delegate
      */
-    protected $equalityComparerDelegate;
+    protected $callbackDelegate;
 
     /**
-     * @param callable           $equalityComparer
+     * @param callable           $callback
      * @param HashCoderInterface $hashCoder
      */
-    public function __construct(callable $equalityComparer, HashCoderInterface $hashCoder = null)
+    public function __construct(callable $callback, HashCoderInterface $hashCoder = null)
     {
         parent::__construct($hashCoder);
 
-        $this->delegate = new Delegate($equalityComparer);
+        $this->callbackDelegate = new Delegate($callback);
     }
 
     /**
@@ -41,6 +41,6 @@ class CustomEqualityComparer extends AbstractEqualityComparer
      */
     public function equals($a, $b)
     {
-        return $this->equalityComparerDelegate->__invoke($a, $b);
+        return $this->callbackDelegate->__invoke($a, $b);
     }
 }
