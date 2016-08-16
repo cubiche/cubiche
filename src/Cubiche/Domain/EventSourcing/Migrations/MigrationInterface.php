@@ -30,4 +30,9 @@ interface MigrationInterface
      * @return VersionIncrementType
      */
     public function migrationType();
+
+    /**
+     * @return string
+     */
+    public function aggregateClassName();
 }
