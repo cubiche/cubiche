@@ -10,6 +10,7 @@
 namespace Cubiche\Core\Console\Converter;
 
 use Cubiche\Core\Bus\Command\CommandConverterInterface;
+use Cubiche\Core\Console\Command\ConsoleCommandInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\Args\Format\ArgsFormat;
@@ -58,7 +59,13 @@ class ConsoleArgsToCommand implements CommandConverterInterface
             $instance = $reflector->newInstanceWithoutConstructor();
 
             foreach ($reflector->getProperties() as $property) {
-                if (!$this->format->hasArgument($property->getName())) {
+                if ($instance instanceof ConsoleCommandInterface && $property->getName() == 'io') {
+                    continue;
+                }
+
+                if (!$this->format->hasArgument($property->getName()) &&
+                    !$this->format->hasOption($property->getName())
+                ) {
                     throw new \InvalidArgumentException(sprintf(
                         "There is not '%s' argument defined in the %s command",
                         $property->getName(),
@@ -66,10 +73,17 @@ class ConsoleArgsToCommand implements CommandConverterInterface
                     ));
                 }
 
+                $value = null;
+                if ($this->format->hasArgument($property->getName())) {
+                    $value = $this->args->getArgument($property->getName());
+                } elseif ($this->format->hasOption($property->getName())) {
+                    $value = $this->args->getOption($property->getName());
+                }
+
                 $accessor->setValue(
                     $instance,
                     $property->getName(),
-                    $this->args->getArgument($property->getName())
+                    $value
                 );
             }
 
