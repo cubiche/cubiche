@@ -9,14 +9,15 @@
  */
 namespace Cubiche\Core\Metadata;
 
-use Metadata\MetadataFactory as BaseMetadataFactory;
+use Metadata\ClassHierarchyMetadata;
+use Metadata\MetadataFactory;
 
 /**
- * MetadataFactory class.
+ * ClassMetadataFactory class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MetadataFactory extends BaseMetadataFactory
+class ClassMetadataFactory extends MetadataFactory
 {
     /**
      * Forces the factory to load the metadata of all classes known to the underlying
@@ -32,5 +33,20 @@ class MetadataFactory extends BaseMetadataFactory
         }
 
         return $metadata;
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return ClassMetadata|MergeableClassMetadata|null
+     */
+    public function getMetadataForClass($className)
+    {
+        $classMetadata = parent::getMetadataForClass($className);
+        if ($classMetadata !== null && $classMetadata instanceof ClassHierarchyMetadata) {
+            return $classMetadata->getOutsideClassMetadata();
+        }
+
+        return $classMetadata;
     }
 }

@@ -97,7 +97,7 @@ class DriverFactory
      *
      * @return array
      */
-    protected function createAnnotationDriver(Reader $reader)
+    public function createAnnotationDriver(Reader $reader)
     {
         $drivers = array();
         foreach ($this->drivers['annotation'] as $driver) {
@@ -112,7 +112,7 @@ class DriverFactory
      *
      * @return array
      */
-    protected function createYamlDriver(FileLocatorInterface $locator)
+    public function createYamlDriver(FileLocatorInterface $locator)
     {
         $drivers = array();
         foreach ($this->drivers['yaml'] as $driver) {
@@ -127,7 +127,7 @@ class DriverFactory
      *
      * @return array
      */
-    protected function createXmlDriver(FileLocatorInterface $locator)
+    public function createXmlDriver(FileLocatorInterface $locator)
     {
         $drivers = array();
         foreach ($this->drivers['xml'] as $driver) {
