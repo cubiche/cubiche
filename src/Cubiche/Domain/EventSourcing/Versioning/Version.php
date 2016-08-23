@@ -106,14 +106,33 @@ class Version implements SerializableInterface
         switch ($type) {
             case VersionIncrementType::MAJOR():
                 ++$this->major;
+                $this->minor = 0;
+                $this->patch = 0;
                 break;
             case VersionIncrementType::MINOR():
                 ++$this->minor;
+                $this->patch = 0;
                 break;
             default:
                 ++$this->patch;
                 break;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMinorVersion()
+    {
+        return $this->patch === 0 && $this->minor !== 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMajorVersion()
+    {
+        return $this->patch === 0 && $this->minor === 0 && $this->major !== 0;
     }
 
     /**

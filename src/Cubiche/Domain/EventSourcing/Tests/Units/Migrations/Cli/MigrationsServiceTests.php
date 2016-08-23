@@ -12,11 +12,13 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli;
 
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
-use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
 use Cubiche\Domain\EventSourcing\Migrations\MigrationInterface;
+use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Tests\Generator\ClassUtils;
 use Webmozart\Console\Api\IO\Input;
 use Webmozart\Console\Api\IO\IO;
@@ -32,11 +34,6 @@ use Webmozart\Console\IO\OutputStream\BufferedOutputStream;
 class MigrationsServiceTests extends TestCase
 {
     /**
-     * @var string
-     */
-    protected $migrationsDirectory = __DIR__.'/Migrations';
-
-    /**
      * @var BufferedOutputStream
      */
     protected $output;
@@ -46,23 +43,7 @@ class MigrationsServiceTests extends TestCase
      */
     protected function createService()
     {
-        if (is_dir($this->migrationsDirectory)) {
-            system('rm -rf '.escapeshellarg($this->migrationsDirectory));
-        }
-
-        return new MigrationsService(new MigrationGenerator($this->migrationsDirectory));
-    }
-
-    /**
-     * @param string $aggregateClassName
-     *
-     * @return string
-     */
-    protected function getMigratorFileName($aggregateClassName)
-    {
-        return $this->migrationsDirectory.'/V0_1_0/'.
-            str_replace('\\', '/', $aggregateClassName).'Migration.php'
-        ;
+        return new MigrationsService(new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory));
     }
 
     /**
@@ -100,14 +81,16 @@ class MigrationsServiceTests extends TestCase
     /**
      * Test MigrationsGenerate method.
      */
-    public function testMigrationsGenerate()
+    public function testMigrationsGenerateForAggregateClass()
     {
         $this
             ->given($service = $this->createService())
             ->and($command = new MigrationsGenerateCommand(null, PostEventSourced::class))
             ->and($command->setIo($this->getIO()))
+            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
+            ->and($version->increment(VersionIncrementType::MINOR()))
+            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class))
             ->and($migrationClass = $this->getMigratorClass($migrationFilename))
             ->then()
                 ->boolean(file_exists($migrationFilename))
@@ -130,8 +113,10 @@ class MigrationsServiceTests extends TestCase
             ->given($service = $this->createService())
             ->and($command = new MigrationsGenerateCommand(null, __DIR__.'/../../../Fixtures/PostEventSourced.php'))
             ->and($command->setIo($this->getIO()))
+            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
+            ->and($version->increment(VersionIncrementType::MINOR()))
+            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class))
             ->and($migrationClass = $this->getMigratorClass($migrationFilename))
             ->then()
                 ->boolean(file_exists($migrationFilename))
@@ -151,8 +136,9 @@ class MigrationsServiceTests extends TestCase
                 )
             )
             ->and($command->setIo($this->getIO()))
+            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
+            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class))
             ->then()
                 ->boolean(file_exists($migrationFilename))
                     ->isFalse()
@@ -164,14 +150,73 @@ class MigrationsServiceTests extends TestCase
             ->given($service = $this->createService())
             ->and($command = new MigrationsGenerateCommand())
             ->and($command->setIo($this->getIO()))
+            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
+            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class))
             ->then()
                 ->boolean(file_exists($migrationFilename))
                     ->isFalse()
                 ->string($this->output->fetch())
                     ->contains('A version number or an aggregate class name is needed.')
 
+        ;
+    }
+
+    /**
+     * Test MigrationsGenerate method.
+     */
+    public function testMigrationsGenerateForProjectVersion()
+    {
+        require_once __DIR__.'/../../../Fixtures/BlogEventSourced.php';
+
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsGenerateCommand('2.5.0'))
+            ->and($command->setIo($this->getIO()))
+            ->and($version = Version::fromString('2.5.0'))
+            ->and($migrationFilename1 = $this->getMigratorFileName(PostEventSourced::class, $version))
+            ->and($migrationFilename2 = $this->getMigratorFileName(\BlogEventSourced::class, $version))
+            ->when($service->migrationsGenerate($command))
+            ->and($migrationClass1 = $this->getMigratorClass($migrationFilename1))
+            ->and($migrationClass2 = $this->getMigratorClass($migrationFilename2))
+            ->then()
+                ->boolean(file_exists($migrationFilename1))
+                    ->isTrue()
+                ->boolean(file_exists($migrationFilename2))
+                    ->isTrue()
+                ->string($migrationClass1->aggregateClassName())
+                    ->isEqualTo(PostEventSourced::class)
+                ->string($migrationClass2->aggregateClassName())
+                    ->isEqualTo(\BlogEventSourced::class)
+                ->object($migrationClass1->migrationType())
+                    ->isEqualTo(VersionIncrementType::MAJOR())
+                ->object($migrationClass2->migrationType())
+                    ->isEqualTo(VersionIncrementType::MAJOR())
+                ->string($this->output->fetch())
+                    ->contains('Generating project migration to version')
+                    ->contains('successfully generated')
+                ->and()
+                ->when($service->migrationsGenerate($command))
+                ->then()
+                    ->string($this->output->fetch())
+                        ->contains('A project migration with version '.$version->__toString().' already exists.')
+        ;
+
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsGenerateCommand('3.2.6'))
+            ->and($command->setIo($this->getIO()))
+            ->and($version = Version::fromString('3.2.6'))
+            ->and($migrationFilename1 = $this->getMigratorFileName(PostEventSourced::class, $version))
+            ->and($migrationFilename2 = $this->getMigratorFileName(\BlogEventSourced::class, $version))
+            ->when($service->migrationsGenerate($command))
+            ->then()
+                ->boolean(file_exists($migrationFilename1))
+                    ->isFalse()
+                ->boolean(file_exists($migrationFilename2))
+                    ->isFalse()
+                ->string($this->output->fetch())
+                    ->contains('A version number must be a minor (x.x.0) or a major (x.0.0) version.')
         ;
     }
 

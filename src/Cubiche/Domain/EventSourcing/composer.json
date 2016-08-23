@@ -27,7 +27,9 @@
         "cubiche/event":        "dev-master",
         "cubiche/enum":         "dev-master",
         "cubiche/repository":   "dev-master",
-        "cubiche/serializer":   "dev-master"
+        "cubiche/serializer":   "dev-master",
+        "cubiche/metadata":     "dev-master",
+        "doctrine/common":      "2.6.1"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"

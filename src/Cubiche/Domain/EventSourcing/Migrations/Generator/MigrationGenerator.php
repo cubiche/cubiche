@@ -26,20 +26,13 @@ class MigrationGenerator
     protected $migrationsDirectory;
 
     /**
-     * @var string
-     */
-    protected $projectName;
-
-    /**
      * MigrationGenerator constructor.
      *
      * @param string $migrationsDirectory
-     * @param string $projectName
      */
-    public function __construct($migrationsDirectory, $projectName = 'Cubiche')
+    public function __construct($migrationsDirectory)
     {
         $this->migrationsDirectory = $migrationsDirectory;
-        $this->projectName = $projectName;
     }
 
     /**
@@ -64,6 +57,18 @@ class MigrationGenerator
         $shortFileName = str_replace($this->migrationsDirectory, '...', $file);
 
         throw new \RuntimeException('The file '.$shortFileName.' already exists.');
+    }
+
+    /**
+     * @param Version $version
+     *
+     * @return bool
+     */
+    public function existsDirectory(Version $version)
+    {
+        $directory = $this->targetDirectory($version);
+
+        return is_dir($directory);
     }
 
     /**
@@ -103,7 +108,6 @@ class MigrationGenerator
 
         $template->setVar(
             array(
-                'projectName' => $this->projectName,
                 'namespace' => $namespace,
                 'migrationClassName' => $migrationClassName,
                 'use' => $aggregateClassNamespace,
@@ -192,10 +196,23 @@ class MigrationGenerator
     protected function targetSourceFile($aggregateClassName, Version $version)
     {
         return sprintf(
-            '%s/%s/%s',
-            $this->migrationsDirectory,
-            $this->versionToDirectory($version),
+            '%s/%s',
+            $this->targetDirectory($version),
             str_replace('\\', '/', $aggregateClassName).'Migration.php'
+        );
+    }
+
+    /**
+     * @param Version $version
+     *
+     * @return string
+     */
+    protected function targetDirectory(Version $version)
+    {
+        return sprintf(
+            '%s/%s',
+            $this->migrationsDirectory,
+            $this->versionToDirectory($version)
         );
     }
 }

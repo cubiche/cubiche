@@ -13,7 +13,6 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Generator;
 use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
@@ -25,33 +24,11 @@ use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 class MigrationGeneratorTests extends TestCase
 {
     /**
-     * @var string
-     */
-    protected $migrationsDirectory = __DIR__.'/../Cli/Migrations';
-
-    /**
      * @return MigrationGenerator
      */
     protected function createGenerator()
     {
-        if (is_dir($this->migrationsDirectory)) {
-            system('rm -rf '.escapeshellarg($this->migrationsDirectory));
-        }
-
         return new MigrationGenerator($this->migrationsDirectory);
-    }
-
-    /**
-     * @param string  $aggregateClassName
-     * @param Version $version
-     *
-     * @return string
-     */
-    protected function getMigratorFileName($aggregateClassName, Version $version)
-    {
-        return $this->migrationsDirectory.'/V'.str_replace('.', '_', $version->__toString()).'/'.
-            str_replace('\\', '/', $aggregateClassName).'Migration.php'
-        ;
     }
 
     /**
@@ -84,6 +61,8 @@ class MigrationGeneratorTests extends TestCase
             ->when($generator->generate($aggregateClass, $version, $incrementType))
                 ->then()
                     ->boolean(file_exists($this->getMigratorFileName($aggregateClass, $version)))
+                        ->isTrue()
+                    ->boolean($generator->existsDirectory($version))
                         ->isTrue()
         ;
     }

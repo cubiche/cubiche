@@ -24,6 +24,9 @@ use Webmozart\Console\Api\Args\Format\Option;
  */
 class ApplicationConfig extends DefaultApplicationConfig
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         parent::configure();

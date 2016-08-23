@@ -13,7 +13,8 @@ namespace Cubiche\Domain\EventSourcing\Migrations\Cli;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
-use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
+use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Tests\Generator\ClassUtils;
@@ -26,18 +27,18 @@ use Cubiche\Tests\Generator\ClassUtils;
 class MigrationsService
 {
     /**
-     * @var MigrationGenerator
+     * @var Migrator
      */
-    protected $generator;
+    protected $migrator;
 
     /**
      * MigrationsService constructor.
      *
-     * @param MigrationGenerator $generator
+     * @param Migrator $migrator
      */
-    public function __construct(MigrationGenerator $generator)
+    public function __construct(Migrator $migrator)
     {
-        $this->generator = $generator;
+        $this->migrator = $migrator;
     }
 
     /**
@@ -46,6 +47,29 @@ class MigrationsService
     public function migrationsGenerate(MigrationsGenerateCommand $command)
     {
         if ($command->version() !== null) {
+            $version = Version::fromString($command->version());
+
+            if (!$version->isMajorVersion() && !$version->isMinorVersion()) {
+                $command->getIo()->writeLine(
+                    '<error>A version number must be a minor (x.x.0) or a major (x.0.0) version.</error>'
+                );
+            } else {
+                $command->getIo()->writeLine(
+                    'Generating project migration to version <c2>'.$version->__toString().'</c2>'
+                );
+
+                try {
+                    $this->migrator->generateProjectMigration($version);
+
+                    $command->getIo()->writeLine(
+                        'The migration has been <c1>successfully generated</c1>'
+                    );
+                } catch (\Exception $e) {
+                    $command->getIo()->writeLine(
+                        '<error>'.$e->getMessage().'</error>'
+                    );
+                }
+            }
         } elseif ($command->aggregate()) {
             $aggregateClassName = $this->getClassName($command->aggregate());
             if (!class_exists($aggregateClassName)) {
@@ -57,11 +81,12 @@ class MigrationsService
                 $version->increment(VersionIncrementType::MINOR());
 
                 $command->getIo()->writeLine(
-                    'Generating migration <c2>'.$version->__toString().'</c2> for <c2>'.$aggregateClassName.'</c2>'
+                    'Generating migration to version <c2>'.$version->__toString().
+                    '</c2> for <c2>'.$aggregateClassName.' class</c2>'
                 );
 
                 try {
-                    $this->generator->generate($aggregateClassName, $version, VersionIncrementType::MINOR());
+                    $this->migrator->generateClassMigration($aggregateClassName, $version);
 
                     $command->getIo()->writeLine(
                         'The migration file has been <c1>successfully generated</c1>'

@@ -10,7 +10,14 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
+use Cubiche\Core\Metadata\ClassMetadataFactory;
+use Cubiche\Domain\EventSourcing\Metadata\Driver\AnnotationDriver;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Tests\TestCase as BaseTestCase;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\FilesystemCache;
 
 /**
  * TestCase class.
@@ -19,4 +26,76 @@ use Cubiche\Tests\TestCase as BaseTestCase;
  */
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * @var string
+     */
+    protected $migrationsDirectory = __DIR__.'/Migrations/Cli/Migrations';
+
+    /**
+     * @var string
+     */
+    protected $cacheDirectory = __DIR__.'/Migrations/Cache';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        if (is_dir($this->migrationsDirectory)) {
+            system('rm -rf '.escapeshellarg($this->migrationsDirectory));
+        }
+    }
+
+    /**
+     * @return ClassMetadataFactory
+     */
+    protected function getClassMetadataFactory()
+    {
+        $reader = new CachedReader(
+            new AnnotationReader(),
+            new FilesystemCache($this->cacheDirectory),
+            $debug = true
+        );
+
+        AnnotationRegistry::registerFile(
+            __DIR__.'/../../Metadata/Annotations/Migratable.php'
+        );
+
+        $driver = new AnnotationDriver($reader, [__DIR__.'/../Fixtures']);
+        $driver->addExcludePaths([
+            __DIR__.'/../Fixtures/Event',
+            __DIR__.'/../Fixtures/Listener',
+        ]);
+
+        return new ClassMetadataFactory($driver);
+    }
+
+    /**
+     * @param string  $aggregateClassName
+     * @param Version $version
+     *
+     * @return string
+     */
+    protected function getMigratorFileName($aggregateClassName, Version $version)
+    {
+        return sprintf(
+            '%s/%s/%s',
+            $this->migrationsDirectory,
+            $this->versionToDirectory($version),
+            str_replace('\\', '/', $aggregateClassName).'Migration.php'
+        );
+    }
+
+    /**
+     * @param Version $version
+     *
+     * @return string
+     */
+    protected function versionToDirectory(Version $version)
+    {
+        return sprintf(
+            'V%s',
+            str_replace('.', '_', $version->__toString())
+        );
+    }
 }

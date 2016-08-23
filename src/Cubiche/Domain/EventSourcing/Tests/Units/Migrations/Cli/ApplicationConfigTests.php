@@ -18,7 +18,7 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateComman
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
-use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
+use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Webmozart\Console\Api\IO\Input;
@@ -60,12 +60,9 @@ class ApplicationConfigTests extends TestCase
         $commandBus = CommandBus::create();
         $eventBus = DomainEventPublisher::eventBus();
 
-        $migrationsDirectory = __DIR__.'/Migrations';
-        if (is_dir($migrationsDirectory)) {
-            system('rm -rf '.escapeshellarg($migrationsDirectory));
-        }
-
-        $migrationsService = new MigrationsService(new MigrationGenerator($migrationsDirectory));
+        $migrationsService = new MigrationsService(
+            new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory)
+        );
 
         $commandBus->addHandler(MigrationsGenerateCommand::class, $migrationsService);
         $commandBus->addHandler(MigrationsMigrateCommand::class, $migrationsService);

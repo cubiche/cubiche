@@ -81,7 +81,6 @@ class TemplateTests extends TestCase
             ->given($template = new Template($this->filename))
             ->and(
                 $values = array(
-                    'projectName' => 'Project Name',
                     'namespace' => 'namespace Some\ClassNamespace;',
                     'migrationClassName' => 'FooMigration',
                     'use' => 'use Some\AggregateRoot\ClassName;',
@@ -115,7 +114,6 @@ class TemplateTests extends TestCase
             ->given($template = new Template($this->filename))
             ->and(
                 $values = array(
-                    'projectName' => 'Project Name',
                     'namespace' => 'namespace Some\ClassNamespace;',
                     'migrationClassName' => 'FooMigration',
                     'use' => 'use Some\AggregateRoot\ClassName;',
@@ -141,8 +139,6 @@ class TemplateTests extends TestCase
                 ->then()
                     ->string(file_get_contents($target))
                         ->isEqualTo(str_replace($keys, $values, file_get_contents($this->filename.'.dist')))
-//                    ->boolean(unlink($target))
-//                        ->isTrue()
         ;
     }
 }

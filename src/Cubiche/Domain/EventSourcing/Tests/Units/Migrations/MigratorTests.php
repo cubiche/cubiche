@@ -10,7 +10,13 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations;
 
+use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
  * MigratorTests class.
@@ -20,10 +26,66 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class MigratorTests extends TestCase
 {
     /**
-     * Test class.
+     * @return Migrator
      */
-    public function testClass()
+    protected function createMigrator()
     {
-        // todo: Implement tests for this class.
+        return new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory);
+    }
+
+    /**
+     * Test generateClassMigration method.
+     */
+    public function testGenerateClassMigration()
+    {
+        $this
+            ->given($migrator = $this->createMigrator())
+            ->and($aggregateClass = PostEventSourced::class)
+            ->and($version = VersionManager::versionOfClass($aggregateClass))
+            ->and($incrementType = VersionIncrementType::MINOR())
+            ->when($migrator->generateClassMigration($aggregateClass, $version, $incrementType))
+            ->then()
+                ->boolean(file_exists($this->getMigratorFileName($aggregateClass, $version)))
+                    ->isTrue()
+                ->and()
+                ->exception(function () use ($migrator, $aggregateClass, $version, $incrementType) {
+                    $migrator->generateClassMigration($aggregateClass, $version, $incrementType);
+                })->isInstanceOf(\RuntimeException::class)
+        ;
+
+        $this
+            ->given($migrator = $this->createMigrator())
+            ->and($aggregateClass = PostEventSourcedFactory::class)
+            ->and($version = VersionManager::versionOfClass($aggregateClass))
+            ->and($incrementType = VersionIncrementType::MAJOR())
+            ->then()
+                ->exception(function () use ($migrator, $aggregateClass, $version, $incrementType) {
+                    $migrator->generateClassMigration($aggregateClass, $version, $incrementType);
+                })
+                ->isInstanceOf(\RuntimeException::class)
+        ;
+    }
+
+    /**
+     * Test generateProjectMigration method.
+     */
+    public function testGenerateProjectMigration()
+    {
+        require_once __DIR__.'/../../Fixtures/BlogEventSourced.php';
+
+        $this
+            ->given($migrator = $this->createMigrator())
+            ->and($version = Version::fromString('6.2.0'))
+            ->when($migrator->generateProjectMigration($version))
+            ->then()
+                ->boolean(file_exists($this->getMigratorFileName(PostEventSourced::class, $version)))
+                    ->isTrue()
+                ->boolean(file_exists($this->getMigratorFileName(\BlogEventSourced::class, $version)))
+                    ->isTrue()
+                ->and()
+                ->exception(function () use ($migrator, $version) {
+                    $migrator->generateProjectMigration($version);
+                })->isInstanceOf(\RuntimeException::class)
+        ;
     }
 }
