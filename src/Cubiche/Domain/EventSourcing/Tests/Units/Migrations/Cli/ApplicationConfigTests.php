@@ -19,7 +19,6 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Webmozart\Console\Api\IO\Input;
 use Webmozart\Console\Api\IO\IO;
@@ -81,7 +80,7 @@ class ApplicationConfigTests extends TestCase
             ->and($application = $this->createApplication($config))
             ->and(
                 $args = new ArgvArgs(
-                    array('migrations', 'eventsourcing', 'migrations-generate', PostEventSourced::class)
+                    array('migrations', 'eventsourcing', 'migrations-generate', '--version=2.4.0')
                 )
             )
             ->and($input = new StringInputStream(''))
@@ -90,8 +89,8 @@ class ApplicationConfigTests extends TestCase
             ->when($application->run($args, $input, $output, $errorOutput))
             ->then()
                 ->string($output->fetch())
-                    ->contains('Generating migration')
-                    ->contains('The migration file has been <c1>successfully generated</c1>')
+                    ->contains('Generating project migration to version')
+                    ->contains('The migration has been <c1>successfully generated</c1>')
         ;
     }
 }

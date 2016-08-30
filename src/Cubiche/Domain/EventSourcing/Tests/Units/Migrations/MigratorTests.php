@@ -12,11 +12,8 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations;
 
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
  * MigratorTests class.
@@ -34,49 +31,16 @@ class MigratorTests extends TestCase
     }
 
     /**
-     * Test generateClassMigration method.
+     * Test generate method.
      */
-    public function testGenerateClassMigration()
-    {
-        $this
-            ->given($migrator = $this->createMigrator())
-            ->and($aggregateClass = PostEventSourced::class)
-            ->and($version = VersionManager::versionOfClass($aggregateClass))
-            ->and($incrementType = VersionIncrementType::MINOR())
-            ->when($migrator->generateClassMigration($aggregateClass, $version, $incrementType))
-            ->then()
-                ->boolean(file_exists($this->getMigratorFileName($aggregateClass, $version)))
-                    ->isTrue()
-                ->and()
-                ->exception(function () use ($migrator, $aggregateClass, $version, $incrementType) {
-                    $migrator->generateClassMigration($aggregateClass, $version, $incrementType);
-                })->isInstanceOf(\RuntimeException::class)
-        ;
-
-        $this
-            ->given($migrator = $this->createMigrator())
-            ->and($aggregateClass = PostEventSourcedFactory::class)
-            ->and($version = VersionManager::versionOfClass($aggregateClass))
-            ->and($incrementType = VersionIncrementType::MAJOR())
-            ->then()
-                ->exception(function () use ($migrator, $aggregateClass, $version, $incrementType) {
-                    $migrator->generateClassMigration($aggregateClass, $version, $incrementType);
-                })
-                ->isInstanceOf(\RuntimeException::class)
-        ;
-    }
-
-    /**
-     * Test generateProjectMigration method.
-     */
-    public function testGenerateProjectMigration()
+    public function testGenerate()
     {
         require_once __DIR__.'/../../Fixtures/BlogEventSourced.php';
 
         $this
             ->given($migrator = $this->createMigrator())
             ->and($version = Version::fromString('6.2.0'))
-            ->when($migrator->generateProjectMigration($version))
+            ->when($migrator->generate($version))
             ->then()
                 ->boolean(file_exists($this->getMigratorFileName(PostEventSourced::class, $version)))
                     ->isTrue()
@@ -84,7 +48,7 @@ class MigratorTests extends TestCase
                     ->isTrue()
                 ->and()
                 ->exception(function () use ($migrator, $version) {
-                    $migrator->generateProjectMigration($version);
+                    $migrator->generate($version);
                 })->isInstanceOf(\RuntimeException::class)
         ;
     }

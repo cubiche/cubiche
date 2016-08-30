@@ -11,7 +11,6 @@
 namespace Cubiche\Domain\EventSourcing\Migrations\Generator;
 
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 
 /**
  * MigrationGenerator class.
@@ -36,13 +35,12 @@ class MigrationGenerator
     }
 
     /**
-     * @param string               $aggregateClassName
-     * @param Version              $version
-     * @param VersionIncrementType $type
+     * @param string  $aggregateClassName
+     * @param Version $version
      *
      * @return int
      */
-    public function generate($aggregateClassName, Version $version, VersionIncrementType $type)
+    public function generate($aggregateClassName, Version $version)
     {
         $file = $this->targetSourceFile($aggregateClassName, $version);
         if (!is_file($file)) {
@@ -51,7 +49,7 @@ class MigrationGenerator
                 mkdir($directory, 0777, true);
             }
 
-            return file_put_contents($file, $this->render($aggregateClassName, $version, $type));
+            return file_put_contents($file, $this->render($aggregateClassName, $version));
         }
 
         $shortFileName = str_replace($this->migrationsDirectory, '...', $file);
@@ -72,13 +70,12 @@ class MigrationGenerator
     }
 
     /**
-     * @param string               $aggregateClassName
-     * @param Version              $version
-     * @param VersionIncrementType $type
+     * @param string  $aggregateClassName
+     * @param Version $version
      *
      * @return string
      */
-    protected function render($aggregateClassName, Version $version, VersionIncrementType $type)
+    protected function render($aggregateClassName, Version $version)
     {
         $template = new Template(sprintf(
             '%s/Templates/MigrationClass.tpl',
@@ -101,17 +98,11 @@ class MigrationGenerator
             $aggregateClassName = $shortClassName;
         }
 
-        $migrationType = 'VersionIncrementType::MINOR()';
-        if ($type == VersionIncrementType::MAJOR()) {
-            $migrationType = 'VersionIncrementType::MAJOR()';
-        }
-
         $template->setVar(
             array(
                 'namespace' => $namespace,
                 'migrationClassName' => $migrationClassName,
                 'use' => $aggregateClassNamespace,
-                'migrationType' => $migrationType,
                 'aggregateClassName' => $aggregateClassName,
                 'date' => date('Y-m-d'),
                 'time' => date('H:i:s'),

@@ -13,7 +13,6 @@ use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Domain\EventSourcing\Metadata\ClassMetadata;
 use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 
 /**
  * Migrator class.
@@ -35,7 +34,7 @@ class Migrator
     /**
      * @var MigrationGenerator
      */
-    protected $generator;
+    protected $migrationGenerator;
 
     /**
      * @var int
@@ -60,26 +59,11 @@ class Migrator
     }
 
     /**
-     * @param string  $aggregateClassName
      * @param Version $version
      */
-    public function generateClassMigration($aggregateClassName, Version $version)
+    public function generate(Version $version)
     {
-        /** @var ClassMetadata $classMetadata */
-        $classMetadata = $this->metadataFactory->getMetadataForClass($aggregateClassName);
-        if ($classMetadata === null || ($classMetadata !== null && !$classMetadata->isMigratable)) {
-            throw new \RuntimeException('The class '.$aggregateClassName.' must be migratable.');
-        }
-
-        $this->getGenerator()->generate($aggregateClassName, $version, VersionIncrementType::MINOR());
-    }
-
-    /**
-     * @param Version $version
-     */
-    public function generateProjectMigration(Version $version)
-    {
-        if ($this->getGenerator()->existsDirectory($version)) {
+        if ($this->getMigrationGenerator()->existsDirectory($version)) {
             throw new \RuntimeException('A project migration with version '.$version->__toString().' already exists.');
         }
 
@@ -87,7 +71,7 @@ class Migrator
         /** @var ClassMetadata $classMetadata */
         foreach ($metadatas as $classMetadata) {
             if ($classMetadata !== null && $classMetadata->isMigratable) {
-                $this->getGenerator()->generate($classMetadata->name, $version, VersionIncrementType::MAJOR());
+                $this->migrationGenerator->generate($classMetadata->name, $version);
             }
         }
     }
@@ -95,12 +79,12 @@ class Migrator
     /**
      * @return MigrationGenerator
      */
-    protected function getGenerator()
+    protected function getMigrationGenerator()
     {
-        if ($this->generator === null) {
-            $this->generator = new MigrationGenerator($this->migrationsDirectory);
+        if ($this->migrationGenerator === null) {
+            $this->migrationGenerator = new MigrationGenerator($this->migrationsDirectory);
         }
 
-        return $this->generator;
+        return $this->migrationGenerator;
     }
 }

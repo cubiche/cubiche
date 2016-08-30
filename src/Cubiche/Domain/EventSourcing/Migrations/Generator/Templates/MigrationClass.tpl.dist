@@ -3,7 +3,6 @@
 {namespace}
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Migrations\MigrationInterface;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 {use}
 /**
  * {migrationClassName} class.
@@ -19,14 +18,6 @@ class {migrationClassName} implements MigrationInterface
     {
         // TODO: Implement migrate() method.
         return $eventStream;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function migrationType()
-    {
-        return {migrationType};
     }
 
     /**

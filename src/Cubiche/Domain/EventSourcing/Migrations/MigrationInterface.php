@@ -10,7 +10,6 @@
 namespace Cubiche\Domain\EventSourcing\Migrations;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 
 /**
  * Migration interface.
@@ -25,11 +24,6 @@ interface MigrationInterface
      * @return EventStream
      */
     public function migrate(EventStream $eventStream);
-
-    /**
-     * @return VersionIncrementType
-     */
-    public function migrationType();
 
     /**
      * @return string

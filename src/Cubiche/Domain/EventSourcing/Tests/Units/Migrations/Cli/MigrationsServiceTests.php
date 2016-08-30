@@ -17,8 +17,6 @@ use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Tests\Generator\ClassUtils;
 use Webmozart\Console\Api\IO\Input;
 use Webmozart\Console\Api\IO\IO;
@@ -81,90 +79,6 @@ class MigrationsServiceTests extends TestCase
     /**
      * Test MigrationsGenerate method.
      */
-    public function testMigrationsGenerateForAggregateClass()
-    {
-        $this
-            ->given($service = $this->createService())
-            ->and($command = new MigrationsGenerateCommand(null, PostEventSourced::class))
-            ->and($command->setIo($this->getIO()))
-            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
-            ->and($version->increment(VersionIncrementType::MINOR()))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
-            ->when($service->migrationsGenerate($command))
-            ->and($migrationClass = $this->getMigratorClass($migrationFilename))
-            ->then()
-                ->boolean(file_exists($migrationFilename))
-                    ->isTrue()
-                ->string($migrationClass->aggregateClassName())
-                    ->isEqualTo(PostEventSourced::class)
-                ->object($migrationClass->migrationType())
-                    ->isEqualTo(VersionIncrementType::MINOR())
-                ->string($this->output->fetch())
-                    ->contains('Generating migration')
-                    ->contains('successfully generated')
-                ->and()
-                ->when($service->migrationsGenerate($command))
-                ->then()
-                    ->string($this->output->fetch())
-                        ->contains('already exists.')
-        ;
-
-        $this
-            ->given($service = $this->createService())
-            ->and($command = new MigrationsGenerateCommand(null, __DIR__.'/../../../Fixtures/PostEventSourced.php'))
-            ->and($command->setIo($this->getIO()))
-            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
-            ->and($version->increment(VersionIncrementType::MINOR()))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
-            ->when($service->migrationsGenerate($command))
-            ->and($migrationClass = $this->getMigratorClass($migrationFilename))
-            ->then()
-                ->boolean(file_exists($migrationFilename))
-                    ->isTrue()
-                ->string($migrationClass->aggregateClassName())
-                    ->isEqualTo(PostEventSourced::class)
-                ->object($migrationClass->migrationType())
-                    ->isEqualTo(VersionIncrementType::MINOR())
-        ;
-
-        $this
-            ->given($service = $this->createService())
-            ->and(
-                $command = new MigrationsGenerateCommand(
-                    null,
-                    __DIR__.'/../../../../Migrations/MigrationInterface.php'
-                )
-            )
-            ->and($command->setIo($this->getIO()))
-            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
-            ->when($service->migrationsGenerate($command))
-            ->then()
-                ->boolean(file_exists($migrationFilename))
-                    ->isFalse()
-                ->string($this->output->fetch())
-                    ->contains('Invalid class name')
-        ;
-
-        $this
-            ->given($service = $this->createService())
-            ->and($command = new MigrationsGenerateCommand())
-            ->and($command->setIo($this->getIO()))
-            ->and($version = VersionManager::versionOfClass(PostEventSourced::class))
-            ->and($migrationFilename = $this->getMigratorFileName(PostEventSourced::class, $version))
-            ->when($service->migrationsGenerate($command))
-            ->then()
-                ->boolean(file_exists($migrationFilename))
-                    ->isFalse()
-                ->string($this->output->fetch())
-                    ->contains('A version number or an aggregate class name is needed.')
-
-        ;
-    }
-
-    /**
-     * Test MigrationsGenerate method.
-     */
     public function testMigrationsGenerateForProjectVersion()
     {
         require_once __DIR__.'/../../../Fixtures/BlogEventSourced.php';
@@ -188,10 +102,6 @@ class MigrationsServiceTests extends TestCase
                     ->isEqualTo(PostEventSourced::class)
                 ->string($migrationClass2->aggregateClassName())
                     ->isEqualTo(\BlogEventSourced::class)
-                ->object($migrationClass1->migrationType())
-                    ->isEqualTo(VersionIncrementType::MAJOR())
-                ->object($migrationClass2->migrationType())
-                    ->isEqualTo(VersionIncrementType::MAJOR())
                 ->string($this->output->fetch())
                     ->contains('Generating project migration to version')
                     ->contains('successfully generated')

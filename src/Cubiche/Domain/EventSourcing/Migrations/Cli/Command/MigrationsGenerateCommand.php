@@ -24,20 +24,13 @@ class MigrationsGenerateCommand extends ConsoleCommand
     protected $version;
 
     /**
-     * @var string
-     */
-    protected $aggregate;
-
-    /**
      * MigrationsMigrateCommand constructor.
      *
      * @param string $version
-     * @param string $aggregate
      */
-    public function __construct($version = null, $aggregate = null)
+    public function __construct($version)
     {
         $this->version = $version;
-        $this->aggregate = $aggregate;
     }
 
     /**
@@ -54,21 +47,5 @@ class MigrationsGenerateCommand extends ConsoleCommand
     public function setVersion($version)
     {
         $this->version = $version;
-    }
-
-    /**
-     * @return string
-     */
-    public function aggregate()
-    {
-        return $this->aggregate;
-    }
-
-    /**
-     * @param string $aggregate
-     */
-    public function setAggregate($aggregate)
-    {
-        $this->aggregate = $aggregate;
     }
 }

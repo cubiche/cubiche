@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Versioning;
 
+use Cubiche\Core\Comparable\ComparableInterface;
 use Cubiche\Core\Serializer\SerializableInterface;
 
 /**
@@ -17,7 +18,7 @@ use Cubiche\Core\Serializer\SerializableInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Version implements SerializableInterface
+class Version implements SerializableInterface, ComparableInterface
 {
     /**
      * @var int
@@ -153,5 +154,29 @@ class Version implements SerializableInterface
     public function __toString()
     {
         return sprintf('%s.%s.%s', $this->major, $this->minor, $this->patch);
+    }
+
+    /**
+     * @return int
+     */
+    public function toInt()
+    {
+        return intval(sprintf('%s%s%s', $this->major, $this->minor, $this->patch));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compareTo($other)
+    {
+        if (!$other instanceof self) {
+            throw new \InvalidArgumentException(sprintf(
+                'Argument "%s" is invalid. Allowed types for argument are "%s".',
+                $other,
+                self::class
+            ));
+        }
+
+        return $this->toInt() == $other->toInt() ? 0 : ($this->toInt() > $other->toInt() ? 1 : -1);
     }
 }

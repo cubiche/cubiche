@@ -43,11 +43,6 @@ class ApplicationConfig extends DefaultApplicationConfig
                         Option::REQUIRED_VALUE,
                         'The version to migrate to'
                     )
-                    ->addArgument(
-                        'aggregate',
-                        Argument::OPTIONAL,
-                        'The aggregate root class name'
-                    )
                 ->end()
                 ->beginSubCommand('migrations-migrate')
                     ->setClass(MigrationsMigrateCommand::class)

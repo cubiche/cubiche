@@ -15,8 +15,6 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Tests\Generator\ClassUtils;
 
 /**
@@ -46,61 +44,28 @@ class MigrationsService
      */
     public function migrationsGenerate(MigrationsGenerateCommand $command)
     {
-        if ($command->version() !== null) {
-            $version = Version::fromString($command->version());
+        $version = Version::fromString($command->version());
 
-            if (!$version->isMajorVersion() && !$version->isMinorVersion()) {
-                $command->getIo()->writeLine(
-                    '<error>A version number must be a minor (x.x.0) or a major (x.0.0) version.</error>'
-                );
-            } else {
-                $command->getIo()->writeLine(
-                    'Generating project migration to version <c2>'.$version->__toString().'</c2>'
-                );
-
-                try {
-                    $this->migrator->generateProjectMigration($version);
-
-                    $command->getIo()->writeLine(
-                        'The migration has been <c1>successfully generated</c1>'
-                    );
-                } catch (\Exception $e) {
-                    $command->getIo()->writeLine(
-                        '<error>'.$e->getMessage().'</error>'
-                    );
-                }
-            }
-        } elseif ($command->aggregate()) {
-            $aggregateClassName = $this->getClassName($command->aggregate());
-            if (!class_exists($aggregateClassName)) {
-                $command->getIo()->writeLine(
-                    '<error>Invalid class name '.$aggregateClassName.'.</error>'
-                );
-            } else {
-                $version = VersionManager::versionOfClass($aggregateClassName);
-                $version->increment(VersionIncrementType::MINOR());
-
-                $command->getIo()->writeLine(
-                    'Generating migration to version <c2>'.$version->__toString().
-                    '</c2> for <c2>'.$aggregateClassName.' class</c2>'
-                );
-
-                try {
-                    $this->migrator->generateClassMigration($aggregateClassName, $version);
-
-                    $command->getIo()->writeLine(
-                        'The migration file has been <c1>successfully generated</c1>'
-                    );
-                } catch (\Exception $e) {
-                    $command->getIo()->writeLine(
-                        '<error>'.$e->getMessage().'</error>'
-                    );
-                }
-            }
+        if (!$version->isMajorVersion() && !$version->isMinorVersion()) {
+            $command->getIo()->writeLine(
+                '<error>A version number must be a minor (x.x.0) or a major (x.0.0) version.</error>'
+            );
         } else {
             $command->getIo()->writeLine(
-                '<error>A version number or an aggregate class name is needed.</error>'
+                'Generating project migration to version <c2>'.$version->__toString().'</c2>'
             );
+
+            try {
+                $this->migrator->generate($version);
+
+                $command->getIo()->writeLine(
+                    'The migration has been <c1>successfully generated</c1>'
+                );
+            } catch (\Exception $e) {
+                $command->getIo()->writeLine(
+                    '<error>'.$e->getMessage().'</error>'
+                );
+            }
         }
     }
 

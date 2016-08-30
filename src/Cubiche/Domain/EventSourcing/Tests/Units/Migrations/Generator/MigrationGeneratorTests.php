@@ -13,7 +13,6 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Generator;
 use Cubiche\Domain\EventSourcing\Migrations\Generator\MigrationGenerator;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
@@ -42,14 +41,13 @@ class MigrationGeneratorTests extends TestCase
             ->given($generator = $this->createGenerator())
             ->and($aggregateClass = PostEventSourced::class)
             ->and($version = VersionManager::versionOfClass($aggregateClass))
-            ->and($incrementType = VersionIncrementType::MINOR())
-            ->when($generator->generate($aggregateClass, $version, $incrementType))
+            ->when($generator->generate($aggregateClass, $version))
                 ->then()
                     ->boolean(file_exists($this->getMigratorFileName($aggregateClass, $version)))
                         ->isTrue()
                     ->and()
-                    ->exception(function () use ($generator, $aggregateClass, $version, $incrementType) {
-                        $generator->generate($aggregateClass, $version, $incrementType);
+                    ->exception(function () use ($generator, $aggregateClass, $version) {
+                        $generator->generate($aggregateClass, $version);
                     })->isInstanceOf(\RuntimeException::class)
         ;
 
@@ -57,8 +55,7 @@ class MigrationGeneratorTests extends TestCase
             ->given($generator = $this->createGenerator())
             ->and($aggregateClass = \BlogEventSourced::class)
             ->and($version = VersionManager::versionOfClass($aggregateClass))
-            ->and($incrementType = VersionIncrementType::MAJOR())
-            ->when($generator->generate($aggregateClass, $version, $incrementType))
+            ->when($generator->generate($aggregateClass, $version))
                 ->then()
                     ->boolean(file_exists($this->getMigratorFileName($aggregateClass, $version)))
                         ->isTrue()

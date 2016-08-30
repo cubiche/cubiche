@@ -11,7 +11,6 @@
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli\Command;
 
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 
 /**
@@ -27,12 +26,10 @@ class MigrationsGenerateCommandTests extends TestCase
     public function testVersion()
     {
         $this
-            ->given($command = new MigrationsGenerateCommand())
+            ->given($command = new MigrationsGenerateCommand('1.2.0'))
             ->then()
-                ->variable($command->version())
-                    ->isNull()
-                ->variable($command->aggregate())
-                    ->isNull()
+                ->STRING($command->version())
+                    ->isEqualTo('1.2.0')
         ;
     }
 
@@ -42,25 +39,11 @@ class MigrationsGenerateCommandTests extends TestCase
     public function testSetVersion()
     {
         $this
-            ->given($command = new MigrationsGenerateCommand())
+            ->given($command = new MigrationsGenerateCommand('3.0.3'))
             ->when($command->setVersion('4.5.0'))
             ->then()
                 ->string($command->version())
                     ->isEqualTo('4.5.0')
-        ;
-    }
-
-    /**
-     * Test SetAggregate method.
-     */
-    public function testSetAggregate()
-    {
-        $this
-            ->given($command = new MigrationsGenerateCommand())
-            ->when($command->setAggregate(PostEventSourced::class))
-            ->then()
-                ->string($command->aggregate())
-                    ->isEqualTo(PostEventSourced::class)
         ;
     }
 }
