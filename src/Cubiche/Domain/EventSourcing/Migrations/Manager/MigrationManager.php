@@ -85,7 +85,7 @@ class MigrationManager
     {
         $availableVersions = array();
         /** @var Migration $migration */
-        foreach ($this->migrationsInFile as $migration) {
+        foreach ($this->migrationsInFile as $key => $migration) {
             $availableVersions[] = $migration->version();
         }
 
@@ -160,12 +160,10 @@ class MigrationManager
     public function registerMigration(array $aggregates, Version $version)
     {
         if (isset($this->migrationsInFile[$version->__toString()])) {
-            $message = sprintf(
+            throw new \RuntimeException(sprintf(
                 'Migration version %s already registered.',
                 $version->__toString()
-            );
-
-            throw new DuplicateVersionException($message);
+            ));
         }
 
         $this->migrationsInFile[$version->__toString()] = new Migration($aggregates, $version, new \DateTime());
@@ -200,9 +198,10 @@ class MigrationManager
                 $sourceFile = realpath($sourceFile);
             }
 
-            $directory = dirname($sourceFile);
-            $info = pathinfo($directory);
-            $version = $info['filename'];
+            // extract the version number from the front of the directory name
+            $relativeSourceFile = str_replace($path.'/', '', $sourceFile);
+            $pieces = explode('/', $relativeSourceFile);
+            $version = reset($pieces);
 
             if (!isset($migrations[$version])) {
                 $migrations[$version] = array();
@@ -220,16 +219,29 @@ class MigrationManager
         }
 
         foreach ($migrations as $versionNumber => $aggregates) {
-            if (count($aggregates) == 0) {
-                $emptyDirectory = $path.'/'.$versionNumber;
+            $version = $this->directoryToVersion($versionNumber);
+
+            if ($version == Version::fromString('0.0.0')) {
                 throw new \RuntimeException(sprintf(
-                    'The migration directory %s is empty.',
-                    $emptyDirectory
+                    'Invalid migration directory %s.',
+                    $versionNumber
                 ));
             }
 
-            $this->registerMigration($aggregates, Version::fromString($versionNumber));
+            $this->registerMigration($aggregates, $version);
         }
+    }
+
+    /**
+     * @param $directory
+     *
+     * @return Version
+     */
+    private function directoryToVersion($directory)
+    {
+        $versionNumber = str_replace(array('V', '_'), array('', '.'), $directory);
+
+        return Version::fromString($versionNumber);
     }
 
     /**

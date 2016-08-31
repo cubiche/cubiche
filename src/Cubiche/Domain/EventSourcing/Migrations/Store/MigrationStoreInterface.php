@@ -20,9 +20,9 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 interface MigrationStoreInterface
 {
     /**
-     * @param Migration $version
+     * @param Migration $migration
      */
-    public function persist(Migration $version);
+    public function persist(Migration $migration);
 
     /**
      * @param Version $version
@@ -37,11 +37,9 @@ interface MigrationStoreInterface
     public function findAll();
 
     /**
-     * @param Version[] $versions
-     *
      * @return Migration
      */
-    public function getLast(array $versions = array());
+    public function getLast();
 
     /**
      * @return int
