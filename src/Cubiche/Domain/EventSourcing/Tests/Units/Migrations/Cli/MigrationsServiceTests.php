@@ -11,9 +11,12 @@
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli;
 
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
+use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
+use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Migrations\MigrationInterface;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Migrations\Store\InMemoryMigrationStore;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
@@ -41,7 +44,9 @@ class MigrationsServiceTests extends TestCase
      */
     protected function createService()
     {
-        return new MigrationsService(new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory));
+        return new MigrationsService(
+            new Migrator($this->getClassMetadataFactory(), new InMemoryMigrationStore(), $this->migrationsDirectory)
+        );
     }
 
     /**
@@ -79,7 +84,7 @@ class MigrationsServiceTests extends TestCase
     /**
      * Test MigrationsGenerate method.
      */
-    public function testMigrationsGenerateForProjectVersion()
+    public function testMigrationsGenerate()
     {
         require_once __DIR__.'/../../../Fixtures/BlogEventSourced.php';
 
@@ -143,6 +148,82 @@ class MigrationsServiceTests extends TestCase
      */
     public function testMigrationsStatus()
     {
-        // todo: Implement testMigrationsStatus().
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsStatusCommand())
+            ->and($command->setIo($this->getIO()))
+            ->when($service->migrationsStatus($command))
+            ->then()
+                ->string($this->output->fetch())
+                    ->contains(' Current Version      <c2>0</c2>')
+                    ->contains(' Latest Version       <c2>none</c2>')
+                    ->contains(' Executed Migrations  <c2>0</c2>')
+                    ->contains(' Available Migrations <c2>0</c2>')
+                    ->contains(' New Migrations       <c2>0</c2>')
+        ;
+
+        $this->migrationsDirectory = __DIR__.'/../../../Fixtures/Event';
+
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsStatusCommand())
+            ->and($command->setIo($this->getIO()))
+            ->when($service->migrationsStatus($command))
+            ->then()
+                ->string($this->output->fetch())
+                    ->contains('Invalid migration directory')
+        ;
+
+        $this->migrationsDirectory = __DIR__.'/../../../Fixtures/Migrations';
+
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsStatusCommand())
+            ->and($command->setIo($this->getIO()))
+            ->when($service->migrationsStatus($command))
+            ->then()
+                ->string($this->output->fetch())
+                    ->contains(' Current Version      <c2>0</c2>')
+                    ->contains(' Latest Version       <c2>1.1.0</c2>')
+                    ->contains(' Executed Migrations  <c2>0</c2>')
+                    ->contains(' Available Migrations <c2>4</c2>')
+                    ->contains(' New Migrations       <c2>4</c2>')
+        ;
+
+        require_once __DIR__.'/../../../Fixtures/BlogEventSourced.php';
+
+        $aggregates = [PostEventSourced::class, \BlogEventSourced::class];
+
+        $migratorStore = new InMemoryMigrationStore();
+        $migratorStore->persist(
+            new Migration(
+                $aggregates,
+                Version::fromString('0.1.0'),
+                \DateTime::createFromFormat('Y-m-d H:i:s', '2016-08-26 14:12:00')
+            )
+        );
+        $migratorStore->persist(
+            new Migration(
+                $aggregates,
+                Version::fromString('0.2.0'),
+                \DateTime::createFromFormat('Y-m-d H:i:s', '2016-09-01 18:30:00')
+            )
+        );
+
+        $migrator = new Migrator($this->getClassMetadataFactory(), $migratorStore, $this->migrationsDirectory);
+        $service = new MigrationsService($migrator);
+
+        $this
+            ->given($command = new MigrationsStatusCommand())
+            ->and($command->setIo($this->getIO()))
+            ->when($service->migrationsStatus($command))
+            ->then()
+                ->string($this->output->fetch())
+                    ->contains(' Current Version      <c2>0.2.0 (2016-09-01 18:30:00)</c2>')
+                    ->contains(' Latest Version       <c2>1.1.0</c2>')
+                    ->contains(' Executed Migrations  <c2>2</c2>')
+                    ->contains(' Available Migrations <c2>4</c2>')
+                    ->contains(' New Migrations       <c2>2</c2>')
+        ;
     }
 }

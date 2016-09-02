@@ -1,3 +1,5 @@
+#!/usr/bin/env php
+
 <?php
 
 /**
@@ -37,6 +39,7 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Migrations\Store\InMemoryMigrationStore;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
@@ -64,8 +67,10 @@ function createApplication($config, $migrationsDirectory, $cacheDirectory)
     $commandBus = CommandBus::create();
     $eventBus = DomainEventPublisher::eventBus();
 
+    $migrationStore = new InMemoryMigrationStore();
+
     $migrationsService = new MigrationsService(
-        new Migrator(getClassMetadataFactory($cacheDirectory), $migrationsDirectory)
+        new Migrator(getClassMetadataFactory($cacheDirectory), $migrationStore, $migrationsDirectory)
     );
 
     $commandBus->addHandler(MigrationsGenerateCommand::class, $migrationsService);

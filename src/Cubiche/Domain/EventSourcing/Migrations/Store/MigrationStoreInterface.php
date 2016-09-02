@@ -37,7 +37,7 @@ interface MigrationStoreInterface
     public function findAll();
 
     /**
-     * @return Migration
+     * @return Migration|null
      */
     public function getLast();
 

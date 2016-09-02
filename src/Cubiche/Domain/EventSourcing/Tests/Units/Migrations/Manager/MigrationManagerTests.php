@@ -44,14 +44,14 @@ class MigrationManagerTests extends TestCase
     }
 
     /**
-     * Test CurrentVersion method.
+     * Test CurrentMigration method.
      */
-    public function testCurrentVersion()
+    public function testCurrentMigration()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->object($manager->currentVersion())
+                ->object($manager->currentMigration()->version())
                     ->isEqualTo(Version::fromString('0.2.0'))
         ;
     }
@@ -164,6 +164,20 @@ class MigrationManagerTests extends TestCase
      */
     public function testRegisterMigrationsFromDirectory()
     {
+        $this
+            ->given(
+                $manager = new MigrationManager(
+                    new InMemoryMigrationStore(),
+                    __DIR__.'/../../../Fixtures/Foo'
+                )
+            )
+            ->then()
+            ->exception(function () use ($manager) {
+                $manager->registerMigrationsFromDirectory();
+            })
+            ->isInstanceOf(\RuntimeException::class)
+        ;
+
         $this
             ->given(
                 $manager = new MigrationManager(

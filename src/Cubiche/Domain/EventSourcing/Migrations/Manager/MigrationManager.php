@@ -34,7 +34,7 @@ class MigrationManager
     /**
      * @var Migration[]
      */
-    protected $migrationsInFile;
+    protected $migrationsInFile = array();
 
     /**
      * @var string
@@ -56,24 +56,24 @@ class MigrationManager
     /**
      * Returns the last migrated version from the migration store.
      *
-     * @return Version
+     * @return Migration
      */
-    public function currentVersion()
+    public function currentMigration()
     {
-        return $this->migrationStore->getLast()->version();
+        return $this->migrationStore->getLast();
     }
 
     /**
      * Returns the latest available migration version.
      *
-     * @return Version
+     * @return Version|null
      */
     public function latestVersion()
     {
         $availableVersions = array_keys($this->migrationsInFile);
         $latest = end($availableVersions);
 
-        return Version::fromString($latest !== false ? (string) $latest : '0');
+        return $latest !== false ? Version::fromString($latest) : null;
     }
 
     /**
@@ -180,6 +180,12 @@ class MigrationManager
     public function registerMigrationsFromDirectory()
     {
         $path = realpath($this->migrationsDirectory);
+        if ($path === false) {
+            throw new \RuntimeException(sprintf(
+                'Invalid migration directory %s',
+                $this->migrationsDirectory
+            ));
+        }
 
         $iterator = new \RegexIterator(
             new \RecursiveIteratorIterator(

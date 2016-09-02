@@ -11,8 +11,7 @@
 namespace Cubiche\Domain\EventSourcing\Migrations\Store;
 
 use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
-use Cubiche\Core\Comparable\Comparator;
-use Cubiche\Core\Comparable\ReverseComparator;
+use Cubiche\Core\Comparable\Custom;
 use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 
@@ -33,7 +32,10 @@ class InMemoryMigrationStore implements MigrationStoreInterface
      */
     public function __construct()
     {
-        $this->store = new SortedArrayHashMap([], new ReverseComparator(new Comparator()));
+        $this->store = new SortedArrayHashMap([], new Custom(function ($a, $b) {
+            // order desc
+            return -1 * Version::fromString($a)->compareTo(Version::fromString($b));
+        }));
     }
 
     /**
@@ -41,7 +43,7 @@ class InMemoryMigrationStore implements MigrationStoreInterface
      */
     public function persist(Migration $migration)
     {
-        $this->store->set($migration->version()->toInt(), $migration);
+        $this->store->set($migration->version()->__toString(), $migration);
     }
 
     /**
@@ -51,7 +53,7 @@ class InMemoryMigrationStore implements MigrationStoreInterface
      */
     public function hasVersion(Version $version)
     {
-        return $this->store->containsKey($version->toInt());
+        return $this->store->containsKey($version->__toString());
     }
 
     /**
@@ -63,11 +65,15 @@ class InMemoryMigrationStore implements MigrationStoreInterface
     }
 
     /**
-     * @return Migration
+     * @return Migration|null
      */
     public function getLast()
     {
-        return reset($this->findAll());
+        if ($this->count() > 0) {
+            return reset($this->findAll());
+        }
+
+        return;
     }
 
     /**

@@ -19,34 +19,4 @@ use Cubiche\Core\Console\Command\ConsoleCommand;
  */
 class MigrationsStatusCommand extends ConsoleCommand
 {
-    /**
-     * @var string
-     */
-    protected $aggregate;
-
-    /**
-     * MigrationsStatusCommand constructor.
-     *
-     * @param string $aggregate
-     */
-    public function __construct($aggregate = null)
-    {
-        $this->aggregate = $aggregate;
-    }
-
-    /**
-     * @return string
-     */
-    public function aggregate()
-    {
-        return $this->aggregate;
-    }
-
-    /**
-     * @param string $aggregate
-     */
-    public function setAggregate($aggregate)
-    {
-        $this->aggregate = $aggregate;
-    }
 }

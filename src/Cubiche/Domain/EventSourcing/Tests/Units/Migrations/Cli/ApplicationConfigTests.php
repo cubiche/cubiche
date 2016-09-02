@@ -19,6 +19,7 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Migrations\Store\InMemoryMigrationStore;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Webmozart\Console\Api\IO\Input;
 use Webmozart\Console\Api\IO\IO;
@@ -60,7 +61,7 @@ class ApplicationConfigTests extends TestCase
         $eventBus = DomainEventPublisher::eventBus();
 
         $migrationsService = new MigrationsService(
-            new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory)
+            new Migrator($this->getClassMetadataFactory(), new InMemoryMigrationStore(), $this->migrationsDirectory)
         );
 
         $commandBus->addHandler(MigrationsGenerateCommand::class, $migrationsService);

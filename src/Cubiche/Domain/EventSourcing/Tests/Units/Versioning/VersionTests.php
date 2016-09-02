@@ -106,4 +106,34 @@ class VersionTests extends TestCase
                         ->isEqualTo(54)
         ;
     }
+
+    /**
+     * Test compareTo method.
+     */
+    public function testCompareTo()
+    {
+        $this
+            ->given($version1 = Version::fromString('0.1.0'))
+            ->and($version2 = Version::fromString('0.1.8'))
+            ->and($version3 = Version::fromString('1.0.0'))
+            ->and($version4 = Version::fromString('1.0.4'))
+            ->and($version5 = Version::fromString('1.3.0'))
+            ->and($version6 = Version::fromString('1.3.9'))
+            ->then()
+                ->integer($version1->compareTo($version1))
+                    ->isEqualTo(0)
+                ->integer($version1->compareTo($version2))
+                    ->isEqualTo(-1)
+                ->integer($version3->compareTo($version2))
+                    ->isEqualTo(1)
+                ->integer($version3->compareTo($version4))
+                    ->isEqualTo(-1)
+                ->integer($version6->compareTo($version5))
+                    ->isEqualTo(1)
+                ->exception(function () use ($version1) {
+                    $version1->compareTo($this);
+                })
+                ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+    }
 }

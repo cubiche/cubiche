@@ -16,6 +16,8 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Tests\Generator\ClassUtils;
+use Webmozart\Console\UI\Component\Table;
+use Webmozart\Console\UI\Style\TableStyle;
 
 /**
  * MigrationsService class.
@@ -82,7 +84,48 @@ class MigrationsService
      */
     public function migrationsStatus(MigrationsStatusCommand $command)
     {
-        $command->getIo()->writeLine('status ok');
+        try {
+            $status = $this->migrator->status();
+            $currentMigration = $status->currentMigration();
+
+            $rows = array(
+                array(
+                    ' Current Version',
+                    $currentMigration ? sprintf(
+                        '<c2>%s (%s)</c2>',
+                        $currentMigration->version()->__toString(),
+                        $currentMigration->createdAt()->format('Y-m-d H:i:s')
+                    ) : '<c2>0</c2>',
+                ),
+                array(
+                    ' Latest Version',
+                    $status->latestVersion() ? '<c2>'.$status->latestVersion()->__toString().'</c2>' : '<c2>none</c2>',
+                ),
+                array(
+                    ' Executed Migrations',
+                    '<c2>'.$status->numExecutedMigrations().'</c2>',
+                ),
+                array(
+                    ' Available Migrations',
+                    '<c2>'.$status->numAvailableMigrations().'</c2>',
+                ),
+                array(
+                    ' New Migrations',
+                    '<c2>'.$status->numNewMigrations().'</c2>',
+                ),
+            );
+
+            $table = new Table(TableStyle::borderless());
+            foreach ($rows as $row) {
+                $table->addRow($row);
+            }
+
+            $table->render($command->getIo());
+        } catch (\Exception $e) {
+            $command->getIo()->writeLine(
+                '<error>'.$e->getMessage().'</error>'
+            );
+        }
     }
 
     /**

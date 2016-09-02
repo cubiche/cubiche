@@ -157,14 +157,6 @@ class Version implements SerializableInterface, ComparableInterface
     }
 
     /**
-     * @return int
-     */
-    public function toInt()
-    {
-        return intval(sprintf('%s%s%s', $this->major, $this->minor, $this->patch));
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function compareTo($other)
@@ -177,6 +169,24 @@ class Version implements SerializableInterface, ComparableInterface
             ));
         }
 
-        return $this->toInt() == $other->toInt() ? 0 : ($this->toInt() > $other->toInt() ? 1 : -1);
+        if ($this->major() == $other->major() &&
+            $this->minor() == $other->minor() &&
+            $this->patch() == $other->patch()
+        ) {
+            return 0;
+        }
+
+        if ($this->major() > $other->major() ||
+            (
+                $this->major() == $other->major() && $this->minor() > $other->minor()
+            ) || (
+                $this->major() == $other->major() && $this->minor() == $other->minor() &&
+                $this->patch() > $other->patch()
+            )
+        ) {
+            return 1;
+        }
+
+        return -1;
     }
 }

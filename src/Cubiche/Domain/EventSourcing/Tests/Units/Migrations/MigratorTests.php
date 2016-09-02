@@ -10,7 +10,9 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations;
 
+use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
+use Cubiche\Domain\EventSourcing\Migrations\Store\InMemoryMigrationStore;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
@@ -27,7 +29,11 @@ class MigratorTests extends TestCase
      */
     protected function createMigrator()
     {
-        return new Migrator($this->getClassMetadataFactory(), $this->migrationsDirectory);
+        return new Migrator(
+            $this->getClassMetadataFactory(),
+            new InMemoryMigrationStore(),
+            $this->migrationsDirectory
+        );
     }
 
     /**
@@ -50,6 +56,59 @@ class MigratorTests extends TestCase
                 ->exception(function () use ($migrator, $version) {
                     $migrator->generate($version);
                 })->isInstanceOf(\RuntimeException::class)
+        ;
+    }
+
+    /**
+     * Test status method.
+     */
+    public function testStatus()
+    {
+        $this->migrationsDirectory = __DIR__.'/../../Fixtures/Migrations';
+        require_once __DIR__.'/../../Fixtures/BlogEventSourced.php';
+
+        $this
+            ->given($migrator = $this->createMigrator())
+            ->when($status = $migrator->status())
+            ->then()
+                ->variable($status->currentMigration())
+                    ->isNull()
+                ->object($status->latestVersion())
+                    ->isEqualTo(Version::fromString('1.1.0'))
+                ->integer($status->numExecutedMigrations())
+                    ->isEqualTo(0)
+                ->integer($status->numAvailableMigrations())
+                    ->isEqualTo(4)
+                ->integer($status->numNewMigrations())
+                    ->isEqualTo(4)
+        ;
+
+        $aggregates = [PostEventSourced::class, \BlogEventSourced::class];
+
+        $migratorStore = new InMemoryMigrationStore();
+
+        $migratorStore->persist(new Migration($aggregates, Version::fromString('0.1.0'), new \DateTime()));
+        $migratorStore->persist(new Migration($aggregates, Version::fromString('0.2.0'), new \DateTime()));
+
+        $migrator = new Migrator(
+            $this->getClassMetadataFactory(),
+            $migratorStore,
+            $this->migrationsDirectory
+        );
+
+        $this
+            ->given($status = $migrator->status())
+            ->then()
+                ->object($status->currentMigration()->version())
+                    ->isEqualTo(Version::fromString('0.2.0'))
+                ->object($status->latestVersion())
+                    ->isEqualTo(Version::fromString('1.1.0'))
+                ->integer($status->numExecutedMigrations())
+                    ->isEqualTo(2)
+                ->integer($status->numAvailableMigrations())
+                    ->isEqualTo(4)
+                ->integer($status->numNewMigrations())
+                    ->isEqualTo(2)
         ;
     }
 }

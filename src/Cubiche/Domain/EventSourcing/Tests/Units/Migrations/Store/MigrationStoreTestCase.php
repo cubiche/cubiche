@@ -107,11 +107,15 @@ abstract class MigrationStoreTestCase extends TestCase
             ->and($aggregates = [PostEventSourced::class])
             ->and($migration1 = new Migration($aggregates, Version::fromString('0.1.0'), new \DateTime()))
             ->and($migration2 = new Migration($aggregates, Version::fromString('0.2.0'), new \DateTime()))
-            ->when($store->persist($migration2))
-            ->and($store->persist($migration1))
             ->then()
-                ->object($store->getLast())
-                    ->isEqualTo($migration2)
+                ->variable($store->getLast())
+                    ->isNull()
+                ->and()
+                ->when($store->persist($migration2))
+                ->and($store->persist($migration1))
+                ->then()
+                    ->object($store->getLast())
+                        ->isEqualTo($migration2)
         ;
     }
 }

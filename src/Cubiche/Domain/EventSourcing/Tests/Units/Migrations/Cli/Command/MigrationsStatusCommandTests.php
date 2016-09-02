@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli\Command;
 
+use Cubiche\Core\Console\Command\ConsoleCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 
 /**
@@ -22,29 +22,15 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class MigrationsStatusCommandTests extends TestCase
 {
     /**
-     * Test Aggregate method.
+     * Test class method.
      */
-    public function testAggregate()
+    public function testClass()
     {
         $this
             ->given($command = new MigrationsStatusCommand())
             ->then()
-                ->variable($command->aggregate())
-                    ->isNull()
-        ;
-    }
-
-    /**
-     * Test SetAggregate method.
-     */
-    public function testSetAggregate()
-    {
-        $this
-            ->given($command = new MigrationsStatusCommand('foo'))
-            ->when($command->setAggregate(PostEventSourced::class))
-            ->then()
-                ->string($command->aggregate())
-                    ->isEqualTo(PostEventSourced::class)
+                ->object($command)
+                    ->isInstanceOf(ConsoleCommand::class)
         ;
     }
 }

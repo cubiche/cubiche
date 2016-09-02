@@ -21,9 +21,12 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class TemplateTests extends TestCase
 {
     /**
-     * @var string
+     * @return string
      */
-    protected $filename = __DIR__.'/../../../../Migrations/Generator/Templates/MigrationClass.tpl';
+    protected function filename()
+    {
+        return __DIR__.'/../../../../Migrations/Generator/Templates/MigrationClass.tpl';
+    }
 
     /**
      * Test SetFile method.
@@ -31,13 +34,13 @@ class TemplateTests extends TestCase
     public function testSetFile()
     {
         $this
-            ->given($template = new Template($this->filename))
+            ->given($template = new Template($this->filename()))
             ->and($reflector = new \ReflectionClass($template))
             ->and($reflectionProperty = $reflector->getProperty('template'))
             ->and($reflectionProperty->setAccessible(true))
             ->then()
                 ->string($reflectionProperty->getValue($template))
-                    ->isEqualTo(file_get_contents($this->filename.'.dist'))
+                    ->isEqualTo(file_get_contents($this->filename().'.dist'))
                 ->and()
                 ->when($template->setFile(__DIR__.'/TemplateTests.php'))
                 ->then()
@@ -56,7 +59,7 @@ class TemplateTests extends TestCase
     public function testSetVar()
     {
         $this
-            ->given($template = new Template($this->filename))
+            ->given($template = new Template($this->filename()))
             ->and($reflector = new \ReflectionClass($template))
             ->and($reflectionProperty = $reflector->getProperty('values'))
             ->and($reflectionProperty->setAccessible(true))
@@ -78,7 +81,7 @@ class TemplateTests extends TestCase
     public function testRender()
     {
         $this
-            ->given($template = new Template($this->filename))
+            ->given($template = new Template($this->filename()))
             ->and(
                 $values = array(
                     'namespace' => 'namespace Some\ClassNamespace;',
@@ -98,7 +101,7 @@ class TemplateTests extends TestCase
             ->when($result = $template->render())
             ->then()
                 ->string($result)
-                    ->isEqualTo(str_replace($keys, $values, file_get_contents($this->filename.'.dist')))
+                    ->isEqualTo(str_replace($keys, $values, file_get_contents($this->filename().'.dist')))
         ;
     }
 
@@ -110,7 +113,7 @@ class TemplateTests extends TestCase
         $target = __DIR__.'/../Cli/Migrations/Version_8_7_5/MigrationClass.php';
 
         $this
-            ->given($template = new Template($this->filename))
+            ->given($template = new Template($this->filename()))
             ->and(
                 $values = array(
                     'namespace' => 'namespace Some\ClassNamespace;',
@@ -136,7 +139,7 @@ class TemplateTests extends TestCase
                 ->and($template->renderTo($target))
                 ->then()
                     ->string(file_get_contents($target))
-                        ->isEqualTo(str_replace($keys, $values, file_get_contents($this->filename.'.dist')))
+                        ->isEqualTo(str_replace($keys, $values, file_get_contents($this->filename().'.dist')))
         ;
     }
 }
