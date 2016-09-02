@@ -70,7 +70,9 @@ class InMemoryMigrationStore implements MigrationStoreInterface
     public function getLast()
     {
         if ($this->count() > 0) {
-            return reset($this->findAll());
+            $migrations = $this->findAll();
+
+            return reset($migrations);
         }
 
         return;
