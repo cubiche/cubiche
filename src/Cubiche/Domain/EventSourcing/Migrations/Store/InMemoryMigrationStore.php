@@ -51,7 +51,7 @@ class InMemoryMigrationStore implements MigrationStoreInterface
      *
      * @return bool
      */
-    public function hasVersion(Version $version)
+    public function hasMigration(Version $version)
     {
         return $this->store->containsKey($version->__toString());
     }

@@ -23,44 +23,63 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 class StatusTests extends TestCase
 {
     /**
-     * Test currentMigration method.
+     * Test latestAvailableVersion method.
      */
-    public function testCurrentMigration()
+    public function testLatestAvailableVersion()
     {
         $this
             ->given($status = new Status())
             ->then()
-                ->variable($status->currentMigration())
+                ->variable($status->latestAvailableVersion())
                     ->isNull()
         ;
 
         $this
-            ->given($migration = new Migration([], Version::fromString('2.4.0')))
-            ->and($status = new Status($migration))
+            ->given($status = new Status(Version::fromString('1.8.0')))
             ->then()
-                ->object($status->currentMigration())
-                    ->isEqualTo($migration)
+                ->object($status->latestAvailableVersion())
+                    ->isEqualTo(Version::fromString('1.8.0'))
         ;
     }
 
     /**
-     * Test latestVersion method.
+     * Test nextAvailableVersion method.
      */
-    public function testLatestVersion()
+    public function testNextAvailableVersion()
     {
         $this
             ->given($status = new Status())
             ->then()
-                ->variable($status->latestVersion())
+                ->variable($status->nextAvailableVersion())
+                    ->isNull()
+        ;
+
+        $this
+            ->given($status = new Status(Version::fromString('1.8.0'), Version::fromString('2.4.0')))
+            ->then()
+                ->object($status->nextAvailableVersion())
+                    ->isEqualTo(Version::fromString('2.4.0'))
+        ;
+    }
+
+    /**
+     * Test latestMigration method.
+     */
+    public function testLatestMigration()
+    {
+        $this
+            ->given($status = new Status())
+            ->then()
+                ->variable($status->latestMigration())
                     ->isNull()
         ;
 
         $this
             ->given($migration = new Migration([], Version::fromString('2.4.0')))
-            ->and($status = new Status($migration, Version::fromString('1.8.0')))
+            ->and($status = new Status(Version::fromString('1.8.0'), Version::fromString('2.1.0'), $migration))
             ->then()
-                ->object($status->latestVersion())
-                    ->isEqualTo(Version::fromString('1.8.0'))
+                ->object($status->latestMigration())
+                    ->isEqualTo($migration)
         ;
     }
 
@@ -78,7 +97,7 @@ class StatusTests extends TestCase
 
         $this
             ->given($migration = new Migration([], Version::fromString('2.4.0')))
-            ->and($status = new Status($migration, Version::fromString('1.8.0'), 12))
+            ->and($status = new Status(Version::fromString('1.8.0'), Version::fromString('2.1.0'), $migration, 12))
             ->then()
                 ->integer($status->numExecutedMigrations())
                     ->isEqualTo(12)
@@ -99,7 +118,7 @@ class StatusTests extends TestCase
 
         $this
             ->given($migration = new Migration([], Version::fromString('2.4.0')))
-            ->and($status = new Status($migration, Version::fromString('1.8.0'), 0, 6))
+            ->and($status = new Status(Version::fromString('1.8.0'), Version::fromString('2.1.0'), $migration, 0, 6))
             ->then()
                 ->integer($status->numAvailableMigrations())
                     ->isEqualTo(6)
@@ -120,7 +139,9 @@ class StatusTests extends TestCase
 
         $this
             ->given($migration = new Migration([], Version::fromString('2.4.0')))
-            ->and($status = new Status($migration, Version::fromString('1.8.0'), 0, 0, 3))
+            ->and(
+                $status = new Status(Version::fromString('1.8.0'), Version::fromString('2.1.0'), $migration, 0, 0, 3)
+            )
             ->then()
                 ->integer($status->numNewMigrations())
                     ->isEqualTo(3)

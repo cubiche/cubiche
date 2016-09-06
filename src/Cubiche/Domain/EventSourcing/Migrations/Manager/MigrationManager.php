@@ -9,6 +9,9 @@
  */
 namespace Cubiche\Domain\EventSourcing\Migrations\Manager;
 
+use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
+use Cubiche\Core\Comparable\Custom;
+use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Migrations\Store\MigrationStoreInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
@@ -51,16 +54,9 @@ class MigrationManager
     {
         $this->migrationStore = $migrationStore;
         $this->migrationsDirectory = $migrationsDirectory;
-    }
-
-    /**
-     * Returns the last migrated version from the migration store.
-     *
-     * @return Migration
-     */
-    public function currentMigration()
-    {
-        return $this->migrationStore->getLast();
+        $this->migrationsInFile = new SortedArrayHashMap([], new Custom(function ($v1, $v2) {
+            return Version::fromString($v1)->compareTo(Version::fromString($v2));
+        }));
     }
 
     /**
@@ -68,12 +64,36 @@ class MigrationManager
      *
      * @return Version|null
      */
-    public function latestVersion()
+    public function latestAvailableVersion()
     {
-        $availableVersions = array_keys($this->migrationsInFile);
+        $availableVersions = $this->migrationsInFile->keys()->toArray();
         $latest = end($availableVersions);
 
         return $latest !== false ? Version::fromString($latest) : null;
+    }
+
+    /**
+     * Returns the next available migration version.
+     *
+     * @return Version|null
+     */
+    public function nextAvailableVersion()
+    {
+        $version = Version::fromString('0.0.0');
+        $latestMigration = $this->latestMigration();
+        if ($latestMigration !== null) {
+            $version = $latestMigration->version();
+        }
+
+        $migrations = $this->migrationsInFile->find(
+            Criteria::method('version')->gt($version)
+        );
+
+        if ($migrations->count() > 0) {
+            return $migrations->toArray()[0]->version();
+        }
+
+        return;
     }
 
     /**
@@ -93,6 +113,26 @@ class MigrationManager
     }
 
     /**
+     * Returns the last migrated version from the migration store.
+     *
+     * @return Migration
+     */
+    public function latestMigration()
+    {
+        return $this->migrationStore->getLast();
+    }
+
+    /**
+     * Returns all migrations from the migration store.
+     *
+     * @return Migration[]
+     */
+    public function migrations()
+    {
+        return $this->migrationStore->findAll();
+    }
+
+    /**
      * Returns all migrated versions from the migration store.
      *
      * @return Version[]
@@ -100,7 +140,7 @@ class MigrationManager
     public function migratedVersions()
     {
         $migratedVersions = array();
-        foreach ($this->migrationStore->findAll() as $migration) {
+        foreach ($this->migrations() as $migration) {
             $migratedVersions[] = $migration->version();
         };
 
@@ -110,7 +150,7 @@ class MigrationManager
     /**
      * @return int
      */
-    public function numberOfMigratedVersions()
+    public function numberOfMigrations()
     {
         return $this->migrationStore->count();
     }
@@ -122,33 +162,24 @@ class MigrationManager
      *
      * @return bool
      */
-    public function hasMigratedVersion(Version $version)
+    public function hasMigration(Version $version)
     {
-        return $this->migrationStore->hasVersion($version);
+        return $this->migrationStore->hasMigration($version);
     }
 
     /**
-     * Returns the array of migrations to executed based on the given target version number.
+     * Returns the next migration to executed.
      *
-     * @param Version $to
-     *
-     * @return Migration[]
+     * @return Migration|null
      */
-    public function migrationsToExecute(Version $to)
+    public function nextMigrationToExecute()
     {
-        $migratedVersions = array();
-        foreach ($this->migratedVersions() as $migratedVersion) {
-            $migratedVersions[] = $migratedVersion->__toString();
+        $nextAvailableVersion = $this->nextAvailableVersion();
+        if ($nextAvailableVersion !== null) {
+            return $this->migrationsInFile->get($nextAvailableVersion->__toString());
         }
 
-        $migrationsToExecute = array();
-        foreach ($this->availableVersions() as $version) {
-            if (!in_array($version->__toString(), $migratedVersions) && $version->compareTo($to) >= 0) {
-                $migrationsToExecute[] = $this->migrationsInFile[$version->__toString()];
-            }
-        }
-
-        return $migrationsToExecute;
+        return;
     }
 
     /**
@@ -159,18 +190,17 @@ class MigrationManager
      */
     public function registerMigration(array $aggregates, Version $version)
     {
-        if (isset($this->migrationsInFile[$version->__toString()])) {
+        if ($this->migrationsInFile->containsKey($version->__toString())) {
             throw new \RuntimeException(sprintf(
                 'Migration version %s already registered.',
                 $version->__toString()
             ));
         }
 
-        $this->migrationsInFile[$version->__toString()] = new Migration($aggregates, $version, new \DateTime());
-
-        uksort($this->migrationsInFile, function ($v1, $v2) {
-            return Version::fromString($v1)->compareTo(Version::fromString($v2));
-        });
+        $this->migrationsInFile->set(
+            $version->__toString(),
+            new Migration($aggregates, $version, new \DateTime())
+        );
     }
 
     /**
@@ -257,8 +287,6 @@ class MigrationManager
      */
     private function getClassName($sourceFile)
     {
-        require_once $sourceFile;
-
         $classes = ClassUtils::getClassesInFile($sourceFile);
         if (count($classes) > 0) {
             return $classes[0];

@@ -129,7 +129,10 @@ class EventSourcedAggregateRepository implements RepositoryInterface
         if (count($recordedEvents) > 0) {
             DomainEventPublisher::publish(new PrePersistEvent($aggregateRoot));
 
+            // clear events
             $aggregateRoot->clearEvents();
+
+            // create the eventStream and persist it
             $eventStream = new EventStream($this->streamName(), $aggregateRoot->id(), $recordedEvents);
             $this->eventStore->persist($eventStream, $aggregateRoot->version());
 

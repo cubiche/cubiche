@@ -56,7 +56,6 @@ class MigrationsServiceTests extends TestCase
      */
     protected function getMigratorClass($filename)
     {
-        require_once $filename;
         $classes = ClassUtils::getClassesInFile($filename);
         foreach ($classes as $className) {
             $reflector = new \ReflectionClass($className);
@@ -90,9 +89,9 @@ class MigrationsServiceTests extends TestCase
 
         $this
             ->given($service = $this->createService())
-            ->and($command = new MigrationsGenerateCommand('2.5.0'))
+            ->and($command = new MigrationsGenerateCommand(false))
             ->and($command->setIo($this->getIO()))
-            ->and($version = Version::fromString('2.5.0'))
+            ->and($version = Version::fromString('0.1.0'))
             ->and($migrationFilename1 = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->and($migrationFilename2 = $this->getMigratorFileName(\BlogEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
@@ -108,30 +107,57 @@ class MigrationsServiceTests extends TestCase
                 ->string($migrationClass2->aggregateClassName())
                     ->isEqualTo(\BlogEventSourced::class)
                 ->string($this->output->fetch())
-                    ->contains('Generating project migration to version')
+                    ->contains('Generating migrations classes for version')
                     ->contains('successfully generated')
                 ->and()
                 ->when($service->migrationsGenerate($command))
-                ->then()
                     ->string($this->output->fetch())
                         ->contains('A project migration with version '.$version->__toString().' already exists.')
         ;
 
         $this
             ->given($service = $this->createService())
-            ->and($command = new MigrationsGenerateCommand('3.2.6'))
+            ->and($command = new MigrationsGenerateCommand(false))
             ->and($command->setIo($this->getIO()))
-            ->and($version = Version::fromString('3.2.6'))
+            ->and($version = Version::fromString('0.2.0'))
             ->and($migrationFilename1 = $this->getMigratorFileName(PostEventSourced::class, $version))
             ->and($migrationFilename2 = $this->getMigratorFileName(\BlogEventSourced::class, $version))
             ->when($service->migrationsGenerate($command))
+            ->and($migrationClass1 = $this->getMigratorClass($migrationFilename1))
+            ->and($migrationClass2 = $this->getMigratorClass($migrationFilename2))
             ->then()
                 ->boolean(file_exists($migrationFilename1))
-                    ->isFalse()
+                    ->isTrue()
                 ->boolean(file_exists($migrationFilename2))
-                    ->isFalse()
+                    ->isTrue()
+                ->string($migrationClass1->aggregateClassName())
+                    ->isEqualTo(PostEventSourced::class)
+                ->string($migrationClass2->aggregateClassName())
+                    ->isEqualTo(\BlogEventSourced::class)
                 ->string($this->output->fetch())
-                    ->contains('A version number must be a minor (x.x.0) or a major (x.0.0) version.')
+                    ->contains('Generating migrations classes for version')
+                    ->contains('successfully generated')
+        ;
+
+        $this
+            ->given($service = $this->createService())
+            ->and($command = new MigrationsGenerateCommand(true))
+            ->and($command->setIo($this->getIO()))
+            ->and($version = Version::fromString('1.0.0'))
+            ->and($migrationFilename1 = $this->getMigratorFileName(PostEventSourced::class, $version))
+            ->and($migrationFilename2 = $this->getMigratorFileName(\BlogEventSourced::class, $version))
+            ->when($service->migrationsGenerate($command))
+            ->and($migrationClass1 = $this->getMigratorClass($migrationFilename1))
+            ->and($migrationClass2 = $this->getMigratorClass($migrationFilename2))
+            ->then()
+                ->boolean(file_exists($migrationFilename1))
+                    ->isTrue()
+                ->boolean(file_exists($migrationFilename2))
+                    ->isTrue()
+                ->string($migrationClass1->aggregateClassName())
+                    ->isEqualTo(PostEventSourced::class)
+                ->string($migrationClass2->aggregateClassName())
+                    ->isEqualTo(\BlogEventSourced::class)
         ;
     }
 
@@ -157,6 +183,7 @@ class MigrationsServiceTests extends TestCase
                 ->string($this->output->fetch())
                     ->contains(' Current Version      <c2>0</c2>')
                     ->contains(' Latest Version       <c2>none</c2>')
+                    ->contains(' Next Version         <c2>none</c2>')
                     ->contains(' Executed Migrations  <c2>0</c2>')
                     ->contains(' Available Migrations <c2>0</c2>')
                     ->contains(' New Migrations       <c2>0</c2>')
@@ -185,6 +212,7 @@ class MigrationsServiceTests extends TestCase
                 ->string($this->output->fetch())
                     ->contains(' Current Version      <c2>0</c2>')
                     ->contains(' Latest Version       <c2>1.1.0</c2>')
+                    ->contains(' Next Version         <c2>0.1.0</c2>')
                     ->contains(' Executed Migrations  <c2>0</c2>')
                     ->contains(' Available Migrations <c2>4</c2>')
                     ->contains(' New Migrations       <c2>4</c2>')
@@ -221,6 +249,7 @@ class MigrationsServiceTests extends TestCase
                 ->string($this->output->fetch())
                     ->contains(' Current Version      <c2>0.2.0 (2016-09-01 18:30:00)</c2>')
                     ->contains(' Latest Version       <c2>1.1.0</c2>')
+                    ->contains(' Next Version         <c2>1.0.0</c2>')
                     ->contains(' Executed Migrations  <c2>2</c2>')
                     ->contains(' Available Migrations <c2>4</c2>')
                     ->contains(' New Migrations       <c2>2</c2>')

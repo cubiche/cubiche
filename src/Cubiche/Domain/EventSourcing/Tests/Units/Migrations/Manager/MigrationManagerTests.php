@@ -44,28 +44,28 @@ class MigrationManagerTests extends TestCase
     }
 
     /**
-     * Test CurrentMigration method.
+     * Test latestAvailableVersion method.
      */
-    public function testCurrentMigration()
+    public function testLatestAvailableVersion()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->object($manager->currentMigration()->version())
-                    ->isEqualTo(Version::fromString('0.2.0'))
+                ->object($manager->latestAvailableVersion())
+                    ->isEqualTo(Version::fromString('1.1.0'))
         ;
     }
 
     /**
-     * Test LatestVersion method.
+     * Test nextAvailableVersion method.
      */
-    public function testLatestVersion()
+    public function testNextAvailableVersion()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->object($manager->latestVersion())
-                    ->isEqualTo(Version::fromString('1.1.0'))
+                ->object($manager->nextAvailableVersion())
+                    ->isEqualTo(Version::fromString('1.0.0'))
         ;
     }
 
@@ -88,59 +88,73 @@ class MigrationManagerTests extends TestCase
     }
 
     /**
-     * Test MigratedVersions method.
+     * Test latestMigration method.
      */
-    public function testMigratedVersions()
+    public function testLatestMigration()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->array($manager->migratedVersions())
-                    ->isEqualTo([Version::fromString('0.2.0'), Version::fromString('0.1.0')])
+            ->object($manager->latestMigration()->version())
+            ->isEqualTo(Version::fromString('0.2.0'))
         ;
     }
 
     /**
-     * Test NumberOfMigratedVersions method.
+     * Test migrations method.
      */
-    public function testNumberOfMigratedVersions()
+    public function testMigrations()
+    {
+        $this
+            ->given($manager = $this->createManager())
+            ->when($migrations = $manager->migratedVersions())
+            ->then()
+                ->object($migrations[0])
+                    ->isEqualTo(Version::fromString('0.2.0'))
+                ->object($migrations[1])
+                    ->isEqualTo(Version::fromString('0.1.0'))
+        ;
+    }
+
+    /**
+     * Test numberOfMigrations method.
+     */
+    public function testNumberOfMigrations()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->integer($manager->numberOfMigratedVersions())
+                ->integer($manager->numberOfMigrations())
                     ->isEqualTo(2)
         ;
     }
 
     /**
-     * Test HasMigratedVersion method.
+     * Test hasMigration method.
      */
-    public function testHasMigratedVersion()
+    public function testHasMigration()
     {
         $this
             ->given($manager = $this->createManager())
             ->then()
-                ->boolean($manager->hasMigratedVersion(Version::fromString('0.1.0')))
+                ->boolean($manager->hasMigration(Version::fromString('0.1.0')))
                     ->isTrue()
-                ->boolean($manager->hasMigratedVersion(Version::fromString('1.0.0')))
+                ->boolean($manager->hasMigration(Version::fromString('1.0.0')))
                     ->isFalse()
         ;
     }
 
     /**
-     * Test MigrationsToExecute method.
+     * Test nextMigrationToExecute method.
      */
-    public function testMigrationsToExecute()
+    public function testNextMigrationToExecute()
     {
         $this
             ->given($manager = $this->createManager())
-            ->when($migrations = $manager->migrationsToExecute(Version::fromString('1.0.0')))
+            ->when($migration = $manager->nextMigrationToExecute())
             ->then()
-                ->sizeOf($migrations)
-                    ->isEqualTo(2)
-                ->integer($migrations[0]->version()->compareTo($migrations[1]->version()))
-                    ->isEqualTo(-1)
+                ->object($migration->version())
+                    ->isEqualTo(Version::fromString('1.0.0'))
         ;
     }
 
@@ -172,10 +186,14 @@ class MigrationManagerTests extends TestCase
                 )
             )
             ->then()
-            ->exception(function () use ($manager) {
-                $manager->registerMigrationsFromDirectory();
-            })
-            ->isInstanceOf(\RuntimeException::class)
+                ->variable($manager->nextAvailableVersion())
+                    ->isNull()
+                ->variable($manager->nextMigrationToExecute())
+                    ->isNull()
+                ->exception(function () use ($manager) {
+                    $manager->registerMigrationsFromDirectory();
+                })
+                ->isInstanceOf(\RuntimeException::class)
         ;
 
         $this

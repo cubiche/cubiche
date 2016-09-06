@@ -149,6 +149,68 @@ class InMemoryEventStore implements EventStoreInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function loadAll($streamName, Version $version)
+    {
+        $streams = array();
+
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
+            throw new \RuntimeException(sprintf(
+                'The application %s not found in the event store.',
+                $applicationKey
+            ));
+        }
+
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $streamKey = $this->getStreamKey($streamName, $version);
+
+        if (!$applicationCollection->containsKey($streamKey)) {
+            throw new \RuntimeException(sprintf(
+                'The stream name %s of application %s not found in the event store.',
+                $streamKey,
+                $applicationKey
+            ));
+        }
+
+        /** @var ArrayHashMap $streamCollection */
+        $streamCollection = $applicationCollection->get($streamKey);
+
+        /** @var ArrayList $aggregateIdCollection */
+        foreach ($streamCollection as $aggregateKey => $aggregateIdCollection) {
+            $streams[] = new EventStream(
+                $streamName,
+                $aggregateKey,
+                $aggregateIdCollection->toArray()
+            );
+        }
+
+        return $streams;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAll($streamName, Version $version)
+    {
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
+            throw new \RuntimeException(sprintf(
+                'The application %s not found in the event store.',
+                $applicationKey
+            ));
+        }
+
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $streamKey = $this->getStreamKey($streamName, $version);
+
+        $applicationCollection->removeAt($streamKey);
+    }
+
+    /**
      * @return string
      */
     protected function getApplicationKey()

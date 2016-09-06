@@ -19,33 +19,33 @@ use Cubiche\Core\Console\Command\ConsoleCommand;
 class MigrationsGenerateCommand extends ConsoleCommand
 {
     /**
-     * @var string
+     * @var bool
      */
-    protected $version;
+    protected $major;
 
     /**
      * MigrationsMigrateCommand constructor.
      *
-     * @param string $version
+     * @param bool $major
      */
-    public function __construct($version)
+    public function __construct($major = false)
     {
-        $this->version = $version;
+        $this->major = $major;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function version()
+    public function isMajor()
     {
-        return $this->version;
+        return $this->major;
     }
 
     /**
-     * @param string $version
+     * @param bool $major
      */
-    public function setVersion($version)
+    public function setMajor($major)
     {
-        $this->version = $version;
+        $this->major = $major;
     }
 }

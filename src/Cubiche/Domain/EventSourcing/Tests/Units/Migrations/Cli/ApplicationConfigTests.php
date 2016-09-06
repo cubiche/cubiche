@@ -81,7 +81,7 @@ class ApplicationConfigTests extends TestCase
             ->and($application = $this->createApplication($config))
             ->and(
                 $args = new ArgvArgs(
-                    array('migrations', 'eventsourcing', 'migrations-generate', '--version=2.4.0')
+                    array('migrations', 'eventsourcing', 'migrations-generate', '--major=true')
                 )
             )
             ->and($input = new StringInputStream(''))
@@ -90,7 +90,25 @@ class ApplicationConfigTests extends TestCase
             ->when($application->run($args, $input, $output, $errorOutput))
             ->then()
                 ->string($output->fetch())
-                    ->contains('Generating project migration to version')
+                    ->contains('Generating migrations classes for version <c2>1.0.0</c2>')
+                    ->contains('The migration has been <c1>successfully generated</c1>')
+        ;
+
+        $this
+            ->given($config = $this->createConfiguration())
+            ->and($application = $this->createApplication($config))
+            ->and(
+                $args = new ArgvArgs(
+                    array('migrations', 'eventsourcing', 'migrations-generate')
+                )
+            )
+            ->and($input = new StringInputStream(''))
+            ->and($output = new BufferedOutputStream())
+            ->and($errorOutput = new BufferedOutputStream())
+            ->when($application->run($args, $input, $output, $errorOutput))
+            ->then()
+                ->string($output->fetch())
+                    ->contains('Generating migrations classes for version <c2>1.1.0</c2>')
                     ->contains('The migration has been <c1>successfully generated</c1>')
         ;
     }

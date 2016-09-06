@@ -29,7 +29,7 @@ interface MigrationStoreInterface
      *
      * @return bool
      */
-    public function hasVersion(Version $version);
+    public function hasMigration(Version $version);
 
     /**
      * @return Migration[]

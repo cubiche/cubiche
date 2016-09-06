@@ -15,6 +15,7 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Tests\Generator\ClassUtils;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
@@ -46,28 +47,32 @@ class MigrationsService
      */
     public function migrationsGenerate(MigrationsGenerateCommand $command)
     {
-        $version = Version::fromString($command->version());
+        $latestAvailableVersion = $this->migrator->status()->latestAvailableVersion();
+        if ($latestAvailableVersion == null) {
+            $latestAvailableVersion = Version::fromString('0.0.0');
+        }
 
-        if (!$version->isMajorVersion() && !$version->isMinorVersion()) {
-            $command->getIo()->writeLine(
-                '<error>A version number must be a minor (x.x.0) or a major (x.0.0) version.</error>'
-            );
+        $nextVersion = $latestAvailableVersion;
+        if ($command->isMajor()) {
+            $nextVersion->increment(VersionIncrementType::MAJOR());
         } else {
+            $nextVersion->increment(VersionIncrementType::MINOR());
+        }
+
+        $command->getIo()->writeLine(
+            'Generating migrations classes for version <c2>'.$nextVersion->__toString().'</c2>'
+        );
+
+        try {
+            $this->migrator->generate($nextVersion);
+
             $command->getIo()->writeLine(
-                'Generating project migration to version <c2>'.$version->__toString().'</c2>'
+                'The migration has been <c1>successfully generated</c1>'
             );
-
-            try {
-                $this->migrator->generate($version);
-
-                $command->getIo()->writeLine(
-                    'The migration has been <c1>successfully generated</c1>'
-                );
-            } catch (\Exception $e) {
-                $command->getIo()->writeLine(
-                    '<error>'.$e->getMessage().'</error>'
-                );
-            }
+        } catch (\Exception $e) {
+            $command->getIo()->writeLine(
+                '<error>'.$e->getMessage().'</error>'
+            );
         }
     }
 
@@ -86,20 +91,28 @@ class MigrationsService
     {
         try {
             $status = $this->migrator->status();
-            $currentMigration = $status->currentMigration();
+            $latestMigration = $status->latestMigration();
 
             $rows = array(
                 array(
                     ' Current Version',
-                    $currentMigration ? sprintf(
+                    $latestMigration ? sprintf(
                         '<c2>%s (%s)</c2>',
-                        $currentMigration->version()->__toString(),
-                        $currentMigration->createdAt()->format('Y-m-d H:i:s')
+                        $latestMigration->version()->__toString(),
+                        $latestMigration->createdAt()->format('Y-m-d H:i:s')
                     ) : '<c2>0</c2>',
                 ),
                 array(
                     ' Latest Version',
-                    $status->latestVersion() ? '<c2>'.$status->latestVersion()->__toString().'</c2>' : '<c2>none</c2>',
+                    $status->latestAvailableVersion() ?
+                        '<c2>'.$status->latestAvailableVersion()->__toString().'</c2>' :
+                        '<c2>none</c2>',
+                ),
+                array(
+                    ' Next Version',
+                    $status->nextAvailableVersion() ?
+                        '<c2>'.$status->nextAvailableVersion()->__toString().'</c2>' :
+                        '<c2>none</c2>',
                 ),
                 array(
                     ' Executed Migrations',

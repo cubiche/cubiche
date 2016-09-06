@@ -18,34 +18,4 @@ use Cubiche\Core\Console\Command\ConsoleCommand;
  */
 class MigrationsMigrateCommand extends ConsoleCommand
 {
-    /**
-     * @var string
-     */
-    protected $version;
-
-    /**
-     * MigrationsMigrateCommand constructor.
-     *
-     * @param string $version
-     */
-    public function __construct($version)
-    {
-        $this->version = $version;
-    }
-
-    /**
-     * @return string
-     */
-    public function version()
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param string $version
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-    }
 }

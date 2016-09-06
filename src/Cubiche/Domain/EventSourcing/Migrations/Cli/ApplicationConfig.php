@@ -14,7 +14,6 @@ use Cubiche\Core\Console\Config\DefaultApplicationConfig;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
-use Webmozart\Console\Api\Args\Format\Argument;
 use Webmozart\Console\Api\Args\Format\Option;
 
 /**
@@ -36,31 +35,22 @@ class ApplicationConfig extends DefaultApplicationConfig
             ->beginCommand('eventsourcing')
                 ->beginSubCommand('migrations-generate')
                     ->setClass(MigrationsGenerateCommand::class)
-                    ->setDescription('Generate a blank migration class.')
+                    ->setDescription('Generate an skeleton migrations classes.')
                     ->addOption(
-                        'version',
+                        'major',
                         null,
                         Option::REQUIRED_VALUE,
-                        'The version to migrate to'
+                        'If the major option is equal true, the command will generate a major migration
+                        or a minor migration otherwise'
                     )
                 ->end()
                 ->beginSubCommand('migrations-migrate')
                     ->setClass(MigrationsMigrateCommand::class)
-                    ->setDescription('Execute a migration to a specified version or the latest available version.')
-                    ->addArgument(
-                        'version',
-                        Argument::OPTIONAL,
-                        'The version to migrate to'
-                    )
+                    ->setDescription('Execute a migration to the latest available version.')
                 ->end()
                 ->beginSubCommand('migrations-status')
                     ->setClass(MigrationsStatusCommand::class)
                     ->setDescription('View the status of a set of migrations.')
-                    ->addArgument(
-                        'showAvailables',
-                        Argument::OPTIONAL,
-                        'This will display a list of all available migrations and their status'
-                    )
                 ->end()
             ->end()
         ;

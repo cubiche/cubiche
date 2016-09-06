@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli\Command;
 
+use Cubiche\Core\Console\Command\ConsoleCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 
@@ -21,29 +22,15 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class MigrationsMigrateCommandTests extends TestCase
 {
     /**
-     * Test Version method.
+     * Test class method.
      */
-    public function testVersion()
+    public function testClass()
     {
         $this
-            ->given($command = new MigrationsMigrateCommand('3.2.0'))
+            ->given($command = new MigrationsMigrateCommand())
             ->then()
-                ->string($command->version())
-                    ->isEqualTo('3.2.0')
-        ;
-    }
-
-    /**
-     * Test SetVersion method.
-     */
-    public function testSetVersion()
-    {
-        $this
-            ->given($command = new MigrationsMigrateCommand('3.2.0'))
-            ->when($command->setVersion('5.2.8'))
-            ->then()
-                ->string($command->version())
-                    ->isEqualTo('5.2.8')
+                ->object($command)
+                    ->isInstanceOf(ConsoleCommand::class)
         ;
     }
 }

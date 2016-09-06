@@ -63,14 +63,14 @@ abstract class MigrationStoreTestCase extends TestCase
             ->and($migration = new Migration($aggregates, $version, $createdAt))
             ->when($store->persist($migration))
             ->then()
-                ->boolean($store->hasVersion($version))
+                ->boolean($store->hasMigration($version))
                     ->isTrue()
-                ->boolean($store->hasVersion($version3))
+                ->boolean($store->hasMigration($version3))
                     ->isFalse()
                 ->and()
                 ->when($store->persist(new Migration($aggregates, $version3, new \DateTime())))
                 ->then()
-                    ->boolean($store->hasVersion($version3))
+                    ->boolean($store->hasMigration($version3))
                         ->isTrue()
         ;
     }

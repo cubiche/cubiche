@@ -21,29 +21,29 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class MigrationsGenerateCommandTests extends TestCase
 {
     /**
-     * Test Version method.
+     * Test Major method.
      */
-    public function testVersion()
+    public function testMajor()
     {
         $this
-            ->given($command = new MigrationsGenerateCommand('1.2.0'))
+            ->given($command = new MigrationsGenerateCommand())
             ->then()
-                ->STRING($command->version())
-                    ->isEqualTo('1.2.0')
+                ->boolean($command->isMajor())
+                    ->isFalse()
         ;
     }
 
     /**
-     * Test SetVersion method.
+     * Test SetMajor method.
      */
-    public function testSetVersion()
+    public function testSetMajor()
     {
         $this
-            ->given($command = new MigrationsGenerateCommand('3.0.3'))
-            ->when($command->setVersion('4.5.0'))
+            ->given($command = new MigrationsGenerateCommand())
+            ->when($command->setMajor(true))
             ->then()
-                ->string($command->version())
-                    ->isEqualTo('4.5.0')
+                ->boolean($command->isMajor())
+                    ->isTrue()
         ;
     }
 }
