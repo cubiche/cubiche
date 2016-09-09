@@ -10,12 +10,19 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations;
 
+use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Migrations\Store\InMemoryMigrationStore;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * MigratorTests class.
@@ -32,6 +39,7 @@ class MigratorTests extends TestCase
         return new Migrator(
             $this->getClassMetadataFactory(),
             new InMemoryMigrationStore(),
+            new InMemoryEventStore(),
             $this->migrationsDirectory
         );
     }
@@ -93,6 +101,7 @@ class MigratorTests extends TestCase
         $migrator = new Migrator(
             $this->getClassMetadataFactory(),
             $migratorStore,
+            new InMemoryEventStore(),
             $this->migrationsDirectory
         );
 
@@ -110,5 +119,90 @@ class MigratorTests extends TestCase
                 ->integer($status->numNewMigrations())
                     ->isEqualTo(2)
         ;
+    }
+
+    /**
+     * Test migrate method.
+     */
+    public function testMigrate()
+    {
+        $this->migrationsDirectory = __DIR__.'/../../Fixtures/Migrations';
+        require_once __DIR__.'/../../Fixtures/BlogEventSourced.php';
+
+        // simulate an application and aggregate version state
+        $currentApplicationVersion = Version::fromString('0.1.0');
+        VersionManager::setCurrentApplicationVersion($currentApplicationVersion);
+        VersionManager::persistVersionOfClass(PostEventSourced::class, $currentApplicationVersion);
+        VersionManager::persistVersionOfClass(\BlogEventSourced::class, $currentApplicationVersion);
+
+        // creating migration store
+        $aggregates = [PostEventSourced::class, \BlogEventSourced::class];
+        $migratorStore = new InMemoryMigrationStore();
+        $migratorStore->persist(new Migration($aggregates, $currentApplicationVersion, new \DateTime()));
+
+        // creating event store
+        $eventStore = new InMemoryEventStore();
+
+        // add the event store flow
+        $postId1 = PostId::fromNative(md5(rand()));
+        $postEventStream1 = new EventStream(
+            $this->streamName(PostEventSourced::class),
+            $postId1,
+            [
+                new PostWasCreated($postId1, 'Best restaurants in barcelona', 'empty'),
+                new PostTitleWasChanged($postId1, 'Best cuban restaurants in barcelona'),
+            ]
+        );
+
+        $postId2 = PostId::fromNative(md5(rand()));
+        $postEventStream2 = new EventStream(
+            $this->streamName(PostEventSourced::class),
+            $postId2,
+            [
+                new PostWasCreated($postId2, 'Best things to do with children in barcelona', 'empty'),
+                new PostTitleWasChanged($postId2, 'Things to do with children in barcelona this weekend'),
+            ]
+        );
+
+        $eventStore->persist($postEventStream1, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+
+        // fake BlogEventSourced event stream
+        $postId2 = PostId::fromNative(md5(rand()));
+        $postEventStream2 = new EventStream(
+            $this->streamName(\BlogEventSourced::class),
+            $postId2,
+            [
+                new PostWasCreated($postId2, 'Blog', 'empty'),
+                new PostTitleWasChanged($postId2, 'new title'),
+            ]
+        );
+
+        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+
+        // creating the migrator
+        $migrator = new Migrator(
+            $this->getClassMetadataFactory(),
+            $migratorStore,
+            $eventStore,
+            $this->migrationsDirectory
+        );
+
+        $this
+            ->given($result = $migrator->migrate())
+            ->then()
+                ->boolean($result)
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * @param string $aggregateClassName
+     *
+     * @return string
+     */
+    protected function streamName($aggregateClassName)
+    {
+        return NameResolver::resolve($aggregateClassName);
     }
 }

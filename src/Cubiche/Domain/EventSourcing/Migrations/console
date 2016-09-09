@@ -28,6 +28,7 @@ if (!$loaded) {
     );
 }
 
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
@@ -70,7 +71,12 @@ function createApplication($config, $migrationsDirectory, $cacheDirectory)
     $migrationStore = new InMemoryMigrationStore();
 
     $migrationsService = new MigrationsService(
-        new Migrator(getClassMetadataFactory($cacheDirectory), $migrationStore, $migrationsDirectory)
+        new Migrator(
+            getClassMetadataFactory($cacheDirectory),
+            $migrationStore,
+            new InMemoryEventStore(),
+            $migrationsDirectory
+        )
     );
 
     $commandBus->addHandler(MigrationsGenerateCommand::class, $migrationsService);

@@ -11,6 +11,7 @@ namespace V0_2_0\Cubiche\Domain\EventSourcing\Tests\Fixtures;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Migrations\MigrationInterface;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 
 /**
@@ -25,8 +26,14 @@ class PostEventSourcedMigration implements MigrationInterface
      */
     public function migrate(EventStream $eventStream)
     {
-        // TODO: Implement migrate() method.
-        return $eventStream;
+        $events = array();
+        foreach ($eventStream->events() as $event) {
+            if (!$event instanceof PostTitleWasChanged) {
+                $events[] = $event;
+            }
+        }
+
+        return new EventStream($eventStream->streamName(), $eventStream->aggregateId(), $events);
     }
 
     /**

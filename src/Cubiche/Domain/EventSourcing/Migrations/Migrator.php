@@ -78,11 +78,12 @@ class Migrator
     public function __construct(
         ClassMetadataFactory $metadataFactory,
         MigrationStoreInterface $migrationStore,
+        EventStoreInterface $eventStore,
         $migrationsDirectory
     ) {
         $this->metadataFactory = $metadataFactory;
         $this->migrationStore = $migrationStore;
-//        $this->eventStore = $eventStore;
+        $this->eventStore = $eventStore;
         $this->migrationsDirectory = $migrationsDirectory;
 
         if (!is_dir($migrationsDirectory)) {
@@ -151,7 +152,7 @@ class Migrator
                 $migrationClass = new $aggregateMigrationClass();
 
                 $aggregateClassName = $migrationClass->aggregateClassName();
-                $currentAggregateVersion = VersionManager::versionOf($aggregateClassName);
+                $currentAggregateVersion = VersionManager::versionOfClass($aggregateClassName);
 
                 // get all event streams for this aggregate class name
                 $eventStreams = $this->eventStore->loadAll(

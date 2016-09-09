@@ -13,6 +13,7 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli;
 use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\ApplicationConfig;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsMigrateCommand;
@@ -61,7 +62,12 @@ class ApplicationConfigTests extends TestCase
         $eventBus = DomainEventPublisher::eventBus();
 
         $migrationsService = new MigrationsService(
-            new Migrator($this->getClassMetadataFactory(), new InMemoryMigrationStore(), $this->migrationsDirectory)
+            new Migrator(
+                $this->getClassMetadataFactory(),
+                new InMemoryMigrationStore(),
+                new InMemoryEventStore(),
+                $this->migrationsDirectory
+            )
         );
 
         $commandBus->addHandler(MigrationsGenerateCommand::class, $migrationsService);

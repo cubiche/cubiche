@@ -81,7 +81,32 @@ class MigrationsService
      */
     public function migrationsMigrate(MigrationsMigrateCommand $command)
     {
-        $command->getIo()->writeLine('migrate ok');
+        try {
+            $status = $this->migrator->status();
+            $nextAvailableVersion = $status->nextAvailableVersion();
+
+            if ($nextAvailableVersion !== null) {
+                $command->getIo()->writeLine(
+                    'Starting migration to version <c2>'.$nextAvailableVersion->__toString().'</c2>'
+                );
+
+                if ($this->migrator->migrate() == true) {
+                    $command->getIo()->writeLine(
+                        'The migration has been <c1>successfully executed</c1>'
+                    );
+                } else {
+                    $command->getIo()->writeLine(
+                        '<warn>The migration '.$nextAvailableVersion->__toString().' was not executed.</warn>'
+                    );
+                }
+            } else {
+                $command->getIo()->writeLine('<warn>There is no migration to execute.</warn>');
+            }
+        } catch (\Exception $e) {
+            $command->getIo()->writeLine(
+                '<error>'.$e->getMessage().'</error>'
+            );
+        }
     }
 
     /**

@@ -15,6 +15,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
+use Cubiche\Domain\Identity\StringId;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -182,7 +183,7 @@ class InMemoryEventStore implements EventStoreInterface
         foreach ($streamCollection as $aggregateKey => $aggregateIdCollection) {
             $streams[] = new EventStream(
                 $streamName,
-                $aggregateKey,
+                StringId::fromNative($aggregateKey),
                 $aggregateIdCollection->toArray()
             );
         }

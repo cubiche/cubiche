@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli;
 
+use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsGenerateCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\MigrationsService;
@@ -45,7 +46,12 @@ class MigrationsServiceTests extends TestCase
     protected function createService()
     {
         return new MigrationsService(
-            new Migrator($this->getClassMetadataFactory(), new InMemoryMigrationStore(), $this->migrationsDirectory)
+            new Migrator(
+                $this->getClassMetadataFactory(),
+                new InMemoryMigrationStore(),
+                new InMemoryEventStore(),
+                $this->migrationsDirectory
+            )
         );
     }
 
@@ -238,7 +244,13 @@ class MigrationsServiceTests extends TestCase
             )
         );
 
-        $migrator = new Migrator($this->getClassMetadataFactory(), $migratorStore, $this->migrationsDirectory);
+        $migrator = new Migrator(
+            $this->getClassMetadataFactory(),
+            $migratorStore,
+            new InMemoryEventStore(),
+            $this->migrationsDirectory
+        );
+
         $service = new MigrationsService($migrator);
 
         $this
