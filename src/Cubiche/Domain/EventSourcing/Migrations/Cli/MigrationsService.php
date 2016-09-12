@@ -16,7 +16,6 @@ use Cubiche\Domain\EventSourcing\Migrations\Cli\Command\MigrationsStatusCommand;
 use Cubiche\Domain\EventSourcing\Migrations\Migrator;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
-use Cubiche\Tests\Generator\ClassUtils;
 use Webmozart\Console\UI\Component\Table;
 use Webmozart\Console\UI\Style\TableStyle;
 
@@ -90,15 +89,11 @@ class MigrationsService
                     'Starting migration to version <c2>'.$nextAvailableVersion->__toString().'</c2>'
                 );
 
-                if ($this->migrator->migrate() == true) {
-                    $command->getIo()->writeLine(
-                        'The migration has been <c1>successfully executed</c1>'
-                    );
-                } else {
-                    $command->getIo()->writeLine(
-                        '<warn>The migration '.$nextAvailableVersion->__toString().' was not executed.</warn>'
-                    );
-                }
+                $this->migrator->migrate();
+
+                $command->getIo()->writeLine(
+                    'The migration has been <c1>successfully executed</c1>'
+                );
             } else {
                 $command->getIo()->writeLine('<warn>There is no migration to execute.</warn>');
             }
@@ -164,23 +159,5 @@ class MigrationsService
                 '<error>'.$e->getMessage().'</error>'
             );
         }
-    }
-
-    /**
-     * @param string $sourceFile
-     *
-     * @return string
-     */
-    private function getClassName($sourceFile)
-    {
-        $aggregateClassName = $sourceFile;
-        if (!class_exists($aggregateClassName)) {
-            $classes = ClassUtils::getClassesInFile($sourceFile);
-            if (count($classes) > 0) {
-                return $classes[0];
-            }
-        }
-
-        return $aggregateClassName;
     }
 }

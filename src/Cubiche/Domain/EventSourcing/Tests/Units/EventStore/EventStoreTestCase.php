@@ -143,4 +143,80 @@ abstract class EventStoreTestCase extends TestCase
                 })->isInstanceOf(\RuntimeException::class)
         ;
     }
+
+    /**
+     * Test LoadAll method.
+     */
+    public function testLoadAll()
+    {
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId1 = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and($eventStream1 = new EventStream('posts', $postId1, [new PostWasCreated($postId1, 'baz', 'content')]))
+            ->and($version = new Version())
+            ->when($store->persist($eventStream, $version))
+            ->and($store->persist($eventStream1, $version))
+            ->then()
+                ->exception(function () use ($store, $version) {
+                    $store->loadAll('blogs', $version);
+                })->isInstanceOf(\RuntimeException::class)
+                ->exception(function () use ($store) {
+                    $store->loadAll('posts', new Version(0, 10, 456));
+                })->isInstanceOf(\RuntimeException::class)
+                ->array($store->loadAll('posts', $version))
+                    ->hasSize(2)
+                ->and()
+                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.1.0')))
+                ->then()
+                    ->exception(function () use ($store, $version) {
+                        $store->loadAll('posts', $version);
+                    })->isInstanceOf(\RuntimeException::class)
+        ;
+    }
+
+    /**
+     * Test RemoveAll method.
+     */
+    public function testRemoveAll()
+    {
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($version = new Version())
+            ->then()
+                ->exception(function () use ($store, $version) {
+                    $store->removeAll('posts', $version);
+                })->isInstanceOf(\RuntimeException::class)
+        ;
+
+        $this
+            ->given($store = $this->createStore())
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId1 = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and($eventStream1 = new EventStream('posts', $postId1, [new PostWasCreated($postId1, 'baz', 'content')]))
+            ->and($version = new Version())
+            ->when($store->persist($eventStream, $version))
+            ->and($store->persist($eventStream1, $version))
+            ->then()
+                ->array($store->loadAll('posts', $version))
+                    ->hasSize(2)
+                ->and()
+                ->when($store->removeAll('posts', $version))
+                ->then()
+                    ->exception(function () use ($store, $version) {
+                        // because there is no stream entry in the current application store
+                        $store->loadAll('posts', $version);
+                    })->isInstanceOf(\RuntimeException::class)
+                ->and()
+                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.1.0')))
+                ->then()
+                    ->exception(function () use ($store, $version) {
+                        // because there is application entry in the store
+                        $store->removeAll('posts', $version);
+                    })->isInstanceOf(\RuntimeException::class)
+        ;
+    }
 }

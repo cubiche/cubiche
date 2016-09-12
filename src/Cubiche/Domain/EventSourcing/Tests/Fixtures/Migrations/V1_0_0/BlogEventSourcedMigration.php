@@ -24,8 +24,7 @@ class BlogEventSourcedMigration implements MigrationInterface
      */
     public function migrate(EventStream $eventStream)
     {
-        // TODO: Implement migrate() method.
-        return $eventStream;
+        return true;
     }
 
     /**

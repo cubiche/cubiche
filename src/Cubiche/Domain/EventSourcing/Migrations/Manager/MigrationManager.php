@@ -168,6 +168,16 @@ class MigrationManager
     }
 
     /**
+     * Persist a given migration.
+     *
+     * @param Migration $migration
+     */
+    public function persistMigration(Migration $migration)
+    {
+        $this->migrationStore->persist($migration);
+    }
+
+    /**
      * Returns the next migration to executed.
      *
      * @return Migration|null

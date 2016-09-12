@@ -95,8 +95,8 @@ class MigrationManagerTests extends TestCase
         $this
             ->given($manager = $this->createManager())
             ->then()
-            ->object($manager->latestMigration()->version())
-            ->isEqualTo(Version::fromString('0.2.0'))
+                ->object($manager->latestMigration()->version())
+                    ->isEqualTo(Version::fromString('0.2.0'))
         ;
     }
 
@@ -141,6 +141,30 @@ class MigrationManagerTests extends TestCase
                     ->isTrue()
                 ->boolean($manager->hasMigration(Version::fromString('1.0.0')))
                     ->isFalse()
+        ;
+    }
+
+    /**
+     * Test persistMigration method.
+     */
+    public function testPersistMigration()
+    {
+        $this
+            ->given($manager = $this->createManager())
+            ->and($latestMigration = $manager->latestMigration())
+            ->and($nextMigration = $manager->nextMigrationToExecute())
+            ->then()
+                ->object($latestMigration->version())
+                    ->isEqualTo(Version::fromString('0.2.0'))
+                ->object($nextMigration->version())
+                    ->isEqualTo(Version::fromString('1.0.0'))
+                ->and()
+                ->when($manager->persistMigration($nextMigration))
+                ->then()
+                    ->object($manager->latestMigration())
+                        ->isNotEqualTo($latestMigration)
+                    ->object($manager->latestMigration())
+                        ->isEqualTo($nextMigration)
         ;
     }
 

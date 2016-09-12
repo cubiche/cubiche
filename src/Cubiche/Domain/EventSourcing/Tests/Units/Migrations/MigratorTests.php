@@ -188,11 +188,38 @@ class MigratorTests extends TestCase
             $this->migrationsDirectory
         );
 
+        $emptyMigrator = new Migrator(
+            $this->getClassMetadataFactory(),
+            $migratorStore,
+            $eventStore,
+            __DIR__.'/../../Fixtures/EmptyMigrations'
+        );
+
         $this
-            ->given($result = $migrator->migrate())
+            ->given($result = $emptyMigrator->migrate())
             ->then()
                 ->boolean($result)
+                    ->isFalse()
+        ;
+
+        $this
+            ->given($status = $migrator->status())
+            ->and($nextVersion = $status->nextAvailableVersion())
+            ->then()
+                ->boolean($migratorStore->hasMigration($nextVersion))
+                    ->isFalse()
+            ->and()
+            ->when($result = $migrator->migrate())
+            ->then()
+                ->boolean($migratorStore->hasMigration($nextVersion))
                     ->isTrue()
+                ->boolean($result)
+                    ->isTrue()
+                ->and()
+                    ->exception(function () use ($migrator) {
+                        // because the V1_0_0\BlogEventSourcedMigration class return an invalid stream
+                        $migrator->migrate();
+                    })->isInstanceOf(\RuntimeException::class)
         ;
     }
 

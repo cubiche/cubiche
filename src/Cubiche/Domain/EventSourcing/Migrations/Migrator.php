@@ -200,6 +200,12 @@ class Migrator
                 // -- end new version context --
             }
 
+            // persist the new migration in the store
+            $this->migrationManager->persistMigration($nextMigration);
+
+            // reset to the current application version
+            VersionManager::setCurrentApplicationVersion($currentApplicationVersion);
+
             return true;
         }
 
