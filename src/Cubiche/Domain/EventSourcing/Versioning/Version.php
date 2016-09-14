@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Versioning;
 
+use Cubiche\Core\Comparable\ComparableInterface;
 use Cubiche\Core\Serializer\SerializableInterface;
 
 /**
@@ -17,7 +18,7 @@ use Cubiche\Core\Serializer\SerializableInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Version implements SerializableInterface
+class Version implements SerializableInterface, ComparableInterface
 {
     /**
      * @var int
@@ -106,14 +107,33 @@ class Version implements SerializableInterface
         switch ($type) {
             case VersionIncrementType::MAJOR():
                 ++$this->major;
+                $this->minor = 0;
+                $this->patch = 0;
                 break;
             case VersionIncrementType::MINOR():
                 ++$this->minor;
+                $this->patch = 0;
                 break;
             default:
                 ++$this->patch;
                 break;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMinorVersion()
+    {
+        return $this->patch === 0 && $this->minor !== 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMajorVersion()
+    {
+        return $this->patch === 0 && $this->minor === 0 && $this->major !== 0;
     }
 
     /**
@@ -134,5 +154,39 @@ class Version implements SerializableInterface
     public function __toString()
     {
         return sprintf('%s.%s.%s', $this->major, $this->minor, $this->patch);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compareTo($other)
+    {
+        if (!$other instanceof self) {
+            throw new \InvalidArgumentException(sprintf(
+                'Argument "%s" is invalid. Allowed types for argument are "%s".',
+                $other,
+                self::class
+            ));
+        }
+
+        if ($this->major() == $other->major() &&
+            $this->minor() == $other->minor() &&
+            $this->patch() == $other->patch()
+        ) {
+            return 0;
+        }
+
+        if ($this->major() > $other->major() ||
+            (
+                $this->major() == $other->major() && $this->minor() > $other->minor()
+            ) || (
+                $this->major() == $other->major() && $this->minor() == $other->minor() &&
+                $this->patch() > $other->patch()
+            )
+        ) {
+            return 1;
+        }
+
+        return -1;
     }
 }

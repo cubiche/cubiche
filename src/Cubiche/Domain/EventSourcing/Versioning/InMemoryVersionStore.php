@@ -54,6 +54,8 @@ class InMemoryVersionStore implements VersionStoreInterface
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
 
+        $aggregateRootVersion->setPatch(0);
+
         $aggregateRootKey = $this->getAggregateRootKey($aggregateClassName);
         $applicationCollection->set($aggregateRootKey, $aggregateRootVersion);
     }
