@@ -13,6 +13,7 @@ use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Console\Api\Config\CommandConfig;
+use Cubiche\Core\Console\Command\ConsoleCommandInterface;
 use Cubiche\Core\Console\Converter\ConsoleArgsToCommand;
 use Cubiche\Core\Console\Handler\DefaultEventHandler;
 use Webmozart\Assert\Assert;
@@ -130,6 +131,10 @@ class ConsoleApplication extends BaseConsoleApplication
         $commandConfig->addEventSubscriber($this->defaultHandler);
 
         if ($command !== null) {
+            if ($command instanceof ConsoleCommandInterface) {
+                $command->setIo($event->getIO());
+            }
+
             try {
                 $this->commandBus->dispatch($command);
 

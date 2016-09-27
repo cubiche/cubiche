@@ -10,7 +10,11 @@
  */
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\VersionManager;
+use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
+use Cubiche\Domain\EventSourcing\Utils\NameResolver;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\IdInterface;
@@ -34,11 +38,6 @@ class EventSourcedAggregateRepository implements RepositoryInterface
     protected $aggregateClassName;
 
     /**
-     * @var string
-     */
-    protected $aggregateName;
-
-    /**
      * AggregateRepository constructor.
      *
      * @param EventStoreInterface $eventStore
@@ -47,9 +46,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
     public function __construct(EventStoreInterface $eventStore, $aggregateClassName)
     {
         $this->eventStore = $eventStore;
-
         $this->aggregateClassName = $aggregateClassName;
-        $this->aggregateName = $this->aggregateName();
     }
 
     /**
@@ -57,12 +54,10 @@ class EventSourcedAggregateRepository implements RepositoryInterface
      */
     public function get(IdInterface $id)
     {
-        $version = VersionManager::versionOfClass($this->aggregateClassName);
-        $eventStream = $this->eventStore->load($this->aggregateName, $id, $version);
+        $eventStream = $this->loadHistory($id);
 
         return call_user_func(
-            $this->aggregateClassName,
-            'loadFromHistory',
+            array($this->aggregateClassName, 'loadFromHistory'),
             $eventStream
         );
     }
@@ -80,13 +75,7 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             ));
         }
 
-        $recordedEvents = $element->recordedEvents();
-        if (count($recordedEvents) > 0) {
-            $element->clearEvents();
-
-            $eventStream = new EventStream($this->aggregateName, $element->id(), $recordedEvents);
-            $this->eventStore->persist($eventStream, $element->version());
-        }
+        $this->saveHistory($element);
     }
 
     /**
@@ -112,29 +101,50 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             ));
         }
 
-        $this->eventStore->remove($this->aggregateName, $element->id(), $element->version());
+        $this->eventStore->remove($this->streamName(), $element->id(), $element->version());
     }
 
     /**
-     * @return string
+     * Load a aggregate history from the storage.
+     *
+     * @param IdInterface $id
+     *
+     * @return EventStream
      */
-    protected function aggregateName()
+    protected function loadHistory(IdInterface $id)
     {
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $this->shortClassName())));
+        $version = VersionManager::versionOfClass($this->aggregateClassName);
 
-        return strtolower(implode('_', $pieces));
+        return $this->eventStore->load($this->streamName(), $id, $version);
     }
 
     /**
-     * @return string
+     * Save the aggregate history.
+     *
+     * @param EventSourcedAggregateRootInterface $aggregateRoot
      */
-    protected function shortClassName()
+    protected function saveHistory(EventSourcedAggregateRootInterface $aggregateRoot)
     {
-        // If class name has a namespace separator, only take last portion
-        if (strpos($this->aggregateClassName, '\\') !== false) {
-            return substr($this->aggregateClassName, strrpos($this->aggregateClassName, '\\') + 1);
+        $recordedEvents = $aggregateRoot->recordedEvents();
+        if (count($recordedEvents) > 0) {
+            DomainEventPublisher::publish(new PrePersistEvent($aggregateRoot));
+
+            // clear events
+            $aggregateRoot->clearEvents();
+
+            // create the eventStream and persist it
+            $eventStream = new EventStream($this->streamName(), $aggregateRoot->id(), $recordedEvents);
+            $this->eventStore->persist($eventStream, $aggregateRoot->version());
+
+            DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot));
         }
+    }
 
-        return $this->aggregateClassName;
+    /**
+     * @return string
+     */
+    protected function streamName()
+    {
+        return NameResolver::resolve($this->aggregateClassName);
     }
 }

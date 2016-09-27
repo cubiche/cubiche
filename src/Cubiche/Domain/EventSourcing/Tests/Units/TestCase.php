@@ -10,7 +10,19 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
+use Cubiche\Core\Metadata\ClassMetadataFactory;
+use Cubiche\Domain\EventSourcing\Metadata\Driver\AnnotationDriver;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Tests\TestCase as BaseTestCase;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\FilesystemCache;
+use mageekguy\atoum\adapter as Adapter;
+use mageekguy\atoum\annotations\extractor as Extractor;
+use mageekguy\atoum\asserter\generator as Generator;
+use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * TestCase class.
@@ -19,4 +31,108 @@ use Cubiche\Tests\TestCase as BaseTestCase;
  */
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * @var string
+     */
+    protected $migrationsDirectory;
+
+    /**
+     * @var string
+     */
+    protected $cacheDirectory;
+
+    /**
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
+     * @param Analyzer  $analyzer
+     */
+    public function __construct(
+        Adapter $adapter = null,
+        Extractor $annotationExtractor = null,
+        Generator $asserterGenerator = null,
+        Manager $assertionManager = null,
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
+    ) {
+        parent::__construct(
+            $adapter,
+            $annotationExtractor,
+            $asserterGenerator,
+            $assertionManager,
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
+        );
+
+        $this->migrationsDirectory = __DIR__.'/Migrations/Cli/Migrations';
+        $this->cacheDirectory = __DIR__.'/Migrations/Cache';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        if (is_dir($this->migrationsDirectory)) {
+            system('rm -rf '.escapeshellarg($this->migrationsDirectory));
+        }
+    }
+
+    /**
+     * @return ClassMetadataFactory
+     */
+    protected function getClassMetadataFactory()
+    {
+        $reader = new CachedReader(
+            new AnnotationReader(),
+            new FilesystemCache($this->cacheDirectory),
+            $debug = true
+        );
+
+        AnnotationRegistry::registerFile(
+            __DIR__.'/../../Metadata/Annotations/Migratable.php'
+        );
+
+        $driver = new AnnotationDriver($reader, [__DIR__.'/../Fixtures']);
+        $driver->addExcludePaths([
+            __DIR__.'/../Fixtures/Event',
+            __DIR__.'/../Fixtures/Listener',
+        ]);
+
+        return new ClassMetadataFactory($driver);
+    }
+
+    /**
+     * @param string  $aggregateClassName
+     * @param Version $version
+     *
+     * @return string
+     */
+    protected function getMigratorFileName($aggregateClassName, Version $version)
+    {
+        return sprintf(
+            '%s/%s/%s',
+            $this->migrationsDirectory,
+            $this->versionToDirectory($version),
+            str_replace('\\', '/', $aggregateClassName).'Migration.php'
+        );
+    }
+
+    /**
+     * @param Version $version
+     *
+     * @return string
+     */
+    protected function versionToDirectory(Version $version)
+    {
+        return sprintf(
+            'V%s',
+            str_replace('.', '_', $version->__toString())
+        );
+    }
 }

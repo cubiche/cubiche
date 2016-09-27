@@ -30,7 +30,7 @@ class ValidatorTests extends TestCase
     /**
      * @return Validator
      */
-    public function creaateValidator()
+    public function createValidator()
     {
         return Validator::create();
     }
@@ -41,7 +41,7 @@ class ValidatorTests extends TestCase
     public function testCreate()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->then()
                 ->object($validator)
                     ->isInstanceOf(ValidatorInterface::class)
@@ -54,7 +54,7 @@ class ValidatorTests extends TestCase
     public function testSetDefaultGroup()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->when($validator->setDefaultGroup('foo'))
             ->then()
                 ->boolean(true)
@@ -68,7 +68,7 @@ class ValidatorTests extends TestCase
     public function testSetMetadataFactory()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->and($metadataFactory = new MetadataFactory(new DriverChain(array(new StaticDriver()))))
             ->when($validator->setMetadataFactory($metadataFactory))
             ->then()
@@ -83,7 +83,7 @@ class ValidatorTests extends TestCase
     public function testAssertExplicitConstraints()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->then()
                 ->boolean($validator->assert('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
                     ->isTrue()
@@ -104,7 +104,7 @@ class ValidatorTests extends TestCase
     public function testAssertObject()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->and($post = new Post('title', 'some content'))
             ->and($post1 = new Post())
             ->and($post2 = new Post(3, 10))
@@ -135,7 +135,7 @@ class ValidatorTests extends TestCase
     public function testAssertArrayObject()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->and($post = new Post('title', 'some content'))
             ->and($post1 = new Post())
             ->and($post2 = new Post(3, 10))
@@ -166,7 +166,7 @@ class ValidatorTests extends TestCase
     public function testValidateExplicitConstraints()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->then()
                 ->boolean($validator->validate('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
                     ->isTrue()
@@ -186,7 +186,7 @@ class ValidatorTests extends TestCase
     public function testValidateObject()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->and($post = new Post('title', 'some content'))
             ->and($post1 = new Post())
             ->and($post2 = new Post(3, 10))
@@ -215,7 +215,7 @@ class ValidatorTests extends TestCase
     public function testValidateArrayObject()
     {
         $this
-            ->given($validator = $this->creaateValidator())
+            ->given($validator = $this->createValidator())
             ->and($post = new Post('title', 'some content'))
             ->and($post1 = new Post())
             ->and($post2 = new Post(3, 10))

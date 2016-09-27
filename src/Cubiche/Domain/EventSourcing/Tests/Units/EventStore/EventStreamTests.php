@@ -10,7 +10,10 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\EventStore;
 
+use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * EventStreamTests class.
@@ -24,7 +27,12 @@ class EventStreamTests extends TestCase
      */
     public function testStreamName()
     {
-        // todo: Implement testStreamName().
+        $this
+            ->given($eventStream = new EventStream('posts', PostId::fromNative(md5(rand())), []))
+            ->then()
+                ->string($eventStream->streamName())
+                    ->isEqualTo('posts')
+        ;
     }
 
     /**
@@ -32,7 +40,13 @@ class EventStreamTests extends TestCase
      */
     public function testAggregateId()
     {
-        // todo: Implement testAggregateId().
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, []))
+            ->then()
+                ->object($eventStream->aggregateId())
+                    ->isEqualTo($postId)
+        ;
     }
 
     /**
@@ -40,6 +54,40 @@ class EventStreamTests extends TestCase
      */
     public function testEvents()
     {
-        // todo: Implement testEvents().
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, []))
+            ->then()
+                ->array($eventStream->events())
+                    ->isEmpty()
+        ;
+
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->then()
+                ->array($eventStream->events())
+                    ->hasSize(1)
+        ;
+
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->then()
+                ->exception(function () use ($postId) {
+                    new EventStream('posts', $postId, ['bar']);
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        $this
+            ->given($postId = PostId::fromNative(md5(rand())))
+            ->then()
+                ->exception(function () use ($postId) {
+                    new EventStream(
+                        'posts',
+                        $postId,
+                        [new PostWasCreated(PostId::fromNative(md5(rand())), 'foo', 'bar')]
+                    );
+                })->isInstanceOf(\InvalidArgumentException::class)
+        ;
     }
 }

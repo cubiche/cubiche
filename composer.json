@@ -38,6 +38,9 @@
         ],
         "psr-0": {
             "Cubiche\\": "src/"
+        },
+        "psr-4": {
+            "": "src/Cubiche/Domain/EventSourcing/Tests/Fixtures/Migrations"
         }
     },
     "config": {

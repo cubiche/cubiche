@@ -9,14 +9,14 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
-use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Console\Command\ConsoleCommand;
 
 /**
  * CreatePostCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CreatePostCommand implements CommandInterface
+class CreatePostCommand extends ConsoleCommand
 {
     /**
      * @var string

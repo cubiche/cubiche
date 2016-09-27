@@ -10,7 +10,11 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\EventSourcing\Versioning\InMemoryVersionStore;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
  * VersionManagerTests class.
@@ -20,34 +24,77 @@ use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 class VersionManagerTests extends TestCase
 {
     /**
-     * Test Create method.
-     */
-    public function testCreate()
-    {
-        // todo: Implement testCreate().
-    }
-
-    /**
-     * Test SetStorage method.
-     */
-    public function testSetStorage()
-    {
-        // todo: Implement testSetStorage().
-    }
-
-    /**
-     * Test VersionOf method.
+     * Test testVersionOf method.
      */
     public function testVersionOf()
     {
-        // todo: Implement testVersionOf().
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = VersionManager::versionOf($post))
+            ->then()
+                ->object($version)
+                    ->isEqualTo(Version::fromString('0.0.0'))
+        ;
     }
 
     /**
-     * Test VersionOfClass method.
+     * Test SetVersionStore method.
      */
-    public function testVersionOfClass()
+    public function testSetVersionStore()
     {
-        // todo: Implement testVersionOfClass().
+        $this
+            ->given($manager = VersionManager::create())
+            ->when($manager->setVersionStore(new InMemoryVersionStore()))
+            ->then()
+                ->boolean(true)
+                    ->isTrue()
+        ;
+    }
+
+    /**
+     * Test persistVersionOf method.
+     */
+    public function testPersistVersionOf()
+    {
+        $this
+            ->given(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($version = VersionManager::versionOf($post))
+            ->then()
+                ->object($version)
+                    ->isEqualTo(Version::fromString('0.0.0'))
+                ->and()
+                ->when($post->version()->setMinor(23))
+                ->and($post->version()->setPatch(45))
+                ->and(VersionManager::persistVersionOf($post))
+                ->then()
+                    ->object(VersionManager::versionOf($post))
+                        ->isEqualTo(new Version(0, 23, 0))
+        ;
+    }
+
+    /**
+     * Test setCurrentApplicationVersion method.
+     */
+    public function testSetCurrentApplicationVersion()
+    {
+        $this
+            ->given(
+                $applicationVersion = Version::fromString('3.2.0')
+            )
+            ->and(VersionManager::setCurrentApplicationVersion($applicationVersion))
+            ->then()
+                ->object(VersionManager::currentApplicationVersion())
+                    ->isEqualTo($applicationVersion)
+        ;
     }
 }

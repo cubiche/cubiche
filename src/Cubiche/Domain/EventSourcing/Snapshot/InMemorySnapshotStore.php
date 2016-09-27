@@ -10,7 +10,8 @@
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -38,14 +39,22 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
      */
     public function persist(Snapshot $snapshot)
     {
-        $aggregateType = $this->getKey($snapshot->aggregateType(), $snapshot->version());
-        if (!$this->store->containsKey($aggregateType)) {
-            $this->store->set($aggregateType, new ArrayHashMap());
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
+            $this->store->set($applicationKey, new ArrayHashMap());
         }
 
-        /** @var ArrayHashMap $aggregateTypeCollection */
-        $aggregateTypeCollection = $this->store->get($aggregateType);
-        $aggregateTypeCollection->set($snapshot->aggregateId()->toNative(), $snapshot);
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $aggregateKey = $this->getAggregateKey($snapshot->aggregateType(), $snapshot->version());
+
+        if (!$applicationCollection->containsKey($aggregateKey)) {
+            $applicationCollection->set($aggregateKey, new ArrayHashMap());
+        }
+
+        /** @var ArrayHashMap $aggregateCollection */
+        $aggregateCollection = $applicationCollection->get($aggregateKey);
+        $aggregateCollection->set($snapshot->aggregateId()->toNative(), $snapshot);
     }
 
     /**
@@ -53,18 +62,23 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
      */
     public function load($aggregateType, IdInterface $aggregateId, Version $version)
     {
-        $aggregateType = $this->getKey($aggregateType, $version);
-        if (!$this->store->containsKey($aggregateType)) {
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
             return;
         }
 
-        /** @var ArrayHashMap $aggregateTypeCollection */
-        $aggregateTypeCollection = $this->store->get($aggregateType);
-        if (!$aggregateTypeCollection->containsKey($aggregateId->toNative())) {
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $aggregateKey = $this->getAggregateKey($aggregateType, $version);
+
+        if (!$applicationCollection->containsKey($aggregateKey)) {
             return;
         }
 
-        return $aggregateTypeCollection->get($aggregateId->toNative());
+        /** @var ArrayHashMap $aggregateCollection */
+        $aggregateCollection = $applicationCollection->get($aggregateKey);
+
+        return $aggregateCollection->get($aggregateId->toNative());
     }
 
     /**
@@ -72,14 +86,30 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
      */
     public function remove($aggregateType, IdInterface $aggregateId, Version $version)
     {
-        $aggregateType = $this->getKey($aggregateType, $version);
-        if (!$this->store->containsKey($aggregateType)) {
+        $applicationKey = $this->getApplicationKey();
+        if (!$this->store->containsKey($applicationKey)) {
             return;
         }
 
-        /** @var ArrayHashMap $aggregateTypeCollection */
-        $aggregateTypeCollection = $this->store->get($aggregateType);
-        $aggregateTypeCollection->removeAt($aggregateId->toNative());
+        /** @var ArrayHashMap $applicationCollection */
+        $applicationCollection = $this->store->get($applicationKey);
+        $aggregateKey = $this->getAggregateKey($aggregateType, $version);
+
+        if (!$applicationCollection->containsKey($aggregateKey)) {
+            return;
+        }
+
+        /** @var ArrayHashMap $aggregateCollection */
+        $aggregateCollection = $applicationCollection->get($aggregateKey);
+        $aggregateCollection->removeAt($aggregateId->toNative());
+    }
+
+    /**
+     * @return string
+     */
+    protected function getApplicationKey()
+    {
+        return str_replace('.', '_', VersionManager::currentApplicationVersion()->__toString());
     }
 
     /**
@@ -88,8 +118,8 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
      *
      * @return string
      */
-    protected function getKey($aggregateType, Version $version)
+    protected function getAggregateKey($aggregateType, Version $version)
     {
-        return sprintf('%s_%s', $aggregateType, $version->modelVersion());
+        return sprintf('%s_%s', $aggregateType, $version->major(), $version->minor());
     }
 }

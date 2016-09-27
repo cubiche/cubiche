@@ -60,7 +60,6 @@ class DefaultApplicationConfig extends ApplicationConfig
                 null,
                 'level'
             )
-            ->addOption('version', 'V', Option::NO_VALUE, 'Display this application version')
             ->addOption('ansi', null, Option::NO_VALUE, 'Force ANSI output')
             ->addOption('no-ansi', null, Option::NO_VALUE, 'Disable ANSI output')
             ->addOption('no-interaction', 'n', Option::NO_VALUE, 'Do not ask any interactive question')

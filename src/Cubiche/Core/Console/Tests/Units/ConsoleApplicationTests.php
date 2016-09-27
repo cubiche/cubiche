@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Console\Tests\Units;
 
 use Cubiche\Core\Bus\Command\CommandBus;
-use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Console\Api\Config\ApplicationConfig;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Core\Console\Tests\Fixtures\Command\BlogService;

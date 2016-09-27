@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -41,4 +41,18 @@ interface EventStoreInterface
      * @param Version     $version
      */
     public function remove($streamName, IdInterface $aggregateId, Version $version);
+
+    /**
+     * @param string  $streamName
+     * @param Version $version
+     *
+     * @return EventStream
+     */
+    public function loadAll($streamName, Version $version);
+
+    /**
+     * @param string  $streamName
+     * @param Version $version
+     */
+    public function removeAll($streamName, Version $version);
 }

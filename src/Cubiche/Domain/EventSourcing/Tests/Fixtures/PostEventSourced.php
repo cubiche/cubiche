@@ -12,6 +12,7 @@ namespace Cubiche\Domain\EventSourcing\Tests\Fixtures;
 
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRoot;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\Metadata\Annotations as ES;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasPublished;
@@ -22,6 +23,7 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
  * PostEventSourced class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @ES\Migratable
  */
 class PostEventSourced extends Post implements EventSourcedAggregateRootInterface
 {

@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Domain\EventSourcing\Aggregate\Versioning\Version;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
@@ -36,7 +36,7 @@ class Snapshot
     protected $version;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTime
      */
     protected $createdAt;
 
@@ -45,12 +45,12 @@ class Snapshot
      *
      * @param string                             $aggregateType
      * @param EventSourcedAggregateRootInterface $aggregate
-     * @param \DateTimeImmutable                 $createdAt
+     * @param \DateTime                          $createdAt
      */
     public function __construct(
         $aggregateType,
         EventSourcedAggregateRootInterface $aggregate,
-        \DateTimeImmutable $createdAt
+        \DateTime $createdAt
     ) {
         $this->aggregateType = $aggregateType;
         $this->aggregate = $aggregate;
@@ -91,7 +91,7 @@ class Snapshot
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return \DateTime
      */
     public function createdAt()
     {
