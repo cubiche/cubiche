@@ -10,13 +10,14 @@
 namespace Cubiche\Core\Equatable\Tests\Fixtures;
 
 use Cubiche\Core\Equatable\EquatableInterface;
+use Cubiche\Core\Hashable\HashCoder;
 
 /**
- * EquatableObject class.
+ * Value class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EquatableObject implements EquatableInterface
+class Value implements EquatableInterface
 {
     /**
      * @var mixed
@@ -24,7 +25,7 @@ class EquatableObject implements EquatableInterface
     protected $value;
 
     /**
-     * EquatableObject constructor.
+     * Value constructor.
      *
      * @param mixed $value
      */
@@ -42,16 +43,18 @@ class EquatableObject implements EquatableInterface
     }
 
     /**
-     * @param EquatableObject $other
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function equals($other)
     {
-        if (!$other instanceof self) {
-            return false;
-        }
+        return $other instanceof self && $this->value() == $other->value();
+    }
 
-        return $this->value() == $other->value();
+    /**
+     * {@inheritdoc}
+     */
+    public function hashCode()
+    {
+        return HashCoder::defaultHashCode($this->value());
     }
 }

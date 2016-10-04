@@ -63,28 +63,8 @@ class IteratorAsserter extends BaseIteratorAsserter
      */
     protected function compare(\Iterator $result, \Iterator $expected, $compareKeys = false, $failMessage = null)
     {
-        $result->rewind();
-        $expected->rewind();
-        while ($result->valid() && $expected->valid()) {
-            $this->areEquals($result->current(), $expected->current());
-            if ($compareKeys) {
-                $this->areEquals($result->key(), $expected->key());
-            }
-            $result->next();
-            $expected->next();
-        }
-        $this->areEquals($result->valid(), $expected->valid(), $failMessage);
-    }
-
-    /**
-     * @param mixed  $value
-     * @param mixed  $expected
-     * @param string $failMessage
-     */
-    private function areEquals($value, $expected, $failMessage = null)
-    {
-        /** @var \mageekguy\atoum\stubs\asserters\variable $asserter */
-        $asserter = $this->generator->__call('variable', array($value));
-        $asserter->isEqualTo($expected, $failMessage);
+        /* @var \mageekguy\atoum\stubs\asserters\phpArray $asserter */
+        $arrayAsserter = $this->generator->__call('array', array(\iterator_to_array($result, $compareKeys)));
+        $arrayAsserter->isEqualTo(\iterator_to_array($expected, $compareKeys), $failMessage);
     }
 }

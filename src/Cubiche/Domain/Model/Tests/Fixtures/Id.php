@@ -34,13 +34,19 @@ class Id implements IdInterface
     }
 
     /**
-     * @param mixed $other
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function equals($other)
     {
         return $this->toNative() == $other->toNative();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hashCode()
+    {
+        return $this->value;
     }
 
     /**
@@ -54,7 +60,7 @@ class Id implements IdInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function toNative()
     {
@@ -62,7 +68,7 @@ class Id implements IdInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function __toString()
     {

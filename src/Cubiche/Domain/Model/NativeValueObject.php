@@ -33,4 +33,12 @@ abstract class NativeValueObject implements NativeValueObjectInterface
     {
         return \strval($this->toNative());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hashCode()
+    {
+        return $this->__toString();
+    }
 }

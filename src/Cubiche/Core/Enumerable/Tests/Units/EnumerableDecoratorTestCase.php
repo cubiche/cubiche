@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Enumerable\Tests\Units;
 
-use Cubiche\Core\Enumerable\EnumerableDecorator;
 use Cubiche\Core\Enumerable\Enumerable;
+use Cubiche\Core\Enumerable\EnumerableDecorator;
 
 /**
  * Enumerable Decorator Test Case class.
@@ -49,6 +49,6 @@ abstract class EnumerableDecoratorTestCase extends AbstractEnumerableTestCase
      */
     protected function defaultTestedInstanceEnumerableTarget()
     {
-        return Enumerable::from(array(1, 2, 3, 4, 5, 6));
+        return Enumerable::from($this->defaultValues());
     }
 }

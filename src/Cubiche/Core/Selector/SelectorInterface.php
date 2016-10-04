@@ -28,9 +28,9 @@ interface SelectorInterface extends CallableInterface, VisiteeInterface
     public function apply($value);
 
     /**
-     * @param callable $selector
+     * @param callable|mixed $selector
      *
      * @return \Cubiche\Core\Selector\SelectorInterface
      */
-    public function select(callable $selector);
+    public function select($selector);
 }

@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Core\Specification;
 
+use Cubiche\Core\Selector\Callback;
 use Cubiche\Core\Selector\Count;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
@@ -75,7 +75,7 @@ class Selector extends Specification implements SelectorInterface
     /**
      * {@inheritdoc}
      */
-    public function select(callable $selector)
+    public function select($selector)
     {
         return new self($this->selector()->select($selector));
     }
@@ -117,7 +117,7 @@ class Selector extends Specification implements SelectorInterface
      */
     public function custom(callable $callable)
     {
-        return $this->select(new Custom($callable));
+        return $this->select(new Callback($callable));
     }
 
     /**

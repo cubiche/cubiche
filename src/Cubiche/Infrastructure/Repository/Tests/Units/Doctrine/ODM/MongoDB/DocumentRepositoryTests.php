@@ -10,7 +10,8 @@
  */
 namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
 
-use Cubiche\Core\Comparable\Sort;
+use Cubiche\Core\Comparable\Comparator;
+use Cubiche\Core\Comparable\Direction;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Repository\Tests\Fixtures\Address;
@@ -22,7 +23,6 @@ use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentRepository;
-use Cubiche\Core\Comparable\Order;
 
 /**
  * DocumentRepositoryTests class.
@@ -140,7 +140,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
      */
     protected function comparator()
     {
-        return Sort::by(Criteria::property('age'), Order::DESC());
+        return Comparator::by(Criteria::property('age'), Direction::DESC());
     }
 
     /**

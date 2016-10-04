@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "php":                      "^5.5.9|^7.0"
+        "php":                      "^5.5.9|^7.0",
+        "cubiche/delegate":         "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"

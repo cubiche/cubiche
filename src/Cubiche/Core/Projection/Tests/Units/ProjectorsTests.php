@@ -37,7 +37,7 @@ class ProjectorsTests extends ProjectorInterfaceTestCase
         $projector = Projectors
             ::select(Selectors::key('foo'))
             ->select(Selectors::key('bar'))
-            ->select(Selectors::custom(function ($value) {
+            ->select(Selectors::callback(function ($value) {
                 return $value['foo'] * $value['bar'];
             }))->as('fooBar')
         ;
@@ -65,7 +65,7 @@ class ProjectorsTests extends ProjectorInterfaceTestCase
             ->join(Projectors::forAll(
                 Selectors::key('list'),
                 Projectors
-                    ::select(Selectors::custom(function ($value) {
+                    ::select(Selectors::callback(function ($value) {
                         return $value['bar'] * 3;
                     }))->as('bar')
             ))

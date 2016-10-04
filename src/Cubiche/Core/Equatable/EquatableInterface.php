@@ -10,12 +10,14 @@
  */
 namespace Cubiche\Core\Equatable;
 
+use Cubiche\Core\Hashable\HashableInterface;
+
 /**
  * Equatable Interface.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface EquatableInterface
+interface EquatableInterface extends HashableInterface
 {
     /**
      * @param mixed $other

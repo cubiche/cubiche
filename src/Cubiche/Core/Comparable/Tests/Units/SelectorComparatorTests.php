@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Comparable\Tests\Units;
 
-use Cubiche\Core\Comparable\Order;
+use Cubiche\Core\Comparable\Direction;
 
 /**
  * Selector Comparator Tests Class.
@@ -28,7 +28,7 @@ class SelectorComparatorTests extends ComparatorTestCase
             function ($value) {
                 return $value['foo'];
             },
-            Order::ASC(),
+            Direction::ASC(),
         );
     }
 

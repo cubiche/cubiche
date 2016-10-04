@@ -11,12 +11,14 @@
 namespace Cubiche\Core\Enumerable;
 
 /**
- * Abstract Enumerable Class.
+ * Abstract Enumerable class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 abstract class AbstractEnumerable implements EnumerableInterface
 {
+    use Filtering, Partitioning, Sorting, Quantifier, Set;
+
     /**
      * {@inheritdoc}
      */
@@ -28,32 +30,8 @@ abstract class AbstractEnumerable implements EnumerableInterface
     /**
      * {@inheritdoc}
      */
-    public function where(callable $predicate)
+    public function toArray($associative = false)
     {
-        return new FilteredEnumerable($this, $predicate);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sorted(callable $comparator)
-    {
-        return new SortedEnumerable($this, $comparator);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function slice($offset, $length = null)
-    {
-        return new SlicedEnumerable($this, $offset, $length);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return \iterator_to_array($this->getIterator(), true);
+        return \iterator_to_array($this->getIterator(), $associative);
     }
 }

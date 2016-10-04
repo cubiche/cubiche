@@ -13,23 +13,23 @@ namespace Cubiche\Core\Selector;
 use Cubiche\Core\Delegate\Delegate;
 
 /**
- * Custom Selector Class.
+ * Callback Selector Class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class Custom extends Selector
+class Callback extends Selector
 {
     /**
      * @var Delegate
      */
-    protected $delegate;
+    protected $callbackDelegate;
 
     /**
-     * @param callable $selector
+     * @param callable $callback
      */
-    public function __construct(callable $selector)
+    public function __construct(callable $callback)
     {
-        $this->delegate = new Delegate($selector);
+        $this->callbackDelegate = new Delegate($callback);
     }
 
     /**
@@ -37,6 +37,14 @@ class Custom extends Selector
      */
     public function apply($value)
     {
-        return $this->delegate->__invoke($value);
+        return $this->callbackDelegate->__invoke($value);
+    }
+
+    /**
+     * @return callable
+     */
+    public function target()
+    {
+        return $this->callbackDelegate->target();
     }
 }

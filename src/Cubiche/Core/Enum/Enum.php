@@ -12,6 +12,7 @@
 namespace Cubiche\Core\Enum;
 
 use Cubiche\Core\Equatable\EquatableInterface;
+use Cubiche\Core\Hashable\HashCoder;
 use MyCLabs\Enum\Enum as BaseEnum;
 
 /**
@@ -44,6 +45,14 @@ abstract class Enum extends BaseEnum implements EquatableInterface
     public function equals($other)
     {
         return \get_class($this) === \get_class($other) && $this->getValue() === $other->getValue();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hashCode()
+    {
+        return HashCoder::defaultHashCoder()->hashCode($this->getValue());
     }
 
     /**

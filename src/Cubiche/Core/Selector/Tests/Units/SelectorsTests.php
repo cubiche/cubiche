@@ -9,13 +9,12 @@
  */
 namespace Cubiche\Core\Selector\Tests\Units;
 
+use Cubiche\Core\Selector\Callback;
 use Cubiche\Core\Selector\Composite;
 use Cubiche\Core\Selector\Count;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
-use Cubiche\Core\Selector\SelectorFactoryInterface;
 use Cubiche\Core\Selector\Selectors;
 use Cubiche\Core\Selector\Value;
 use Cubiche\Core\Visitor\VisitorInterface;
@@ -61,46 +60,6 @@ class SelectorsTests extends SelectorTestCase
     }
 
     /**
-     * Test addSelector.
-     */
-    public function testAddSelector()
-    {
-        $this
-            /* @var \Cubiche\Core\Selector\Selectors $builder */
-            ->given($factory = $this->newMockInstance(SelectorFactoryInterface::class))
-            ->when(function () use ($factory) {
-                Selectors::setFactory($factory);
-                Selectors::addSelector('foo', 'bar');
-            })
-            ->then()
-                ->mock($factory)
-                    ->call('addSelector')
-                        ->withArguments('foo', 'bar')
-                        ->once()
-        ;
-    }
-
-    /**
-     * Test addSelector.
-     */
-    public function testAddNamespace()
-    {
-        $this
-            /* @var \Cubiche\Core\Selector\Selectors $builder */
-            ->given($factory = $this->newMockInstance(SelectorFactoryInterface::class))
-            ->when(function () use ($factory) {
-                Selectors::setFactory($factory);
-                Selectors::addNamespace('foo');
-            })
-            ->then()
-                ->mock($factory)
-                    ->call('addNamespace')
-                        ->withArguments('foo')
-                        ->once()
-        ;
-    }
-
-    /**
      * Test apply.
      */
     public function testApply()
@@ -138,9 +97,9 @@ class SelectorsTests extends SelectorTestCase
             array(Selectors::key('foo'), Key::class),
             array(Selectors::property('foo'), Property::class),
             array(Selectors::method('foo'), Method::class),
-            array(Selectors::custom(function () {
+            array(Selectors::callback(function () {
 
-            }), Custom::class),
+            }), Callback::class),
             array(Selectors::count(), Count::class),
             array(Selectors::value('foo'), Value::class),
             array(Selectors::composite(

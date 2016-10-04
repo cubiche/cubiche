@@ -12,7 +12,7 @@ namespace Cubiche\Core\Collections\Tests\Units\ArrayCollection;
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
 use Cubiche\Core\Collections\Tests\Units\HashMapTestCase;
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 use Cubiche\Core\Specification\Criteria;
 
 /**
@@ -37,7 +37,7 @@ class ArrayHashMapTests extends HashMapTestCase
      */
     protected function randomValue()
     {
-        return new EquatableObject(\rand(0, 100));
+        return new Value(\rand(0, 100));
     }
 
     /**
@@ -45,7 +45,7 @@ class ArrayHashMapTests extends HashMapTestCase
      */
     protected function uniqueValue()
     {
-        return new EquatableObject(1000);
+        return new Value(1000);
     }
 
     /*

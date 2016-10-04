@@ -24,15 +24,7 @@ class SortedEnumerableTests extends EnumerableDecoratorTestCase
      */
     protected function defaultConstructorArguments()
     {
-        return array($this->defaultTestedInstanceEnumerableTarget(), $this->defaultSortedCompartor());
-    }
-
-    /**
-     * @return \Cubiche\Core\Enumerable\EnumerableInterface
-     */
-    protected function defaultTestedInstanceEnumerableTarget()
-    {
-        return Enumerable::from(array(4, 1, 6, 2, 3, 5));
+        return array($this->defaultTestedInstanceEnumerableTarget(), $this->defaultSortedComparator());
     }
 
     /**
@@ -42,7 +34,7 @@ class SortedEnumerableTests extends EnumerableDecoratorTestCase
     {
         return $this->sortIterator(
             $this->defaultTestedInstanceEnumerableTarget()->getIterator(),
-            $this->defaultSortedCompartor()
+            $this->defaultSortedComparator()
         );
     }
 }

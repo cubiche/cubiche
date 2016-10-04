@@ -14,7 +14,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
 use Cubiche\Core\Collections\Exception\InvalidKeyException;
 use Cubiche\Core\Collections\Tests\Units\SetTestCase;
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 
 /**
  * ArraySetTests class.
@@ -38,7 +38,7 @@ class ArraySetTests extends SetTestCase
      */
     protected function randomValue()
     {
-        return new EquatableObject(\rand(0, 100));
+        return new Value(\rand(0, 100));
     }
 
     /**
@@ -46,7 +46,7 @@ class ArraySetTests extends SetTestCase
      */
     protected function uniqueValue()
     {
-        return new EquatableObject(1000);
+        return new Value(1000);
     }
 
     /*

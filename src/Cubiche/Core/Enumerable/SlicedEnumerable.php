@@ -28,13 +28,21 @@ class SlicedEnumerable extends EnumerableDecorator
     protected $length;
 
     /**
-     * @param EnumerableInterface $enumerable
-     * @param int                 $offset
-     * @param int                 $length
+     * @param array|\Traversable $enumerable
+     * @param int                $offset
+     * @param int                $length
      */
-    public function __construct(EnumerableInterface $enumerable, $offset, $length = null)
+    public function __construct($enumerable, $offset, $length = null)
     {
         parent::__construct($enumerable);
+
+        if (!\is_integer($offset) || $offset < 0) {
+            throw new \InvalidArgumentException('The $offset parameter must be non-negative integer.');
+        }
+
+        if ($length !== null && !\is_integer($length)) {
+            throw new \InvalidArgumentException('The $length parameter must be non-negative integer.');
+        }
 
         $this->offset = $offset;
         $this->length = $length;
@@ -67,5 +75,35 @@ class SlicedEnumerable extends EnumerableDecorator
         }
 
         return new \LimitIterator(parent::getIterator(), $this->offset(), $length === null ? -1 : $length);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($offset, $length = null)
+    {
+        return new static($this->enumerable(), $this->offset() + $offset, $this->calculateLimit($offset, $length));
+    }
+
+    /**
+     * @param int $offset
+     * @param int $length
+     *
+     * @return int
+     */
+    protected function calculateLimit($offset, $length = null)
+    {
+        if ($this->length() !== null && $offset >= $this->length()) {
+            return 0;
+        }
+        $limit = $length;
+        if ($this->length() !== null) {
+            $limit = $this->length() - (int) $offset;
+            if ($length !== null) {
+                $limit = \min([$limit, $length]);
+            }
+        }
+
+        return $limit;
     }
 }

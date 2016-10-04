@@ -10,7 +10,7 @@
 namespace Cubiche\Domain\EventSourcing\Migrations\Manager;
 
 use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
-use Cubiche\Core\Comparable\Custom;
+use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Migrations\Store\MigrationStoreInterface;
@@ -54,7 +54,7 @@ class MigrationManager
     {
         $this->migrationStore = $migrationStore;
         $this->migrationsDirectory = $migrationsDirectory;
-        $this->migrationsInFile = new SortedArrayHashMap([], new Custom(function ($v1, $v2) {
+        $this->migrationsInFile = new SortedArrayHashMap([], Comparator::from(function ($v1, $v2) {
             return Version::fromString($v1)->compareTo(Version::fromString($v2));
         }));
     }

@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Enumerable\Tests\Units;
 
 use Cubiche\Core\Enumerable\Enumerable;
+use Cubiche\Core\Enumerable\Tests\Fixtures\Value;
 
 /**
  * Filtered Enumerable Tests class.
@@ -43,8 +44,8 @@ class FilteredEnumerableTests extends EnumerableDecoratorTestCase
      */
     protected function defaultTestedInstancePredicate()
     {
-        return function ($value) {
-            return $value > 2;
+        return function (Value $value) {
+            return $value->value() > 2;
         };
     }
 }

@@ -12,6 +12,7 @@ namespace Cubiche\Core\Enumerable\Tests\Asserters;
 
 use Cubiche\Core\Enumerable\EnumerableInterface;
 use mageekguy\atoum\asserters\object as ObjectAsserter;
+use Cubiche\Core\Equatable\EqualityComparer;
 
 /**
  * Enumerable Asserter class.
@@ -123,6 +124,74 @@ class EnumerableAsserter extends ObjectAsserter
     public function iteratorAreEqualTo(\Iterator $iterator, $failMessage = null)
     {
         $this->getIterator()->isEqualTo($iterator, $failMessage);
+
+        return $this;
+    }
+
+    /**
+     * @param callable $equalityComparer
+     * @param string   $failMessage
+     *
+     * @return $this
+     */
+    public function areDistinct(callable $equalityComparer = null, $failMessage = 'There are duplicate elements')
+    {
+        $equalityComparer = EqualityComparer::ensure($equalityComparer);
+        $array = $this->valueAsEnumerable()->toArray();
+        for ($i = 0; $i < \count($array) - 1; ++$i) {
+            for ($j = $i + 1; $j < \count($array); ++$j) {
+                if ($equalityComparer->equals($array[$i], $array[$j])) {
+                    $this->fail($failMessage);
+                }
+            }
+        }
+        $this->pass();
+
+        return $this;
+    }
+
+    /**
+     * @param mixed    $value
+     * @param callable $equalityComparer
+     * @param string   $failMessage
+     *
+     * @return $this
+     */
+    public function contains(
+        $value,
+        callable $equalityComparer = null,
+        $failMessage = 'The value is not contained in the sequense'
+    ) {
+        if ($this->valueAsEnumerable()->contains($value, $equalityComparer)) {
+            $this->pass();
+        } else {
+            $this->fail($failMessage);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array|\Traversable $enumerable
+     * @param callable           $equalityComparer
+     * @param string             $failMessage
+     *
+     * @return $this
+     */
+    public function containsAll(
+        $enumerable,
+        callable $equalityComparer = null,
+        $failMessage = 'The sequense not contains all values'
+    ) {
+        foreach ($enumerable as $value) {
+            if (!$this->valueAsEnumerable()->contains($value, $equalityComparer)) {
+                //                 var_export($this->valueAsEnumerable());
+//                 var_export($enumerable);
+//                 var_export($value);
+                $this->fail($failMessage);
+            }
+        }
+        $this->pass();
 
         return $this;
     }

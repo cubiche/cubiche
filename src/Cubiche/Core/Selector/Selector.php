@@ -23,23 +23,27 @@ abstract class Selector extends AbstractCallable implements SelectorInterface
     use VisiteeTrait;
 
     /**
-     * @param callable $selector
+     * @param callable|mixed $selector
      *
      * @return \Cubiche\Core\Selector\SelectorInterface
      */
-    public static function from(callable $selector)
+    public static function from($selector)
     {
         if ($selector instanceof SelectorInterface) {
             return $selector;
         }
 
-        return new Custom($selector);
+        if (\is_callable($selector)) {
+            return new Callback($selector);
+        }
+
+        return new Value($selector);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function select(callable $selector)
+    public function select($selector)
     {
         return new Composite($this, self::from($selector));
     }
@@ -47,7 +51,7 @@ abstract class Selector extends AbstractCallable implements SelectorInterface
     /**
      * {@inheritdoc}
      */
-    protected function innerCallable()
+    protected function innerCallback()
     {
         return array($this, 'apply');
     }

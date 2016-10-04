@@ -11,12 +11,12 @@
 namespace Cubiche\Core\Comparable\Tests\Units;
 
 /**
- * Custom Tests class.
+ * Callback Comparator Tests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class CustomTests extends ComparatorTestCase
+class CallbackComparatorTests extends ComparatorTestCase
 {
     /**
      * {@inheritdoc}

@@ -12,9 +12,9 @@ namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Delegate\Delegate;
+use Cubiche\Core\Selector\Callback;
 use Cubiche\Core\Selector\Composite;
 use Cubiche\Core\Selector\Count;
-use Cubiche\Core\Selector\Custom;
 use Cubiche\Core\Selector\Field;
 use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
@@ -150,7 +150,7 @@ class SpecificationVisitor extends Visitor
     /**
      * {@inheritdoc}
      */
-    public function visitCustom(Custom $specification)
+    public function visitCallback(Callback $specification)
     {
         throw $this->notSupportedException($specification);
     }
@@ -274,7 +274,7 @@ class SpecificationVisitor extends Visitor
             \array_intersect_key($queryBuilder1->getQueryArray(), $queryBuilder2->getQueryArray())
         );
 
-        return $intersection->keys()->findOne(Criteria::custom(function ($value) {
+        return $intersection->keys()->findOne(Criteria::callback(function ($value) {
             return \strpos($value, '$') === 0;
         })) !== null;
     }

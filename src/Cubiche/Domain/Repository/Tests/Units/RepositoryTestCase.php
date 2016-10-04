@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\Repository\Tests\Units;
 
-use Cubiche\Core\Comparable\Sort;
+use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\Repository\RepositoryInterface;
 use Cubiche\Domain\Repository\Tests\Fixtures\User;
@@ -130,7 +130,7 @@ abstract class RepositoryTestCase extends TestCase
      */
     protected function comparator()
     {
-        return Sort::by(Criteria::property('age'));
+        return Comparator::by(Criteria::property('age'));
     }
 
     /**

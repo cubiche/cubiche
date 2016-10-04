@@ -9,10 +9,10 @@
  */
 namespace Cubiche\Core\Collections\Tests\Units\DataSource;
 
-use Cubiche\Core\Comparable\ComparatorInterface;
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
-use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Core\Collections\DataSource\ArrayDataSource;
+use Cubiche\Core\Comparable\ComparatorInterface;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
+use Cubiche\Core\Specification\SpecificationInterface;
 
 /**
  * ArrayDataSourceTests class.
@@ -32,7 +32,7 @@ class ArrayDataSourceTests extends IteratorDataSourceTests
     ) {
         $items = array();
         foreach (range(0, rand(10, 20)) as $value) {
-            $items[] = new EquatableObject($value);
+            $items[] = new Value($value);
         }
 
         return new ArrayDataSource($items, $searchCriteria, $sortCriteria, $offset, $length);
@@ -51,7 +51,7 @@ class ArrayDataSourceTests extends IteratorDataSourceTests
      */
     protected function uniqueValue()
     {
-        return new EquatableObject(1000);
+        return new Value(1000);
     }
 
     /**

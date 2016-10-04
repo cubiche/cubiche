@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Specification\Tests\Units\Constraint;
 
-use Cubiche\Core\Equatable\Tests\Fixtures\EquatableObject;
+use Cubiche\Core\Equatable\Tests\Fixtures\Value;
 use Cubiche\Core\Specification\Criteria;
 
 /**
@@ -48,13 +48,13 @@ class EqualTests extends BinaryConstraintOperatorTestCase
     public function testEvaluateEquatable()
     {
         $this
-            ->given($eq = Criteria::eq(new EquatableObject(5)))
+            ->given($eq = Criteria::eq(new Value(5)))
             ->then()
-                ->boolean($eq->evaluate(new EquatableObject(5)))
+                ->boolean($eq->evaluate(new Value(5)))
                     ->isTrue()
-                ->boolean($eq->evaluate(new EquatableObject(5.0)))
+                ->boolean($eq->evaluate(new Value(5.0)))
                     ->isTrue()
-                ->boolean($eq->evaluate(new EquatableObject(4)))
+                ->boolean($eq->evaluate(new Value(4)))
                     ->isFalse();
     }
 }

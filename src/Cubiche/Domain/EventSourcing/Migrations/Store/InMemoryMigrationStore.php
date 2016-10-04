@@ -11,7 +11,7 @@
 namespace Cubiche\Domain\EventSourcing\Migrations\Store;
 
 use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
-use Cubiche\Core\Comparable\Custom;
+use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Domain\EventSourcing\Migrations\Migration;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 
@@ -32,7 +32,7 @@ class InMemoryMigrationStore implements MigrationStoreInterface
      */
     public function __construct()
     {
-        $this->store = new SortedArrayHashMap([], new Custom(function ($a, $b) {
+        $this->store = new SortedArrayHashMap([], Comparator::from(function ($a, $b) {
             // order desc
             return -1 * Version::fromString($a)->compareTo(Version::fromString($b));
         }));
