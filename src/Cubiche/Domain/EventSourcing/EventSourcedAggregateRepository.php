@@ -12,7 +12,9 @@ namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
@@ -101,7 +103,12 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             ));
         }
 
+        DomainEventPublisher::publish(new PreRemoveEvent($element));
+
+        // remove the event stream
         $this->eventStore->remove($this->streamName(), $element->id(), $element->version());
+
+        DomainEventPublisher::publish(new PostRemoveEvent($element));
     }
 
     /**
