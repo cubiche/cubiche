@@ -22,22 +22,39 @@ interface SnapshotStoreInterface
 {
     /**
      * @param Snapshot $snapshot
+     * @param Version  $applicationVersion
+     *
+     * @return
      */
-    public function persist(Snapshot $snapshot);
+    public function persist(Snapshot $snapshot, Version $applicationVersion);
 
     /**
      * @param string      $aggregateType
      * @param IdInterface $aggregateId
-     * @param Version     $version
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
      *
      * @return Snapshot|null
      */
-    public function load($aggregateType, IdInterface $aggregateId, Version $version);
+    public function load(
+        $aggregateType,
+        IdInterface $aggregateId,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    );
 
     /**
      * @param string      $aggregateType
      * @param IdInterface $aggregateId
-     * @param Version     $version
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
+     *
+     * @return
      */
-    public function remove($aggregateType, IdInterface $aggregateId, Version $version);
+    public function remove(
+        $aggregateType,
+        IdInterface $aggregateId,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    );
 }

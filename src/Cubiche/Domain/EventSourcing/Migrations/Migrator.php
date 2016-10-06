@@ -58,16 +58,6 @@ class Migrator
     protected $eventStore;
 
     /**
-     * @var int
-     */
-    protected $numberOfBelowVersions = 1;
-
-    /**
-     * @var int
-     */
-    protected $numberOfAboveVersions = 1;
-
-    /**
      * MigrationGenerator constructor.
      *
      * @param ClassMetadataFactory    $metadataFactory
@@ -145,25 +135,25 @@ class Migrator
         if ($nextMigration !== null) {
             foreach ($nextMigration->aggregates() as $aggregateMigrationClass) {
                 // -- start current application context --
-                // reset to the current application version
-                VersionManager::setCurrentApplicationVersion($currentApplicationVersion);
-
                 /** @var MigrationInterface $migrationClass */
                 $migrationClass = new $aggregateMigrationClass();
 
                 $aggregateClassName = $migrationClass->aggregateClassName();
-                $currentAggregateVersion = VersionManager::versionOfClass($aggregateClassName);
+                $currentAggregateVersion = VersionManager::versionOfClass(
+                    $aggregateClassName,
+                    $currentApplicationVersion
+                );
 
                 // get all event streams for this aggregate class name
                 $eventStreams = $this->eventStore->loadAll(
                     $this->streamName($aggregateClassName),
-                    $currentAggregateVersion
+                    $currentAggregateVersion,
+                    $currentApplicationVersion
                 );
                 // -- end current application context --
 
                 // -- start new version context --
-                // set the application version to target migration
-                VersionManager::setCurrentApplicationVersion($nextMigration->version());
+                $nextApplicationVersion = $nextMigration->version();
 
                 // iterate for every aggregateRoot event stream
                 foreach ($eventStreams as $aggregateRootEventStream) {
@@ -186,30 +176,51 @@ class Migrator
                     }
 
                     // and the new version for this aggregateRoot
-                    $aggregateRootVersion = Version::fromString($nextMigration->version()->__toString());
-                    $aggregateRootVersion->setPatch($pathVersion);
+                    $newAggregateRootVersion = Version::fromString($nextMigration->version()->__toString());
+                    $newAggregateRootVersion->setPatch($pathVersion);
 
                     // persist the new event stream for this aggregateRoot.
-                    // this will persist the eventstream in a new flow, because the
-                    // currentApplicationVersion is set to the target migration
-                    $this->eventStore->persist($newAggregateRootEventStream, $aggregateRootVersion);
+                    $this->migrateAggregateRoot(
+                        $aggregateClassName,
+                        $newAggregateRootEventStream,
+                        $newAggregateRootVersion,
+                        $nextApplicationVersion
+                    );
                 }
 
                 // persist the new version of this aggregate class in the VersionManager
-                VersionManager::persistVersionOfClass($aggregateClassName, $nextMigration->version());
+                VersionManager::persistVersionOfClass(
+                    $aggregateClassName,
+                    $nextMigration->version(),
+                    $nextApplicationVersion
+                );
                 // -- end new version context --
             }
 
             // persist the new migration in the store
             $this->migrationManager->persistMigration($nextMigration);
 
-            // reset to the current application version
-            VersionManager::setCurrentApplicationVersion($currentApplicationVersion);
-
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param string      $aggregateClassName
+     * @param EventStream $eventStream
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
+     */
+    protected function migrateAggregateRoot(
+        $aggregateClassName,
+        EventStream $eventStream,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    ) {
+        // this will persist the eventstream in a new flow, because the
+        // currentApplicationVersion is set to the target migration
+        $this->eventStore->persist($eventStream, $aggregateVersion, $applicationVersion);
     }
 
     /**

@@ -164,8 +164,8 @@ class MigratorTests extends TestCase
             ]
         );
 
-        $eventStore->persist($postEventStream1, $currentApplicationVersion);
-        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+        $eventStore->persist($postEventStream1, $currentApplicationVersion, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
 
         // fake BlogEventSourced event stream
         $postId2 = PostId::fromNative(md5(rand()));
@@ -178,7 +178,7 @@ class MigratorTests extends TestCase
             ]
         );
 
-        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
 
         // creating the migrator
         $migrator = new Migrator(
@@ -210,6 +210,7 @@ class MigratorTests extends TestCase
                     ->isFalse()
             ->and()
             ->when($result = $migrator->migrate())
+            ->and(VersionManager::setCurrentApplicationVersion($migratorStore->getLast()->version()))
             ->then()
                 ->boolean($migratorStore->hasMigration($nextVersion))
                     ->isTrue()

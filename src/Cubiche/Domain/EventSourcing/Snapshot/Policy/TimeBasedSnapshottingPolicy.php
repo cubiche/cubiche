@@ -81,9 +81,10 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        $version = VersionManager::versionOfClass($this->aggregateClassName);
+        $applicationVersion = VersionManager::currentApplicationVersion();
+        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
 
-        return $this->snapshotStore->load($this->streamName(), $id, $version);
+        return $this->snapshotStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
     }
 
     /**

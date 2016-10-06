@@ -15,7 +15,6 @@ use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
@@ -44,14 +43,15 @@ abstract class SnapshotStoreTestCase extends TestCase
                 )
             )
             ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->when($store->persist($snapshot))
+            ->and($applicationVersion = Version::fromString('0.0.0'))
+            ->when($store->persist($snapshot, $applicationVersion))
             ->then()
-                ->object($store->load('posts', $post->id(), $post->version()))
+                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                     ->isEqualTo($snapshot)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.0.0')))
+                ->when($applicationVersion = Version::fromString('2.0.0'))
                 ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version()))
+                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                         ->isNull()
         ;
     }
@@ -70,12 +70,14 @@ abstract class SnapshotStoreTestCase extends TestCase
                 )
             )
             ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->when($store->persist($snapshot))
+            ->and($applicationVersion = Version::fromString('1.1.0'))
+            ->when($store->persist($snapshot, $applicationVersion))
             ->then()
-                ->variable($store->load('blogs', $post->id(), $post->version()))
+                ->variable($store->load('blogs', $post->id(), $post->version(), $applicationVersion))
                     ->isNull()
-                ->variable($store->load('posts', PostId::fromNative(md5(rand())), $post->version()))
-                    ->isNull()
+                ->variable(
+                    $store->load('posts', PostId::fromNative(md5(rand())), $post->version(), $applicationVersion)
+                )->isNull()
         ;
     }
 
@@ -93,15 +95,16 @@ abstract class SnapshotStoreTestCase extends TestCase
                 )
             )
             ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->when($store->persist($snapshot))
-            ->and($store->remove('blogs', $post->id(), $post->version()))
+            ->and($applicationVersion = Version::fromString('0.1.0'))
+            ->when($store->persist($snapshot, $applicationVersion))
+            ->and($store->remove('blogs', $post->id(), $post->version(), $applicationVersion))
             ->then()
-                ->object($store->load('posts', $post->id(), $post->version()))
+                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                     ->isEqualTo($snapshot)
                 ->and()
-                ->when($store->remove('posts', $post->id(), $post->version()))
+                ->when($store->remove('posts', $post->id(), $post->version(), $applicationVersion))
                 ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version()))
+                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                         ->isNull()
         ;
 
@@ -114,23 +117,21 @@ abstract class SnapshotStoreTestCase extends TestCase
                 )
             )
             ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->and($currentApplicationVersion = VersionManager::currentApplicationVersion())
-            ->when($store->persist($snapshot))
+            ->and($applicationVersion = Version::fromString('0.1.0'))
+            ->when($store->persist($snapshot, $applicationVersion))
             ->then()
-                ->object($store->load('posts', $post->id(), $post->version()))
+                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                     ->isEqualTo($snapshot)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.0.0')))
-                ->and($store->remove('posts', $post->id(), $post->version()))
-                ->and(VersionManager::setCurrentApplicationVersion($currentApplicationVersion))
+                ->when($applicationVersion2 = Version::fromString('2.0.0'))
+                ->and($store->remove('posts', $post->id(), $post->version(), $applicationVersion2))
                 ->then()
-                    ->object($store->load('posts', $post->id(), $post->version()))
+                    ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                         ->isEqualTo($snapshot)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion($currentApplicationVersion))
-                ->and($store->remove('posts', $post->id(), $post->version()))
+                ->when($store->remove('posts', $post->id(), $post->version(), $applicationVersion))
                 ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version()))
+                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
                         ->isNull()
         ;
     }
