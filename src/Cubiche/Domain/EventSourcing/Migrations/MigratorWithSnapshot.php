@@ -60,7 +60,7 @@ class MigratorWithSnapshot extends Migrator
         Version $aggregateVersion,
         Version $applicationVersion
     ) {
-        parent::migrateAggregateRoot($eventStream, $aggregateVersion, $applicationVersion);
+        parent::migrateAggregateRoot($aggregateClassName, $eventStream, $aggregateVersion, $applicationVersion);
 
         // reconstruct the new aggregate root
         $aggregateRoot = call_user_func(

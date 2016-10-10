@@ -131,14 +131,16 @@ class MigratorTests extends TestCase
 
         // simulate an application and aggregate version state
         $currentApplicationVersion = Version::fromString('0.1.0');
+        $aggregateVersion = Version::fromString('0.1.0');
+
         VersionManager::setCurrentApplicationVersion($currentApplicationVersion);
-        VersionManager::persistVersionOfClass(PostEventSourced::class, $currentApplicationVersion);
-        VersionManager::persistVersionOfClass(\BlogEventSourced::class, $currentApplicationVersion);
+        VersionManager::persistVersionOfClass(PostEventSourced::class, $aggregateVersion);
+        VersionManager::persistVersionOfClass(\BlogEventSourced::class, $aggregateVersion);
 
         // creating migration store
         $aggregates = [PostEventSourced::class, \BlogEventSourced::class];
         $migratorStore = new InMemoryMigrationStore();
-        $migratorStore->persist(new Migration($aggregates, $currentApplicationVersion, new \DateTime()));
+        $migratorStore->persist(new Migration($aggregates, $aggregateVersion, new \DateTime()));
 
         // creating event store
         $eventStore = new InMemoryEventStore();
@@ -164,21 +166,18 @@ class MigratorTests extends TestCase
             ]
         );
 
-        $eventStore->persist($postEventStream1, $currentApplicationVersion, $currentApplicationVersion);
-        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
+        $eventStore->persist($postEventStream1, $aggregateVersion, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $aggregateVersion, $currentApplicationVersion);
 
         // fake BlogEventSourced event stream
         $postId2 = PostId::fromNative(md5(rand()));
         $postEventStream2 = new EventStream(
             $this->streamName(\BlogEventSourced::class),
             $postId2,
-            [
-                new PostWasCreated($postId2, 'Blog', 'empty'),
-                new PostTitleWasChanged($postId2, 'new title'),
-            ]
+            []
         );
 
-        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $aggregateVersion, $currentApplicationVersion);
 
         // creating the migrator
         $migrator = new Migrator(

@@ -129,6 +129,6 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
      */
     protected function getAggregateKey($aggregateType, Version $aggregateVersion)
     {
-        return sprintf('%s_%s', $aggregateType, $aggregateVersion->major(), $aggregateVersion->minor());
+        return sprintf('%s_%s_%s', $aggregateType, $aggregateVersion->major(), $aggregateVersion->minor());
     }
 }
