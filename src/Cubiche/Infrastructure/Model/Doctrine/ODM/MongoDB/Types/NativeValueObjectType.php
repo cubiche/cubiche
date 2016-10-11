@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types;
 
 /**
@@ -51,7 +50,7 @@ abstract class NativeValueObjectType extends ValueObjectType
     {
         $class = $this->targetClass();
 
-        return 'return $value !== null ? '.$class.'::fromNative($value) : null;';
+        return 'return = $value !== null ? \\'.$class.'::fromNative($value) : null;';
     }
 
     /**

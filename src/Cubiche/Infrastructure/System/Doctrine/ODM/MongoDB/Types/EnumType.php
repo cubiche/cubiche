@@ -39,6 +39,8 @@ abstract class EnumType extends NativeValueObjectType
     {
         $class = $this->targetClass();
 
-        return '$return = $value !== null && $value instanceof '.$class.' ? '.$class.'::fromNative($value) : $value;';
+        return '
+        $return = $value !== null && $value instanceof \\'.$class.' ? \\'.$class.'::fromNative($value) : $value;
+        ';
     }
 }
