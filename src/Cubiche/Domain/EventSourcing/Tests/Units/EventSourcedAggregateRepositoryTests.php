@@ -14,7 +14,9 @@ use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PostPersistSubscriber;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PostRemoveSubscriber;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PrePersistSubscriber;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PreRemoveSubscriber;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\Model\Tests\Fixtures\Post;
@@ -179,6 +181,25 @@ class EventSourcedAggregateRepositoryTests extends TestCase
                     $repository->remove($post);
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
+        ;
+
+        $this
+            ->given($repository = $this->createRepository())
+            ->and(
+                $post = PostEventSourcedFactory::create(
+                    $this->faker->sentence,
+                    $this->faker->paragraph
+                )
+            )
+            ->and($repository->persist($post))
+            ->and($preRemoveSubscriber = new PreRemoveSubscriber(42))
+            ->and($postRemoveSubscriber = new PostRemoveSubscriber())
+            ->and(DomainEventPublisher::subscribe($preRemoveSubscriber))
+            ->and(DomainEventPublisher::subscribe($postRemoveSubscriber))
+            ->when($repository->remove($post))
+            ->then()
+                ->integer($post->version()->patch())
+                    ->isEqualTo(21)
         ;
     }
 }

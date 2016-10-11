@@ -22,37 +22,54 @@ interface EventStoreInterface
 {
     /**
      * @param EventStream $eventStream
-     * @param Version     $version
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
+     *
+     * @return
      */
-    public function persist(EventStream $eventStream, Version $version);
+    public function persist(EventStream $eventStream, Version $aggregateVersion, Version $applicationVersion);
 
     /**
      * @param string      $streamName
      * @param IdInterface $aggregateId
-     * @param Version     $version
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
      *
      * @return EventStream
      */
-    public function load($streamName, IdInterface $aggregateId, Version $version);
+    public function load(
+        $streamName,
+        IdInterface $aggregateId,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    );
 
     /**
      * @param string      $streamName
      * @param IdInterface $aggregateId
-     * @param Version     $version
+     * @param Version     $aggregateVersion
+     * @param Version     $applicationVersion
      */
-    public function remove($streamName, IdInterface $aggregateId, Version $version);
+    public function remove(
+        $streamName,
+        IdInterface $aggregateId,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    );
 
     /**
      * @param string  $streamName
-     * @param Version $version
+     * @param Version $aggregateVersion
+     * @param Version $applicationVersion
      *
      * @return EventStream
      */
-    public function loadAll($streamName, Version $version);
+    public function loadAll($streamName, Version $aggregateVersion, Version $applicationVersion);
 
     /**
      * @param string  $streamName
-     * @param Version $version
+     * @param Version $aggregateVersion
+     * @param Version $applicationVersion
      */
-    public function removeAll($streamName, Version $version);
+    public function removeAll($streamName, Version $aggregateVersion, Version $applicationVersion);
 }

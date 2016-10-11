@@ -96,9 +96,10 @@ class SnapshotAggregateRepository extends EventSourcedAggregateRepository
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        $version = VersionManager::versionOfClass($this->aggregateClassName);
+        $applicationVersion = VersionManager::currentApplicationVersion();
+        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
 
-        return $this->snapshotStore->load($this->streamName(), $id, $version);
+        return $this->snapshotStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
     }
 
     /**
@@ -108,9 +109,10 @@ class SnapshotAggregateRepository extends EventSourcedAggregateRepository
      */
     protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
     {
+        $applicationVersion = VersionManager::currentApplicationVersion();
         $snapshot = new Snapshot($this->streamName(), $aggregateRoot, new \DateTime());
 
-        $this->snapshotStore->persist($snapshot);
+        $this->snapshotStore->persist($snapshot, $applicationVersion);
     }
 
     /**
@@ -120,7 +122,13 @@ class SnapshotAggregateRepository extends EventSourcedAggregateRepository
      */
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {
-        $history = $this->eventStore->load($this->streamName(), $snapshot->aggregateId(), $snapshot->version());
+        $applicationVersion = VersionManager::currentApplicationVersion();
+        $history = $this->eventStore->load(
+            $this->streamName(),
+            $snapshot->aggregateId(),
+            $snapshot->version(),
+            $applicationVersion
+        );
 
         $aggregateRoot = $snapshot->aggregate();
 

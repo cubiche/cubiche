@@ -17,6 +17,7 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * TimeBasedSnapshottingPolicyTests class.
@@ -47,7 +48,8 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $createdAt
                 )
             )
-            ->and($snapshotStore->persist($snapshot))
+            ->and($applicationVersion = Version::fromString('0.0.0'))
+            ->and($snapshotStore->persist($snapshot, $applicationVersion))
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isTrue()
@@ -69,7 +71,8 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
             )
             ->and($createdAt = new \DateTime())
             ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, $createdAt))
-            ->and($snapshotStore->persist($snapshot))
+            ->and($applicationVersion = Version::fromString('0.1.0'))
+            ->and($snapshotStore->persist($snapshot, $applicationVersion))
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isFalse()

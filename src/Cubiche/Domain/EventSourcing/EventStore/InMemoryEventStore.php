@@ -14,7 +14,6 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Identity\StringId;
 use Cubiche\Domain\Model\IdInterface;
 
@@ -41,16 +40,16 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function persist(EventStream $eventStream, Version $version)
+    public function persist(EventStream $eventStream, Version $aggregateVersion, Version $applicationVersion)
     {
-        $applicationKey = $this->getApplicationKey();
+        $applicationKey = $this->getApplicationKey($applicationVersion);
         if (!$this->store->containsKey($applicationKey)) {
             $this->store->set($applicationKey, new ArrayHashMap());
         }
 
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($eventStream->streamName(), $version);
+        $streamKey = $this->getStreamKey($eventStream->streamName(), $aggregateVersion);
 
         if (!$applicationCollection->containsKey($streamKey)) {
             $applicationCollection->set($streamKey, new ArrayHashMap());
@@ -74,9 +73,9 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function load($streamName, IdInterface $aggregateId, Version $version)
+    public function load($streamName, IdInterface $aggregateId, Version $aggregateVersion, Version $applicationVersion)
     {
-        $applicationKey = $this->getApplicationKey();
+        $applicationKey = $this->getApplicationKey($applicationVersion);
         if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
                 'The application %s not found in the event store.',
@@ -86,7 +85,7 @@ class InMemoryEventStore implements EventStoreInterface
 
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $version);
+        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
 
         if (!$applicationCollection->containsKey($streamKey)) {
             throw new \RuntimeException(sprintf(
@@ -115,16 +114,20 @@ class InMemoryEventStore implements EventStoreInterface
         return new EventStream(
             $streamName,
             $aggregateId,
-            $aggregateIdCollection->find(Criteria::method('version')->gte($version->patch()))->toArray()
+            $aggregateIdCollection->find(Criteria::method('version')->gte($aggregateVersion->patch()))->toArray()
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($streamName, IdInterface $aggregateId, Version $version)
-    {
-        $applicationKey = $this->getApplicationKey();
+    public function remove(
+        $streamName,
+        IdInterface $aggregateId,
+        Version $aggregateVersion,
+        Version $applicationVersion
+    ) {
+        $applicationKey = $this->getApplicationKey($applicationVersion);
         if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
                 'The application %s not found in the event store.',
@@ -134,7 +137,7 @@ class InMemoryEventStore implements EventStoreInterface
 
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $version);
+        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
 
         if (!$applicationCollection->containsKey($streamKey)) {
             throw new \RuntimeException(sprintf(
@@ -152,11 +155,11 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function loadAll($streamName, Version $version)
+    public function loadAll($streamName, Version $aggregateVersion, Version $applicationVersion)
     {
         $streams = array();
 
-        $applicationKey = $this->getApplicationKey();
+        $applicationKey = $this->getApplicationKey($applicationVersion);
         if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
                 'The application %s not found in the event store.',
@@ -166,7 +169,7 @@ class InMemoryEventStore implements EventStoreInterface
 
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $version);
+        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
 
         if (!$applicationCollection->containsKey($streamKey)) {
             throw new \RuntimeException(sprintf(
@@ -194,9 +197,9 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function removeAll($streamName, Version $version)
+    public function removeAll($streamName, Version $aggregateVersion, Version $applicationVersion)
     {
-        $applicationKey = $this->getApplicationKey();
+        $applicationKey = $this->getApplicationKey($applicationVersion);
         if (!$this->store->containsKey($applicationKey)) {
             throw new \RuntimeException(sprintf(
                 'The application %s not found in the event store.',
@@ -206,27 +209,29 @@ class InMemoryEventStore implements EventStoreInterface
 
         /** @var ArrayHashMap $applicationCollection */
         $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $version);
+        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
 
         $applicationCollection->removeAt($streamKey);
     }
 
     /**
+     * @param Version $applicationVersion
+     *
      * @return string
      */
-    protected function getApplicationKey()
+    protected function getApplicationKey(Version $applicationVersion)
     {
-        return str_replace('.', '_', VersionManager::currentApplicationVersion()->__toString());
+        return str_replace('.', '_', $applicationVersion->__toString());
     }
 
     /**
      * @param string  $streamName
-     * @param Version $version
+     * @param Version $aggregateVersion
      *
      * @return string
      */
-    protected function getStreamKey($streamName, Version $version)
+    protected function getStreamKey($streamName, Version $aggregateVersion)
     {
-        return sprintf('%s_%s_%s', $streamName, $version->major(), $version->minor());
+        return sprintf('%s_%s_%s', $streamName, $aggregateVersion->major(), $aggregateVersion->minor());
     }
 }

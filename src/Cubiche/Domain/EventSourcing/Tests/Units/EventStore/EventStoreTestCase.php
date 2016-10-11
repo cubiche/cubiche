@@ -16,7 +16,6 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
@@ -40,10 +39,11 @@ abstract class EventStoreTestCase extends TestCase
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
-            ->and($version = new Version())
-            ->when($store->persist($eventStream, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
+            ->when($store->persist($eventStream, $aggregateVersion, $applicationVersion))
             ->then()
-                ->object($store->load('posts', $postId, $version))
+                ->object($store->load('posts', $postId, $aggregateVersion, $applicationVersion))
                     ->isEqualTo($eventStream)
         ;
 
@@ -64,17 +64,17 @@ abstract class EventStoreTestCase extends TestCase
                     [new PostWasCreated($postId, 'foo', 'bar'), new PostTitleWasChanged($postId, 'new title')]
                 )
             )
-            ->and($version = new Version())
-            ->and(VersionManager::setCurrentApplicationVersion(Version::fromString('1.0.0')))
-            ->when($store->persist($eventStream1x0, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = Version::fromString('1.0.0'))
+            ->when($store->persist($eventStream1x0, $aggregateVersion, $applicationVersion))
             ->then()
-                ->object($store->load('posts', $postId, $version))
+                ->object($store->load('posts', $postId, $aggregateVersion, $applicationVersion))
                     ->isEqualTo($eventStream1x0)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.0.0')))
-                ->and($store->persist($eventStream2x0, $version))
+                ->when($applicationVersion2 = Version::fromString('2.0.0'))
+                ->and($store->persist($eventStream2x0, $aggregateVersion, $applicationVersion2))
                 ->then()
-                    ->object($store->load('posts', $postId, $version))
+                    ->object($store->load('posts', $postId, $aggregateVersion, $applicationVersion2))
                         ->isEqualTo($eventStream2x0)
         ;
     }
@@ -88,23 +88,24 @@ abstract class EventStoreTestCase extends TestCase
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
-            ->and($version = new Version())
-            ->when($store->persist($eventStream, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
+            ->when($store->persist($eventStream, $aggregateVersion, $applicationVersion))
             ->then()
-                ->exception(function () use ($store, $postId, $version) {
-                    $store->load('blogs', $postId, $version);
+                ->exception(function () use ($store, $postId, $aggregateVersion, $applicationVersion) {
+                    $store->load('blogs', $postId, $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->exception(function () use ($store, $postId) {
-                    $store->load('posts', $postId, new Version(0, 10, 456));
+                ->exception(function () use ($store, $postId, $applicationVersion) {
+                    $store->load('posts', $postId, new Version(0, 10, 456), $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->exception(function () use ($store, $version) {
-                    $store->load('posts', PostId::fromNative(md5(rand())), $version);
+                ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
+                    $store->load('posts', PostId::fromNative(md5(rand())), $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.1.0')))
+                ->when($applicationVersion = Version::fromString('2.1.0'))
                 ->then()
-                    ->exception(function () use ($store, $postId, $version) {
-                        $store->load('posts', $postId, $version);
+                    ->exception(function () use ($store, $postId, $aggregateVersion, $applicationVersion) {
+                        $store->load('posts', $postId, $aggregateVersion, $applicationVersion);
                     })->isInstanceOf(\RuntimeException::class)
         ;
     }
@@ -117,10 +118,11 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($version = new Version())
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
             ->then()
-                ->exception(function () use ($store, $postId, $version) {
-                    $store->remove('posts', $postId, $version);
+                ->exception(function () use ($store, $postId, $aggregateVersion, $applicationVersion) {
+                    $store->remove('posts', $postId, $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
         ;
 
@@ -128,18 +130,19 @@ abstract class EventStoreTestCase extends TestCase
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
-            ->and($version = new Version())
-            ->when($store->persist($eventStream, $version))
-            ->and($store->remove('posts', $postId, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
+            ->when($store->persist($eventStream, $aggregateVersion, $applicationVersion))
+            ->and($store->remove('posts', $postId, $aggregateVersion, $applicationVersion))
             ->then()
-                ->exception(function () use ($store, $postId, $version) {
-                    $store->load('posts', $postId, $version);
+                ->exception(function () use ($store, $postId, $aggregateVersion, $applicationVersion) {
+                    $store->load('posts', $postId, $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->exception(function () use ($store, $postId, $version) {
-                    $store->remove('blogs', $postId, $version);
+                ->exception(function () use ($store, $postId, $aggregateVersion, $applicationVersion) {
+                    $store->remove('blogs', $postId, $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->exception(function () use ($store, $postId) {
-                    $store->remove('posts', $postId, new Version(0, 10, 456));
+                ->exception(function () use ($store, $postId, $applicationVersion) {
+                    $store->remove('posts', $postId, new Version(0, 10, 456), $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
         ;
     }
@@ -155,23 +158,24 @@ abstract class EventStoreTestCase extends TestCase
             ->and($postId1 = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
             ->and($eventStream1 = new EventStream('posts', $postId1, [new PostWasCreated($postId1, 'baz', 'content')]))
-            ->and($version = new Version())
-            ->when($store->persist($eventStream, $version))
-            ->and($store->persist($eventStream1, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
+            ->when($store->persist($eventStream, $aggregateVersion, $applicationVersion))
+            ->and($store->persist($eventStream1, $aggregateVersion, $applicationVersion))
             ->then()
-                ->exception(function () use ($store, $version) {
-                    $store->loadAll('blogs', $version);
+                ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
+                    $store->loadAll('blogs', $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->exception(function () use ($store) {
-                    $store->loadAll('posts', new Version(0, 10, 456));
+                ->exception(function () use ($store, $applicationVersion) {
+                    $store->loadAll('posts', new Version(0, 10, 456), $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
-                ->array($store->loadAll('posts', $version))
+                ->array($store->loadAll('posts', $aggregateVersion, $applicationVersion))
                     ->hasSize(2)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.1.0')))
+                ->when($applicationVersion = Version::fromString('2.1.0'))
                 ->then()
-                    ->exception(function () use ($store, $version) {
-                        $store->loadAll('posts', $version);
+                    ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
+                        $store->loadAll('posts', $aggregateVersion, $applicationVersion);
                     })->isInstanceOf(\RuntimeException::class)
         ;
     }
@@ -184,10 +188,11 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($version = new Version())
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
             ->then()
-                ->exception(function () use ($store, $version) {
-                    $store->removeAll('posts', $version);
+                ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
+                    $store->removeAll('posts', $aggregateVersion, $applicationVersion);
                 })->isInstanceOf(\RuntimeException::class)
         ;
 
@@ -197,25 +202,26 @@ abstract class EventStoreTestCase extends TestCase
             ->and($postId1 = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, [new PostWasCreated($postId, 'foo', 'bar')]))
             ->and($eventStream1 = new EventStream('posts', $postId1, [new PostWasCreated($postId1, 'baz', 'content')]))
-            ->and($version = new Version())
-            ->when($store->persist($eventStream, $version))
-            ->and($store->persist($eventStream1, $version))
+            ->and($aggregateVersion = new Version())
+            ->and($applicationVersion = new Version())
+            ->when($store->persist($eventStream, $aggregateVersion, $applicationVersion))
+            ->and($store->persist($eventStream1, $aggregateVersion, $applicationVersion))
             ->then()
-                ->array($store->loadAll('posts', $version))
+                ->array($store->loadAll('posts', $aggregateVersion, $applicationVersion))
                     ->hasSize(2)
                 ->and()
-                ->when($store->removeAll('posts', $version))
+                ->when($store->removeAll('posts', $aggregateVersion, $applicationVersion))
                 ->then()
-                    ->exception(function () use ($store, $version) {
+                    ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
                         // because there is no stream entry in the current application store
-                        $store->loadAll('posts', $version);
+                        $store->loadAll('posts', $aggregateVersion, $applicationVersion);
                     })->isInstanceOf(\RuntimeException::class)
                 ->and()
-                ->when(VersionManager::setCurrentApplicationVersion(Version::fromString('2.1.0')))
+                ->when($applicationVersion = Version::fromString('2.1.0'))
                 ->then()
-                    ->exception(function () use ($store, $version) {
+                    ->exception(function () use ($store, $aggregateVersion, $applicationVersion) {
                         // because there is application entry in the store
-                        $store->removeAll('posts', $version);
+                        $store->removeAll('posts', $aggregateVersion, $applicationVersion);
                     })->isInstanceOf(\RuntimeException::class)
         ;
     }

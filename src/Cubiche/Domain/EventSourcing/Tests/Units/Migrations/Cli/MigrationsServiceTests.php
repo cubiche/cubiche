@@ -120,8 +120,8 @@ class MigrationsServiceTests extends TestCase
             ]
         );
 
-        $eventStore->persist($postEventStream1, $currentApplicationVersion);
-        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+        $eventStore->persist($postEventStream1, $currentApplicationVersion, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
 
         // fake BlogEventSourced event stream
         $postId2 = PostId::fromNative(md5(rand()));
@@ -134,7 +134,7 @@ class MigrationsServiceTests extends TestCase
             ]
         );
 
-        $eventStore->persist($postEventStream2, $currentApplicationVersion);
+        $eventStore->persist($postEventStream2, $currentApplicationVersion, $currentApplicationVersion);
 
         return new MigrationsService(
             new Migrator(

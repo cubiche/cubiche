@@ -12,7 +12,9 @@ namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
@@ -101,7 +103,13 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             ));
         }
 
-        $this->eventStore->remove($this->streamName(), $element->id(), $element->version());
+        DomainEventPublisher::publish(new PreRemoveEvent($element));
+
+        // remove the event stream
+        $applicationVersion = VersionManager::currentApplicationVersion();
+        $this->eventStore->remove($this->streamName(), $element->id(), $element->version(), $applicationVersion);
+
+        DomainEventPublisher::publish(new PostRemoveEvent($element));
     }
 
     /**
@@ -113,9 +121,10 @@ class EventSourcedAggregateRepository implements RepositoryInterface
      */
     protected function loadHistory(IdInterface $id)
     {
-        $version = VersionManager::versionOfClass($this->aggregateClassName);
+        $applicationVersion = VersionManager::currentApplicationVersion();
+        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
 
-        return $this->eventStore->load($this->streamName(), $id, $version);
+        return $this->eventStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
     }
 
     /**
@@ -133,8 +142,10 @@ class EventSourcedAggregateRepository implements RepositoryInterface
             $aggregateRoot->clearEvents();
 
             // create the eventStream and persist it
+            $applicationVersion = VersionManager::currentApplicationVersion();
             $eventStream = new EventStream($this->streamName(), $aggregateRoot->id(), $recordedEvents);
-            $this->eventStore->persist($eventStream, $aggregateRoot->version());
+
+            $this->eventStore->persist($eventStream, $aggregateRoot->version(), $applicationVersion);
 
             DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot));
         }

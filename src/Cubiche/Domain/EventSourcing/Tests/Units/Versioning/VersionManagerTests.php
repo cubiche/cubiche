@@ -79,6 +79,8 @@ class VersionManagerTests extends TestCase
                 ->then()
                     ->object(VersionManager::versionOf($post))
                         ->isEqualTo(new Version(0, 23, 0))
+                    ->object(VersionManager::versionOf($post, Version::fromString('1.1.0')))
+                        ->isEqualTo(new Version(0, 0, 0))
         ;
     }
 
