@@ -1,5 +1,5 @@
 {
-    "name": "cubiche/event",
+    "name": "cubiche/event-publisher",
     "type": "library",
     "description": "Domain event component.",
     "keywords": [
@@ -33,7 +33,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Domain\\Event\\": ""
+            "Cubiche\\Domain\\EventPublisher\\": ""
         }
     }
 }
