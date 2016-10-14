@@ -19,17 +19,19 @@
         }
     ],
     "require": {
-        "php":                  "^5.5.9|^7.0",
-        "cubiche/collections":  "dev-master",
-        "cubiche/console":      "dev-master",
-        "cubiche/bus":          "dev-master",
-        "cubiche/model":        "dev-master",
-        "cubiche/event":        "dev-master",
-        "cubiche/enum":         "dev-master",
-        "cubiche/repository":   "dev-master",
-        "cubiche/serializer":   "dev-master",
-        "cubiche/metadata":     "dev-master",
-        "doctrine/common":      "2.6.1"
+        "php":                      "^5.5.9|^7.0",
+
+        "cubiche/collections":      "dev-master",
+        "cubiche/console":          "dev-master",
+        "cubiche/bus":              "dev-master",
+        "cubiche/model":            "dev-master",
+        "cubiche/event-publisher":  "dev-master",
+        "cubiche/enum":             "dev-master",
+        "cubiche/repository":       "dev-master",
+        "cubiche/serializer":       "dev-master",
+        "cubiche/metadata":         "dev-master",
+
+        "doctrine/common":          "2.6.1"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"
