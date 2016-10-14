@@ -1,0 +1,2 @@
+# Cubiche - Identity
+[![Build Status](https://travis-ci.org/cubiche/identity.svg?branch=master)](https://travis-ci.org/cubiche/identity) [![Coverage Status](https://coveralls.io/repos/github/cubiche/identity/badge.svg?branch=master)](https://coveralls.io/github/cubiche/identity?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/identity/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/identity/?branch=master) 

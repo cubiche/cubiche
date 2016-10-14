@@ -1,0 +1,40 @@
+{
+    "name": "cubiche/system",
+    "type": "library",
+    "description": "System library.",
+    "keywords": [
+        "number",
+        "string"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                  "^5.5.9|^7.0",
+
+        "cubiche/exception":    "dev-master",
+        "cubiche/enum":         "dev-master",
+        "cubiche/model":        "dev-master",
+        "cubiche/comparable":   "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Domain\\System\\": ""
+        }
+    }
+}
