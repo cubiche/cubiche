@@ -17,6 +17,7 @@
     "require": {
         "php":                      "^5.5.9|^7.0",
         "cubiche/comparable":       "dev-master",
+        "cubiche/equatable":        "dev-master",
         "cubiche/specification":    "dev-master"
     },
     "require-dev": {

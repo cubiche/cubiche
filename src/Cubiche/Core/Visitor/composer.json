@@ -20,6 +20,7 @@
     "require-dev": {
         "cubiche/tests":            "dev-master"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "exclude-from-classmap": [
             "/Tests/"
