@@ -1,0 +1,2 @@
+# Cubiche - Repository
+[![Build Status](https://travis-ci.org/cubiche/repository.svg?branch=master)](https://travis-ci.org/cubiche/repository) [![Coverage Status](https://coveralls.io/repos/github/cubiche/repository/badge.svg?branch=master)](https://coveralls.io/github/cubiche/repository?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/repository/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/repository/?branch=master) 
