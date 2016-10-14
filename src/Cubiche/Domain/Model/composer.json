@@ -23,7 +23,7 @@
 
         "cubiche/serializer":       "dev-master",
         "cubiche/storage":          "dev-master",
-        "cubiche/event":            "dev-master",
+        "cubiche/event-publisher":  "dev-master",
         "cubiche/selector":         "dev-master",
         "cubiche/specification":    "dev-master",
         "cubiche/equatable":        "dev-master",
