@@ -9,31 +9,13 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
-use Cubiche\Core\Console\Tests\Fixtures\PostId;
-use Cubiche\Domain\EventSourcing\DomainEvent;
+use Cubiche\Core\Bus\Event\Event;
 
 /**
  * PostWasPublished class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostWasPublished extends DomainEvent
+class PostWasPublished extends Event
 {
-    /**
-     * PostWasPublished constructor.
-     *
-     * @param PostId $id
-     */
-    public function __construct(PostId $id)
-    {
-        parent::__construct($id);
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
-    }
 }

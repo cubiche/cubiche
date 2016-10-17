@@ -9,6 +9,9 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
+use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\Console\Tests\Fixtures\Event\PostTitleWasChanged;
+use Cubiche\Core\Console\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Core\Console\Tests\Fixtures\Post;
 
 /**
@@ -19,11 +22,26 @@ use Cubiche\Core\Console\Tests\Fixtures\Post;
 class PostService
 {
     /**
+     * @var EventBus
+     */
+    protected $eventBus;
+
+    /**
+     * PostService constructor.
+     *
+     * @param EventBus $eventBus
+     */
+    public function __construct(EventBus $eventBus)
+    {
+        $this->eventBus = $eventBus;
+    }
+
+    /**
      * @param CreatePostCommand $command
      */
     public function createPost(CreatePostCommand $command)
     {
-        Post::create($command->title(), $command->content());
+        $this->eventBus->dispatch(new PostWasCreated($command->title(), $command->content()));
     }
 
     /**
@@ -31,8 +49,6 @@ class PostService
      */
     public function changePostTitle(ChangePostTitleCommand $command)
     {
-        // fake post
-        $post = Post::create('fake', 'post');
-        $post->changeTitle($command->title());
+        $this->eventBus->dispatch(new PostTitleWasChanged($command->title()));
     }
 }

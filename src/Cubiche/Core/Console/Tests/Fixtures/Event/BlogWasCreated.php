@@ -9,15 +9,14 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
-use Cubiche\Core\Console\Tests\Fixtures\BlogId;
-use Cubiche\Domain\EventSourcing\DomainEvent;
+use Cubiche\Core\Bus\Event\Event;
 
 /**
  * BlogWasCreated class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class BlogWasCreated extends DomainEvent
+class BlogWasCreated extends Event
 {
     /**
      * @var string
@@ -27,13 +26,10 @@ class BlogWasCreated extends DomainEvent
     /**
      * BlogWasCreated constructor.
      *
-     * @param BlogId $id
      * @param string $name
      */
-    public function __construct(BlogId $id, $name)
+    public function __construct($name)
     {
-        parent::__construct($id);
-
         $this->name = $name;
     }
 

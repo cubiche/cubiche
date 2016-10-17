@@ -9,7 +9,9 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
+use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Console\Tests\Fixtures\Blog;
+use Cubiche\Core\Console\Tests\Fixtures\Event\BlogWasCreated;
 
 /**
  * BlogService class.
@@ -18,11 +20,23 @@ use Cubiche\Core\Console\Tests\Fixtures\Blog;
  */
 class BlogService
 {
+    protected $eventBus;
+
+    /**
+     * BlogService constructor.
+     *
+     * @param EventBus $eventBus
+     */
+    public function __construct(EventBus $eventBus)
+    {
+        $this->eventBus = $eventBus;
+    }
+
     /**
      * @param CreateBlogCommand $command
      */
     public function createBlog(CreateBlogCommand $command)
     {
-        Blog::create($command->name());
+        $this->eventBus->dispatch(new BlogWasCreated($command->name()));
     }
 }
