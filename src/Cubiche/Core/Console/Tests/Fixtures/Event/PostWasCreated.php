@@ -9,15 +9,14 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
-use Cubiche\Core\Console\Tests\Fixtures\PostId;
-use Cubiche\Domain\EventSourcing\DomainEvent;
+use Cubiche\Core\Bus\Event\Event;
 
 /**
  * PostWasCreated class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostWasCreated extends DomainEvent
+class PostWasCreated extends Event
 {
     /**
      * @var string
@@ -32,24 +31,13 @@ class PostWasCreated extends DomainEvent
     /**
      * PostWasCreated constructor.
      *
-     * @param PostId $id
      * @param string $title
      * @param string $content
      */
-    public function __construct(PostId $id, $title, $content)
+    public function __construct($title, $content)
     {
-        parent::__construct($id);
-
         $this->title = $title;
         $this->content = $content;
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
     }
 
     /**

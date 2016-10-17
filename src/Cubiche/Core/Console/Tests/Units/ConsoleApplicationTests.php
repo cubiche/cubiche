@@ -107,9 +107,9 @@ class ConsoleApplicationTests extends TestCase
         $commandBus = CommandBus::create();
         $eventBus = DomainEventPublisher::eventBus();
 
-        $postService = new PostService();
+        $postService = new PostService($eventBus);
 
-        $commandBus->addHandler(CreateBlogCommand::class, new BlogService());
+        $commandBus->addHandler(CreateBlogCommand::class, new BlogService($eventBus));
         $commandBus->addHandler(CreatePostCommand::class, $postService);
         $commandBus->addHandler(ChangePostTitleCommand::class, $postService);
 
@@ -296,8 +296,6 @@ class ConsoleApplicationTests extends TestCase
                     ->contains('blog was created')
                     ->contains('<c1>blog was created</c1> success')
                     ->contains('name')
-                    ->contains('aggregateId')
-                    ->contains('occurredOn')
         ;
     }
 
@@ -360,9 +358,6 @@ class ConsoleApplicationTests extends TestCase
                     ->contains('post title was changed')
                     ->contains('on post dispatch')
                     ->contains('title')
-                    ->contains('content')
-                    ->contains('aggregateId')
-                    ->contains('occurredOn')
         ;
     }
 }

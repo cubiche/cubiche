@@ -9,15 +9,14 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Event;
 
-use Cubiche\Core\Console\Tests\Fixtures\PostId;
-use Cubiche\Domain\EventSourcing\DomainEvent;
+use Cubiche\Core\Bus\Event\Event;
 
 /**
  * PostTitleWasChanged class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostTitleWasChanged extends DomainEvent
+class PostTitleWasChanged extends Event
 {
     /**
      * @var string
@@ -27,22 +26,11 @@ class PostTitleWasChanged extends DomainEvent
     /**
      * PostTitleWasChanged constructor.
      *
-     * @param PostId $id
      * @param string $title
      */
-    public function __construct(PostId $id, $title)
+    public function __construct($title)
     {
-        parent::__construct($id);
-
         $this->title = $title;
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
     }
 
     /**
