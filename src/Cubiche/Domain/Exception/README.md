@@ -1,2 +1,0 @@
-# Cubiche - Exception
-[![Build Status](https://travis-ci.org/cubiche/exception.svg?branch=master)](https://travis-ci.org/cubiche/exception) [![Coverage Status](https://coveralls.io/repos/github/cubiche/exception/badge.svg?branch=master)](https://coveralls.io/github/cubiche/exception?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/exception/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/exception/?branch=master) 

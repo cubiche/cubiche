@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\System\Tests\Units;
 
-use Cubiche\Domain\Exception\NotImplementedException;
+use Cubiche\Domain\System\Exception\NotImplementedException;
 use Cubiche\Domain\System\Decimal;
 use Cubiche\Domain\System\DecimalInfinite;
 
