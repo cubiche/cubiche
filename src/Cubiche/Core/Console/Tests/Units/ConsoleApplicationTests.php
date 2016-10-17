@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Console\Tests\Units;
 
 use Cubiche\Core\Bus\Command\CommandBus;
+use Cubiche\Core\Bus\Event\EventBus;
 use Cubiche\Core\Console\Api\Config\ApplicationConfig;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Core\Console\Tests\Fixtures\Command\BlogService;
@@ -19,7 +20,6 @@ use Cubiche\Core\Console\Tests\Fixtures\Command\CreateBlogCommand;
 use Cubiche\Core\Console\Tests\Fixtures\Command\CreatePostCommand;
 use Cubiche\Core\Console\Tests\Fixtures\Command\PostService;
 use Cubiche\Core\EventDispatcher\EventInterface;
-use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Webmozart\Console\Api\Args\Format\Argument;
 use Webmozart\Console\Api\IO\Input;
 use Webmozart\Console\Api\IO\IO;
@@ -105,7 +105,7 @@ class ConsoleApplicationTests extends TestCase
     protected function createApplication($config)
     {
         $commandBus = CommandBus::create();
-        $eventBus = DomainEventPublisher::eventBus();
+        $eventBus = EventBus::create();
 
         $postService = new PostService($eventBus);
 
