@@ -19,8 +19,7 @@
     ],
     "require": {
         "php":                  "^5.5.9|^7.0",
-
-        "cubiche/exception":    "dev-master",
+        
         "cubiche/enum":         "dev-master",
         "cubiche/model":        "dev-master",
         "cubiche/comparable":   "dev-master"

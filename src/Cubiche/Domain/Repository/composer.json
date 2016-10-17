@@ -23,7 +23,8 @@
         "cubiche/collections":      "dev-master",
         "cubiche/comparable":       "dev-master",
         "cubiche/specification":    "dev-master",
-        "cubiche/model":            "dev-master"
+        "cubiche/model":            "dev-master",
+        "cubiche/identity":         "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"
