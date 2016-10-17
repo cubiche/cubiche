@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\System;
 
-use Cubiche\Domain\Exception\NotImplementedException;
+use Cubiche\Domain\System\Exception\NotImplementedException;
 
 /**
  * Decimal Infinite Class.
