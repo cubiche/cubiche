@@ -42,7 +42,8 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Domain\\EventSourcing\\": ""
+            "Cubiche\\Domain\\EventSourcing\\": "",
+            "": "Tests/Fixtures/Migrations"
         }
     }
 }
