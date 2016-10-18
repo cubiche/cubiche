@@ -16,6 +16,7 @@ use Cubiche\Core\Equatable\Tests\Units\EquatableInterfaceTestCase;
  * Enum Test Case Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>bib 
  */
 abstract class EnumTestCase extends EquatableInterfaceTestCase
 {

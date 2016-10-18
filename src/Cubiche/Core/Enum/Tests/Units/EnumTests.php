@@ -19,6 +19,7 @@ use Cubiche\Core\Enum\Tests\Fixtures\EnumFixture;
  * Enum Tests Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
 class EnumTests extends EnumTestCase
 {
@@ -31,17 +32,126 @@ class EnumTests extends EnumTestCase
     }
 
     /**
+     * Test value method.
+     */
+    public function testValue()
+    {
+        $this
+            ->given($enum = new EnumFixture(EnumFixture::FOO))
+            ->when($value = $enum->value())
+            ->then()
+                ->variable($value)
+                    ->isEqualTo(EnumFixture::FOO)
+        ;
+    }
+
+    /**
+     * Test name method.
+     */
+    public function testName()
+    {
+        $this
+            ->given($enum = new EnumFixture(EnumFixture::FOO))
+            ->when($name = $enum->name())
+            ->then()
+                ->variable($name)
+                    ->isEqualTo('FOO')
+        ;
+    }
+
+    /**
+     * Test hashCode method.
+     */
+    public function testHashCode()
+    {
+        $this
+            ->given($enum = new EnumFixture(EnumFixture::FOO))
+            ->when($hashCode = $enum->hashCode())
+            ->then()
+                ->variable($hashCode)
+                    ->isEqualTo((string) $enum->value())
+        ;
+    }
+
+    /**
+     * Test __toString method.
+     */
+    public function testToString()
+    {
+        $this
+            ->given($enum = new EnumFixture(EnumFixture::FOO))
+            ->when($string = $enum->__toString())
+            ->then()
+                ->string($string)
+                    ->isEqualTo((string) $enum->value())
+        ;
+    }
+
+    /**
      * Test is method.
      */
     public function testIs()
     {
         $this
-            ->given($enum = $this->newDefaultTestedInstance())
+            ->given($enum = new EnumFixture(EnumFixture::FOO))
             ->then()
                 ->boolean($enum->is(EnumFixture::FOO))
                     ->isTrue()
                 ->boolean($enum->is(EnumFixture::BAR))
                     ->isFalse()
+        ;
+    }
+
+    /**
+     * Test isValidName method.
+     */
+    public function testIsValidName()
+    {
+        $this
+            ->when($isValid = EnumFixture::isValidName('FOO'))
+            ->then()
+                ->boolean($isValid)
+                    ->isTrue()
+        ;
+
+        $this
+            ->when($isValid = EnumFixture::isValidName('ZOO'))
+                ->then()
+                ->boolean($isValid)
+                ->isFalse()
+        ;
+
+        $this
+            ->when($isValid = EnumFixture::isValidName('__DEFAULT'))
+            ->then()
+                ->boolean($isValid)
+                    ->isFalse()
+        ;
+    }
+
+    /**
+     * Test names method.
+     */
+    public function testNames()
+    {
+        $this
+            ->when($names = EnumFixture::names())
+            ->then()
+                ->array($names)
+                    ->isEqualTo(array('FOO', 'BAR'))
+        ;
+    }
+
+    /**
+     * Test values method.
+     */
+    public function testValues()
+    {
+        $this
+            ->when($values = EnumFixture::values())
+            ->then()
+                ->array($values)
+                    ->isEqualTo(array('FOO' => EnumFixture::FOO(), 'BAR' => EnumFixture::BAR()))
         ;
     }
 

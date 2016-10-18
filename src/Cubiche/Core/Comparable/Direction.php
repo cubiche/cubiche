@@ -33,6 +33,6 @@ final class Direction extends Enum
      */
     public function reverse()
     {
-        return new self(-1 * $this->getValue());
+        return new self(-1 * $this->value());
     }
 }

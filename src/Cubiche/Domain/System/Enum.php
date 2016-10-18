@@ -40,6 +40,6 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
      */
     public function toNative()
     {
-        return $this->value;
+        return $this->value();
     }
 }

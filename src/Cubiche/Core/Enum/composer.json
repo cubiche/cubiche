@@ -16,8 +16,7 @@
     ],
     "require": {
         "php":                      "^5.5.9|^7.0",
-        "cubiche/equatable":        "dev-master",
-        "myclabs/php-enum":         "^1.4"
+        "cubiche/equatable":        "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"

@@ -80,6 +80,6 @@ class ComparatorVisitor extends Visitor
     public function visitSelectorComparator(SelectorComparator $comparator)
     {
         $field = $this->createField($comparator->selector());
-        $this->queryBuilder->sort($field->name(), $comparator->direction()->getValue());
+        $this->queryBuilder->sort($field->name(), $comparator->direction()->value());
     }
 }
