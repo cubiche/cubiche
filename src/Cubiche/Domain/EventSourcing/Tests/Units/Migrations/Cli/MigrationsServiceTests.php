@@ -314,6 +314,8 @@ class MigrationsServiceTests extends TestCase
      */
     public function testMigrationsStatus()
     {
+        $this->migrationsDirectory = __DIR__.'/../Cli/Migrations';
+
         $this
             ->given($service = $this->createService())
             ->and($command = new MigrationsStatusCommand())
