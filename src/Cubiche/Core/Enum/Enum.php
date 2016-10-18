@@ -13,21 +13,88 @@ namespace Cubiche\Core\Enum;
 
 use Cubiche\Core\Equatable\EquatableInterface;
 use Cubiche\Core\Hashable\HashCoder;
-use MyCLabs\Enum\Enum as BaseEnum;
 
 /**
- * Enum class.
+ * Enum class based on http://github.com/myclabs/php-enum.
  *
  * @method static static __DEFAULT()
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-abstract class Enum extends BaseEnum implements EquatableInterface
+abstract class Enum implements EquatableInterface
 {
+    /**
+     * @var mixed
+     */
+    protected $value;
+
+    /**
+     * @var array
+     */
+    protected static $cache = array();
+
     /**
      * @var array
      */
     protected static $defaultCache = array();
+
+    /**
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return static
+     *
+     * @throws \BadMethodCallException
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        $array = static::toArray();
+        if (\strtoupper($name) === '__DEFAULT' && isset(static::$defaultCache[static::class])) {
+            return new static(static::$defaultCache[static::class]);
+        }
+
+        if (isset($array[$name])) {
+            return new static($array[$name]);
+        }
+
+        throw new \BadMethodCallException(
+            \sprintf('No static method or enum constant %S in class %s', $name, static::class)
+        );
+    }
+
+    /**
+     * Creates a new value of some type.
+     *
+     * @param mixed $value
+     *
+     * @throws \UnexpectedValueException if incompatible type is given.
+     */
+    public function __construct($value)
+    {
+        if (!$this->isValid($value)) {
+            throw new \UnexpectedValueException(
+                \sprintf('Value %s is not part of the enum %s.', $value, static::class)
+            );
+        }
+
+        $this->value = $value;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function value()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return static::search($this->value);
+    }
 
     /**
      * @param mixed $value
@@ -44,7 +111,7 @@ abstract class Enum extends BaseEnum implements EquatableInterface
      */
     public function equals($other)
     {
-        return \get_class($this) === \get_class($other) && $this->getValue() === $other->getValue();
+        return $other instanceof static && $this->is($other->value());
     }
 
     /**
@@ -52,7 +119,73 @@ abstract class Enum extends BaseEnum implements EquatableInterface
      */
     public function hashCode()
     {
-        return HashCoder::defaultHashCoder()->hashCode($this->getValue());
+        return HashCoder::defaultHashCoder()->hashCode($this->value());
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->value;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public static function isValid($value)
+    {
+        return \in_array($value, static::toArray(), true);
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    public static function isValidName($name)
+    {
+        $array = static::toArray();
+
+        return isset($array[$name]);
+    }
+
+    /**
+     * @return array
+     */
+    public static function names()
+    {
+        return \array_keys(static::toArray());
+    }
+
+    /**
+     * @return static[]
+     */
+    public static function values()
+    {
+        $values = array();
+        foreach (static::toArray() as $key => $value) {
+            $values[$key] = new static($value);
+        }
+
+        return $values;
+    }
+
+    /**
+     * @return array
+     */
+    public static function toArray()
+    {
+        if (!isset(static::$cache[static::class])) {
+            static::$cache[static::class] = self::constants(static::class);
+            if (!isset(static::$defaultCache[static::class]) && !empty(static::$cache[static::class])) {
+                static::$defaultCache[static::class] = \array_values(static::$cache[static::class])[0];
+            }
+        }
+
+        return static::$cache[static::class];
     }
 
     /**
@@ -76,40 +209,13 @@ abstract class Enum extends BaseEnum implements EquatableInterface
     }
 
     /**
-     * @param string $name
-     * @param array  $arguments
+     * @param $value
      *
-     * @return static
-     *
-     * @throws \BadMethodCallException
+     * @return mixed
      */
-    public static function __callStatic($name, $arguments)
+    protected static function search($value)
     {
-        $array = static::toArray();
-        if (\strtoupper($name) === '__DEFAULT' && isset(static::$defaultCache[static::class])) {
-            return new static(static::$defaultCache[static::class]);
-        }
-
-        if (isset($array[$name])) {
-            return new static($array[$name]);
-        }
-
-        throw new \BadMethodCallException("No static method or enum constant '$name' in class ".static::class);
-    }
-
-    /**
-     * @return array
-     */
-    public static function toArray()
-    {
-        if (!isset(static::$cache[static::class])) {
-            static::$cache[static::class] = self::constants(static::class);
-            if (!isset(static::$defaultCache[static::class]) && !empty(static::$cache[static::class])) {
-                static::$defaultCache[static::class] = \array_values(static::$cache[static::class])[0];
-            }
-        }
-
-        return static::$cache[static::class];
+        return \array_search($value, static::toArray(), true);
     }
 
     /**

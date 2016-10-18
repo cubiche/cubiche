@@ -60,7 +60,7 @@ class SelectorComparator extends Comparator
      */
     public function compare($a, $b)
     {
-        return $this->direction()->getValue() * parent::compare(
+        return $this->direction()->value() * parent::compare(
             $this->selector->__invoke($a),
             $this->selector->__invoke($b)
         );

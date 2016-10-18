@@ -84,7 +84,7 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
                 $resolver->notify($state);
             }
         } else {
-            throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state()->getValue()));
+            throw new \LogicException(\sprintf('A %s promise cannot be notified', $this->state()));
         }
     }
 
@@ -126,7 +126,7 @@ class PromiseDeferred extends AbstractPromise implements DeferredInterface
             }
         } else {
             throw new \LogicException(
-                \sprintf('A %s promise cannot be %s', $this->state()->getValue(), $success ? 'resolved' : 'rejected')
+                \sprintf('A %s promise cannot be %s', $this->state(), $success ? 'resolved' : 'rejected')
             );
         }
     }
