@@ -1,0 +1,2 @@
+# Cubiche - Domain Geolocation
+[![Build Status](https://travis-ci.org/cubiche/domain-geolocation.svg?branch=master)](https://travis-ci.org/cubiche/domain-geolocation) [![Coverage Status](https://coveralls.io/repos/github/cubiche/domain-geolocation/badge.svg?branch=master)](https://coveralls.io/github/cubiche/domain-geolocation?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/domain-geolocation/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/domain-geolocation/?branch=master) 

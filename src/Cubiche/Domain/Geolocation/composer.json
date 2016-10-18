@@ -1,0 +1,41 @@
+{
+    "name": "cubiche/domain-geolocation",
+    "type": "library",
+    "description": "Geolocation library.",
+    "keywords": [
+        "coordinate",
+        "latitude",
+        "longitude",
+        "distance"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+
+        "cubiche/comparable":       "dev-master",
+        "cubiche/domain-model":     "dev-master",
+        "cubiche/domain-system":    "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Domain\\Geolocation\\": ""
+        }
+    }
+}
