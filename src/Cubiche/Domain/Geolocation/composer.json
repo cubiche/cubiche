@@ -1,5 +1,5 @@
 {
-    "name": "cubiche/domain-geolocation",
+    "name": "cubiche/geolocation",
     "type": "library",
     "description": "Geolocation library.",
     "keywords": [
@@ -23,8 +23,8 @@
         "php":                      "^5.5.9|^7.0",
 
         "cubiche/comparable":       "dev-master",
-        "cubiche/domain-model":     "dev-master",
-        "cubiche/domain-system":    "dev-master"
+        "cubiche/model":            "dev-master",
+        "cubiche/system":           "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"
