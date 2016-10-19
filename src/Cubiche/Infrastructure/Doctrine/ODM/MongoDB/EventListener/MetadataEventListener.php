@@ -9,10 +9,10 @@
  */
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener;
 
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\DriverFactory;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
