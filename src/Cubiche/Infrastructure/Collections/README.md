@@ -1,0 +1,2 @@
+# Cubiche - Collections Adapter
+[![Build Status](https://travis-ci.org/cubiche/collections-adapter.svg?branch=master)](https://travis-ci.org/cubiche/collections-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/collections-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/collections-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/collections-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/collections-adapter/?branch=master) 
