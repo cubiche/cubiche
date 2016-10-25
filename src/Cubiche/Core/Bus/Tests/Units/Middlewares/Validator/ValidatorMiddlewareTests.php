@@ -11,8 +11,8 @@
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Validator;
 
 use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LogoutUserCommand;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 use Cubiche\Core\Validator\Exception\ValidationException;
 
@@ -30,8 +30,8 @@ class ValidatorMiddlewareTests extends TestCase
     {
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->and($callable = function (LoginUserCommand $command) {
+            ->and($command = new LoginUserEvent('ivan@cubiche.com', 'plainpassword'))
+            ->and($callable = function (LoginUserEvent $command) {
                 $command->setEmail('info@cubiche.org');
             })
             ->when($middleware->handle($command, $callable))
@@ -42,7 +42,7 @@ class ValidatorMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LoginUserCommand('invalid.email.com', 'plainpassword'))
+            ->and($command = new LoginUserEvent('invalid.email.com', 'plainpassword'))
             ->and($callable = function () {
             })
             ->then()
@@ -53,8 +53,8 @@ class ValidatorMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LogoutUserCommand('invalid.email.com'))
-            ->and($callable = function (LogoutUserCommand $command) {
+            ->and($command = new LogoutUserEvent('invalid.email.com'))
+            ->and($callable = function (LogoutUserEvent $command) {
                 $command->setEmail('info@cubiche.org');
             })
             ->when($middleware->handle($command, $callable))

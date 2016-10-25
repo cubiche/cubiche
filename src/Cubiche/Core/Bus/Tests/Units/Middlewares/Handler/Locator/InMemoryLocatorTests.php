@@ -8,14 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Locator;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommandHandler;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
@@ -31,21 +30,21 @@ class InMemoryLocatorTests extends TestCase
     public function testAdd()
     {
         $this
-            ->given($handler = new LoginUserCommandHandler())
+            ->given($handler = new LoginUserEventListener())
             ->then()
-                ->object($locator = new InMemoryLocator([LoginUserCommand::class => $handler]))
+                ->object($locator = new InMemoryLocator([LoginUserEvent::class => $handler]))
                     ->isInstanceOf(LocatorInterface::class)
         ;
 
         $this
-            ->given($handler = new LoginUserCommandHandler())
+            ->given($handler = new LoginUserEventListener())
             ->then()
                 ->exception(function () use ($handler) {
                     new InMemoryLocator([255 => $handler]);
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
                 ->exception(function () use ($handler) {
-                    new InMemoryLocator([LoginUserCommand::class => 255]);
+                    new InMemoryLocator([LoginUserEvent::class => 255]);
                 })
                 ->isInstanceOf(\InvalidArgumentException::class)
 
@@ -58,9 +57,9 @@ class InMemoryLocatorTests extends TestCase
     public function testLocate()
     {
         $this
-            ->given($handler = new LoginUserCommandHandler())
-            ->and($locator = new InMemoryLocator([LoginUserCommand::class => $handler]))
-            ->when($result = $locator->locate(LoginUserCommand::class))
+            ->given($handler = new LoginUserEventListener())
+            ->and($locator = new InMemoryLocator([LoginUserEvent::class => $handler]))
+            ->when($result = $locator->locate(LoginUserEvent::class))
             ->then()
                 ->object($result)
                     ->isEqualTo($handler)

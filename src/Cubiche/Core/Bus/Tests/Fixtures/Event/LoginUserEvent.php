@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Fixtures\Event;
 
 use Cubiche\Core\Bus\Event\Event;
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
  * LoginUserEvent class.
@@ -49,5 +50,16 @@ class LoginUserEvent extends Event
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function loadValidatorMetadata(ClassMetadata $classMetadata)
+    {
+        $classMetadata->addPropertyConstraint(
+            'email',
+            Assert::email()
+        );
     }
 }

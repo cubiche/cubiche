@@ -1,0 +1,2 @@
+# Cubiche - Cqrs
+[![Build Status](https://travis-ci.org/cubiche/cqrs.svg?branch=master)](https://travis-ci.org/cubiche/cqrs) [![Coverage Status](https://coveralls.io/repos/github/cubiche/cqrs/badge.svg?branch=master)](https://coveralls.io/github/cubiche/cqrs?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/cqrs/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/cqrs/?branch=master) 

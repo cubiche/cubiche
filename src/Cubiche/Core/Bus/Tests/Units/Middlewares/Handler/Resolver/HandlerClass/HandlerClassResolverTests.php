@@ -13,12 +13,11 @@ namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerClass
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver as HandlerMethodNameDefaultResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommandHandler;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LogoutUserCommand;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 use Cubiche\Core\Delegate\Delegate;
 
@@ -38,12 +37,12 @@ class HandlerClassResolverTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new HandlerMethodNameDefaultResolver(),
+                    new MethodWithShortObjectNameResolver('Event'),
                     new InMemoryLocator([])
                 )
             )
-            ->and($resolver->addHandler(LoginUserCommand::class, new LoginUserCommandHandler()))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->and($resolver->addHandler(LoginUserEvent::class, new LoginUserEventListener()))
+            ->when($result = $resolver->resolve(new LoginUserEvent('ivan@cubiche.com')))
             ->then()
                 ->object($result)
                     ->isInstanceOf(Delegate::class)
@@ -53,14 +52,14 @@ class HandlerClassResolverTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new HandlerMethodNameDefaultResolver(),
+                    new MethodWithShortObjectNameResolver('Event'),
                     new InMemoryLocator([])
                 )
             )
-            ->and($resolver->addHandler(LoginUserCommand::class, new LoginUserCommandHandler()))
+            ->and($resolver->addHandler(LoginUserEvent::class, new LoginUserEventListener()))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
+                    $resolver->resolve(new LogoutUserEvent('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;
@@ -70,12 +69,12 @@ class HandlerClassResolverTests extends TestCase
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
                     new MethodWithShortObjectNameResolver('Command'),
-                    new InMemoryLocator([LoginUserCommand::class => new LoginUserCommandHandler()])
+                    new InMemoryLocator([LoginUserEvent::class => new LoginUserEventListener()])
                 )
             )
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword'));
+                    $resolver->resolve(new LoginUserEvent('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

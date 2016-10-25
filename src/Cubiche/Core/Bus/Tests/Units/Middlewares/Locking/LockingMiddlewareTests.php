@@ -8,12 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Locking;
 
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\TriggerCommandOnHandle;
 use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
 use Cubiche\Core\Bus\Tests\Fixtures\Event\TriggerEventOnListener;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
@@ -28,70 +25,25 @@ class LockingMiddlewareTests extends TestCase
     /**
      * Test handle method.
      */
-    public function testHandleCommand()
-    {
-        $this
-            ->given($middleware = new LockingMiddleware())
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->and($callable = function (LoginUserCommand $command) {
-                $command->setEmail('info@cubiche.org');
-            })
-            ->when($middleware->handle($command, $callable))
-            ->then()
-                ->string($command->email())
-                    ->isEqualTo('info@cubiche.org')
-        ;
-
-        $this
-            ->given($middleware = new LockingMiddleware())
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->and($callable = function (LoginUserCommand $command) {
-                $command->setEmail('info@cubiche.org');
-                throw new \InvalidArgumentException();
-            })
-            ->then()
-                ->exception(function () use ($middleware, $command, $callable) {
-                    $middleware->handle($command, $callable);
-                })
-                ->isInstanceOf(\InvalidArgumentException::class)
-        ;
-
-        $this
-            ->given($middleware = new LockingMiddleware())
-            ->and($callable = function (LoginUserCommand $command) {
-                $command->setPassword(md5($command->password()));
-            })
-            ->and($handler = new TriggerCommandOnHandle($middleware, $callable))
-            ->and($command = new LoginUserCommand('ivan@cubiche.com', 'plainpassword'))
-            ->when($middleware->handle($command, array($handler, 'handle')))
-            ->then()
-                ->string($command->password())
-                    ->isEqualTo(md5(sha1('plainpassword')))
-        ;
-    }
-
-    /**
-     * Test handle method.
-     */
     public function testHandleEvent()
     {
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
             ->and($callable = function (LoginUserEvent $event) {
-                $event->setEmail('info@cubiche.org');
+                $event->setEmail('tech@cubiche.org');
             })
             ->when($middleware->handle($event, $callable))
             ->then()
                 ->string($event->email())
-                    ->isEqualTo('info@cubiche.org')
+                    ->isEqualTo('tech@cubiche.org')
         ;
 
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
             ->and($callable = function (LoginUserEvent $event) {
-                $event->setEmail('info@cubiche.org');
+                $event->setEmail('tech@cubiche.org');
 
                 throw new \InvalidArgumentException();
             })
@@ -109,7 +61,9 @@ class LockingMiddlewareTests extends TestCase
             })
             ->and($listener = new TriggerEventOnListener($middleware, $callable))
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->when($middleware->handle($event, array($listener, 'onLogin')))
+            ->when($middleware->handle($event, function ($event) use ($listener) {
+                $listener->onLogin($event);
+            }))
             ->then()
                 ->string($event->email())
                     ->isEqualTo(md5(sha1('ivan@cubiche.com')))

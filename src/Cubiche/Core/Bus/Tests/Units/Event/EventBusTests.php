@@ -102,7 +102,7 @@ class EventBusTests extends TestCase
     {
         $this
             ->given($eventBus = EventBus::create())
-            ->and($eventBus->addListener('event.foo', array(new LoginUserEventListener(), 'onLogin')))
+            ->and($eventBus->addListener('event.foo', array(new LoginUserEventListener(), 'loginUser')))
             ->and($eventBus->addListener('event.foo', function (Event $event) {
 
             }))
@@ -129,7 +129,7 @@ class EventBusTests extends TestCase
     {
         $this
             ->given($eventBus = EventBus::create())
-            ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
+            ->and($listener1 = array(new LoginUserEventListener(), 'loginUser'))
             ->and($listener2 = function (Event $event) {
                 return $event->eventName();
             })

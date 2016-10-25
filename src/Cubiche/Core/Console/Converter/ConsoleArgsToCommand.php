@@ -9,8 +9,8 @@
  */
 namespace Cubiche\Core\Console\Converter;
 
-use Cubiche\Core\Bus\Command\CommandConverterInterface;
 use Cubiche\Core\Console\Command\ConsoleCommandInterface;
+use Cubiche\Core\Cqrs\Command\CommandConverterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\Args\Format\ArgsFormat;

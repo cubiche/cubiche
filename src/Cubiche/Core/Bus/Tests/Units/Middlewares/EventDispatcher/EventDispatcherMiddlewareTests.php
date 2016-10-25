@@ -32,7 +32,7 @@ class EventDispatcherMiddlewareTests extends TestCase
             ->given($dispatcher = new EventDispatcher())
             ->and($middleware = new EventDispatcherMiddleware($dispatcher))
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'loginUser')))
             ->and($dispatcher->addListener($event->eventName(), function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())

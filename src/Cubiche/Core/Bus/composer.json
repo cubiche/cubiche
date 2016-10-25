@@ -30,10 +30,10 @@
         "cubiche/delegate":         "dev-master",
         "cubiche/event-dispatcher": "dev-master",
         "cubiche/serializer":       "dev-master",
-        "cubiche/validator":       "dev-master"
+        "cubiche/validator":        "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":        "dev-master"
+        "cubiche/tests":            "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

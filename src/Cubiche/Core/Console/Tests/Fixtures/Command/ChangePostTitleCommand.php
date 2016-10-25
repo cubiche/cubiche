@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
-use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Cqrs\Command\CommandInterface;
 
 /**
  * ChangePostTitleCommand class.

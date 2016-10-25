@@ -1,0 +1,42 @@
+{
+    "name": "cubiche/cqrs",
+    "type": "library",
+    "description": "Cqrs library",
+    "keywords": [
+        "read-model",
+        "write-model",
+        "command",
+        "command bus",
+        "query",
+        "query bus"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^5.5.9|^7.0",
+
+        "cubiche/bus":              "dev-master",
+        "cubiche/validator":        "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Core\\Cqrs\\": ""
+        }
+    }
+}
