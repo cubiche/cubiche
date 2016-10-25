@@ -10,8 +10,8 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Migrations\Cli;
 
-use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\Console\ConsoleApplication;
+use Cubiche\Core\Cqrs\Command\CommandBus;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Migrations\Cli\ApplicationConfig;

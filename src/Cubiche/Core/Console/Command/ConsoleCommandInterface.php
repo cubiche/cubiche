@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Core\Console\Command;
 
-use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Cqrs\Command\CommandInterface;
 use Webmozart\Console\Api\IO\IO;
 
 /**

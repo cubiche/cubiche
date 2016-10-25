@@ -15,8 +15,8 @@ use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LogoutUserCommand;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
 use Cubiche\Core\Bus\Tests\Fixtures\InvalidHandlerMethodNameResolver;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
@@ -49,10 +49,10 @@ class ChainResolverTests extends TestCase
     {
         $this
             ->given($resolver1 = new InvalidHandlerMethodNameResolver())
-            ->given($resolver2 = new MethodWithShortObjectNameResolver('Command'))
+            ->given($resolver2 = new MethodWithShortObjectNameResolver('Event'))
             ->and($resolver3 = new DefaultResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3]))
-            ->when($result = $resolver->resolve(LoginUserCommand::class))
+            ->when($result = $resolver->resolve(LoginUserEvent::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUser')
@@ -62,7 +62,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver = new ChainResolver([]))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
+                    $resolver->resolve(new LogoutUserEvent('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;
