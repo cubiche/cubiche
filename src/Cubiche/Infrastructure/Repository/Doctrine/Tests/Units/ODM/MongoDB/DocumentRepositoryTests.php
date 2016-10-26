@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Comparable\Direction;

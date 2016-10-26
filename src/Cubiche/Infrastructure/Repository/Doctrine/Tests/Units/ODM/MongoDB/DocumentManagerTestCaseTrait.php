@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB;
+namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as CollectionsEventSubscriber;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener\MetadataEventSubscriber;
@@ -21,8 +21,8 @@ use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFac
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactory;
-use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\PhonenumberType;
-use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types\RoleType;
+use Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\Types\PhonenumberType;
+use Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\Types\RoleType;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;

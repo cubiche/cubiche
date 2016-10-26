@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Types;
+namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\Types;
 
 use Cubiche\Domain\Repository\Tests\Fixtures\Role;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\EnumType;
