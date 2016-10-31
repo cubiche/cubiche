@@ -8,15 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Bus\Event;
+namespace Cubiche\Core\EventBus\Event;
 
-use Cubiche\Core\EventDispatcher\Event as BaseEvent;
+use Cubiche\Core\EventDispatcher\EventInterface as DispatcherEventInterface;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
- * Event class.
+ * Event interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Event extends BaseEvent implements EventInterface
+interface EventInterface extends MessageInterface, DispatcherEventInterface
 {
 }

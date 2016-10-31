@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -8,37 +9,45 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Console\Tests\Fixtures\Event;
+namespace Cubiche\Core\EventBus\Tests\Fixtures\Event;
 
 use Cubiche\Core\EventBus\Event\Event;
 
 /**
- * PostTitleWasChanged class.
+ * LogoutUserEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostTitleWasChanged extends Event
+class LogoutUserEvent extends Event
 {
     /**
      * @var string
      */
-    protected $title;
+    protected $email;
 
     /**
-     * PostTitleWasChanged constructor.
+     * LogoutUserEvent constructor.
      *
-     * @param string $title
+     * @param $email
      */
-    public function __construct($title)
+    public function __construct($email)
     {
-        $this->title = $title;
+        $this->setEmail($email);
     }
 
     /**
      * @return string
      */
-    public function title()
+    public function email()
     {
-        return $this->title;
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
     }
 }

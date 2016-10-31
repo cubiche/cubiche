@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Bus\Event;
+namespace Cubiche\Core\EventBus\Event;
 
 use Cubiche\Core\EventDispatcher\EventSubscriberInterface as DispatcherEventSubscriberInterface;
 

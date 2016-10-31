@@ -8,13 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Event;
 
-use Cubiche\Core\Bus\Exception\NotFoundException;
+namespace Cubiche\Core\EventBus\Event;
+
 use Cubiche\Core\Bus\Bus;
+use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Bus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Core\EventBus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
 use Cubiche\Core\EventDispatcher\EventDispatcher;
 
 /**

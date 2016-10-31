@@ -1,19 +1,20 @@
 <?php
 
 /**
- * This file is part of the Cubiche component.
+ * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Tests\Units\Middlewares\EventDispatcher;
 
-use Cubiche\Core\Bus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
-use Cubiche\Core\Bus\Tests\Units\TestCase;
+namespace Cubiche\Core\EventBus\Tests\Units\Middlewares\EventDispatcher;
+
+use Cubiche\Core\EventBus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEventListener;
+use Cubiche\Core\EventBus\Tests\Units\TestCase;
 use Cubiche\Core\EventDispatcher\EventDispatcher;
 
 /**

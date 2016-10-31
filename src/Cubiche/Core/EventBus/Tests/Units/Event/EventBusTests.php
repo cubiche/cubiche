@@ -7,25 +7,26 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Tests\Units\Event;
 
-use Cubiche\Core\Bus\Event\Event;
-use Cubiche\Core\Bus\Event\EventBus;
+namespace Cubiche\Core\EventBus\Tests\Units\Event;
+
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\UserEventSubscriber;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
-use Cubiche\Core\Bus\Tests\Units\TestCase;
+use Cubiche\Core\Bus\Tests\Units\BusTests;
+use Cubiche\Core\EventBus\Event\Event;
+use Cubiche\Core\EventBus\Event\EventBus;
+use Cubiche\Core\EventBus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEvent;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEventListener;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\UserEventSubscriber;
 
 /**
  * EventBusTests class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventBusTests extends TestCase
+class EventBusTests extends BusTests
 {
     /**
      * Test create without event dispatcher middleware.

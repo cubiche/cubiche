@@ -8,17 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Tests\Fixtures\Event;
 
-use Cubiche\Core\Bus\Event\Event;
+namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
+
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
- * LogoutUserEvent class.
+ * LogoutUserMessage class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserEvent extends Event
+class LogoutUserMessage implements MessageInterface
 {
     /**
      * @var string
@@ -26,7 +27,7 @@ class LogoutUserEvent extends Event
     protected $email;
 
     /**
-     * LogoutUserEvent constructor.
+     * LogoutUserMessage constructor.
      *
      * @param $email
      */

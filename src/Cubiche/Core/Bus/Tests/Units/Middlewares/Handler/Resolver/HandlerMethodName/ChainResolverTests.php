@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerMethodName;
 
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
@@ -15,8 +16,8 @@ use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
 use Cubiche\Core\Bus\Tests\Fixtures\InvalidHandlerMethodNameResolver;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
@@ -49,10 +50,10 @@ class ChainResolverTests extends TestCase
     {
         $this
             ->given($resolver1 = new InvalidHandlerMethodNameResolver())
-            ->given($resolver2 = new MethodWithShortObjectNameResolver('Event'))
+            ->given($resolver2 = new MethodWithShortObjectNameResolver('Message'))
             ->and($resolver3 = new DefaultResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3]))
-            ->when($result = $resolver->resolve(LoginUserEvent::class))
+            ->when($result = $resolver->resolve(LoginUserMessage::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUser')
@@ -62,7 +63,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver = new ChainResolver([]))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserEvent('ivan@cubiche.com'));
+                    $resolver->resolve(new LogoutUserMessage('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
@@ -15,9 +16,9 @@ use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEventListener;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessageListener;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 use Cubiche\Core\Delegate\Delegate;
 
@@ -37,12 +38,12 @@ class HandlerClassResolverTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new MethodWithShortObjectNameResolver('Event'),
+                    new MethodWithShortObjectNameResolver('Message'),
                     new InMemoryLocator([])
                 )
             )
-            ->and($resolver->addHandler(LoginUserEvent::class, new LoginUserEventListener()))
-            ->when($result = $resolver->resolve(new LoginUserEvent('ivan@cubiche.com')))
+            ->and($resolver->addHandler(LoginUserMessage::class, new LoginUserMessageListener()))
+            ->when($result = $resolver->resolve(new LoginUserMessage('ivan@cubiche.com')))
             ->then()
                 ->object($result)
                     ->isInstanceOf(Delegate::class)
@@ -52,14 +53,14 @@ class HandlerClassResolverTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new MethodWithShortObjectNameResolver('Event'),
+                    new MethodWithShortObjectNameResolver('Message'),
                     new InMemoryLocator([])
                 )
             )
-            ->and($resolver->addHandler(LoginUserEvent::class, new LoginUserEventListener()))
+            ->and($resolver->addHandler(LoginUserMessage::class, new LoginUserMessageListener()))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserEvent('ivan@cubiche.com'));
+                    $resolver->resolve(new LogoutUserMessage('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;
@@ -69,12 +70,12 @@ class HandlerClassResolverTests extends TestCase
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
                     new MethodWithShortObjectNameResolver('Command'),
-                    new InMemoryLocator([LoginUserEvent::class => new LoginUserEventListener()])
+                    new InMemoryLocator([LoginUserMessage::class => new LoginUserMessageListener()])
                 )
             )
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LoginUserEvent('ivan@cubiche.com'));
+                    $resolver->resolve(new LoginUserMessage('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

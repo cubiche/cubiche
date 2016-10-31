@@ -1,13 +1,11 @@
 {
-    "name": "cubiche/event-publisher",
+    "name": "cubiche/event-bus",
     "type": "library",
-    "description": "Domain event component.",
+    "description": "Event bus library",
     "keywords": [
+        "bus",
         "event",
-        "domain event",
-        "publisher",
-        "notify",
-        "dispatcher"
+        "event bus"
     ],
     "license": "MIT",
     "authors": [
@@ -21,11 +19,13 @@
         }
     ],
     "require": {
-        "php":                  "^5.5.9|^7.0",
-        "cubiche/event-bus":    "dev-master"
+        "php":                      "^5.5.9|^7.0",
+
+        "cubiche/bus":              "dev-master",
+        "cubiche/event-dispatcher": "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":        "dev-master"
+        "cubiche/tests":            "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -33,7 +33,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Domain\\EventPublisher\\": ""
+            "Cubiche\\Core\\EventBus\\": ""
         }
     }
 }

@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Tests\Fixtures\Event;
 
-use Cubiche\Core\Bus\Event\Event;
-use Cubiche\Core\Bus\Event\EventSubscriberInterface;
+namespace Cubiche\Core\EventBus\Tests\Fixtures\Event;
+
+use Cubiche\Core\EventBus\Event\Event;
+use Cubiche\Core\EventBus\Event\EventSubscriberInterface;
 
 /**
  * UserEventSubscriber class.

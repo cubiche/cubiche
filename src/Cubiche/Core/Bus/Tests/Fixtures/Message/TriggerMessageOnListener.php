@@ -8,16 +8,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Bus\Tests\Fixtures\Event;
+namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
 
 /**
- * TriggerEventOnListener class.
+ * TriggerMessageOnListener class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class TriggerEventOnListener
+class TriggerMessageOnListener
 {
     /**
      * @var callable
@@ -30,7 +30,7 @@ class TriggerEventOnListener
     protected $middleware;
 
     /**
-     * TriggerEventOnListener constructor.
+     * TriggerMessageOnListener constructor.
      *
      * @param LockingMiddleware $middleware
      * @param callable          $callback
@@ -42,11 +42,11 @@ class TriggerEventOnListener
     }
 
     /**
-     * @param LoginUserEvent $event
+     * @param LoginUserMessage $event
      *
      * @return bool
      */
-    public function onLogin(LoginUserEvent $event)
+    public function onLogin(LoginUserMessage $event)
     {
         // try to execute the same event before set the value
         $this->middleware->handle($event, $this->callback);

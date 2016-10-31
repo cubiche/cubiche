@@ -8,11 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Locking;
 
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\TriggerEventOnListener;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\TriggerMessageOnListener;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
@@ -25,12 +26,12 @@ class LockingMiddlewareTests extends TestCase
     /**
      * Test handle method.
      */
-    public function testHandleEvent()
+    public function testHandleMessage()
     {
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($callable = function (LoginUserEvent $event) {
+            ->and($event = new LoginUserMessage('ivan@cubiche.com'))
+            ->and($callable = function (LoginUserMessage $event) {
                 $event->setEmail('tech@cubiche.org');
             })
             ->when($middleware->handle($event, $callable))
@@ -41,8 +42,8 @@ class LockingMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($callable = function (LoginUserEvent $event) {
+            ->and($event = new LoginUserMessage('ivan@cubiche.com'))
+            ->and($callable = function (LoginUserMessage $event) {
                 $event->setEmail('tech@cubiche.org');
 
                 throw new \InvalidArgumentException();
@@ -56,11 +57,11 @@ class LockingMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new LockingMiddleware())
-            ->and($callable = function (LoginUserEvent $event) {
+            ->and($callable = function (LoginUserMessage $event) {
                 $event->setEmail(md5($event->email()));
             })
-            ->and($listener = new TriggerEventOnListener($middleware, $callable))
-            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
+            ->and($listener = new TriggerMessageOnListener($middleware, $callable))
+            ->and($event = new LoginUserMessage('ivan@cubiche.com'))
             ->when($middleware->handle($event, function ($event) use ($listener) {
                 $listener->onLogin($event);
             }))

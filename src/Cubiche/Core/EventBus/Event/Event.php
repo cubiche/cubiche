@@ -8,20 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\EventPublisher;
+namespace Cubiche\Core\EventBus\Event;
 
-use Cubiche\Core\EventBus\Event\EventInterface;
-use DateTime;
+use Cubiche\Core\EventDispatcher\Event as BaseEvent;
 
 /**
- * DomainEvent interface.
+ * Event class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DomainEventInterface extends EventInterface
+class Event extends BaseEvent implements EventInterface
 {
-    /**
-     * @return DateTime
-     */
-    public function occurredOn();
 }

@@ -1,17 +1,18 @@
 <?php
 
 /**
- * This file is part of the Cubiche/Bus package.
+ * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus\Middlewares\EventDispatcher;
+
+namespace Cubiche\Core\EventBus\Middlewares\EventDispatcher;
 
 use Cubiche\Core\EventDispatcher\EventDispatcherInterface;
-use Cubiche\Core\Bus\Event\EventInterface;
+use Cubiche\Core\EventBus\Event\EventInterface;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -8,20 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\EventPublisher;
-
-use Cubiche\Core\EventBus\Event\EventInterface;
-use DateTime;
+namespace Cubiche\Core\EventBus\Tests\Fixtures\Event;
 
 /**
- * DomainEvent interface.
+ * LoginUserEventListener class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DomainEventInterface extends EventInterface
+class LoginUserEventListener
 {
     /**
-     * @return DateTime
+     * @param LoginUserEvent $event
+     *
+     * @return bool
      */
-    public function occurredOn();
+    public function loginUser(LoginUserEvent $event)
+    {
+        $event->setEmail('info@cubiche.org');
+    }
 }

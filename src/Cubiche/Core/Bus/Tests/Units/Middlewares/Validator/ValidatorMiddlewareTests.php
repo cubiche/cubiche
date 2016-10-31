@@ -8,11 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Validator;
 
 use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\Bus\Tests\Fixtures\Event\LogoutUserEvent;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 use Cubiche\Core\Validator\Exception\ValidationException;
 
@@ -30,8 +31,8 @@ class ValidatorMiddlewareTests extends TestCase
     {
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LoginUserEvent('ivan@cubiche.com', 'plainpassword'))
-            ->and($callable = function (LoginUserEvent $command) {
+            ->and($command = new LoginUserMessage('ivan@cubiche.com', 'plainpassword'))
+            ->and($callable = function (LoginUserMessage $command) {
                 $command->setEmail('info@cubiche.org');
             })
             ->when($middleware->handle($command, $callable))
@@ -42,7 +43,7 @@ class ValidatorMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LoginUserEvent('invalid.email.com', 'plainpassword'))
+            ->and($command = new LoginUserMessage('invalid.email.com', 'plainpassword'))
             ->and($callable = function () {
             })
             ->then()
@@ -53,8 +54,8 @@ class ValidatorMiddlewareTests extends TestCase
 
         $this
             ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LogoutUserEvent('invalid.email.com'))
-            ->and($callable = function (LogoutUserEvent $command) {
+            ->and($command = new LogoutUserMessage('invalid.email.com'))
+            ->and($callable = function (LogoutUserMessage $command) {
                 $command->setEmail('info@cubiche.org');
             })
             ->when($middleware->handle($command, $callable))

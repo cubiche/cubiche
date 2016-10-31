@@ -8,16 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Bus\Event;
+namespace Cubiche\Core\EventBus\Tests\Units;
 
-use Cubiche\Core\EventDispatcher\EventInterface as DispatcherEventInterface;
-use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Tests\TestCase as BaseTestCase;
 
 /**
- * Event interface.
+ * TestCase class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventInterface extends MessageInterface, DispatcherEventInterface
+abstract class TestCase extends BaseTestCase
 {
 }

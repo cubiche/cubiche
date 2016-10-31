@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console;
 
-use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Console\Api\Config\CommandConfig;
 use Cubiche\Core\Console\Command\ConsoleCommandInterface;

@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Tests\Units;
 
-use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Console\Api\Config\ApplicationConfig;
 use Cubiche\Core\Console\ConsoleApplication;
 use Cubiche\Core\Console\Tests\Fixtures\Command\BlogService;

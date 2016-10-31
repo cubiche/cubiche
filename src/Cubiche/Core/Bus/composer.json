@@ -4,12 +4,7 @@
     "description": "A small, flexible message bus. Handy for building service layers.",
     "keywords": [
         "bus",
-        "message",
-        "event",
-        "command",
-        "command bus",
-        "event bus",
-        "query bus"
+        "message"
     ],
     "license": "MIT",
     "authors": [
@@ -28,8 +23,8 @@
         "cubiche/collections":      "dev-master",
         "cubiche/comparable":       "dev-master",
         "cubiche/delegate":         "dev-master",
-        "cubiche/event-dispatcher": "dev-master",
         "cubiche/serializer":       "dev-master",
+        "cubiche/specification":    "dev-master",
         "cubiche/validator":        "dev-master"
     },
     "require-dev": {
