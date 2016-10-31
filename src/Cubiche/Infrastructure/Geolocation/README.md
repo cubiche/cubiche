@@ -1,0 +1,2 @@
+# Cubiche - Geolocation Adapter
+[![Build Status](https://travis-ci.org/cubiche/geolocation-adapter.svg?branch=master)](https://travis-ci.org/cubiche/geolocation-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/geolocation-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/geolocation-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/geolocation-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/geolocation-adapter/?branch=master) 

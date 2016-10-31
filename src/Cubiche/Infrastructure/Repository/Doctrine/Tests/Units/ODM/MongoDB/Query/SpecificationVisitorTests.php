@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\Query;
+namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\Query;
 
 use Cubiche\Core\Selector\Composite;
 use Cubiche\Core\Selector\Field;
@@ -21,7 +21,7 @@ use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\QueryBuilder;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitor;
-use Cubiche\Infrastructure\Repository\Tests\Units\Doctrine\ODM\MongoDB\TestCase;
+use Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\TestCase;
 use Cubiche\Core\Visitor\VisiteeInterface;
 use Cubiche\Core\Selector\SelectorInterface;
 use Cubiche\Core\Specification\Selector;

@@ -1,0 +1,2 @@
+# Cubiche - Repository Adapter
+[![Build Status](https://travis-ci.org/cubiche/repository-adapter.svg?branch=master)](https://travis-ci.org/cubiche/repository-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/repository-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/repository-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/repository-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/repository-adapter/?branch=master) 

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Model\Doctrine\Common\Types;
 
 use Cubiche\Domain\Model\ValueObjectInterface;
@@ -29,7 +30,7 @@ interface ValueObjectTypeInterface
     /**
      * @param mixed $value
      *
-     * @return Cubiche\Domain\Model\ValueObjectInterface
+     * @return ValueObjectInterface
      */
     public function fromDatabaseValue($value);
 }
