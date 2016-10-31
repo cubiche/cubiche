@@ -1,0 +1,39 @@
+{
+    "name": "cubiche/model-doctrine-adapter",
+    "type": "library",
+    "description": "Model doctrine adapter library.",
+    "keywords": [
+        "model",
+        "entity",
+        "aggregateroot"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                          "^5.5.9|^7.0",
+
+        "cubiche/model":                "dev-master",
+        "cubiche/doctrine-adapter":     "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":                "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Infrastructure\\Model\\Doctrine\\": ""
+        }
+    }
+}

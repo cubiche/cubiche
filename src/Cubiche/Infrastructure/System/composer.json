@@ -1,0 +1,40 @@
+{
+    "name": "cubiche/system-adapter",
+    "type": "library",
+    "description": "System adapter library.",
+    "keywords": [
+        "number",
+        "string"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                              "^5.5.9|^7.0",
+
+        "cubiche/system":                   "dev-master",
+
+        "cubiche/doctrine-adapter":         "dev-master",
+        "cubiche/model-doctrine-adapter":   "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":                    "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Infrastructure\\System\\": ""
+        }
+    }
+}

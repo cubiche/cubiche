@@ -1,0 +1,2 @@
+# Cubiche - Model Adapter
+[![Build Status](https://travis-ci.org/cubiche/model-adapter.svg?branch=master)](https://travis-ci.org/cubiche/model-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/model-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/model-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/model-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/model-adapter/?branch=master) 
