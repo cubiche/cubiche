@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Exception;
 
 use RuntimeException;
@@ -43,9 +44,9 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function commandNameForObject($object, Exception $cause = null)
+    public static function nameOfMessage($object, Exception $cause = null)
     {
-        return self::notFound('command name', $object, $cause);
+        return self::notFound('name of message', $object, $cause);
     }
 
     /**
@@ -54,9 +55,9 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function methodNameForObject($object, Exception $cause = null)
+    public static function nameOfCommand($object, Exception $cause = null)
     {
-        return self::notFound('method name', $object, $cause);
+        return self::notFound('name of command', $object, $cause);
     }
 
     /**
@@ -65,9 +66,20 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function queryNameForObject($object, Exception $cause = null)
+    public static function handlerMethodNameForObject($object, Exception $cause = null)
     {
-        return self::notFound('query name', $object, $cause);
+        return self::notFound('handler method name', $object, $cause);
+    }
+
+    /**
+     * @param mixed          $object
+     * @param Exception|null $cause
+     *
+     * @return NotFoundException
+     */
+    public static function nameOfQuery($object, Exception $cause = null)
+    {
+        return self::notFound('name of query', $object, $cause);
     }
 
     /**

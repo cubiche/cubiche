@@ -7,34 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery;
 
-use Cubiche\Core\Bus\Exception\InvalidResolverException;
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver as NameOfMessageChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver as BaseResolver;
 
 /**
  * ChainResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ChainResolver extends NameOfMessageChainResolver implements ResolverInterface
+class ChainResolver extends BaseResolver
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function ensureResolver($resolver)
-    {
-        if (!$resolver instanceof ResolverInterface) {
-            throw InvalidResolverException::forUnknownValue($resolver, ResolverInterface::class);
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
     protected function notFoundException($query)
     {
-        return NotFoundException::queryNameForObject($query);
+        return NotFoundException::nameOfQuery($query);
     }
 }

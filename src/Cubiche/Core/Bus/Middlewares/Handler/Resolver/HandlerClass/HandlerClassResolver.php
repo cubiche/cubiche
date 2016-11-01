@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
@@ -85,7 +86,7 @@ class HandlerClassResolver implements ResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function getHandlerMethodFor($className)
+    protected function getHandlerMethodFor($className)
     {
         return $this->handlerMethodNameResolver->resolve($className);
     }

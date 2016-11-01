@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Cqrs\Tests\Units\Middlewares\Handler\Resolver\NameOfCommand;
+namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\ChainResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromCommandNamedResolver;
-use Cubiche\Core\Cqrs\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Cqrs\Tests\Fixtures\Command\LogoutUserCommand;
-use Cubiche\Core\Cqrs\Tests\Units\TestCase;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
+use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
  * ChainResolver class.
@@ -31,15 +31,15 @@ class ChainResolverTests extends TestCase
     public function testResolve()
     {
         $this
-            ->given($resolver1 = new FromCommandNamedResolver())
+            ->given($resolver1 = new FromMessageNamedResolver())
             ->and($resolver2 = new FromClassNameResolver())
             ->and($resolver = new ChainResolver([$resolver1, $resolver2]))
-            ->when($result = $resolver->resolve(new LoginUserCommand('ivan@cubiche.com', 'plainpassword')))
+            ->when($result = $resolver->resolve(new LoginUserMessage('ivan@cubiche.com', 'plainpassword')))
             ->then()
                 ->string($result)
-                    ->isEqualTo(LoginUserCommand::class)
+                    ->isEqualTo(LoginUserMessage::class)
             ->and()
-            ->when($result = $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com')))
+            ->when($result = $resolver->resolve(new LogoutUserMessage('ivan@cubiche.com')))
             ->then()
                 ->string($result)
                     ->isEqualTo('logout_user')
@@ -49,7 +49,7 @@ class ChainResolverTests extends TestCase
             ->given($resolver = new ChainResolver([]))
             ->then()
                 ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LogoutUserCommand('ivan@cubiche.com'));
+                    $resolver->resolve(new LogoutUserMessage('ivan@cubiche.com'));
                 })
                 ->isInstanceOf(NotFoundException::class)
         ;

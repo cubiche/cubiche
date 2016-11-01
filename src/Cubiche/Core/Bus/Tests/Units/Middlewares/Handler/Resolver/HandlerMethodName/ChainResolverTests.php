@@ -11,7 +11,6 @@
 
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\Exception\InvalidResolverException;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver;
@@ -28,21 +27,6 @@ use Cubiche\Core\Bus\Tests\Units\TestCase;
  */
 class ChainResolverTests extends TestCase
 {
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        $this
-            ->given($resolver1 = new \StdClass())
-            ->then()
-                ->exception(function () use ($resolver1) {
-                    new ChainResolver([$resolver1]);
-                })
-                ->isInstanceOf(InvalidResolverException::class)
-        ;
-    }
-
     /**
      * Test Resolve method.
      */

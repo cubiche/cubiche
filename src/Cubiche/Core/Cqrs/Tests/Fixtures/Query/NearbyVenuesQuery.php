@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Query;
 
 use Cubiche\Core\Cqrs\Query\QueryNamedInterface;
@@ -76,7 +77,7 @@ class NearbyVenuesQuery implements QueryNamedInterface
     /**
      * {@inheritdoc}
      */
-    public function queryName()
+    public function named()
     {
         return 'aroundVenues';
     }

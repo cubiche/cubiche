@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -9,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery;
+namespace Cubiche\Core\Cqrs\Tests\Fixtures;
 
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver as BaseResolver;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
- * FromClassNameResolver class.
+ * FooMessage class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FromClassNameResolver extends BaseResolver
+class FooMessage implements MessageInterface
 {
 }

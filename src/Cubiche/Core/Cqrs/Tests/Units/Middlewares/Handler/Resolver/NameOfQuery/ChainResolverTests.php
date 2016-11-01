@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Units\Middlewares\Handler\Resolver\NameOfQuery;
 
-use Cubiche\Core\Bus\Exception\InvalidResolverException;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\ChainResolver;
 use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
@@ -26,21 +26,6 @@ use Cubiche\Core\Cqrs\Tests\Units\TestCase;
  */
 class ChainResolverTests extends TestCase
 {
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        $this
-            ->given($resolver1 = new \StdClass())
-            ->then()
-                ->exception(function () use ($resolver1) {
-                    new ChainResolver([$resolver1]);
-                })
-                ->isInstanceOf(InvalidResolverException::class)
-        ;
-    }
-
     /**
      * Test Resolve method.
      */

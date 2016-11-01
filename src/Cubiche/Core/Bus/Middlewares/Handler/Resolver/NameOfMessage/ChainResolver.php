@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
-use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Exception\NotFoundException;
-use Cubiche\Core\Bus\Exception\InvalidResolverException;
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 
 /**
@@ -20,7 +20,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class ChainResolver implements ResolverInterface
+class ChainResolver implements ResolverInterface
 {
     /**
      * @var ArrayList
@@ -36,8 +36,7 @@ abstract class ChainResolver implements ResolverInterface
     {
         $this->resolvers = new ArrayList();
         foreach ($resolvers as $resolver) {
-            $this->ensureResolver($resolver);
-            $this->resolvers->add($resolver);
+            $this->addResolver($resolver);
         }
     }
 
@@ -58,16 +57,20 @@ abstract class ChainResolver implements ResolverInterface
     }
 
     /**
-     * @param $resolver
-     *
-     * @throws InvalidResolverException
+     * {@inheritdoc}
      */
-    abstract protected function ensureResolver($resolver);
+    protected function addResolver(ResolverInterface $resolver)
+    {
+        $this->resolvers->add($resolver);
+    }
 
     /**
      * @param MessageInterface $message
      *
      * @return NotFoundException
      */
-    abstract protected function notFoundException($message);
+    protected function notFoundException($message)
+    {
+        return NotFoundException::nameOfMessage($message);
+    }
 }

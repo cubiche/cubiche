@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass;
 
 use Cubiche\Core\Bus\Exception\InvalidResolverException;
@@ -47,11 +48,4 @@ interface ResolverInterface
      * @return object
      */
     public function getHandlerFor($className);
-
-    /**
-     * @param string $className
-     *
-     * @return string
-     */
-    public function getHandlerMethodFor($className);
 }

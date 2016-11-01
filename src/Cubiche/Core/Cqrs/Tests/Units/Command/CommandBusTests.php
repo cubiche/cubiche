@@ -8,16 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Units\Command;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
 use Cubiche\Core\Bus\Tests\Units\BusTests;
 use Cubiche\Core\Cqrs\Command\CommandBus;
 use Cubiche\Core\Cqrs\Middlewares\Handler\CommandHandlerMiddleware;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Command\EncodePasswordCommand;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Command\EncodePasswordHandler;
+use Cubiche\Core\Cqrs\Tests\Fixtures\FooMessage;
 
 /**
  * CommandBusTests class.
@@ -71,20 +72,6 @@ class CommandBusTests extends BusTests
             ->then()
                 ->object($commandBus->getHandlerFor(EncodePasswordCommand::class))
                     ->isEqualTo($commandHandler)
-        ;
-    }
-
-    /**
-     * Test getHandlerMethodFor.
-     */
-    public function testGetHandlerMethodFor()
-    {
-        $this
-            ->given($commandBus = CommandBus::create())
-            ->and($command = new EncodePasswordCommand('plainpassword'))
-            ->then()
-                ->string($commandBus->getHandlerMethodFor(EncodePasswordCommand::class))
-                    ->isEqualTo('encodePassword')
         ;
     }
 

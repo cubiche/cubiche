@@ -8,11 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerMethodName;
 
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Command\LoginUserCommand;
-use Cubiche\Core\Bus\Tests\Fixtures\Query\PublishedPostsQuery;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessageListener;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
 /**
@@ -28,27 +29,27 @@ class MethodWithShortObjectNameResolverTests extends TestCase
     public function testResolve()
     {
         $this
-            ->given($resolver = new MethodWithShortObjectNameResolver('Command'))
-            ->when($result = $resolver->resolve(LoginUserCommand::class))
+            ->given($resolver = new MethodWithShortObjectNameResolver('Message'))
+            ->when($result = $resolver->resolve(LoginUserMessage::class))
             ->then()
                 ->string($result)
                     ->isEqualTo('loginUser')
         ;
 
         $this
-            ->given($resolver = new MethodWithShortObjectNameResolver('Query'))
-            ->when($result = $resolver->resolve(PublishedPostsQuery::class))
+            ->given($resolver = new MethodWithShortObjectNameResolver('Listener'))
+            ->when($result = $resolver->resolve(LoginUserMessageListener::class))
             ->then()
                 ->string($result)
-                    ->isEqualTo('publishedPosts')
+                    ->isEqualTo('loginUserMessage')
         ;
 
         $this
             ->given($resolver = new MethodWithShortObjectNameResolver('Service'))
-            ->when($result = $resolver->resolve(LoginUserCommand::class))
+            ->when($result = $resolver->resolve(LoginUserMessage::class))
             ->then()
                 ->string($result)
-                    ->isEqualTo('loginUserCommand')
+                    ->isEqualTo('loginUserMessage')
         ;
     }
 }

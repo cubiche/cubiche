@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Units\Middlewares\Handler;
 
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
@@ -41,7 +42,7 @@ class QueryHandlerMiddlewareTests extends TestCase
             ->and($middleware = new QueryHandlerMiddleware($resolver))
             ->and($query = new NearByVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($resolver->addHandler($query->queryName(), $queryHandler))
+            ->and($resolver->addHandler($query->named(), $queryHandler))
             ->and($callable = function (array $result) {
                 return json_encode($result);
             })

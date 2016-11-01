@@ -9,15 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery;
-
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver as BaseResolver;
+namespace Cubiche\Core\Cqrs;
 
 /**
- * FromClassNameResolver class.
+ * WriteModel interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FromClassNameResolver extends BaseResolver
+interface ReadModelInterface
 {
 }

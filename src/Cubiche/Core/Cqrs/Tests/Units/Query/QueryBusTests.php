@@ -8,14 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Units\Query;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
-use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
-use Cubiche\Core\Bus\Tests\Fixtures\JsonEncodeMiddleware;
 use Cubiche\Core\Bus\Tests\Units\BusTests;
 use Cubiche\Core\Cqrs\Query\QueryBus;
+use Cubiche\Core\Cqrs\Tests\Fixtures\FooMessage;
+use Cubiche\Core\Cqrs\Tests\Fixtures\JsonEncodeMiddleware;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Query\NearbyVenuesQuery;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Query\PublishedPostsQuery;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Query\VenuesQueryHandler;
@@ -52,7 +53,7 @@ class QueryBusTests extends BusTests
             ->given($queryBus = QueryBus::create())
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($queryBus->addHandler($query->queryName(), $queryHandler))
+            ->and($queryBus->addHandler($query->named(), $queryHandler))
             ->and($result = $queryBus->dispatch($query))
             ->then()
                 ->array($result)
@@ -64,7 +65,7 @@ class QueryBusTests extends BusTests
             ->and($queryBus->addMiddlewareAfter(new JsonEncodeMiddleware(), $queryBus->handlerMiddleware()))
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($queryBus->addHandler($query->queryName(), $queryHandler))
+            ->and($queryBus->addHandler($query->named(), $queryHandler))
             ->and($result = $queryBus->dispatch($query))
             ->then()
                 ->string($result)
