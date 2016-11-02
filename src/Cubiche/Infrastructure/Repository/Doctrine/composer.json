@@ -18,21 +18,24 @@
         }
     ],
     "require": {
-        "php":                          "^5.5.9|^7.0",
+        "php":                                  "^5.5.9|^7.0",
 
-        "cubiche/repository":           "dev-master",
-        "cubiche/comparable":           "dev-master",
-        "cubiche/collections":          "dev-master",
-        "cubiche/delegate":             "dev-master",
-        "cubiche/model":                "dev-master",
-        "cubiche/selector":             "dev-master",
-        "cubiche/specification":        "dev-master",
-        "cubiche/visitor":              "dev-master",
+        "cubiche/repository":                   "dev-master",
+        "cubiche/comparable":                   "dev-master",
+        "cubiche/delegate":                     "dev-master",
+        "cubiche/selector":                     "dev-master",
+        "cubiche/specification":                "dev-master",
+        "cubiche/visitor":                      "dev-master",
 
-        "cubiche/doctrine-adapter":     "dev-master"
+        "cubiche/doctrine-adapter":             "dev-master",
+        "cubiche/collections-doctrine-adapter": "dev-master",
+        "cubiche/geolocation-doctrine-adapter": "dev-master",
+        "cubiche/identity-doctrine-adapter":    "dev-master",
+        "cubiche/model-doctrine-adapter":       "dev-master",
+        "cubiche/system-doctrine-adapter":      "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":                "dev-master"
+        "cubiche/tests":                        "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
