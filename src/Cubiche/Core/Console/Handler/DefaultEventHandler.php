@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Handler;
 
-use Cubiche\Core\Bus\Event\EventInterface;
-use Cubiche\Core\Bus\Event\EventSubscriberInterface;
+use Cubiche\Core\EventBus\Event\EventInterface;
+use Cubiche\Core\EventBus\Event\EventSubscriberInterface;
 use Cubiche\Core\EventDispatcher\PostDispatchEvent;
 use Cubiche\Core\EventDispatcher\PreDispatchEvent;
 use Webmozart\Console\Api\IO\IO;

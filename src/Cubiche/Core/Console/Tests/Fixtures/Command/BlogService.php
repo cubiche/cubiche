@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
-use Cubiche\Core\Bus\Event\EventBus;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Console\Tests\Fixtures\Blog;
 use Cubiche\Core\Console\Tests\Fixtures\Event\BlogWasCreated;
 

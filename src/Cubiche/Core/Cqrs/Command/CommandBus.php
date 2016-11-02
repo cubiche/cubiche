@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Command;
 
 use Cubiche\Core\Bus\Bus;
@@ -126,17 +127,5 @@ class CommandBus extends Bus
         $this->ensureCommandHandlerMiddleware();
 
         return $this->commandHandlerMiddleware->resolver()->getHandlerFor($commandName);
-    }
-
-    /**
-     * @param string $commandName
-     *
-     * @return string
-     */
-    public function getHandlerMethodFor($commandName)
-    {
-        $this->ensureCommandHandlerMiddleware();
-
-        return $this->commandHandlerMiddleware->resolver()->getHandlerMethodFor($commandName);
     }
 }

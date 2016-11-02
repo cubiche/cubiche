@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName;
 
-use Cubiche\Core\Bus\Exception\InvalidResolverException;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 
@@ -26,15 +26,18 @@ class ChainResolver implements ResolverInterface
      */
     protected $resolvers;
 
+    /**
+     * ChainResolver constructor.
+     *
+     * @param array $resolvers
+     *
+     * @throws \Cubiche\Core\Bus\Exception\InvalidLocatorException
+     */
     public function __construct(array $resolvers)
     {
         $this->resolvers = new ArrayList();
         foreach ($resolvers as $resolver) {
-            if (!$resolver instanceof ResolverInterface) {
-                throw InvalidResolverException::forUnknownValue($resolver, ResolverInterface::class);
-            }
-
-            $this->resolvers->add($resolver);
+            $this->addResolver($resolver);
         }
     }
 
@@ -51,6 +54,14 @@ class ChainResolver implements ResolverInterface
             }
         }
 
-        throw NotFoundException::methodNameForObject($className);
+        throw NotFoundException::handlerMethodNameForObject($className);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function addResolver(ResolverInterface $resolver)
+    {
+        $this->resolvers->add($resolver);
     }
 }

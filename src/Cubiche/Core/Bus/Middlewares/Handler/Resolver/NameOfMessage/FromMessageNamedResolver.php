@@ -8,43 +8,32 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\MessageNamedInterface;
 
 /**
  * FromMessageNamedResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class FromMessageNamedResolver implements ResolverInterface
+class FromMessageNamedResolver implements ResolverInterface
 {
     /**
      * {@inheritdoc}
      */
     public function resolve(MessageInterface $message)
     {
-        $type = $this->getType();
-        if ($message instanceof $type) {
-            return $this->getName($message);
+        if ($message instanceof MessageNamedInterface) {
+            return $message->named();
         }
 
         throw new \InvalidArgumentException(sprintf(
             'The object of type %s should implement the %s interface',
             get_class($message),
-            $type
+            MessageNamedInterface::class
         ));
     }
-
-    /**
-     * @return mixed
-     */
-    abstract protected function getType();
-
-    /**
-     * @param MessageInterface $message
-     *
-     * @return string
-     */
-    abstract protected function getName(MessageInterface $message);
 }

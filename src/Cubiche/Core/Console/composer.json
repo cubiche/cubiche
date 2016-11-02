@@ -21,7 +21,7 @@
     "require": {
         "php":                      "^5.5.9|^7.0",
 
-        "cubiche/bus":              "dev-master",
+        "cubiche/event-bus":        "dev-master",
         "cubiche/cqrs":             "dev-master",
 
         "symfony/property-access":  "^3.0",

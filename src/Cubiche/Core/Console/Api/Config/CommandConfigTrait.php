@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Api\Config;
 
-use Cubiche\Core\Bus\Event\EventBus;
-use Cubiche\Core\Bus\Event\EventSubscriberInterface;
+use Cubiche\Core\EventBus\Event\EventBus;
+use Cubiche\Core\EventBus\Event\EventSubscriberInterface;
 
 /**
  * CommandConfig trait.

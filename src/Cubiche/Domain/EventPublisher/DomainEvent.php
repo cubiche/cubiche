@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventPublisher;
 
-use Cubiche\Core\Bus\Event\Event;
+use Cubiche\Core\EventBus\Event\Event;
 use DateTime;
 
 /**

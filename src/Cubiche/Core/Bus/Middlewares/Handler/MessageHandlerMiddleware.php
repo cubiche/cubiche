@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Middlewares\Handler;
 
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\ResolverInterface;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 
@@ -18,7 +20,7 @@ use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class MessageHandlerMiddleware implements MiddlewareInterface
+class MessageHandlerMiddleware implements MiddlewareInterface
 {
     /**
      * @var ResolverInterface
@@ -60,5 +62,16 @@ abstract class MessageHandlerMiddleware implements MiddlewareInterface
      *
      * @throws \InvalidArgumentException
      */
-    abstract protected function ensureTypeOfMessage($message);
+    protected function ensureTypeOfMessage($message)
+    {
+        if (!$message instanceof MessageInterface) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'The object must be an instance of %s. Instance of %s given',
+                    MessageInterface::class,
+                    get_class($message)
+                )
+            );
+        }
+    }
 }

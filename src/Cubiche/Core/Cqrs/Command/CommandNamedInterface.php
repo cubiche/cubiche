@@ -8,19 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Command;
+
+use Cubiche\Core\Bus\MessageNamedInterface;
 
 /**
  * CommandNamed interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface CommandNamedInterface extends CommandInterface
+interface CommandNamedInterface extends CommandInterface, MessageNamedInterface
 {
-    /**
-     * Return the command name.
-     *
-     * @return string
-     */
-    public function commandName();
 }

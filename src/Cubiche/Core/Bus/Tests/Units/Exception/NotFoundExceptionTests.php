@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units\Exception;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
@@ -31,13 +32,13 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test commandNameForObject method.
+     * Test nameOfMessage method.
      */
-    public function testCommandNameForObject()
+    public function testNameOfMessage()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = NotFoundException::commandNameForObject('foo', $cause))
+            ->when($exception = NotFoundException::nameOfMessage('foo', $cause))
             ->then()
                 ->object($exception)
                     ->isInstanceOf(NotFoundException::class)
@@ -49,12 +50,12 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test methodNameForObject method.
+     * Test handlerMethodNameForObject method.
      */
     public function testMethodNameForObject()
     {
         $this
-            ->given($exception = NotFoundException::methodNameForObject('bar'))
+            ->given($exception = NotFoundException::handlerMethodNameForObject('bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
@@ -88,12 +89,25 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test queryNameForObject method.
+     * Test nameOfCommand method.
      */
-    public function testQueryNameForObject()
+    public function testNameOfCommand()
     {
         $this
-            ->given($exception = NotFoundException::queryNameForObject('bar'))
+            ->given($exception = NotFoundException::nameOfCommand('bar'))
+            ->then()
+                ->variable($exception->getPrevious())
+                    ->isNull()
+        ;
+    }
+
+    /**
+     * Test nameOfQuery method.
+     */
+    public function testNameOfQuery()
+    {
+        $this
+            ->given($exception = NotFoundException::nameOfQuery('bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()

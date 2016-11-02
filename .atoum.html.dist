@@ -14,7 +14,6 @@ use mageekguy\atoum;
 // Code coverage setup
 $coverageHtmlField = new Custom('Cubiche', '/path/to/destination/directory', '/path/to/source/directory');
 $coverageHtmlField->setRootUrl('http://url/of/web/site');
-$coverageHtmlField->setTemplatesDirectory(__DIR__.'/resources/coverage');
 
 $script
     ->addDefaultReport()

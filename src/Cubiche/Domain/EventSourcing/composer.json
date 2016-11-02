@@ -23,7 +23,6 @@
 
         "cubiche/collections":      "dev-master",
         "cubiche/console":          "dev-master",
-        "cubiche/bus":              "dev-master",
         "cubiche/cqrs":             "dev-master",
         "cubiche/model":            "dev-master",
         "cubiche/event-publisher":  "dev-master",

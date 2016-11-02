@@ -1529,12 +1529,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/tests.git",
-                "reference": "04100065ddaa558348c4aa8c626afcbfbfd593f7"
+                "reference": "b1ff62ae55ca470940c2fa84d587efe903c80422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/tests/zipball/04100065ddaa558348c4aa8c626afcbfbfd593f7",
-                "reference": "04100065ddaa558348c4aa8c626afcbfbfd593f7",
+                "url": "https://api.github.com/repos/cubiche/tests/zipball/b1ff62ae55ca470940c2fa84d587efe903c80422",
+                "reference": "b1ff62ae55ca470940c2fa84d587efe903c80422",
                 "shasum": ""
             },
             "require": {
