@@ -11,9 +11,9 @@ phpunit.xml
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Proxies/
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Hydrators/
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Cache/
+src/Cubiche/Infrastructure/Repository/Doctrine/.atoum.config.php
 src/Cubiche/Domain/EventSourcing/Tests/Units/Migrations/Cli/Migrations/
 src/Cubiche/Domain/EventSourcing/Tests/Units/Migrations/Cache/
-
 .buildpath
 .project
 .settings/
