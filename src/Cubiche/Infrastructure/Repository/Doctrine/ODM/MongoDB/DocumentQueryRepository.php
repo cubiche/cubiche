@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB;
 
 use Cubiche\Core\Collections\DataSource\IteratorDataSource;
@@ -49,7 +50,7 @@ class DocumentQueryRepository extends QueryRepository
         MongoDBDocumentRepository $repository,
         DocumentDataSourceFactoryInterface $documentDataSourceFactory
     ) {
-        parent::__construct($repository->getDocumentName());
+        $this->entityReflectionClass = new \ReflectionClass($repository->getDocumentName());
 
         $this->repository = $repository;
         $this->documentDataSourceFactory = $documentDataSourceFactory;
