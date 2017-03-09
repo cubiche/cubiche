@@ -17,3 +17,4 @@ src/Cubiche/Domain/EventSourcing/Tests/Units/Migrations/Cache/
 .buildpath
 .project
 .settings/
+.idea/
