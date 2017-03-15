@@ -1,0 +1,2 @@
+# Cubiche - Web Doctrine Adapter
+[![Build Status](https://travis-ci.org/cubiche/web-doctrine-adapter.svg?branch=master)](https://travis-ci.org/cubiche/web-doctrine-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/web-doctrine-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/web-doctrine-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/web-doctrine-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/web-doctrine-adapter/?branch=master) 
