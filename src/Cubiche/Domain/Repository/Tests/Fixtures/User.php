@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
@@ -18,6 +19,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
 use Cubiche\Domain\Model\AggregateRoot;
 use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\Web\EmailAddress;
 
 /**
  * User Class.
@@ -41,6 +43,11 @@ class User extends AggregateRoot
      * @var int
      */
     protected $age;
+
+    /**
+     * @var EmailAddress
+     */
+    protected $email;
 
     /**
      * @var ArrayListInterface
@@ -81,14 +88,16 @@ class User extends AggregateRoot
      * @param UserId $id
      * @param string $name
      * @param int    $age
+     * @param string $email
      */
-    public function __construct(UserId $id, $name, $age)
+    public function __construct(UserId $id, $name, $age, $email)
     {
         parent::__construct($id);
 
         $this->name = $name;
         $this->fullName = StringLiteral::fromNative($name);
         $this->age = $age;
+        $this->email = EmailAddress::fromNative($email);
         $this->phonenumbers = new ArrayList();
         $this->roles = new ArraySet();
         $this->languagesLevel = new ArrayHashMap();
@@ -126,6 +135,14 @@ class User extends AggregateRoot
     public function fullName()
     {
         return $this->fullName;
+    }
+
+    /**
+     * @return EmailAddress
+     */
+    public function email()
+    {
+        return $this->email;
     }
 
     /**

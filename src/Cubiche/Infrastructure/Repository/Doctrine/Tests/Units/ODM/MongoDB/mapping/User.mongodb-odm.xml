@@ -12,6 +12,10 @@
         <field fieldName="name" name="name" type="string" />
         <field fieldName="age" name="age" type="integer" />
 
+        <field fieldName="email" name="email" type="CubicheType">
+            <cubiche:email />
+        </field>
+
         <field fieldName="fullName" name="fullName" type="CubicheType">
             <cubiche:string />
         </field>
