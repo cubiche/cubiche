@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -40,7 +41,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
      */
     protected function randomValue()
     {
-        $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100));
+        $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100), $this->faker->email);
 
         $user->setFax(new Phonenumber($this->faker->phoneNumber));
         foreach (range(1, 3) as $key) {
@@ -86,7 +87,7 @@ class DocumentRepositoryTests extends RepositoryTestCase
      */
     protected function uniqueValue()
     {
-        $user = new User(UserId::next(), 'Methuselah', 1000);
+        $user = new User(UserId::next(), 'Methuselah', 1000, $this->faker->email);
 
         $user->setFax(new Phonenumber('+34-208-1234567'));
         $user->addPhonenumber(new Phonenumber('+34 685 165 267'));
@@ -153,8 +154,8 @@ class DocumentRepositoryTests extends RepositoryTestCase
         $this
             ->given($repository = $this->randomRepository())
             ->and($unique = $this->uniqueValue())
-            ->and($friend = new User(UserId::next(), 'Ivan', 32))
-            ->and($friend1 = new User(UserId::next(), 'Karel', 32))
+            ->and($friend = new User(UserId::next(), 'Ivan', 32, $this->faker->email))
+            ->and($friend1 = new User(UserId::next(), 'Karel', 32, $this->faker->email))
             ->and($repository->persist($friend))
             ->and($repository->persist($friend1))
             ->and($unique->addFriend($friend))

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB\Query;
 
 use Cubiche\Core\Selector\Composite;
@@ -224,7 +225,7 @@ class SpecificationVisitorTests extends TestCase
             return $this->createQueryBuilder()->field('foo')->size(10);
         });
 
-        $user = new User(UserId::next(), 'user', 20);
+        $user = new User(UserId::next(), 'user', 20, $this->faker->email);
 
         $this->visitTest(Criteria::eq($user), function () use ($user) {
             return $this->createQueryBuilder()->field('id')->equals($user->id()->toNative());

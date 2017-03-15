@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -114,7 +115,7 @@ abstract class RepositoryTestCase extends TestCase
      */
     protected function randomValue()
     {
-        return new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100));
+        return new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100), $this->faker->email);
     }
 
     /**
@@ -122,7 +123,7 @@ abstract class RepositoryTestCase extends TestCase
      */
     protected function uniqueValue()
     {
-        return new User(UserId::next(), 'Methuselah', 1000);
+        return new User(UserId::next(), 'Methuselah', 1000, $this->faker->email);
     }
 
     /**
