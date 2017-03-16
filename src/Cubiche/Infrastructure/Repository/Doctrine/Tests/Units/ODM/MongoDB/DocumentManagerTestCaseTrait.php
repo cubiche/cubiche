@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Repository\Doctrine\Tests\Units\ODM\MongoDB;
 
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as CollectionsEventSubscriber;
@@ -16,6 +17,7 @@ use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventListener\EventSubs
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as ModelEventSubscriber;
 use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as GeolocationEventSubscriber;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as SystemEventSubscriber;
+use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\EventListener\EventSubscriber as WebEventSubscriber;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory;
 use Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactoryInterface;
@@ -71,6 +73,7 @@ trait DocumentManagerTestCaseTrait
             $this->dm->getEventManager()->addEventSubscriber(new IdentityEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new GeolocationEventSubscriber());
             $this->dm->getEventManager()->addEventSubscriber(new SystemEventSubscriber());
+            $this->dm->getEventManager()->addEventSubscriber(new WebEventSubscriber());
         }
 
         return $this->dm;
