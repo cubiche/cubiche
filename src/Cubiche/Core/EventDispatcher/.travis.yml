@@ -9,7 +9,7 @@ php:
 
 install:
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --no-interaction
+  - COMPOSER_ROOT_VERSION=dev-master php composer.phar install --dev --no-interaction
 
 script:
   - vendor/bin/atoum -c .atoum.travis.php +verbose
