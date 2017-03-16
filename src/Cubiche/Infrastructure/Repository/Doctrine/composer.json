@@ -32,7 +32,8 @@
         "cubiche/geolocation-doctrine-adapter": "dev-master",
         "cubiche/identity-doctrine-adapter":    "dev-master",
         "cubiche/model-doctrine-adapter":       "dev-master",
-        "cubiche/system-doctrine-adapter":      "dev-master"
+        "cubiche/system-doctrine-adapter":      "dev-master",
+        "cubiche/web-doctrine-adapter":         "dev-master"
     },
     "require-dev": {
         "cubiche/tests":                        "dev-master"
