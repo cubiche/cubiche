@@ -14,6 +14,7 @@ namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\HandlerMetho
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameAndSuffixResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
@@ -34,9 +35,10 @@ class ChainResolverTests extends TestCase
     {
         $this
             ->given($resolver1 = new InvalidHandlerMethodNameResolver())
-            ->given($resolver2 = new MethodWithShortObjectNameResolver('Message'))
-            ->and($resolver3 = new DefaultResolver())
-            ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3]))
+            ->and($resolver2 = new MethodWithShortObjectNameAndSuffixResolver('Listener'))
+            ->and($resolver3 = new MethodWithShortObjectNameResolver('Message'))
+            ->and($resolver4 = new DefaultResolver())
+            ->and($resolver = new ChainResolver([$resolver1, $resolver2, $resolver3, $resolver4]))
             ->when($result = $resolver->resolve(LoginUserMessage::class))
             ->then()
                 ->string($result)

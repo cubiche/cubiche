@@ -25,17 +25,18 @@ class NotFoundException extends RuntimeException
      *
      * @param string         $type
      * @param mixed          $message
+     * @param int            $code
      * @param Exception|null $cause
      *
      * @return NotFoundException
      */
-    protected static function notFound($type, $message, Exception $cause = null)
+    protected static function notFound($type, $message, $code = 0, Exception $cause = null)
     {
         return new static(sprintf(
             'Not found a %s for a given object of type %s',
             $type,
             is_object($message) ? get_class($message) : gettype($message)
-        ), 0, $cause);
+        ), $code, $cause);
     }
 
     /**
@@ -46,7 +47,7 @@ class NotFoundException extends RuntimeException
      */
     public static function nameOfMessage($object, Exception $cause = null)
     {
-        return self::notFound('name of message', $object, $cause);
+        return self::notFound('name of message', $object, 1, $cause);
     }
 
     /**
@@ -57,7 +58,7 @@ class NotFoundException extends RuntimeException
      */
     public static function nameOfCommand($object, Exception $cause = null)
     {
-        return self::notFound('name of command', $object, $cause);
+        return self::notFound('name of command', $object, 2, $cause);
     }
 
     /**
@@ -68,7 +69,7 @@ class NotFoundException extends RuntimeException
      */
     public static function handlerMethodNameForObject($object, Exception $cause = null)
     {
-        return self::notFound('handler method name', $object, $cause);
+        return self::notFound('handler method name', $object, 3, $cause);
     }
 
     /**
@@ -79,7 +80,7 @@ class NotFoundException extends RuntimeException
      */
     public static function nameOfQuery($object, Exception $cause = null)
     {
-        return self::notFound('name of query', $object, $cause);
+        return self::notFound('name of query', $object, 4, $cause);
     }
 
     /**
@@ -93,7 +94,7 @@ class NotFoundException extends RuntimeException
         return new static(sprintf(
             'Not found a handler for a given message named %s',
             $messageName
-        ), 0, $cause);
+        ), 5, $cause);
     }
 
     /**
@@ -109,7 +110,7 @@ class NotFoundException extends RuntimeException
         return new static(sprintf(
             'Not found a middleware of type %s',
             $type
-        ), 0, $cause);
+        ), 6, $cause);
     }
 
     /**
@@ -121,6 +122,6 @@ class NotFoundException extends RuntimeException
      */
     public static function methodForObject($object, $method, Exception $cause = null)
     {
-        return self::notFound('method with name `'.$method.'`', $object, $cause);
+        return self::notFound('method with name `'.$method.'`', $object, 7, $cause);
     }
 }
