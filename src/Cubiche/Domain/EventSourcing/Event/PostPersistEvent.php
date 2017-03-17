@@ -7,10 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Event;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 
 /**
  * PostPersistEvent class.
@@ -25,15 +27,21 @@ class PostPersistEvent extends DomainEvent
     protected $aggregate;
 
     /**
+     * @var EventStream
+     */
+    protected $eventStream;
+
+    /**
      * PrePersistEvent constructor.
      *
      * @param EventSourcedAggregateRootInterface $aggregate
      */
-    public function __construct(EventSourcedAggregateRootInterface $aggregate)
+    public function __construct(EventSourcedAggregateRootInterface $aggregate, EventStream $eventStream)
     {
         parent::__construct();
 
         $this->aggregate = $aggregate;
+        $this->eventStream = $eventStream;
     }
 
     /**
@@ -42,5 +50,13 @@ class PostPersistEvent extends DomainEvent
     public function aggregate()
     {
         return $this->aggregate;
+    }
+
+    /**
+     * @return EventStream
+     */
+    public function eventStream()
+    {
+        return $this->eventStream;
     }
 }
