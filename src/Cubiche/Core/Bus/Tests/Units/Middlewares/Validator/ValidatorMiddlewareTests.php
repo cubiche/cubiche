@@ -11,9 +11,17 @@
 
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Validator;
 
+use Cubiche\Core\Bus\Exception\NotFoundException;
+use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameAndSuffixResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
 use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\RemoveUserMessage;
+use Cubiche\Core\Bus\Tests\Fixtures\Message\UserMessageValidator;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 use Cubiche\Core\Validator\Exception\ValidationException;
 
@@ -30,8 +38,19 @@ class ValidatorMiddlewareTests extends TestCase
     public function testHandle()
     {
         $this
-            ->given($middleware = new ValidatorMiddleware())
-            ->and($command = new LoginUserMessage('ivan@cubiche.com', 'plainpassword'))
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new FromClassNameResolver(),
+                    new ChainResolver([
+                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
+                    ]),
+                    new InMemoryLocator([LoginUserMessage::class => new UserMessageValidator()])
+                )
+            )
+            ->and($middleware = new ValidatorMiddleware($resolver))
+            ->and($command = new LoginUserMessage('ivan@gmail.com', 'plainpassword'))
             ->and($callable = function (LoginUserMessage $command) {
                 $command->setEmail('info@cubiche.org');
             })
@@ -39,10 +58,27 @@ class ValidatorMiddlewareTests extends TestCase
             ->then()
                 ->string($command->email())
                     ->isEqualTo('info@cubiche.org')
+            ->and()
+            ->when($command = new LoginUserMessage('ivan@cubiche.com', 'plainpassword'))
+            ->then()
+                ->exception(function () use ($middleware, $command, $callable) {
+                    $middleware->handle($command, $callable);
+                })->isInstanceOf(ValidationException::class)
         ;
 
         $this
-            ->given($middleware = new ValidatorMiddleware())
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new FromClassNameResolver(),
+                    new ChainResolver([
+                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
+                    ]),
+                    new InMemoryLocator([LoginUserMessage::class => new UserMessageValidator()])
+                )
+            )
+            ->and($middleware = new ValidatorMiddleware($resolver))
             ->and($command = new LoginUserMessage('invalid.email.com', 'plainpassword'))
             ->and($callable = function () {
             })
@@ -53,15 +89,72 @@ class ValidatorMiddlewareTests extends TestCase
         ;
 
         $this
-            ->given($middleware = new ValidatorMiddleware())
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new FromClassNameResolver(),
+                    new ChainResolver([
+                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
+                    ]),
+                    new InMemoryLocator([LogoutUserMessage::class => new UserMessageValidator()])
+                )
+            )
+            ->and($middleware = new ValidatorMiddleware($resolver))
             ->and($command = new LogoutUserMessage('invalid.email.com'))
             ->and($callable = function (LogoutUserMessage $command) {
                 $command->setEmail('info@cubiche.org');
             })
-            ->when($middleware->handle($command, $callable))
             ->then()
-                ->string($command->email())
-                    ->isEqualTo('info@cubiche.org')
+                ->exception(function () use ($middleware, $command, $callable) {
+                    $middleware->handle($command, $callable);
+                })->isInstanceOf(ValidationException::class)
+        ;
+
+        $this
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new FromClassNameResolver(),
+                    new ChainResolver([
+                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
+                    ]),
+                    new InMemoryLocator([])
+                )
+            )
+            ->and($middleware = new ValidatorMiddleware($resolver))
+            ->and($command = new RemoveUserMessage('ivan@gmail.com'))
+            ->and($callable = function (RemoveUserMessage $command) {
+                $command->setEmail('info@cubiche.org');
+            })
+            ->when($middleware->handle($command, $callable))
+                ->then()
+                    ->string($command->email())
+                        ->isEqualTo('info@cubiche.org')
+        ;
+
+        $this
+            ->given(
+                $resolver = new HandlerClassResolver(
+                    new FromClassNameResolver(),
+                    new ChainResolver([
+                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
+                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
+                    ]),
+                    new InMemoryLocator([RemoveUserMessage::class => new UserMessageValidator()])
+                )
+            )
+            ->and($middleware = new ValidatorMiddleware($resolver))
+            ->and($command = new RemoveUserMessage('ivan@gmail.com'))
+            ->and($callable = function (RemoveUserMessage $command) {
+                $command->setEmail('info@cubiche.org');
+            })
+            ->then()
+                ->exception(function () use ($middleware, $command, $callable) {
+                    $middleware->handle($command, $callable);
+                })->isInstanceOf(NotFoundException::class)
         ;
     }
 }

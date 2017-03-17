@@ -43,7 +43,7 @@ class NotFoundExceptionTests extends TestCase
                 ->object($exception)
                     ->isInstanceOf(NotFoundException::class)
                 ->integer($exception->getCode())
-                    ->isEqualTo(0)
+                    ->isEqualTo(1)
                 ->object($exception->getPrevious())
                     ->isIdenticalTo($cause)
         ;
@@ -59,6 +59,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(3)
         ;
     }
 
@@ -72,6 +74,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(5)
         ;
     }
 
@@ -85,6 +89,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(6)
         ;
     }
 
@@ -98,6 +104,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(2)
         ;
     }
 
@@ -111,6 +119,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(4)
         ;
     }
 
@@ -124,6 +134,8 @@ class NotFoundExceptionTests extends TestCase
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+                ->integer($exception->getCode())
+                    ->isEqualTo(7)
         ;
     }
 }
