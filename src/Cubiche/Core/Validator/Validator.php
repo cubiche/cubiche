@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator;
 
 use Cubiche\Core\Validator\Exception\ValidationException;
@@ -310,6 +311,25 @@ class Validator implements ValidatorInterface
                 }
             }
         }
+    }
+
+    /**
+     * @param string $className
+     *
+     * @return ClassMetadata|null
+     */
+    public static function getMetadataForClass($className)
+    {
+        return self::create()->metadataFactory->getMetadataForClass($className);
+    }
+
+    /**
+     * @param string $namespace
+     * @param bool   $prepend
+     */
+    public static function registerValidator($namespace, $prepend = false)
+    {
+        Assert::registerValidator($namespace, $prepend);
     }
 
     /**
