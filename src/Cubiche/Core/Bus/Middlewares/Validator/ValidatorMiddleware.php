@@ -28,12 +28,18 @@ class ValidatorMiddleware extends MessageHandlerMiddleware
     public function handle($message, callable $next)
     {
         $this->ensureTypeOfMessage($message);
-        Validator::assert($message);
 
         try {
             $handler = $this->handlerClassResolver->resolve($message);
+            $metadata = Validator::getMetadataForClass(get_class($message));
+            $classMetadata = null;
 
-            $handler($message);
+            if ($metadata !== null) {
+                /** @var ClassMetadata $classMetadata */
+                $classMetadata = $metadata->getRootClassMetadata();
+            }
+
+            $handler($message, $classMetadata);
         } catch (NotFoundException $e) {
             // NotFoundException::handlerMethodNameForObject
             // NotFoundException::methodForObject
@@ -42,6 +48,7 @@ class ValidatorMiddleware extends MessageHandlerMiddleware
             }
         }
 
+        Validator::assert($message);
         $next($message);
     }
 }
