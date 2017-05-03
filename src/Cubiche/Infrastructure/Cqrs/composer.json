@@ -19,13 +19,12 @@
         }
     ],
     "require": {
-        "php":                              "^5.5.9|^7.0",
+        "php":                  "^5.5.9|^7.0",
 
-        "cubiche/cqrs":                     "dev-master",
-        "symfony/dependency-injection":     "3.2.x-dev"
+        "cubiche/cqrs":         "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":                    "dev-master"
+        "cubiche/tests":        "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
