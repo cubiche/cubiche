@@ -1,0 +1,2 @@
+# Cubiche - Event Bus Adapter
+[![Build Status](https://travis-ci.org/cubiche/event-bus-adapter.svg?branch=master)](https://travis-ci.org/cubiche/event-bus-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/event-bus-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/event-bus-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/event-bus-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/event-bus-adapter/?branch=master) 
