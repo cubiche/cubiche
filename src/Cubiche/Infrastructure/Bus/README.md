@@ -1,0 +1,2 @@
+# Cubiche - Bus Adapter
+[![Build Status](https://travis-ci.org/cubiche/bus-adapter.svg?branch=master)](https://travis-ci.org/cubiche/bus-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/bus-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/bus-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/bus-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/bus-adapter/?branch=master) 
