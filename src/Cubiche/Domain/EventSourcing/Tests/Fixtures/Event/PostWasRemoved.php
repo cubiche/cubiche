@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * This file is part of the Cubiche package.
+ *
+ * Copyright (c) Cubiche
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
+
+use Cubiche\Domain\EventSourcing\DomainEvent;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+
+/**
+ * PostWasRemoved class.
+ *
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ */
+class PostWasRemoved extends DomainEvent
+{
+    /**
+     * PostWasRemoved constructor.
+     *
+     * @param PostId $id
+     */
+    public function __construct(PostId $id)
+    {
+        parent::__construct($id);
+    }
+}

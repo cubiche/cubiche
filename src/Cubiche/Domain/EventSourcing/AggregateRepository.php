@@ -24,11 +24,11 @@ use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 
 /**
- * EventSourcedAggregateRepository class.
+ * AggregateRepository class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventSourcedAggregateRepository implements RepositoryInterface
+class AggregateRepository implements RepositoryInterface
 {
     /**
      * @var EventStoreInterface
@@ -148,7 +148,9 @@ class EventSourcedAggregateRepository implements RepositoryInterface
 
             $this->eventStore->persist($eventStream, $aggregateRoot->version(), $applicationVersion);
 
-            DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
+            DomainEventPublisher::publish(
+                new PostPersistEvent($aggregateRoot, $this->aggregateClassName, $eventStream)
+            );
         }
     }
 
