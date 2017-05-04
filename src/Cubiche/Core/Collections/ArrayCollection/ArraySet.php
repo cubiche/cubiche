@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\ArrayCollection;
 
 use Cubiche\Core\Collections\DataSource\ArrayDataSource;
@@ -40,9 +41,16 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
      */
     public function add($element)
     {
-        if (!$this->contains($element)) {
-            $this->elements[] = $element;
+        $criteria = Criteria::eq($element);
+        foreach ($this->elements as $key => $value) {
+            if ($criteria->evaluate($value)) {
+                $this->elements[$key] = $element;
+
+                return;
+            }
         }
+
+        $this->elements[] = $element;
     }
 
     /**
