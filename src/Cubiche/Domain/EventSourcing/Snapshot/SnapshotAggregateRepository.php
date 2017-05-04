@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRepository;
+use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Policy\SnapshottingPolicyInterface;
@@ -22,7 +23,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class SnapshotAggregateRepository extends EventSourcedAggregateRepository
+class SnapshotAggregateRepository extends AggregateRepository
 {
     /**
      * @var SnapshotStoreInterface
