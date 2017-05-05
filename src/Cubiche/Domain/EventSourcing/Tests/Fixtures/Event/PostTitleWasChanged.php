@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 
 use Cubiche\Core\Validator\Assert;
@@ -22,11 +23,6 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 class PostTitleWasChanged extends DomainEvent
 {
     /**
-     * @var string
-     */
-    protected $title;
-
-    /**
      * PostTitleWasChanged constructor.
      *
      * @param PostId $id
@@ -36,7 +32,7 @@ class PostTitleWasChanged extends DomainEvent
     {
         parent::__construct($id);
 
-        $this->title = $title;
+        $this->setPayload('title', $title);
     }
 
     /**
@@ -52,7 +48,7 @@ class PostTitleWasChanged extends DomainEvent
      */
     public function title()
     {
-        return $this->title;
+        return $this->getPayload('title');
     }
 
     /**
@@ -60,6 +56,6 @@ class PostTitleWasChanged extends DomainEvent
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
+        $classMetadata->addMethodConstraint('title', Assert::stringType()->notBlank());
     }
 }

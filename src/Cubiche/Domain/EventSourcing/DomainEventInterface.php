@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Domain\EventPublisher\DomainEventInterface as BaseDomainEventInterface;
@@ -20,6 +21,11 @@ use Cubiche\Domain\Model\IdInterface;
  */
 interface DomainEventInterface extends BaseDomainEventInterface
 {
+    /**
+     * @return DomainEventId
+     */
+    public function eventId();
+
     /**
      * @return IdInterface
      */

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 
 use Cubiche\Core\Validator\Assert;
@@ -23,16 +24,6 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 class PostWasCreated extends DomainEvent
 {
     /**
-     * @var string
-     */
-    protected $title;
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
      * PostWasCreated constructor.
      *
      * @param PostId $id
@@ -43,8 +34,8 @@ class PostWasCreated extends DomainEvent
     {
         parent::__construct($id);
 
-        $this->title = $title;
-        $this->content = $content;
+        $this->setPayload('title', $title);
+        $this->setPayload('content', $content);
     }
 
     /**
@@ -60,7 +51,7 @@ class PostWasCreated extends DomainEvent
      */
     public function title()
     {
-        return $this->title;
+        return $this->getPayload('title');
     }
 
     /**
@@ -68,7 +59,7 @@ class PostWasCreated extends DomainEvent
      */
     public function content()
     {
-        return $this->content;
+        return $this->getPayload('content');
     }
 
     /**
@@ -76,7 +67,7 @@ class PostWasCreated extends DomainEvent
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assert::stringType());
+        $classMetadata->addMethodConstraint('title', Assert::stringType()->notBlank());
+        $classMetadata->addMethodConstraint('content', Assert::stringType());
     }
 }
