@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing;
 
+use Cubiche\Core\Cqrs\WriteModelInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\Model\AggregateRootInterface;
@@ -19,7 +21,7 @@ use Cubiche\Domain\Model\AggregateRootInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventSourcedAggregateRootInterface extends AggregateRootInterface
+interface EventSourcedAggregateRootInterface extends AggregateRootInterface, WriteModelInterface
 {
     /**
      * @return DomainEventInterface[]

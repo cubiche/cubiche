@@ -12,11 +12,9 @@
 namespace Cubiche\Domain\EventSourcing\Projector;
 
 use Cubiche\Core\Cqrs\ReadModelInterface;
+use Cubiche\Core\Cqrs\WriteModelInterface;
 use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
-use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
-use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 
@@ -33,20 +31,13 @@ abstract class Projector implements DomainEventSubscriberInterface
     protected $repository;
 
     /**
-     * @var EventStoreInterface
-     */
-    protected $eventStore;
-
-    /**
      * Projector constructor.
      *
      * @param QueryRepositoryInterface $repository
-     * @param EventStoreInterface      $eventStore
      */
-    public function __construct(QueryRepositoryInterface $repository, EventStoreInterface $eventStore)
+    public function __construct(QueryRepositoryInterface $repository)
     {
         $this->repository = $repository;
-        $this->eventStore = $eventStore;
     }
 
     /**
@@ -56,74 +47,59 @@ abstract class Projector implements DomainEventSubscriberInterface
     {
         // skip if the aggregate is not my write model class
         if (is_a($event->aggregate(), $this->writeModelClass())) {
-            /** @var ReadModelInterface $readModel */
-            $readModel = $this->repository->get($event->aggregate()->id());
             $eventStream = $event->eventStream();
 
-            // there is a projected read model?
-            if ($readModel !== null) {
-                // something change and has to be removed?
-                if ($this->shouldBeRemoved($eventStream)) {
-                    // remove it
-                    $this->remove($readModel);
+            // find all read models that exist for a given write model
+            $readModels = $this->readModelsFromRepository($event->aggregate()->id());
+            foreach ($readModels as $readModel) {
+                // create the initial projection
+                $projection = new Projection($readModel, Action::UPDATE());
 
-                    return;
-                }
-            } else {
-                // the write model should be projected?
-                if (!$this->shouldBeProjected($eventStream)) {
-                    return;
-                }
-
-                // we have a write model that has never been projected
-                // so, we need the complete stream history
-                $eventStream = $this->loadHistory(
-                    $event->aggregate()->id(),
-                    $eventStream->streamName(),
-                    $event->aggregateClassName()
-                );
+                // project it
+                $this->projectEvents($projection, $eventStream->events());
             }
 
-            $this->projectAndPersistEvents($eventStream, $readModel);
+            // there is not read models for the given write model?
+            if (count($readModels) == 0) {
+                // create all read models of a given write model
+                $readModels = $this->readModelsFromWriteModel($event->aggregate());
+                foreach ($readModels as $readModel) {
+                    // create the initial projection
+                    $projection = new Projection($readModel, Action::NONE());
+
+                    // project it
+                    $this->projectEvents($projection, $eventStream->events());
+                }
+            }
         }
     }
 
     /**
-     * @param EventStream        $eventStream
-     * @param ReadModelInterface $readModel
+     * @param Projection $projection
+     * @param array      $events
      */
-    protected function projectAndPersistEvents(EventStream $eventStream, ReadModelInterface $readModel = null)
+    protected function projectEvents(Projection $projection, array $events)
     {
-        // get the read model with the new changes
-        $readModel = $this->projectEventStream($eventStream, $readModel);
-
-        // persist the read model
-        $this->persist($readModel);
-    }
-
-    /**
-     * Projects all the events into the read model.
-     *
-     * @param EventStream        $eventStream
-     * @param ReadModelInterface $readModel
-     *
-     * @return ReadModelInterface|null
-     */
-    protected function projectEventStream(EventStream $eventStream, ReadModelInterface $readModel = null)
-    {
-        foreach ($eventStream->events() as $event) {
+        foreach ($events as $event) {
             $classParts = explode('\\', get_class($event));
             $method = 'project'.end($classParts);
 
             if (method_exists($this, $method)) {
-                $result = $this->$method($event, $readModel);
-                if ($result !== null) {
-                    $readModel = $result;
-                }
+                $this->$method($projection, $event);
             }
         }
 
-        return $readModel;
+        switch ($projection->action()) {
+            case Action::CREATE():
+            case Action::UPDATE():
+                // the read model should be created/updated
+                $this->persist($projection->readModel());
+                break;
+            case Action::REMOVE():
+                // the read model should be removed
+                $this->remove($projection->readModel());
+                break;
+        }
     }
 
     /**
@@ -143,40 +119,23 @@ abstract class Projector implements DomainEventSubscriberInterface
     }
 
     /**
-     * Load a aggregate history from the storage.
+     * @param IdInterface $writeModelId
      *
-     * @param IdInterface $id
-     * @param string      $streamName
-     * @param string      $aggregateClassName
-     *
-     * @return EventStream
+     * @return array
      */
-    protected function loadHistory(IdInterface $id, $streamName, $aggregateClassName)
-    {
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $aggregateVersion = VersionManager::versionOfClass($aggregateClassName, $applicationVersion);
+    abstract protected function readModelsFromRepository(IdInterface $writeModelId);
 
-        return $this->eventStore->load($streamName, $id, $aggregateVersion, $applicationVersion);
-    }
+    /**
+     * @param WriteModelInterface $writeModel
+     *
+     * @return array
+     */
+    abstract protected function readModelsFromWriteModel(WriteModelInterface $writeModel);
 
     /**
      * @return string
      */
     abstract protected function writeModelClass();
-
-    /**
-     * @param EventStream $eventStream
-     *
-     * @return bool
-     */
-    abstract protected function shouldBeProjected(EventStream $eventStream);
-
-    /**
-     * @param EventStream $eventStream
-     *
-     * @return bool
-     */
-    abstract protected function shouldBeRemoved(EventStream $eventStream);
 
     /**
      * {@inheritdoc}

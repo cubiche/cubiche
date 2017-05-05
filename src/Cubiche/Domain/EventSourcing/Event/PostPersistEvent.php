@@ -27,11 +27,6 @@ class PostPersistEvent extends DomainEvent
     protected $aggregate;
 
     /**
-     * @var string
-     */
-    protected $aggregateClassName;
-
-    /**
      * @var EventStream
      */
     protected $eventStream;
@@ -40,18 +35,13 @@ class PostPersistEvent extends DomainEvent
      * PostPersistEvent constructor.
      *
      * @param EventSourcedAggregateRootInterface $aggregate
-     * @param string                             $aggregateClassName
      * @param EventStream                        $eventStream
      */
-    public function __construct(
-        EventSourcedAggregateRootInterface $aggregate,
-        $aggregateClassName,
-        EventStream $eventStream
-    ) {
+    public function __construct(EventSourcedAggregateRootInterface $aggregate, EventStream $eventStream)
+    {
         parent::__construct();
 
         $this->aggregate = $aggregate;
-        $this->aggregateClassName = $aggregateClassName;
         $this->eventStream = $eventStream;
     }
 
@@ -61,14 +51,6 @@ class PostPersistEvent extends DomainEvent
     public function aggregate()
     {
         return $this->aggregate;
-    }
-
-    /**
-     * @return string
-     */
-    public function aggregateClassName()
-    {
-        return $this->aggregateClassName;
     }
 
     /**
