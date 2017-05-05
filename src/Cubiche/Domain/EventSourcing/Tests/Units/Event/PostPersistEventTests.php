@@ -13,7 +13,6 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Event;
 
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
@@ -39,12 +38,10 @@ class PostPersistEventTests extends TestCase
             )
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($eventStream = new EventStream('posts', $postId, []))
-            ->and($event = new PostPersistEvent($post, PostEventSourced::class, $eventStream))
+            ->and($event = new PostPersistEvent($post, $eventStream))
             ->then()
                 ->object($event->aggregate())
                     ->isEqualTo($post)
-                ->string($event->aggregateClassName())
-                    ->isEqualTo(PostEventSourced::class)
                 ->object($event->eventStream()->aggregateId())
                     ->isEqualTo($postId)
         ;

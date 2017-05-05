@@ -14,7 +14,6 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\Projector;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
-use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Projector\PublishedPostProjector;
@@ -34,9 +33,9 @@ class ProjectorTests extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function createProjector(QueryRepositoryInterface $repository, EventStoreInterface $eventStore)
+    protected function createProjector(QueryRepositoryInterface $repository)
     {
-        return new PublishedPostProjector($repository, $eventStore);
+        return new PublishedPostProjector($repository);
     }
 
     /**
@@ -44,12 +43,11 @@ class ProjectorTests extends TestCase
      */
     public function testCreate()
     {
-        $eventStore = new InMemoryEventStore();
         $readModelRepository = new InMemoryQueryRepository(PublishedPost::class);
-        $writeModelRepository = new AggregateRepository($eventStore, PostEventSourced::class);
+        $writeModelRepository = new AggregateRepository(new InMemoryEventStore(), PostEventSourced::class);
 
         $this
-            ->given($projector = $this->createProjector($readModelRepository, $eventStore))
+            ->given($projector = $this->createProjector($readModelRepository))
             ->and(DomainEventPublisher::subscribe($projector))
             ->and(
                 $postId = PostId::fromNative(md5(rand())),

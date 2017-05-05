@@ -148,9 +148,7 @@ class AggregateRepository implements RepositoryInterface
 
             $this->eventStore->persist($eventStream, $aggregateRoot->version(), $applicationVersion);
 
-            DomainEventPublisher::publish(
-                new PostPersistEvent($aggregateRoot, $this->aggregateClassName, $eventStream)
-            );
+            DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
         }
     }
 
