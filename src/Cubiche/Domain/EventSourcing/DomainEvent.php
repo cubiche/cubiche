@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Domain\EventPublisher\DomainEvent as BaseDomainEvent;
@@ -21,14 +22,9 @@ use Cubiche\Domain\Model\IdInterface;
 class DomainEvent extends BaseDomainEvent implements DomainEventInterface
 {
     /**
-     * @var IdInterface
+     * @var DomainEventId
      */
-    protected $aggregateId;
-
-    /**
-     * @var int
-     */
-    protected $version = 0;
+    protected $eventId;
 
     /**
      * EntityDomainEvent constructor.
@@ -39,7 +35,17 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
     {
         parent::__construct();
 
-        $this->aggregateId = $aggregateId;
+        $this->setMetadata('aggregateId', $aggregateId);
+        $this->setVersion(0);
+        $this->eventId = DomainEventId::next();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function eventId()
+    {
+        return $this->eventId;
     }
 
     /**
@@ -47,7 +53,7 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function aggregateId()
     {
-        return $this->aggregateId;
+        return $this->getMetadata('aggregateId');
     }
 
     /**
@@ -55,7 +61,7 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function version()
     {
-        return $this->version;
+        return $this->getMetadata('version');
     }
 
     /**
@@ -63,6 +69,28 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function setVersion($version)
     {
-        $this->version = $version;
+        $this->setMetadata('version', $version);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function fromArray(array $data)
+    {
+        /** @var DomainEvent $domainEvent */
+        $domainEvent = parent::fromArray($data);
+        $domainEvent->eventId = $data['eventId'];
+
+        return $domainEvent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), array(
+            'eventId' => $this->eventId(),
+        ));
     }
 }
