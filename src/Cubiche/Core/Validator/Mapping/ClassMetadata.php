@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Mapping;
 
 use Cubiche\Core\Validator\Assert;
@@ -34,7 +35,7 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
-     * @param $property
+     * @param string $property
      *
      * @return PropertyMetadata|null
      */
@@ -82,6 +83,54 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
+     * @param string $method
+     *
+     * @return MethodMetadata|null
+     */
+    protected function getMethodMetadata($method)
+    {
+        return isset($this->methodMetadata[$method]) ? $this->methodMetadata[$method] : null;
+    }
+
+    /**
+     * @param string $method
+     * @param Assert $constraint
+     * @param string $group
+     */
+    public function addMethodConstraint($method, Assert $constraint, $group = null)
+    {
+        $methodMetadata = $this->getMethodMetadata($method);
+        if ($methodMetadata === null) {
+            $methodMetadata = new MethodMetadata($this->getClassName(), $method);
+            $methodMetadata->defaultGroup = $this->defaultGroup;
+        }
+
+        $methodMetadata->addConstraint($constraint, $group);
+
+        $this->addMethodMetadata($methodMetadata);
+    }
+
+    /**
+     * @param string $method
+     * @param array  $constraints
+     * @param string $group
+     */
+    public function addMethodConstraints($method, array $constraints, $group = null)
+    {
+        foreach ($constraints as $constraint) {
+            $this->addMethodConstraint($method, $constraint, $group);
+        }
+    }
+
+    /**
+     * @return MethodMetadata[]
+     */
+    public function getMethodsMetadata()
+    {
+        return $this->methodMetadata;
+    }
+
+    /**
      * Merges the constraints of the given metadata into this object.
      *
      * @param ClassMetadata $source
@@ -91,6 +140,12 @@ class ClassMetadata extends BaseClassMetadata
         foreach ($source->getPropertiesMetadata() as $property => $propertyMetadata) {
             foreach ($propertyMetadata->getConstraints() as $group => $constraints) {
                 $this->addPropertyConstraints($property, $constraints, $group);
+            }
+        }
+
+        foreach ($source->getMethodsMetadata() as $method => $methodMetadata) {
+            foreach ($methodMetadata->getConstraints() as $group => $constraints) {
+                $this->addMethodConstraints($method, $constraints, $group);
             }
         }
     }
