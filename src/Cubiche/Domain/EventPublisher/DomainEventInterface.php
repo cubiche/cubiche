@@ -24,4 +24,16 @@ interface DomainEventInterface extends EventInterface
      * @return DateTime
      */
     public function occurredOn();
+
+    /**
+     * @param array $data
+     *
+     * @return DomainEventInterface
+     */
+    public static function fromArray(array $data);
+
+    /**
+     * @return array
+     */
+    public function toArray();
 }

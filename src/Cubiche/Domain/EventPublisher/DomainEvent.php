@@ -21,23 +21,95 @@ use DateTime;
 class DomainEvent extends Event implements DomainEventInterface
 {
     /**
-     * @var DateTime
+     * @var array
      */
-    protected $occurredOn;
+    private $metadata = [];
+
+    /**
+     * @var array
+     */
+    private $payload = [];
 
     /**
      * DomainEvent constructor.
      */
     public function __construct()
     {
-        $this->occurredOn = new DateTime();
+        $this->setMetadata('occurredOn', new DateTime());
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function occurredOn()
+    {
+        return $this->getMetadata('occurredOn');
+    }
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     */
+    protected function setMetadata($property, $value)
+    {
+        $this->metadata[$property] = $value;
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return mixed
+     */
+    protected function getMetadata($property)
+    {
+        return $this->metadata[$property];
+    }
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     */
+    protected function setPayload($property, $value)
+    {
+        $this->payload[$property] = $value;
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return mixed
+     */
+    protected function getPayload($property)
+    {
+        return $this->payload[$property];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function occurredOn()
+    public static function fromArray(array $data)
     {
-        return $this->occurredOn;
+        $reflectionClass = new \ReflectionClass(static::class);
+
+        /** @var DomainEvent $domainEvent */
+        $domainEvent = $reflectionClass->newInstanceWithoutConstructor();
+
+        $domainEvent->eventName = $data['eventType'];
+        $domainEvent->metadata = $data['metadata'];
+        $domainEvent->payload = $data['payload'];
+
+        return $domainEvent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return array(
+            'eventType' => $this->eventName(),
+            'metadata' => $this->metadata,
+            'payload' => $this->payload,
+        );
     }
 }

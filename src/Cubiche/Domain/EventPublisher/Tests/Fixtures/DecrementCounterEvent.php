@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventPublisher\Tests\Fixtures;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
@@ -19,18 +20,15 @@ use Cubiche\Domain\EventPublisher\DomainEvent;
 class DecrementCounterEvent extends DomainEvent
 {
     /**
-     * @var int
-     */
-    protected $step;
-
-    /**
      * IncrementCounterEvent constructor.
      *
      * @param $step
      */
     public function __construct($step = 1)
     {
-        $this->step = $step;
+        parent::__construct();
+
+        $this->setPayload('step', $step);
     }
 
     /**
@@ -38,6 +36,6 @@ class DecrementCounterEvent extends DomainEvent
      */
     public function step()
     {
-        return $this->step;
+        return $this->getPayload('step');
     }
 }

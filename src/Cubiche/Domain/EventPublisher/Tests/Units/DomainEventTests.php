@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventPublisher\Tests\Units;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
+use Cubiche\Domain\EventPublisher\Tests\Fixtures\IncrementCounterEvent;
 
 /**
  * DomainEvent class.
@@ -29,6 +31,69 @@ class DomainEventTests extends TestCase
             ->then()
                 ->object($event->occurredOn())
                     ->isInstanceOf(\DateTime::class)
+        ;
+    }
+
+    /**
+     * Test SetPayload method.
+     */
+    public function testSetPayload()
+    {
+        $this
+            ->given($event = new IncrementCounterEvent(5))
+            ->then()
+                ->object($event->occurredOn())
+                    ->isInstanceOf(\DateTime::class)
+                ->integer($event->step())
+                    ->isEqualTo(5)
+        ;
+    }
+
+    /**
+     * Test ToArray method.
+     */
+    public function testToArray()
+    {
+        $this
+            ->given($event = new IncrementCounterEvent(3))
+            ->then()
+                ->array($event->toArray())
+                    ->string['eventType']
+                        ->isEqualTo(IncrementCounterEvent::class)
+                    ->child['metadata'](function ($metadata) {
+                        $metadata
+                            ->hasKey('occurredOn')
+                        ;
+                    })
+                    ->child['payload'](function ($payload) {
+                        $payload
+                            ->isEqualTo(array(
+                                'step' => 3,
+                            ))
+                        ;
+                    })
+        ;
+    }
+
+    /**
+     * Test FromArray method.
+     */
+    public function testFromArray()
+    {
+        $this
+            ->given($event = new IncrementCounterEvent(3))
+            ->and($eventFromArray = IncrementCounterEvent::fromArray($event->toArray()))
+            ->then()
+                ->object($eventFromArray)
+                    ->isInstanceOf(IncrementCounterEvent::class)
+                ->object($event->occurredOn())
+                    ->isEqualTo($eventFromArray->occurredOn())
+                ->string($event->eventName())
+                    ->isEqualTo($eventFromArray->eventName())
+                ->integer($event->step())
+                    ->isEqualTo($eventFromArray->step())
+                ->boolean($event->isPropagationStopped())
+                    ->isEqualTo($eventFromArray->isPropagationStopped())
         ;
     }
 }
