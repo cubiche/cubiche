@@ -310,6 +310,21 @@ class Validator implements ValidatorInterface
                     );
                 }
             }
+
+            foreach ($classMetadata->getMethodsMetadata() as $methodMetadata) {
+                foreach ($methodMetadata->getConstraints() as $group => $constraints) {
+                    $allOf = Assert::create();
+                    foreach ($constraints as $constraint) {
+                        $allOf->addRules($constraint->getRules());
+                    }
+
+                    $this->addConstraint(
+                        Assert::create()->call([$object, $methodMetadata->getMethodName()], $allOf),
+                        get_class($object),
+                        $group
+                    );
+                }
+            }
         }
     }
 
