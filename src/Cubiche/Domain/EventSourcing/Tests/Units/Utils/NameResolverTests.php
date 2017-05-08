@@ -8,11 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Utils;
 
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * NameResolverTests class.
@@ -28,18 +30,20 @@ class NameResolverTests extends TestCase
     {
         $this
             ->given($className = PostEventSourced::class)
-            ->when($result = NameResolver::resolve($className))
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->when($result = NameResolver::resolve($className, $postId))
             ->then()
                 ->string($result)
-                    ->isEqualTo('post_event_sourced')
+                    ->isEqualTo('PostEventSourced-'.$postId->toNative())
         ;
 
         $this
             ->given($className = 'FooDocument')
-            ->when($result = NameResolver::resolve($className))
+            ->and($postId = PostId::fromNative(md5(rand())))
+            ->when($result = NameResolver::resolve($className, $postId))
             ->then()
                 ->string($result)
-                    ->isEqualTo('foo_document')
+                    ->isEqualTo('FooDocument-'.$postId->toNative())
         ;
     }
 }

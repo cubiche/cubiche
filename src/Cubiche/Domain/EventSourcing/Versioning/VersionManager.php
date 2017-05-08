@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Versioning;
 
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
@@ -28,11 +29,6 @@ class VersionManager
      * @var VersionStoreInterface
      */
     protected $versionStore;
-
-    /**
-     * @var Version
-     */
-    protected $currentApplicationVersion;
 
     /**
      * VersionManager constructor.
@@ -65,117 +61,58 @@ class VersionManager
     }
 
     /**
-     * @return Version
+     * @param EventSourcedAggregateRootInterface $aggregate
+     *
+     * @return int
      */
-    public static function currentApplicationVersion()
+    public static function versionOf(EventSourcedAggregateRootInterface $aggregate)
     {
-        return static::create()->getApplicationVersion();
-    }
-
-    /**
-     * @param Version $applicationVersion
-     */
-    public static function setCurrentApplicationVersion(Version $applicationVersion)
-    {
-        static::create()->setApplicationVersion($applicationVersion);
+        return static::versionOfClass(get_class($aggregate));
     }
 
     /**
      * @param EventSourcedAggregateRootInterface $aggregate
-     * @param Version                            $applicationVersion
+     */
+    public static function persistVersionOf(EventSourcedAggregateRootInterface $aggregate)
+    {
+        static::persistVersionOfClass(get_class($aggregate), $aggregate->version());
+    }
+
+    /**
+     * @param string $className
      *
-     * @return Version
+     * @return int
      */
-    public static function versionOf(EventSourcedAggregateRootInterface $aggregate, Version $applicationVersion = null)
+    public static function versionOfClass($className)
     {
-        return static::versionOfClass(get_class($aggregate), $applicationVersion);
+        return static::create()->getAggregateRootVersion($className);
     }
 
     /**
-     * @param EventSourcedAggregateRootInterface $aggregate
-     * @param Version                            $applicationVersion
+     * @param string $className
+     * @param int    $version
      */
-    public static function persistVersionOf(
-        EventSourcedAggregateRootInterface $aggregate,
-        Version $applicationVersion = null
-    ) {
-        static::persistVersionOfClass(get_class($aggregate), $aggregate->version(), $applicationVersion);
+    public static function persistVersionOfClass($className, $version)
+    {
+        static::create()->setAggregateRootVersion($className, $version);
     }
 
     /**
-     * @param string  $className
-     * @param Version $applicationVersion
+     * @param string $aggregateClassName
      *
-     * @return Version
+     * @return int
      */
-    public static function versionOfClass($className, Version $applicationVersion = null)
+    protected function getAggregateRootVersion($aggregateClassName)
     {
-        return static::create()->getAggregateRootVersion($className, $applicationVersion);
+        return $this->versionStore->load($aggregateClassName);
     }
 
     /**
-     * @param string  $className
-     * @param Version $aggregateVersion
-     * @param Version $applicationVersion
+     * @param string $aggregateClassName
+     * @param int    $version
      */
-    public static function persistVersionOfClass(
-        $className,
-        Version $aggregateVersion,
-        Version $applicationVersion = null
-    ) {
-        static::create()->setAggregateRootVersion($className, $aggregateVersion, $applicationVersion);
-    }
-
-    /**
-     * @param string  $aggregateClassName
-     * @param Version $applicationVersion
-     *
-     * @return Version
-     */
-    protected function getAggregateRootVersion($aggregateClassName, Version $applicationVersion = null)
+    protected function setAggregateRootVersion($aggregateClassName, $version)
     {
-        return $this->versionStore->loadAggregateRootVersion(
-            $aggregateClassName,
-            $this->getApplicationVersion($applicationVersion)
-        );
-    }
-
-    /**
-     * @param string  $aggregateClassName
-     * @param Version $aggregateVersion
-     * @param Version $applicationVersion
-     */
-    protected function setAggregateRootVersion(
-        $aggregateClassName,
-        Version $aggregateVersion,
-        Version $applicationVersion = null
-    ) {
-        $this->versionStore->persistAggregateRootVersion(
-            $aggregateClassName,
-            $aggregateVersion,
-            $this->getApplicationVersion($applicationVersion)
-        );
-    }
-
-    /**
-     * @param Version $applicationVersion
-     *
-     * @return Version
-     */
-    protected function getApplicationVersion(Version $applicationVersion = null)
-    {
-        if ($applicationVersion !== null) {
-            return $applicationVersion;
-        }
-
-        return $this->versionStore->loadApplicationVersion();
-    }
-
-    /**
-     * @param Version $applicationVersion
-     */
-    protected function setApplicationVersion(Version $applicationVersion)
-    {
-        $this->versionStore->persistApplicationVersion($applicationVersion);
+        $this->versionStore->persist($aggregateClassName, $version);
     }
 }

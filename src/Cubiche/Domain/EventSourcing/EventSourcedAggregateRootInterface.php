@@ -46,12 +46,12 @@ interface EventSourcedAggregateRootInterface extends AggregateRootInterface, Wri
     public function replay(EventStream $history);
 
     /**
-     * @return Version
+     * @return int
      */
     public function version();
 
     /**
-     * @param Version $version
+     * @param int $version
      */
-    public function setVersion(Version $version);
+    public function setVersion($version);
 }

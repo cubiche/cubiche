@@ -8,12 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionIncrementType;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 
@@ -25,7 +25,7 @@ use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 trait EventSourcedAggregateRoot
 {
     /**
-     * @var Version
+     * @var int
      */
     protected $version;
 
@@ -41,8 +41,8 @@ trait EventSourcedAggregateRoot
     {
         Validator::assert($event);
 
-        $this->version()->increment(VersionIncrementType::PATCH());
-        $event->setVersion($this->version()->patch());
+        $this->incrementVersion();
+        $event->setVersion($this->version());
 
         $this->recordEvent($event);
         $this->applyEvent($event);
@@ -64,7 +64,7 @@ trait EventSourcedAggregateRoot
         }
 
         $this->$method($event);
-        $this->version()->setPatch($event->version());
+        $this->setVersion($event->version());
     }
 
     /**
@@ -139,9 +139,20 @@ trait EventSourcedAggregateRoot
     }
 
     /**
+     * Increment the current version.
+     */
+    protected function incrementVersion()
+    {
+        $version = $this->version();
+        ++$version;
+
+        $this->setVersion($version);
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function setVersion(Version $version)
+    public function setVersion($version)
     {
         $this->version = $version;
     }

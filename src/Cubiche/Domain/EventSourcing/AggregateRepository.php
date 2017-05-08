@@ -16,10 +16,9 @@ use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
-use Cubiche\Domain\EventSourcing\Utils\NameResolver;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 
@@ -59,10 +58,14 @@ class AggregateRepository implements RepositoryInterface
     {
         $eventStream = $this->loadHistory($id);
 
-        return call_user_func(
-            array($this->aggregateClassName, 'loadFromHistory'),
-            $eventStream
-        );
+        if ($eventStream !== null) {
+            return call_user_func(
+                array($this->aggregateClassName, 'loadFromHistory'),
+                $eventStream
+            );
+        }
+
+        return;
     }
 
     /**
@@ -107,8 +110,7 @@ class AggregateRepository implements RepositoryInterface
         DomainEventPublisher::publish(new PreRemoveEvent($element));
 
         // remove the event stream
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $this->eventStore->remove($this->streamName(), $element->id(), $element->version(), $applicationVersion);
+        $this->eventStore->remove($this->streamName($element->id()));
 
         DomainEventPublisher::publish(new PostRemoveEvent($element));
     }
@@ -118,14 +120,11 @@ class AggregateRepository implements RepositoryInterface
      *
      * @param IdInterface $id
      *
-     * @return EventStream
+     * @return EventStream|null
      */
     protected function loadHistory(IdInterface $id)
     {
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
-
-        return $this->eventStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
+        return $this->eventStore->load($this->streamName($id));
     }
 
     /**
@@ -143,20 +142,25 @@ class AggregateRepository implements RepositoryInterface
             $aggregateRoot->clearEvents();
 
             // create the eventStream and persist it
-            $applicationVersion = VersionManager::currentApplicationVersion();
-            $eventStream = new EventStream($this->streamName(), $aggregateRoot->id(), $recordedEvents);
+            $eventStream = new EventStream(
+                $this->streamName($aggregateRoot->id()),
+                $aggregateRoot->id(),
+                $recordedEvents
+            );
 
-            $this->eventStore->persist($eventStream, $aggregateRoot->version(), $applicationVersion);
+            $this->eventStore->persist($eventStream);
 
             DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
         }
     }
 
     /**
+     * @param IdInterface $id
+     *
      * @return string
      */
-    protected function streamName()
+    protected function streamName(IdInterface $id)
     {
-        return NameResolver::resolve($this->aggregateClassName);
+        return NameResolver::resolve($this->aggregateClassName, $id);
     }
 }

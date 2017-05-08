@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionStoreInterface;
 
 /**
@@ -28,64 +28,29 @@ abstract class VersionStoreTestCase extends TestCase
     abstract protected function createStore();
 
     /**
-     * Test PersistAggregateRootVersion method.
+     * Test persist method.
      */
-    public function testPersistAggregateRootVersion()
+    public function testPersist()
     {
         $this
             ->given($store = $this->createStore())
-            ->and($aggregateVersion = Version::fromString('1.2.45'))
-            ->and($applicationVersion = Version::fromString('1.2.0'))
-            ->when(
-                $store->persistAggregateRootVersion(PostEventSourced::class, $aggregateVersion, $applicationVersion)
-            )
+            ->when($store->persist(PostEventSourced::class, 10))
             ->then()
-                ->object($store->loadAggregateRootVersion(PostEventSourced::class, $applicationVersion))
-                    ->isEqualTo($aggregateVersion)
+                ->integer($store->load(PostEventSourced::class))
+                    ->isEqualTo(10)
         ;
     }
 
     /**
-     * Test LoadAggregateRootVersion method.
+     * Test load method.
      */
-    public function testLoadAggregateRootVersion()
-    {
-        $this
-            ->given($store = $this->createStore())
-            ->and($applicationVersion = Version::fromString('1.2.0'))
-            ->then()
-                ->object($store->loadAggregateRootVersion(PostEventSourced::class, $applicationVersion))
-                    ->isEqualTo(Version::fromString('0.0.0'))
-                ->object($store->loadAggregateRootVersion(PostEventSourced::class))
-                    ->isEqualTo(Version::fromString('0.0.0'))
-        ;
-    }
-
-    /**
-     * Test PersistApplicationVersion method.
-     */
-    public function testPersistApplicationVersion()
-    {
-        $this
-            ->given($store = $this->createStore())
-            ->and($applicationVersion = Version::fromString('1.2.0'))
-            ->when($store->persistApplicationVersion($applicationVersion))
-            ->then()
-                ->object($store->loadApplicationVersion())
-                    ->isEqualTo($applicationVersion)
-        ;
-    }
-
-    /**
-     * Test LoadApplicationVersion method.
-     */
-    public function testLoadApplicationVersion()
+    public function testLoad()
     {
         $this
             ->given($store = $this->createStore())
             ->then()
-                ->object($store->loadApplicationVersion())
-                    ->isEqualTo(Version::fromString('0.0.0'))
+                ->integer($store->load(PostEventSourced::class))
+                    ->isEqualTo(0)
         ;
     }
 }

@@ -7,13 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -77,21 +77,18 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
      *
      * @param IdInterface $id
      *
-     * @return Snapshot
+     * @return Snapshot|null
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
-
-        return $this->snapshotStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
+        return $this->snapshotStore->load($this->streamName($id));
     }
 
     /**
      * @return string
      */
-    protected function streamName()
+    protected function streamName(IdInterface $id)
     {
-        return NameResolver::resolve($this->aggregateClassName);
+        return NameResolver::resolve($this->aggregateClassName, $id);
     }
 }

@@ -7,11 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
-use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * Snapshot class.
@@ -23,7 +23,7 @@ class Snapshot
     /**
      * @var string
      */
-    protected $aggregateType;
+    protected $snapshotName;
 
     /**
      * @var EventSourcedAggregateRootInterface
@@ -31,7 +31,7 @@ class Snapshot
     protected $aggregate;
 
     /**
-     * @var Version
+     * @var int
      */
     protected $version;
 
@@ -43,35 +43,23 @@ class Snapshot
     /**
      * Snapshot constructor.
      *
-     * @param string                             $aggregateType
+     * @param string                             $snapshotName
      * @param EventSourcedAggregateRootInterface $aggregate
-     * @param \DateTime                          $createdAt
      */
-    public function __construct(
-        $aggregateType,
-        EventSourcedAggregateRootInterface $aggregate,
-        \DateTime $createdAt
-    ) {
-        $this->aggregateType = $aggregateType;
+    public function __construct($snapshotName, EventSourcedAggregateRootInterface $aggregate)
+    {
+        $this->snapshotName = $snapshotName;
         $this->aggregate = $aggregate;
         $this->version = $aggregate->version();
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTime();
     }
 
     /**
      * @return string
      */
-    public function aggregateType()
+    public function snapshotName()
     {
-        return $this->aggregateType;
-    }
-
-    /**
-     * @return IdInterface
-     */
-    public function aggregateId()
-    {
-        return $this->aggregate->id();
+        return $this->snapshotName;
     }
 
     /**

@@ -8,10 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\Model\IdInterface;
+namespace Cubiche\Domain\EventSourcing\EventStore;
 
 /**
  * EventStore interface.
@@ -22,54 +20,21 @@ interface EventStoreInterface
 {
     /**
      * @param EventStream $eventStream
-     * @param Version     $aggregateVersion
-     * @param Version     $applicationVersion
      *
-     * @return
+     * @return int
      */
-    public function persist(EventStream $eventStream, Version $aggregateVersion, Version $applicationVersion);
+    public function persist(EventStream $eventStream);
 
     /**
-     * @param string      $streamName
-     * @param IdInterface $aggregateId
-     * @param Version     $aggregateVersion
-     * @param Version     $applicationVersion
+     * @param string $streamName
+     */
+    public function remove($streamName);
+
+    /**
+     * @param string $streamName
+     * @param int    $version
      *
-     * @return EventStream
+     * @return EventStream|null
      */
-    public function load(
-        $streamName,
-        IdInterface $aggregateId,
-        Version $aggregateVersion,
-        Version $applicationVersion
-    );
-
-    /**
-     * @param string      $streamName
-     * @param IdInterface $aggregateId
-     * @param Version     $aggregateVersion
-     * @param Version     $applicationVersion
-     */
-    public function remove(
-        $streamName,
-        IdInterface $aggregateId,
-        Version $aggregateVersion,
-        Version $applicationVersion
-    );
-
-    /**
-     * @param string  $streamName
-     * @param Version $aggregateVersion
-     * @param Version $applicationVersion
-     *
-     * @return EventStream
-     */
-    public function loadAll($streamName, Version $aggregateVersion, Version $applicationVersion);
-
-    /**
-     * @param string  $streamName
-     * @param Version $aggregateVersion
-     * @param Version $applicationVersion
-     */
-    public function removeAll($streamName, Version $aggregateVersion, Version $applicationVersion);
+    public function load($streamName, $version = 0);
 }

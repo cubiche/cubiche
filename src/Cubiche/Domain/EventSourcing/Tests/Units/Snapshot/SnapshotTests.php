@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
@@ -23,9 +24,9 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 class SnapshotTests extends TestCase
 {
     /**
-     * Test AggregateType method.
+     * Test snapshotName method.
      */
-    public function testAggregateType()
+    public function testSnapshotName()
     {
         $this
             ->given(
@@ -34,29 +35,11 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
             ->then()
-                ->string($snapshot->aggregateType())
-                    ->isEqualTo('posts')
-        ;
-    }
-
-    /**
-     * Test AggregateId method.
-     */
-    public function testAggregateId()
-    {
-        $this
-            ->given(
-                $post = PostEventSourcedFactory::create(
-                    $this->faker->sentence,
-                    $this->faker->paragraph
-                )
-            )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->then()
-                ->object($snapshot->aggregateId())
-                    ->isEqualTo($post->id())
+                ->string($snapshot->snapshotName())
+                    ->isEqualTo($snapshotName)
         ;
     }
 
@@ -72,7 +55,8 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
             ->then()
                 ->object($snapshot->aggregate())
                     ->isEqualTo($post)
@@ -91,12 +75,13 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(0, 5, 345))
-            ->and($post->setVersion($version))
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
+            ->and($post->setVersion(345))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
             ->then()
-                ->object($snapshot->version())
+                ->integer($snapshot->version())
                     ->isEqualTo($post->version())
+                    ->isEqualTo(345)
         ;
     }
 
@@ -112,11 +97,11 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($createdAt = new \DateTime())
-            ->and($snapshot = new Snapshot('posts', $post, $createdAt))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
             ->then()
                 ->object($snapshot->createdAt())
-                    ->isEqualTo($createdAt)
+                    ->isInstanceOf(\DateTime::class)
         ;
     }
 }

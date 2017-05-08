@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot\Policy;
 
 use Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore;
@@ -17,7 +18,6 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * TimeBasedSnapshottingPolicyTests class.
@@ -40,16 +40,9 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($createdAt = date_create()->modify('-2 hours'))
-            ->and(
-                $snapshot = new Snapshot(
-                    NameResolver::resolve(get_class($post)),
-                    $post,
-                    $createdAt
-                )
-            )
-            ->and($applicationVersion = Version::fromString('0.0.0'))
-            ->and($snapshotStore->persist($snapshot, $applicationVersion))
+            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post))
+            ->and($snapshot->createdAt()->modify('-2 hours'))
+            ->and($snapshotStore->persist($snapshot))
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isTrue()
@@ -69,10 +62,8 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($createdAt = new \DateTime())
-            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, $createdAt))
-            ->and($applicationVersion = Version::fromString('0.1.0'))
-            ->and($snapshotStore->persist($snapshot, $applicationVersion))
+            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post))
+            ->and($snapshotStore->persist($snapshot))
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isFalse()

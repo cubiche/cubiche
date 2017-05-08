@@ -16,6 +16,7 @@ use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Factory\AggregateRepositoryFactory;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * AggregateRepositoryFactoryTests class.
@@ -39,13 +40,14 @@ class AggregateRepositoryFactoryTests extends TestCase
     {
         $this
             ->given($factory = $this->createFactory())
+            ->and($postId = PostId::fromNative(md5(rand())))
             ->and($repository = $factory->create(PostEventSourced::class))
             ->then()
                 ->object($repository)
                     ->isInstanceOf(AggregateRepository::class)
                 ->and()
-                ->string($this->invoke($repository)->streamName())
-                    ->isEqualTo('post_event_sourced')
+                ->string($this->invoke($repository)->streamName($postId))
+                    ->isEqualTo('PostEventSourced-'.$postId)
         ;
     }
 }

@@ -104,7 +104,7 @@ class EventSourcedAggregateRootTests extends TestCase
             ->and($post->changeTitle($newTitle))
             ->and(
                 $eventStream = new EventStream(
-                    PostEventSourced::class,
+                    PostEventSourced::class.'-'.$post->id(),
                     $post->id(),
                     [
                         new PostWasCreated($post->id(), $title, $content),
@@ -133,28 +133,13 @@ class EventSourcedAggregateRootTests extends TestCase
             )
             ->when($post->changeTitle($this->faker->sentence))
             ->then()
-                ->integer($post->version()->minor())
-                    ->isEqualTo(0)
-                ->integer($post->version()->patch())
+                ->integer($post->version())
                     ->isEqualTo(2)
-        ;
-
-        $this
-            ->given(
-                $post = PostEventSourcedFactory::create(
-                    $this->faker->sentence,
-                    $this->faker->paragraph
-                )
-            )
-            ->and($version = new Version(1, 10, 125))
-            ->when($post->setVersion($version))
+            ->and()
+            ->when($post->setVersion(8))
             ->then()
-                ->integer($post->version()->major())
-                    ->isEqualTo(1)
-                ->integer($post->version()->minor())
-                    ->isEqualTo(10)
-                ->integer($post->version()->patch())
-                    ->isEqualTo(125)
+                ->integer($post->version())
+                    ->isEqualTo(8)
         ;
     }
 

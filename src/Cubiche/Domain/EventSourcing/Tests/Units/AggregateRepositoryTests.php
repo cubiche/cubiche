@@ -69,10 +69,8 @@ class AggregateRepositoryTests extends TestCase
             ->and($post->clearEvents())
             ->when($repository->persist($post))
             ->then()
-                ->exception(function () use ($repository, $post) {
-                    $repository->get($post->id());
-                })
-                ->isInstanceOf(\RuntimeException::class)
+                ->variable($repository->get($post->id()))
+                    ->isNull()
         ;
 
         $this
@@ -106,7 +104,7 @@ class AggregateRepositoryTests extends TestCase
             ->and(DomainEventPublisher::subscribe($postPersistSubscriber))
             ->when($repository->persist($post))
             ->then()
-                ->integer($post->version()->patch())
+                ->integer($post->version())
                     ->isEqualTo(84)
         ;
     }
@@ -163,9 +161,8 @@ class AggregateRepositoryTests extends TestCase
                 ->and()
                 ->when($repository->remove($post))
                 ->then()
-                    ->exception(function () use ($repository, $post) {
-                        $repository->get($post->id());
-                    })->isInstanceOf(\RuntimeException::class)
+                    ->variable($repository->get($post->id()))
+                        ->isNull()
         ;
 
         $this
@@ -199,7 +196,7 @@ class AggregateRepositoryTests extends TestCase
             ->and(DomainEventPublisher::subscribe($postRemoveSubscriber))
             ->when($repository->remove($post))
             ->then()
-                ->integer($post->version()->patch())
+                ->integer($post->version())
                     ->isEqualTo(21)
         ;
     }

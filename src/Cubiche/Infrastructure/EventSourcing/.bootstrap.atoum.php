@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Cubiche package.
  *
@@ -7,13 +8,5 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace WithoutMigrationClass\V1_2_0;
-
-/**
- * BlogEventSourcedInterface.
- *
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
- */
-interface BlogEventSourcedInterface
-{
-}
+require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/vendor/atoum/atoum/scripts/runner.php';
