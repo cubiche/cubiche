@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener;
 
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
@@ -24,8 +25,8 @@ class PostRemoveListener
      */
     public function onPostRemove(PostRemoveEvent $event)
     {
-        $event->aggregate()->version()->setPatch(
-            $event->aggregate()->version()->patch() / 2
+        $event->aggregate()->setVersion(
+            $event->aggregate()->version() / 2
         );
     }
 }

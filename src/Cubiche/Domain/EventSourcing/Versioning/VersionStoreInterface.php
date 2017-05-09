@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Versioning;
 
 /**
@@ -17,31 +18,15 @@ namespace Cubiche\Domain\EventSourcing\Versioning;
 interface VersionStoreInterface
 {
     /**
-     * @param string  $aggregateClassName
-     * @param Version $aggregateRootVersion
-     * @param Version $applicationVersion
+     * @param string $aggregateClassName
+     * @param int    $version
      */
-    public function persistAggregateRootVersion(
-        $aggregateClassName,
-        Version $aggregateRootVersion,
-        Version $applicationVersion
-    );
+    public function persist($aggregateClassName, $version);
 
     /**
-     * @param string  $aggregateClassName
-     * @param Version $applicationVersion
+     * @param string $aggregateClassName
      *
-     * @return Version
+     * @return int
      */
-    public function loadAggregateRootVersion($aggregateClassName, Version $applicationVersion);
-
-    /**
-     * @param Version $applicationVersion
-     */
-    public function persistApplicationVersion(Version $applicationVersion);
-
-    /**
-     * @return Version
-     */
-    public function loadApplicationVersion();
+    public function load($aggregateClassName);
 }

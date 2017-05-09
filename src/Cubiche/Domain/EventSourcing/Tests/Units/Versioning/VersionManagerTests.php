@@ -8,12 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Versioning;
 
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Versioning\InMemoryVersionStore;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 
 /**
@@ -37,8 +37,8 @@ class VersionManagerTests extends TestCase
             )
             ->and($version = VersionManager::versionOf($post))
             ->then()
-                ->object($version)
-                    ->isEqualTo(Version::fromString('0.0.0'))
+                ->integer($version)
+                    ->isEqualTo(0)
         ;
     }
 
@@ -70,33 +70,14 @@ class VersionManagerTests extends TestCase
             )
             ->and($version = VersionManager::versionOf($post))
             ->then()
-                ->object($version)
-                    ->isEqualTo(Version::fromString('0.0.0'))
+                ->integer($version)
+                    ->isEqualTo(0)
                 ->and()
-                ->when($post->version()->setMinor(23))
-                ->and($post->version()->setPatch(45))
+                ->when($post->setVersion(23))
                 ->and(VersionManager::persistVersionOf($post))
                 ->then()
-                    ->object(VersionManager::versionOf($post))
-                        ->isEqualTo(new Version(0, 23, 0))
-                    ->object(VersionManager::versionOf($post, Version::fromString('1.1.0')))
-                        ->isEqualTo(new Version(0, 0, 0))
-        ;
-    }
-
-    /**
-     * Test setCurrentApplicationVersion method.
-     */
-    public function testSetCurrentApplicationVersion()
-    {
-        $this
-            ->given(
-                $applicationVersion = Version::fromString('3.2.0')
-            )
-            ->and(VersionManager::setCurrentApplicationVersion($applicationVersion))
-            ->then()
-                ->object(VersionManager::currentApplicationVersion())
-                    ->isEqualTo($applicationVersion)
+                    ->integer(VersionManager::versionOf($post))
+                        ->isEqualTo(23)
         ;
     }
 }

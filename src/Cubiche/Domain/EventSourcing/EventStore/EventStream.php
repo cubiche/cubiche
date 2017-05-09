@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
@@ -40,8 +41,6 @@ class EventStream
      * @param string                 $streamName
      * @param IdInterface            $aggregateId
      * @param DomainEventInterface[] $events
-     *
-     * @throws \InvalidArgumentException
      */
     public function __construct($streamName, IdInterface $aggregateId, array $events)
     {
@@ -59,7 +58,7 @@ class EventStream
                 );
             }
 
-            $this->addEvent($event);
+            $this->events[] = $event;
         }
     }
 
@@ -85,25 +84,5 @@ class EventStream
     public function events()
     {
         return $this->events;
-    }
-
-    /**
-     * @param DomainEventInterface $event
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function addEvent(DomainEventInterface $event)
-    {
-        if (!$event->aggregateId()->equals($this->aggregateId)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Event-stream can only contain events for identifier %s, but got %s',
-                    $this->aggregateId->toNative(),
-                    $event->aggregateId()->toNative()
-                )
-            );
-        }
-
-        $this->events[] = $event;
     }
 }

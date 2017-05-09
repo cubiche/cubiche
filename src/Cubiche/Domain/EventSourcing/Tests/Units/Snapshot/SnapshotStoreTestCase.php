@@ -8,14 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * SnapshotStoreTestCase class.
@@ -42,17 +41,12 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->and($applicationVersion = Version::fromString('0.0.0'))
-            ->when($store->persist($snapshot, $applicationVersion))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->when($store->persist($snapshot))
             ->then()
-                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
+                ->object($store->load($snapshotName))
                     ->isEqualTo($snapshot)
-                ->and()
-                ->when($applicationVersion = Version::fromString('2.0.0'))
-                ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
-                        ->isNull()
         ;
     }
 
@@ -69,16 +63,18 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->and($applicationVersion = Version::fromString('1.1.0'))
-            ->when($store->persist($snapshot, $applicationVersion))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshotNameFake = 'Blogs-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->when($store->persist($snapshot))
             ->then()
-                ->variable($store->load('blogs', $post->id(), $post->version(), $applicationVersion))
+                ->variable($store->load($snapshotNameFake))
                     ->isNull()
-                ->variable(
-                    $store->load('posts', PostId::fromNative(md5(rand())), $post->version(), $applicationVersion)
-                )->isNull()
-        ;
+                ->and()
+                ->when($result = $store->load($snapshotName))
+                ->then()
+                    ->object($result)
+                        ->isEqualTo($snapshot);
     }
 
     /**
@@ -94,44 +90,18 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->and($applicationVersion = Version::fromString('0.1.0'))
-            ->when($store->persist($snapshot, $applicationVersion))
-            ->and($store->remove('blogs', $post->id(), $post->version(), $applicationVersion))
+            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
+            ->and($snapshotNameFake = 'Blogs-'.$post->id()->toNative())
+            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($store->persist($snapshot))
+            ->when($store->remove($snapshotNameFake))
             ->then()
-                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
+                ->object($store->load($snapshotName))
                     ->isEqualTo($snapshot)
                 ->and()
-                ->when($store->remove('posts', $post->id(), $post->version(), $applicationVersion))
+                ->when($store->remove($snapshotName))
                 ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
-                        ->isNull()
-        ;
-
-        $this
-            ->given($store = $this->createStore())
-            ->and(
-                $post = PostEventSourcedFactory::create(
-                    $this->faker->sentence,
-                    $this->faker->paragraph
-                )
-            )
-            ->and($snapshot = new Snapshot('posts', $post, new \DateTime()))
-            ->and($applicationVersion = Version::fromString('0.1.0'))
-            ->when($store->persist($snapshot, $applicationVersion))
-            ->then()
-                ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
-                    ->isEqualTo($snapshot)
-                ->and()
-                ->when($applicationVersion2 = Version::fromString('2.0.0'))
-                ->and($store->remove('posts', $post->id(), $post->version(), $applicationVersion2))
-                ->then()
-                    ->object($store->load('posts', $post->id(), $post->version(), $applicationVersion))
-                        ->isEqualTo($snapshot)
-                ->and()
-                ->when($store->remove('posts', $post->id(), $post->version(), $applicationVersion))
-                ->then()
-                    ->variable($store->load('posts', $post->id(), $post->version(), $applicationVersion))
+                    ->variable($store->load($snapshotName))
                         ->isNull()
         ;
     }

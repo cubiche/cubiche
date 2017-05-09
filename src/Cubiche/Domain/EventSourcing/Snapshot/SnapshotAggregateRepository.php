@@ -15,7 +15,6 @@ use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Policy\SnapshottingPolicyInterface;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -93,14 +92,11 @@ class SnapshotAggregateRepository extends AggregateRepository
      *
      * @param IdInterface $id
      *
-     * @return Snapshot
+     * @return Snapshot|null
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $aggregateVersion = VersionManager::versionOfClass($this->aggregateClassName, $applicationVersion);
-
-        return $this->snapshotStore->load($this->streamName(), $id, $aggregateVersion, $applicationVersion);
+        return $this->snapshotStore->load($this->streamName($id));
     }
 
     /**
@@ -110,10 +106,9 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
     {
-        $applicationVersion = VersionManager::currentApplicationVersion();
-        $snapshot = new Snapshot($this->streamName(), $aggregateRoot, new \DateTime());
+        $snapshot = new Snapshot($this->streamName($aggregateRoot->id()), $aggregateRoot);
 
-        $this->snapshotStore->persist($snapshot, $applicationVersion);
+        $this->snapshotStore->persist($snapshot);
     }
 
     /**
@@ -123,12 +118,9 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {
-        $applicationVersion = VersionManager::currentApplicationVersion();
         $history = $this->eventStore->load(
-            $this->streamName(),
-            $snapshot->aggregateId(),
-            $snapshot->version(),
-            $applicationVersion
+            $this->streamName($snapshot->aggregate()->id()),
+            $snapshot->version()
         );
 
         $aggregateRoot = $snapshot->aggregate();

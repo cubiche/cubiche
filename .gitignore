@@ -18,3 +18,4 @@ src/Cubiche/Domain/EventSourcing/Tests/Units/Migrations/Cache/
 .project
 .settings/
 .idea/
+.DS_Store

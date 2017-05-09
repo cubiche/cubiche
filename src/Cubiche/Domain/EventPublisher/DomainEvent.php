@@ -36,6 +36,8 @@ class DomainEvent extends Event implements DomainEventInterface
     public function __construct()
     {
         $this->setMetadata('occurredOn', new DateTime());
+        $this->setMetadata('eventType', parent::eventName());
+        $this->setMetadata('propagationStopped', parent::isPropagationStopped());
     }
 
     /**
@@ -44,6 +46,30 @@ class DomainEvent extends Event implements DomainEventInterface
     public function occurredOn()
     {
         return $this->getMetadata('occurredOn');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function eventName()
+    {
+        return $this->getMetadata('eventType');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function stopPropagation()
+    {
+        $this->setMetadata('propagationStopped', true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPropagationStopped()
+    {
+        return $this->getMetadata('propagationStopped');
     }
 
     /**
@@ -93,8 +119,6 @@ class DomainEvent extends Event implements DomainEventInterface
 
         /** @var DomainEvent $domainEvent */
         $domainEvent = $reflectionClass->newInstanceWithoutConstructor();
-
-        $domainEvent->eventName = $data['eventType'];
         $domainEvent->metadata = $data['metadata'];
         $domainEvent->payload = $data['payload'];
 
@@ -107,7 +131,6 @@ class DomainEvent extends Event implements DomainEventInterface
     public function toArray()
     {
         return array(
-            'eventType' => $this->eventName(),
             'metadata' => $this->metadata,
             'payload' => $this->payload,
         );

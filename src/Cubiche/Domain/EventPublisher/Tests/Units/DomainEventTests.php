@@ -58,11 +58,11 @@ class DomainEventTests extends TestCase
             ->given($event = new IncrementCounterEvent(3))
             ->then()
                 ->array($event->toArray())
-                    ->string['eventType']
-                        ->isEqualTo(IncrementCounterEvent::class)
                     ->child['metadata'](function ($metadata) {
                         $metadata
                             ->hasKey('occurredOn')
+                            ->string['eventType']
+                                ->isEqualTo(IncrementCounterEvent::class)
                         ;
                     })
                     ->child['payload'](function ($payload) {

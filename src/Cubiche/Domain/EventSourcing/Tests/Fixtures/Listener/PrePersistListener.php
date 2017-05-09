@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener;
 
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
@@ -39,6 +40,6 @@ class PrePersistListener
      */
     public function onPrePersist(PrePersistEvent $event)
     {
-        $event->aggregate()->version()->setPatch($this->version);
+        $event->aggregate()->setVersion($this->version);
     }
 }

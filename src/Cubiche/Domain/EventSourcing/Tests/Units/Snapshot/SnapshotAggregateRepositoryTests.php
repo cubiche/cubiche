@@ -23,7 +23,6 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\AggregateRepositoryTests;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * SnapshotAggregateRepositoryTests class.
@@ -64,13 +63,16 @@ class SnapshotAggregateRepositoryTests extends AggregateRepositoryTests
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(0, 0, 231))
-            ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
-            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post)), $post, new \DateTime()))
-            ->and($applicationVersion = Version::fromString('0.0.0'))
+            ->and(
+                $snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post, new \DateTime())
+            )
             ->when($repository->persist($post))
-            ->and($store->persist($snapshot, $applicationVersion))
+            ->then()
+                ->object($repository->get($post->id()))
+                    ->isEqualTo($post)
+            ->and()
+            ->when($store->persist($snapshot))
             ->then()
                 ->object($repository->get($post->id()))
                     ->isEqualTo($post)
@@ -97,8 +99,6 @@ class SnapshotAggregateRepositoryTests extends AggregateRepositoryTests
                     $this->faker->paragraph
                 )
             )
-            ->and($version = new Version(0, 0, 231))
-            ->and($post->setVersion($version))
             ->and($post->changeTitle($this->faker->sentence))
             ->when($repository->persist($post))
             ->then()

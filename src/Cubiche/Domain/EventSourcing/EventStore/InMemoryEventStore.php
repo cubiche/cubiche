@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\Identity\StringId;
-use Cubiche\Domain\Model\IdInterface;
 
 /**
  * InMemoryEventStore class.
@@ -40,198 +40,52 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function persist(EventStream $eventStream, Version $aggregateVersion, Version $applicationVersion)
+    public function persist(EventStream $eventStream)
     {
-        $applicationKey = $this->getApplicationKey($applicationVersion);
-        if (!$this->store->containsKey($applicationKey)) {
-            $this->store->set($applicationKey, new ArrayHashMap());
+        $version = 0;
+        if (!$this->store->containsKey($eventStream->streamName())) {
+            $this->store->set($eventStream->streamName(), new ArrayList());
         }
 
-        /** @var ArrayHashMap $applicationCollection */
-        $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($eventStream->streamName(), $aggregateVersion);
+        /** @var ArrayList $streamCollection */
+        $streamCollection = $this->store->get($eventStream->streamName());
 
-        if (!$applicationCollection->containsKey($streamKey)) {
-            $applicationCollection->set($streamKey, new ArrayHashMap());
-        }
-
-        /** @var ArrayHashMap $streamCollection */
-        $streamCollection = $applicationCollection->get($streamKey);
-        $aggregateKey = $eventStream->aggregateId()->toNative();
-
-        if (!$streamCollection->containsKey($aggregateKey)) {
-            $streamCollection->set($aggregateKey, new ArrayList());
-        }
-
-        /** @var ArrayList $aggregateIdCollection */
-        $aggregateIdCollection = $streamCollection->get($aggregateKey);
+        /** @var DomainEventInterface $event */
         foreach ($eventStream->events() as $event) {
-            $aggregateIdCollection->add($event);
+            $streamCollection->add($event);
+
+            $version = $event->version();
         }
+
+        return $version;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($streamName, IdInterface $aggregateId, Version $aggregateVersion, Version $applicationVersion)
+    public function remove($streamName)
     {
-        $applicationKey = $this->getApplicationKey($applicationVersion);
-        if (!$this->store->containsKey($applicationKey)) {
-            throw new \RuntimeException(sprintf(
-                'The application %s not found in the event store.',
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $applicationCollection */
-        $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
-
-        if (!$applicationCollection->containsKey($streamKey)) {
-            throw new \RuntimeException(sprintf(
-                'The stream name %s of application %s not found in the event store.',
-                $streamKey,
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $streamCollection */
-        $streamCollection = $applicationCollection->get($streamKey);
-        $aggregateKey = $aggregateId->toNative();
-
-        if (!$streamCollection->containsKey($aggregateKey)) {
-            throw new \RuntimeException(sprintf(
-                'Aggregate id %s of the stream %s in the application %s not found in the event store.',
-                $aggregateKey,
-                $streamKey,
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayList $aggregateIdCollection */
-        $aggregateIdCollection = $streamCollection->get($aggregateKey);
-
-        return new EventStream(
-            $streamName,
-            $aggregateId,
-            $aggregateIdCollection->find(Criteria::method('version')->gte($aggregateVersion->patch()))->toArray()
-        );
+        $this->store->removeAt($streamName);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(
-        $streamName,
-        IdInterface $aggregateId,
-        Version $aggregateVersion,
-        Version $applicationVersion
-    ) {
-        $applicationKey = $this->getApplicationKey($applicationVersion);
-        if (!$this->store->containsKey($applicationKey)) {
-            throw new \RuntimeException(sprintf(
-                'The application %s not found in the event store.',
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $applicationCollection */
-        $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
-
-        if (!$applicationCollection->containsKey($streamKey)) {
-            throw new \RuntimeException(sprintf(
-                'The stream name %s of application %s not found in the event store.',
-                $streamKey,
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $streamCollection */
-        $streamCollection = $applicationCollection->get($streamKey);
-        $streamCollection->removeAt($aggregateId->toNative());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadAll($streamName, Version $aggregateVersion, Version $applicationVersion)
+    public function load($streamName, $version = 0)
     {
-        $streams = array();
+        /** @var ArrayList $streamCollection */
+        $streamCollection = $this->store->get($streamName);
 
-        $applicationKey = $this->getApplicationKey($applicationVersion);
-        if (!$this->store->containsKey($applicationKey)) {
-            throw new \RuntimeException(sprintf(
-                'The application %s not found in the event store.',
-                $applicationKey
-            ));
+        if ($streamCollection !== null) {
+            $events = $streamCollection->find(Criteria::method('version')->gte($version))->toArray();
+            if (count($events) > 0) {
+                /** @var DomainEventInterface $event */
+                $event = $events[0];
+
+                return new EventStream($streamName, $event->aggregateId(), $events);
+            }
         }
 
-        /** @var ArrayHashMap $applicationCollection */
-        $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
-
-        if (!$applicationCollection->containsKey($streamKey)) {
-            throw new \RuntimeException(sprintf(
-                'The stream name %s of application %s not found in the event store.',
-                $streamKey,
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $streamCollection */
-        $streamCollection = $applicationCollection->get($streamKey);
-
-        /** @var ArrayList $aggregateIdCollection */
-        foreach ($streamCollection as $aggregateKey => $aggregateIdCollection) {
-            $streams[] = new EventStream(
-                $streamName,
-                StringId::fromNative($aggregateKey),
-                $aggregateIdCollection->toArray()
-            );
-        }
-
-        return $streams;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function removeAll($streamName, Version $aggregateVersion, Version $applicationVersion)
-    {
-        $applicationKey = $this->getApplicationKey($applicationVersion);
-        if (!$this->store->containsKey($applicationKey)) {
-            throw new \RuntimeException(sprintf(
-                'The application %s not found in the event store.',
-                $applicationKey
-            ));
-        }
-
-        /** @var ArrayHashMap $applicationCollection */
-        $applicationCollection = $this->store->get($applicationKey);
-        $streamKey = $this->getStreamKey($streamName, $aggregateVersion);
-
-        $applicationCollection->removeAt($streamKey);
-    }
-
-    /**
-     * @param Version $applicationVersion
-     *
-     * @return string
-     */
-    protected function getApplicationKey(Version $applicationVersion)
-    {
-        return str_replace('.', '_', $applicationVersion->__toString());
-    }
-
-    /**
-     * @param string  $streamName
-     * @param Version $aggregateVersion
-     *
-     * @return string
-     */
-    protected function getStreamKey($streamName, Version $aggregateVersion)
-    {
-        return sprintf('%s_%s_%s', $streamName, $aggregateVersion->major(), $aggregateVersion->minor());
+        return;
     }
 }

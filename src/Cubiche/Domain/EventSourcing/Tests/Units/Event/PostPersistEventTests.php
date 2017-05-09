@@ -37,13 +37,14 @@ class PostPersistEventTests extends TestCase
                 )
             )
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($eventStream = new EventStream('posts', $postId, []))
+            ->and($streamName = 'Posts-'.$postId)
+            ->and($eventStream = new EventStream($streamName, $postId, []))
             ->and($event = new PostPersistEvent($post, $eventStream))
             ->then()
                 ->object($event->aggregate())
                     ->isEqualTo($post)
-                ->object($event->eventStream()->aggregateId())
-                    ->isEqualTo($postId)
+                ->object($event->eventStream())
+                    ->isEqualTo($eventStream)
         ;
     }
 }

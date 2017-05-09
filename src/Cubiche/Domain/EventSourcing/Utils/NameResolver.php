@@ -7,7 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Utils;
+
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * NameResolver class.
@@ -17,19 +20,18 @@ namespace Cubiche\Domain\EventSourcing\Utils;
 class NameResolver
 {
     /**
-     * @param string $aggregateClassName
+     * @param string      $aggregateClassName
+     * @param IdInterface $id
      *
      * @return string
      */
-    public static function resolve($aggregateClassName)
+    public static function resolve($aggregateClassName, IdInterface $id)
     {
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', self::shortClassName($aggregateClassName))));
-
-        return strtolower(implode('_', $pieces));
+        return sprintf('%s-%s', self::shortClassName($aggregateClassName), $id->toNative());
     }
 
     /**
-     * @param $aggregateClassName
+     * @param string $aggregateClassName
      *
      * @return string
      */
