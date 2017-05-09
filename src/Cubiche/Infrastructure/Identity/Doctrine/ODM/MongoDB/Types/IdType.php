@@ -32,16 +32,4 @@ abstract class IdType extends NativeValueObjectType
 
         return parent::convertToDatabaseValue($value);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function closureToPHP()
-    {
-        $class = $this->targetClass();
-
-        return '
-        $return = $value !== null && $value instanceof \\'.$class.' ? \\'.$class.'::fromNative($value) : $value;
-        ';
-    }
 }
