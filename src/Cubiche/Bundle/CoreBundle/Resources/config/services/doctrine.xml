@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!--  connection  -->
+        <service id="cubiche.mongodb.connection.event_store" class="Doctrine\MongoDB\Connection">
+            <factory service="cubiche.mongodb.odm.event_store_document_manager" method="getConnection" />
+            <call method="initialize" />
+        </service>
+
+        <service id="cubiche.mongodb.client.event_store" class="\MongoClient">
+            <factory service="cubiche.mongodb.connection.event_store" method="getMongo" />
+        </service>
+
+        <service id="cubiche.mongodb.connection.snapshot_store" class="Doctrine\MongoDB\Connection">
+            <factory service="cubiche.mongodb.odm.snapshot_store_document_manager" method="getConnection" />
+            <call method="initialize" />
+        </service>
+
+        <service id="cubiche.mongodb.client.snapshot_store" class="\MongoClient">
+            <factory service="cubiche.mongodb.connection.snapshot_store" method="getMongo" />
+        </service>
+
+        <!--  event subscriber  -->
+        <service id="cubiche.doctrine.event_subscriber.metadata" class="Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener\MetadataEventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.collection" class="Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.model" class="Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.identity" class="Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.geolocation" class="Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.system" class="Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+
+        <service id="cubiche.doctrine.event_subscriber.web" class="Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\EventListener\EventSubscriber">
+            <tag name="doctrine_mongodb.odm.event_subscriber" />
+        </service>
+    </services>
+</container>
