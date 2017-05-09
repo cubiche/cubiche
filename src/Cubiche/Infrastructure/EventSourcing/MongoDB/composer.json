@@ -1,11 +1,11 @@
 {
-    "name": "cubiche/event-sourcing-adapter",
+    "name": "cubiche/event-sourcing-mongodb-adapter",
     "type": "library",
-    "description": "Event sourcing adapter library.",
+    "description": "Event sourcing mongodb adapter library.",
     "keywords": [
         "event-store",
-        "event-stream",
-        "snapshot"
+        "snapshot",
+        "mongodb"
     ],
     "license": "MIT",
     "authors": [
@@ -20,6 +20,7 @@
     ],
     "require": {
         "php":                              "^5.5.9|^7.0",
+        "ext-mongo":                        "^1.5",
 
         "cubiche/event-sourcing":           "dev-master"
     },
@@ -32,7 +33,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Infrastructure\\EventSourcing\\": ""
+            "Cubiche\\Infrastructure\\EventSourcing\\MongoDB\\": ""
         }
     }
 }
