@@ -166,7 +166,7 @@ class Validator implements ValidatorInterface
                 $returnValue = $constraints->assert($value);
             } catch (NestedValidationException $e) {
                 throw new ValidationException(
-                    $e->getMainMessage(),
+                    implode(', ', $e->getMessages()),
                     $e->getMessages(),
                     $e->getCode(),
                     $e->getPrevious()
@@ -187,7 +187,7 @@ class Validator implements ValidatorInterface
                 $returnValue = $constraints->assert($value);
             } catch (NestedValidationException $e) {
                 throw new ValidationException(
-                    $e->getMainMessage(),
+                    implode(', ', $e->getMessages()),
                     $e->getMessages(),
                     $e->getCode(),
                     $e->getPrevious()
@@ -210,7 +210,7 @@ class Validator implements ValidatorInterface
                     $returnValue = $returnValue && $constraints->assert($item);
                 } catch (NestedValidationException $e) {
                     throw new ValidationException(
-                        $e->getMainMessage(),
+                        implode(', ', $e->getMessages()),
                         $e->getMessages(),
                         $e->getCode(),
                         $e->getPrevious()
