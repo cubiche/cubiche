@@ -103,15 +103,15 @@ class DomainEventTests extends TestCase
             ->and($eventId = $event->eventId())
             ->then()
             ->array($event->toArray())
-                ->object['eventId']
-                    ->isEqualTo($eventId)
-                ->string['eventType']
-                    ->isEqualTo(PostWasCreated::class)
-                ->child['metadata'](function ($metadata) use ($postId) {
+                ->child['metadata'](function ($metadata) use ($postId, $eventId) {
                     $metadata
                         ->hasKey('occurredOn')
                         ->object['aggregateId']
                             ->isEqualTo($postId)
+                        ->object['eventId']
+                            ->isEqualTo($eventId)
+                        ->string['eventType']
+                            ->isEqualTo(PostWasCreated::class)
                     ;
                 })
                 ->child['payload'](function ($payload) use ($title, $content) {

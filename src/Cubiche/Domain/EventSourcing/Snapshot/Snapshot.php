@@ -10,6 +10,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 
@@ -18,7 +19,7 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Snapshot
+class Snapshot implements SerializableInterface
 {
     /**
      * @var string
