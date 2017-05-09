@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Mapping\Driver;
 
 use Cubiche\Core\Validator\Assert;
@@ -67,14 +68,6 @@ class StaticDriver implements DriverInterface
                     'The method %s::%s should be static',
                     $reflClass->name,
                     $this->methodName
-                );
-            }
-
-            if ($reflMethod->getDeclaringClass()->name != $reflClass->name) {
-                throw MappingException::withMessage(
-                    'The method %s should be declared in %s class',
-                    $this->methodName,
-                    $reflClass->name
                 );
             }
 
