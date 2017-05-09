@@ -49,6 +49,7 @@ class ValidatorMiddleware extends MessageHandlerMiddleware
         }
 
         Validator::assert($message);
-        $next($message);
+
+        return $next($message);
     }
 }

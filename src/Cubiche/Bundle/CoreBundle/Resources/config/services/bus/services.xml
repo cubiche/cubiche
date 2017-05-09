@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!--  locator  -->
+        <service id="cubiche.bus.service_container_locator" class="Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator\ContainerLocator">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <!--  factory  -->
+        <service id="cubiche.bus.validator_handler_resolver_factory" class="Cubiche\Infrastructure\Cqrs\Factory\ValidatorHandlerResolverFactory">
+            <argument type="service" id="cubiche.bus.service_container_locator"/>
+        </service>
+
+        <!--  resolver  -->
+        <service id="cubiche.bus.validator_handler_resolver" class="Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver">
+            <factory service="cubiche.bus.validator_handler_resolver_factory" method="create" />
+        </service>
+    </services>
+</container>

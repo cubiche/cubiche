@@ -1,0 +1,49 @@
+{
+    "name": "cubiche/core-bundle",
+    "type": "library",
+    "description": "Symfony cubiche core bundle",
+    "keywords": [
+        "cubiche",
+        "ddd"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                              "^5.5.9|^7.0",
+
+        "cubiche/bus-adapter":              "dev-master",
+        "cubiche/collections-adapter":      "dev-master",
+        "cubiche/cqrs-adapter":             "dev-master",
+        "cubiche/event-bus-adapter":        "dev-master",
+        "cubiche/event-sourcing-adapter":   "dev-master",
+        "cubiche/geolocation-adapter":      "dev-master",
+        "cubiche/identity-adapter":         "dev-master",
+        "cubiche/model-adapter":            "dev-master",
+        "cubiche/repository-adapter":       "dev-master",
+        "cubiche/storage-adapter":          "dev-master",
+        "cubiche/system-adapter":           "dev-master",
+        "cubiche/web-adapter":              "dev-master",
+        "symfony/framework-bundle":         "^3.2"
+    },
+    "require-dev": {
+        "cubiche/tests":                    "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Bundle\\CoreBundle\\": ""
+        }
+    }
+}

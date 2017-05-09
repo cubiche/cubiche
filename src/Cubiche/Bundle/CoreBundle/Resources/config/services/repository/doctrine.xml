@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="cubiche.repository.doctrine_mongodb.odm.comparator_visitor_factory" class="Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\ComparatorVisitorFactory" />
+        <service id="cubiche.repository.doctrine_mongodb.odm.specification_visitor_factory" class="Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\Query\SpecificationVisitorFactory" />
+
+        <service id="cubiche.repository.doctrine_mongodb.odm.document_datasource_factory" class="Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentDataSourceFactory">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="cubiche.repository.doctrine_mongodb.odm.specification_visitor_factory" />
+            <argument type="service" id="cubiche.repository.doctrine_mongodb.odm.comparator_visitor_factory" />
+        </service>
+
+        <service id="cubiche.repository.doctrine_mongodb.odm.document_repository_factory" class="Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentRepositoryFactory">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="cubiche.repository.doctrine_mongodb.odm.document_datasource_factory" />
+        </service>
+
+        <service id="cubiche.repository.doctrine_mongodb.odm.document_query_repository_factory" class="Cubiche\Infrastructure\Repository\Doctrine\ODM\MongoDB\DocumentQueryRepositoryFactory">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <argument type="service" id="cubiche.repository.doctrine_mongodb.odm.document_datasource_factory" />
+        </service>
+    </services>
+</container>

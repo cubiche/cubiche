@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!--  factory  -->
+        <service id="cubiche.event_store.aggregate_repository_factory" class="Cubiche\Domain\EventSourcing\Factory\AggregateRepositoryFactory">
+            <argument type="service" id="cubiche.event_store" />
+        </service>
+
+        <!--  event store  -->
+        <service id="cubiche.event_store.inmemory" class="Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore" />
+        <service id="cubiche.event_store.mongodb" class="Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore\MongoDBEventStore">
+            <argument type="service" id="cubiche.mongodb.client.event_store"/>
+            <argument>%cubiche.mongodb.event_store.database%</argument>
+            <argument type="service" id="cubiche.serializer"/>
+        </service>
+
+        <service id="cubiche.event_store" alias="cubiche.event_store.mongodb" />
+
+        <!--  snapshot store  -->
+        <service id="cubiche.snapshot_store.inmemory" class="Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore" />
+        <service id="cubiche.snapshot_store.mongodb" class="Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot\MongoDBSnapshotStore">
+            <argument type="service" id="cubiche.mongodb.client.snapshot_store"/>
+            <argument>%cubiche.mongodb.snapshot_store.database%</argument>
+            <argument type="service" id="cubiche.serializer"/>
+        </service>
+
+        <service id="cubiche.snapshot_store" alias="cubiche.snapshot_store.mongodb" />
+    </services>
+</container>
