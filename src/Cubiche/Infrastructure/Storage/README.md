@@ -1,0 +1,2 @@
+# Cubiche - Storage Adapter
+[![Build Status](https://travis-ci.org/cubiche/storage-adapter.svg?branch=master)](https://travis-ci.org/cubiche/storage-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/storage-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/storage-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/storage-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/storage-adapter/?branch=master) 
