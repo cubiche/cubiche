@@ -23,7 +23,7 @@
         "ramsey/uuid":                  "^3.2",
         "symfony/property-access":      "^3.0",
         "react/event-loop":             "^0.4.2",
-        "respect/validation":           "1.1.2",
+        "respect/validation":           "1.1.12",
         "jms/metadata":                 "~1.1",
         "webmozart/console":            "~1.0@beta"
     },
