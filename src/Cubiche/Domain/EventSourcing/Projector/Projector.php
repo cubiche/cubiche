@@ -53,7 +53,7 @@ abstract class Projector implements DomainEventSubscriberInterface
             $readModels = $this->readModelsFromRepository($event->aggregate()->id());
             foreach ($readModels as $readModel) {
                 // create the initial projection
-                $projection = new Projection($readModel, Action::UPDATE());
+                $projection = new Projection(Action::UPDATE(), $readModel);
 
                 // project it
                 $this->projectEvents($projection, $eventStream->events());
@@ -65,7 +65,15 @@ abstract class Projector implements DomainEventSubscriberInterface
                 $readModels = $this->readModelsFromWriteModel($event->aggregate());
                 foreach ($readModels as $readModel) {
                     // create the initial projection
-                    $projection = new Projection($readModel, Action::NONE());
+                    $projection = new Projection(Action::NONE(), $readModel);
+
+                    // project it
+                    $this->projectEvents($projection, $eventStream->events());
+                }
+
+                if (count($readModels) == 0) {
+                    // create the initial projection
+                    $projection = new Projection(Action::NONE());
 
                     // project it
                     $this->projectEvents($projection, $eventStream->events());

@@ -43,7 +43,7 @@ class UUID extends StringId
             throw new \InvalidArgumentException(sprintf('Argument "%s" is an invalid UUID.', $value));
         }
 
-        parent::__construct($value === null ? self::nextUUIDValue() :  $value);
+        $this->value = $value === null ? self::nextUUIDValue() :  $value;
     }
 
     /**
