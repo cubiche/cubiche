@@ -33,13 +33,13 @@ class Projection
     /**
      * Projection constructor.
      *
-     * @param ReadModelInterface $readModel
      * @param Action             $action
+     * @param ReadModelInterface $readModel
      */
-    public function __construct(ReadModelInterface $readModel, Action $action)
+    public function __construct(Action $action, ReadModelInterface $readModel = null)
     {
-        $this->readModel = $readModel;
         $this->action = $action;
+        $this->readModel = $readModel;
     }
 
     /**
