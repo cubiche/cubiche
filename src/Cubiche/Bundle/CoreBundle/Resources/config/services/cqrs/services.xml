@@ -47,6 +47,13 @@
             <argument type="service" id="cubiche.bus.validator_handler_resolver"/>
         </service>
 
+        <service id="cubiche.command_bus.non_locking" class="Cubiche\Core\Cqrs\Command\CommandBus">
+            <factory service="cubiche.command_bus.factory" method="createNonLocking" />
+
+            <argument type="service" id="cubiche.command_bus.handler_resolver"/>
+            <argument type="service" id="cubiche.bus.validator_handler_resolver"/>
+        </service>
+
         <service id="cubiche.query_bus" class="Cubiche\Core\Cqrs\Query\QueryBus">
             <factory service="cubiche.query_bus.factory" method="create" />
 

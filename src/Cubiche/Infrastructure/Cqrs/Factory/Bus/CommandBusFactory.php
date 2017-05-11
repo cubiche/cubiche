@@ -30,10 +30,27 @@ class CommandBusFactory
      *
      * @return CommandBus
      */
-    public function create(HandlerClassResolver $commandHandlerResolver, HandlerClassResolver $validatorHandlerResolver)
-    {
+    public function create(
+        HandlerClassResolver $commandHandlerResolver,
+        HandlerClassResolver $validatorHandlerResolver
+    ) {
+        $commandBus = $this->createNonLocking($commandHandlerResolver, $validatorHandlerResolver);
+        $commandBus->addMiddleware(new LockingMiddleware(), 500);
+
+        return $commandBus;
+    }
+
+    /**
+     * @param HandlerClassResolver $commandHandlerResolver
+     * @param HandlerClassResolver $validatorHandlerResolver
+     *
+     * @return CommandBus
+     */
+    public function createNonLocking(
+        HandlerClassResolver $commandHandlerResolver,
+        HandlerClassResolver $validatorHandlerResolver
+    ) {
         return new CommandBus([
-            500 => new LockingMiddleware(),
             250 => new ValidatorMiddleware($validatorHandlerResolver),
             100 => new CommandHandlerMiddleware($commandHandlerResolver),
         ]);
