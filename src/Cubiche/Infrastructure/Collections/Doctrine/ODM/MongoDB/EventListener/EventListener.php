@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Core\Collections\CollectionInterface;
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
 use Doctrine\Common\Collections\ArrayCollection as DoctrineArrayCollection;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;

@@ -12,7 +12,7 @@
 namespace Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
-use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\Types\EmailAddressType;
 use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\Types\HostNameType;
 use Cubiche\Infrastructure\Web\Doctrine\ODM\MongoDB\Types\IPAddressType;

@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
-use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Types\CoordinateType;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;

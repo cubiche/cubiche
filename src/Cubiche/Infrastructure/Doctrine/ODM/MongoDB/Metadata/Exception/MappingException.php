@@ -17,14 +17,16 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping;
+namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception;
+
+use Cubiche\Core\Metadata\Exception\MappingException as BaseMappingException;
 
 /**
- * Class for all exceptions related to the Doctrine MongoDB ODM.
+ * MappingException class.
  *
- * @since       1.0
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MappingException extends \Exception
+class MappingException extends BaseMappingException
 {
     /**
      * @param string $message

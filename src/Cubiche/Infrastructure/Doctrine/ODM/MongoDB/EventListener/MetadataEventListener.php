@@ -7,16 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener;
 
+use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\DriverFactory;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Factory\DriverFactory;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\Event\LoadClassMetadataEventArgs;
-use Metadata\MetadataFactory;
 
 /**
  * MetadataEventListener class.
@@ -26,7 +27,7 @@ use Metadata\MetadataFactory;
 class MetadataEventListener
 {
     /**
-     * @var MetadataFactory
+     * @var ClassMetadataFactory
      */
     protected $metadataFactory;
 
@@ -64,7 +65,7 @@ class MetadataEventListener
     /**
      * @param ObjectManager $om
      *
-     * @return MetadataFactory
+     * @return ClassMetadataFactory
      */
     protected function getMetadataFactory(ObjectManager $om, EventManager $evm)
     {
@@ -76,7 +77,7 @@ class MetadataEventListener
                 $evm->dispatchEvent(Events::REGISTER_DRIVER_METADATA, $eventArgs);
             }
 
-            $this->metadataFactory = new MetadataFactory($driverFactory->driversFromManager($om));
+            $this->metadataFactory = new ClassMetadataFactory($driverFactory->driversFromManager($om));
         }
 
         return $this->metadataFactory;

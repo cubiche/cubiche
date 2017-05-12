@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping;
+namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata;
 
-use Metadata\PropertyMetadata as BasePropertyMetadata;
+use Cubiche\Core\Metadata\PropertyMetadata as BasePropertyMetadata;
 
 /**
  * PropertyMetadata class.

@@ -7,19 +7,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Metadata\Driver;
 
 use Cubiche\Core\Metadata\Exception\MappingException;
 use Cubiche\Tests\Generator\ClassUtils;
 use Doctrine\Common\Annotations\Reader;
-use Metadata\Driver\AdvancedDriverInterface;
 
 /**
  * AbstractAnnotationDriver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AbstractAnnotationDriver implements AdvancedDriverInterface
+abstract class AbstractAnnotationDriver implements DriverInterface
 {
     /**
      * @var Reader

@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\Driver;
+namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\Driver;
 
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Mapping\CollectionPropertyMetadata;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver as BaseXmlDriver;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
-use Metadata\MergeableClassMetadata;
+use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\CollectionPropertyMetadata;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver as BaseXmlDriver;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
+use Cubiche\Core\Metadata\MergeableClassMetadata;
 
 /**
  * XmlDriver class.

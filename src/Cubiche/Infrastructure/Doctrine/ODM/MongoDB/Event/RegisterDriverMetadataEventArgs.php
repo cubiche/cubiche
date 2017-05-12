@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event;
 
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\DriverFactory;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Factory\DriverFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ODM\MongoDB\Event\ManagerEventArgs;
 
@@ -28,7 +29,7 @@ class RegisterDriverMetadataEventArgs extends ManagerEventArgs
     /**
      * RegisterDriverMetadataEventArgs constructor.
      *
-     * @param DriverFactory $factory
+     * @param DriverFactory $driverFactory
      * @param ObjectManager $objectManager
      */
     public function __construct(DriverFactory $driverFactory, ObjectManager $objectManager)
