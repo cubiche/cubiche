@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Metadata\Driver;
 
+namespace Cubiche\Core\Metadata\Factory;
+
+use Cubiche\Core\Metadata\Driver\DriverInterface;
 use Doctrine\Common\Annotations\Reader;
 use Metadata\Driver\FileLocatorInterface;
 
@@ -53,18 +55,20 @@ class DriverFactory
     }
 
     /**
-     * @param AbstractYamlDriver $driver
+     * @param string $driver
      */
-    public static function registerYamlDriver(AbstractYamlDriver $driver)
+    public static function registerYamlDriver($driver)
     {
         static::instance()->addYamlDriver($driver);
     }
 
     /**
-     * @param AbstractYamlDriver $driver
+     * @param string $driver
      */
-    protected function addYamlDriver(AbstractYamlDriver $driver)
+    protected function addYamlDriver($driver)
     {
+        $this->checkDriver($driver);
+
         if (!isset($this->drivers['yaml'])) {
             $this->drivers['yaml'] = array();
         }
@@ -73,18 +77,20 @@ class DriverFactory
     }
 
     /**
-     * @param AbstractXmlDriver $driver
+     * @param string $driver
      */
-    public static function registerXmlDriver(AbstractXmlDriver $driver)
+    public static function registerXmlDriver($driver)
     {
         static::instance()->addXmlDriver($driver);
     }
 
     /**
-     * @param AbstractXmlDriver $driver
+     * @param string $driver
      */
-    protected function addXmlDriver(AbstractXmlDriver $driver)
+    protected function addXmlDriver($driver)
     {
+        $this->checkDriver($driver);
+
         if (!isset($this->drivers['xml'])) {
             $this->drivers['xml'] = array();
         }
@@ -135,6 +141,21 @@ class DriverFactory
         }
 
         return $drivers;
+    }
+
+    /**
+     * @param string $driver
+     */
+    private function checkDriver($driver)
+    {
+        $reflector = new \ReflectionClass($driver);
+        if (!$reflector->implementsInterface(DriverInterface::class)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The object must be an instance of %s. Instance of %s given',
+                DriverInterface::class,
+                $driver
+            ));
+        }
     }
 
     /**

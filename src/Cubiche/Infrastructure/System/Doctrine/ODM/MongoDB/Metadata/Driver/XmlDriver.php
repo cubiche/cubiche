@@ -7,12 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Mapping\Driver;
 
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\MappingException;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver as BaseXmlDriver;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
-use Metadata\MergeableClassMetadata;
+namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Metadata\Driver;
+
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver as BaseXmlDriver;
+use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\PropertyMetadata;
+use Cubiche\Core\Metadata\MergeableClassMetadata;
 
 /**
  * XmlDriver class.

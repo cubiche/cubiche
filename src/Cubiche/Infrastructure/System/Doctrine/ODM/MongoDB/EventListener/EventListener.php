@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
-use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Mapping\Driver\XmlDriver;
+use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\DecimalType;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\DynamicEnumType;
 use Cubiche\Infrastructure\System\Doctrine\ODM\MongoDB\Types\IntegerType;

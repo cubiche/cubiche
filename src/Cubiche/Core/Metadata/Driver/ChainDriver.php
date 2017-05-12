@@ -7,17 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\Driver;
 
-use Metadata\MergeableClassMetadata;
-use Metadata\Driver\DriverInterface;
+namespace Cubiche\Core\Metadata\Driver;
+
+use Cubiche\Core\Metadata\Exception\MappingException;
 
 /**
- * MergeableDriver class.
+ * ChainDriver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MergeableDriver implements DriverInterface
+class ChainDriver implements DriverInterface
 {
     /**
      * @var DriverInterface[]
@@ -46,16 +46,33 @@ class MergeableDriver implements DriverInterface
 
     /**
      * @param \ReflectionClass $class
+     *
+     * @return mixed
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        $classMetadata = new MergeableClassMetadata($class->getName());
         foreach ($this->drivers as $driver) {
             if (null !== $metadata = $driver->loadMetadataForClass($class)) {
-                $classMetadata->merge($metadata);
+                return $metadata;
             }
         }
 
-        return $classMetadata;
+        throw MappingException::classNotFound($class->getName());
+    }
+
+    /**
+     * Gets all the metadata class names known to this driver.
+     *
+     * @return array
+     */
+    public function getAllClassNames()
+    {
+        foreach ($this->drivers as $driver) {
+            if (null !== $classNames = $driver->getAllClassNames()) {
+                return $classNames;
+            }
+        }
+
+        return array();
     }
 }
