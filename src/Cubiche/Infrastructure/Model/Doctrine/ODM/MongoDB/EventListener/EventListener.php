@@ -11,6 +11,7 @@
 
 namespace Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\EventListener;
 
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Model\Doctrine\ODM\MongoDB\Types\DynamicNativeValueObjectType;
@@ -49,12 +50,13 @@ class EventListener
     {
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
             if (isset($mapping['cubiche:valueobject'])) {
-                $valueMapping = $mapping['cubiche:valueobject'];
+                /** @var PropertyMetadata $propertyMetadata */
+                $propertyMetadata = $mapping['cubiche:valueobject'];
 
-                $type = str_replace('\\', '.', $valueMapping['type']);
+                $type = str_replace('\\', '.', $propertyMetadata->getMetadata('type'));
                 if (!Type::hasType($type)) {
                     Type::registerType($type, DynamicNativeValueObjectType::class);
-                    Type::getType($type)->setTargetClass($valueMapping['type']);
+                    Type::getType($type)->setTargetClass($propertyMetadata->getMetadata('type'));
                 }
 
                 $classMetadata->fieldMappings[$fieldName]['type'] = $type;

@@ -13,7 +13,6 @@ namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\EventListener;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Events;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Mapping\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Factory\DriverFactory;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -48,16 +47,13 @@ class MetadataEventListener
             ->getMetadataFactory(
                 $eventArgs->getDocumentManager(),
                 $eventArgs->getDocumentManager()->getEventManager()
-            )
-            ->getMetadataForClass($classMetadata->getName())
+            )->getMetadataFor($classMetadata->getName())
         ;
 
         foreach ($classMetadata->fieldMappings as $fieldName => &$mapping) {
-            if (isset($cubicheClassMetadata->propertyMetadata[$fieldName])) {
-                /** @var PropertyMetadata $propertyMetadata */
-                $propertyMetadata = $cubicheClassMetadata->propertyMetadata[$fieldName];
-
-                $mapping['cubiche:'.$propertyMetadata->namespace] = $propertyMetadata->toArray();
+            $propertyMetadata = $cubicheClassMetadata->propertyMetadata($fieldName);
+            if ($propertyMetadata !== null) {
+                $mapping['cubiche:'.$propertyMetadata->getMetadata('namespace')] = $propertyMetadata;
             }
         }
     }

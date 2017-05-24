@@ -11,6 +11,7 @@
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\EventListener;
 
 use Cubiche\Core\Collections\CollectionInterface;
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
@@ -107,7 +108,11 @@ class EventListener
 
             if ((isset($mapping['association']) && $mapping['type'] === 'many') && $value !== null) {
                 if (isset($mapping['cubiche:collection'])) {
-                    $value = new $mapping['cubiche:collection']['persistenClassName']($value);
+                    /** @var PropertyMetadata $propertyMetadata */
+                    $propertyMetadata = $mapping['cubiche:collection'];
+                    $className = $propertyMetadata->getMetadata('persistenClassName');
+
+                    $value = new $className($value);
                     if ($reflectionProperty->isPrivate()) {
                         $reflectionProperty->setAccessible(true);
                     }
@@ -131,19 +136,20 @@ class EventListener
             }
 
             if (isset($mapping['cubiche:collection'])) {
-                $collectionMapping = $mapping['cubiche:collection'];
-                if ($collectionMapping['of'] === null) {
+                /** @var PropertyMetadata $propertyMetadata */
+                $propertyMetadata = $mapping['cubiche:collection'];
+                if ($propertyMetadata->getMetadata('of') === null) {
                     throw MappingException::inField(
-                        'The "of" option in '.$collectionMapping['type'].' type is missing',
+                        'The "of" option in '.$propertyMetadata->getMetadata('type').' type is missing',
                         $classMetadata->name,
                         $fieldName
                     );
                 }
 
-                $type = $collectionMapping['of'].$collectionMapping['type'];
+                $type = $propertyMetadata->getMetadata('of').$propertyMetadata->getMetadata('type');
                 if (!Type::hasType($type)) {
-                    Type::addType($type, $collectionMapping['typeClassName']);
-                    Type::getType($type)->setInnerType($collectionMapping['of']);
+                    Type::addType($type, $propertyMetadata->getMetadata('typeClassName'));
+                    Type::getType($type)->setInnerType($propertyMetadata->getMetadata('of'));
                 }
 
                 $classMetadata->fieldMappings[$fieldName]['type'] = $type;

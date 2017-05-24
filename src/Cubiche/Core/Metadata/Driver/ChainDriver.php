@@ -10,6 +10,8 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Metadata\Exception\MappingException;
 
 /**
@@ -20,17 +22,28 @@ use Cubiche\Core\Metadata\Exception\MappingException;
 class ChainDriver implements DriverInterface
 {
     /**
-     * @var DriverInterface[]
+     * @var ArrayHashMapInterface
      */
     protected $drivers;
 
     /**
-     * DriverChain constructor.
+     * The default driver.
      *
-     * @param array $drivers
+     * @var DriverInterface
      */
-    public function __construct(array $drivers = array())
+    protected $defaultDriver;
+
+    /**
+     * ChainDriver constructor.
+     *
+     * @param array                $drivers
+     * @param DriverInterface|null $defaultDriver
+     */
+    public function __construct(array $drivers = array(), DriverInterface $defaultDriver = null)
     {
+        $this->drivers = new ArrayList();
+        $this->defaultDriver = $defaultDriver;
+
         foreach ($drivers as $driver) {
             $this->addDriver($driver);
         }
@@ -41,38 +54,42 @@ class ChainDriver implements DriverInterface
      */
     public function addDriver(DriverInterface $driver)
     {
-        $this->drivers[] = $driver;
+        $this->drivers->add($driver);
     }
 
     /**
-     * @param \ReflectionClass $class
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function loadMetadataForClass(\ReflectionClass $class)
+    public function loadMetadataForClass($className)
     {
-        foreach ($this->drivers as $driver) {
-            if (null !== $metadata = $driver->loadMetadataForClass($class)) {
+        /** @var $driver DriverInterface */
+        foreach ($this->drivers->toArray() as $driver) {
+            if (null !== $metadata = $driver->loadMetadataForClass($className)) {
                 return $metadata;
             }
         }
 
-        throw MappingException::classNotFound($class->getName());
+        if ($this->defaultDriver !== null) {
+            return $this->defaultDriver->loadMetadataForClass($className);
+        }
+
+        throw MappingException::classNotFound($className);
     }
 
     /**
-     * Gets all the metadata class names known to this driver.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getAllClassNames()
     {
-        foreach ($this->drivers as $driver) {
-            if (null !== $classNames = $driver->getAllClassNames()) {
-                return $classNames;
-            }
+        $classNames = [];
+        foreach ($this->drivers->toArray() as $driver) {
+            $classNames = array_merge($classNames, $driver->getAllClassNames());
         }
 
-        return array();
+        if ($this->defaultDriver !== null) {
+            $classNames = array_merge($classNames, $this->defaultDriver->getAllClassNames());
+        }
+
+        return $classNames;
     }
 }

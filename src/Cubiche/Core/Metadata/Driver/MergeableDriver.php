@@ -10,7 +10,9 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
-use Cubiche\Core\Metadata\MergeableClassMetadata;
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Metadata\ClassMetadata;
+use Cubiche\Core\Metadata\Exception\MappingException;
 
 /**
  * MergeableDriver class.
@@ -31,6 +33,7 @@ class MergeableDriver implements DriverInterface
      */
     public function __construct(array $drivers = array())
     {
+        $this->drivers = new ArrayList();
         foreach ($drivers as $driver) {
             $this->addDriver($driver);
         }
@@ -41,35 +44,47 @@ class MergeableDriver implements DriverInterface
      */
     public function addDriver(DriverInterface $driver)
     {
-        $this->drivers[] = $driver;
+        $this->drivers->add($driver);
     }
 
     /**
-     * @param \ReflectionClass $class
-     *
-     * @return MergeableClassMetadata
+     * {@inheritdoc}
      */
-    public function loadMetadataForClass(\ReflectionClass $class)
+    public function loadMetadataForClass($className)
     {
-        $classMetadata = new MergeableClassMetadata($class->getName());
-        foreach ($this->drivers as $driver) {
-            if (null !== $metadata = $driver->loadMetadataForClass($class)) {
+        $classMetadata = null;
+        /** @var $driver DriverInterface */
+        foreach ($this->drivers->toArray() as $driver) {
+            try {
+                $metadata = $driver->loadMetadataForClass($className);
+            } catch (MappingException $e) {
+                continue;
+            }
+
+            if ($metadata !== null) {
+                if ($classMetadata === null) {
+                    $classMetadata = new ClassMetadata($className);
+                }
+
                 $classMetadata->merge($metadata);
             }
+        }
+
+        if ($classMetadata === null) {
+            throw MappingException::classNotFound($className);
         }
 
         return $classMetadata;
     }
 
     /**
-     * Gets all the metadata class names known to this driver.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getAllClassNames()
     {
         $classNames = [];
-        foreach ($this->drivers as $driver) {
+        /** @var $driver DriverInterface */
+        foreach ($this->drivers->toArray() as $driver) {
             $classNames = array_merge($classNames, $driver->getAllClassNames());
         }
 

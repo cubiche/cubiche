@@ -1,0 +1,2 @@
+Cubiche\Core\Metadata\Tests\Fixtures\Venue:
+    fields: id: id:  true type: AddressId

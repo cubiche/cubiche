@@ -12,7 +12,6 @@
 namespace Cubiche\Core\Metadata\Exception;
 
 use RuntimeException;
-use Exception;
 
 /**
  * MappingException class.
@@ -22,60 +21,66 @@ use Exception;
 class MappingException extends RuntimeException
 {
     /**
-     * @param Exception|null $cause
-     *
      * @return MappingException
      */
-    public static function pathRequired(Exception $cause = null)
+    public static function pathRequired()
     {
-        return new static(
-            'The paths is required to retrieve all class names.',
-            0,
-            $cause
-        );
+        return new static('The paths is required to retrieve all class names.');
     }
 
     /**
-     * @param string         $path
-     * @param Exception|null $cause
+     * @param string $path
      *
      * @return MappingException
      */
-    public static function invalidDirectory($path, Exception $cause = null)
+    public static function invalidDirectory($path)
     {
         return new static(sprintf(
             'The given path %s must have a valid directory.',
             $path
-        ), 0, $cause);
+        ));
     }
 
     /**
-     * @param string    $entityName
-     * @param string    $fileName
-     * @param Exception $cause
+     * @param string $className
      *
      * @return MappingException
      */
-    public static function invalidMappingFile($entityName, $fileName, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'Invalid mapping file %s for class %s.',
-            $fileName,
-            $entityName
-        ), 0, $cause);
-    }
-
-    /**
-     * @param string    $className
-     * @param Exception $cause
-     *
-     * @return MappingException
-     */
-    public static function classNotFound($className, Exception $cause = null)
+    public static function classNotFound($className)
     {
         return new static(sprintf(
             'The class %s was not found in the chain configured drivers.',
             $className
-        ), 0, $cause);
+        ));
+    }
+
+    /**
+     * @param string $className
+     * @param string $fileName
+     *
+     * @return MappingException
+     */
+    public static function mappingNotFound($className, $fileName)
+    {
+        return new static(sprintf(
+            'No mapping found for class %s in file %s.',
+            $className,
+            $fileName
+        ));
+    }
+
+    /**
+     * @param string $className
+     * @param string $fileName
+     *
+     * @return MappingException
+     */
+    public static function invalidMapping($className, $fileName)
+    {
+        return new static(sprintf(
+            'Invalid mapping for class %s in file %s.',
+            $className,
+            $fileName
+        ));
     }
 }

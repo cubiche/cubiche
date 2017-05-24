@@ -10,7 +10,9 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
-use Cubiche\Core\Metadata\MergeableClassMetadata;
+use Cubiche\Core\Metadata\ClassMetadata;
+use Cubiche\Core\Metadata\ClassMetadataInterface;
+use Cubiche\Core\Metadata\Exception\MappingException;
 
 /**
  * AbstractXmlDriver class.
@@ -19,6 +21,26 @@ use Cubiche\Core\Metadata\MergeableClassMetadata;
  */
 abstract class AbstractXmlDriver extends AbstractFileDriver
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function loadMetadataFromFile($className, $file)
+    {
+        /* @var $xmlRoot \SimpleXMLElement */
+        $xmlRoot = $this->getElement($className, $file);
+        $xmlRoot->registerXPathNamespace('cubiche', 'cubiche');
+
+        try {
+            $classMetadata = new ClassMetadata($className);
+        } catch (\ReflectionException $e) {
+            throw MappingException::classNotFound($className);
+        }
+
+        $this->addMetadataFor($xmlRoot, $classMetadata);
+
+        return $classMetadata;
+    }
+
     /**
      * @param \SimpleXMLElement $item
      * @param array             $default
@@ -36,40 +58,16 @@ abstract class AbstractXmlDriver extends AbstractFileDriver
     }
 
     /**
-     * Parses the content of the file, and converts it to the desired metadata.
-     *
-     * @param \ReflectionClass $class
-     * @param string           $file
-     *
-     * @return MergeableClassMetadata|null
-     */
-    protected function loadMetadataFromFile(\ReflectionClass $class, $file)
-    {
-        /* @var $xmlRoot \SimpleXMLElement */
-        $xmlRoot = $this->getElement($class->getName(), $file);
-        if (!$xmlRoot) {
-            return;
-        }
-
-        $xmlRoot->registerXPathNamespace('cubiche', 'cubiche');
-
-        $classMetadata = new MergeableClassMetadata($class->getName());
-        $this->addMetadataFor($xmlRoot, $classMetadata);
-
-        return $classMetadata;
-    }
-
-    /**
-     * @param \SimpleXMLElement      $xmlRoot
-     * @param MergeableClassMetadata $classMetadata
-     */
-    abstract protected function addMetadataFor(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata);
-
-    /**
      * {@inheritdoc}
      */
     protected function getExtension()
     {
         return '.xml';
     }
+
+    /**
+     * @param \SimpleXMLElement      $xmlRoot
+     * @param ClassMetadataInterface $classMetadata
+     */
+    abstract protected function addMetadataFor(\SimpleXMLElement $xmlRoot, ClassMetadataInterface $classMetadata);
 }

@@ -10,21 +10,31 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
+use Cubiche\Core\Metadata\ClassMetadataInterface;
 use Cubiche\Core\Metadata\Exception\MappingException;
-use Metadata\Driver\AbstractFileDriver as BaseFileDriver;
-use Metadata\Driver\FileLocatorInterface;
+use Cubiche\Core\Metadata\Locator\FileLocatorInterface;
 
 /**
  * AbstractFileDriver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AbstractFileDriver extends BaseFileDriver implements DriverInterface
+abstract class AbstractFileDriver implements DriverInterface
 {
     /**
-     * @var array|null
+     * @var FileLocatorInterface
+     */
+    protected $locator;
+
+    /**
+     * @var array
      */
     protected $classCache;
+
+    /**
+     * @var string
+     */
+    protected $fileName;
 
     /**
      * AbstractFileDriver constructor.
@@ -33,9 +43,30 @@ abstract class AbstractFileDriver extends BaseFileDriver implements DriverInterf
      */
     public function __construct(FileLocatorInterface $locator)
     {
-        parent::__construct($locator);
-
+        $this->locator = $locator;
         $this->classCache = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadMetadataForClass($className)
+    {
+        if (null === $path = $this->locator->findMappingFile($className, $this->getExtension())) {
+            return;
+        }
+
+        $this->fileName = $path;
+
+        return $this->loadMetadataFromFile($className, $path);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllClassNames()
+    {
+        return $this->locator->getAllClassNames($this->getExtension());
     }
 
     /**
@@ -57,13 +88,30 @@ abstract class AbstractFileDriver extends BaseFileDriver implements DriverInterf
 
         $result = $this->loadMappingFile($file);
         if (!isset($result[$className])) {
-            throw MappingException::invalidMappingFile($className, $file);
+            throw MappingException::mappingNotFound($className, $file);
         }
 
         $this->classCache = array_merge($this->classCache, $result);
 
         return $result[$className];
     }
+
+    /**
+     * Parses the content of the file, and converts it to the desired metadata.
+     *
+     * @param string $className
+     * @param string $file
+     *
+     * @return ClassMetadataInterface
+     */
+    abstract protected function loadMetadataFromFile($className, $file);
+
+    /**
+     * Returns the extension of the file.
+     *
+     * @return string
+     */
+    abstract protected function getExtension();
 
     /**
      * Loads a mapping file with the given name and returns a map

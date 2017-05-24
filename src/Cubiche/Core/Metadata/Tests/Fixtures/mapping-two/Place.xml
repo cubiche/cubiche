@@ -1,0 +1,6 @@
+<cubiche-mapping>
+    <aggregate-root name="Cubiche\Foo\Bar\Tests\Place">
+        <field fieldName="id" name="id" id="true" type="Identifier" />
+    </aggregate-root>
+    
+</cubiche-mapping>

@@ -22,11 +22,11 @@
     "require": {
         "php":                      "^5.5.9|^7.0",
 
-        "jms/metadata":             "~1.1",
         "doctrine/common":          "2.6.1"
     },
     "require-dev": {
-        "cubiche/tests":        "dev-master"
+        "cubiche/tests":            "dev-master",
+        "symfony/yaml":             "~2.3|~3.0"
     },
     "minimum-stability": "dev",
     "autoload": {

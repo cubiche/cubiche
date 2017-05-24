@@ -10,10 +10,10 @@
 
 namespace Cubiche\Infrastructure\Geolocation\Doctrine\ODM\MongoDB\Metadata\Driver;
 
+use Cubiche\Core\Metadata\ClassMetadataInterface;
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver as BaseXmlDriver;
-use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\PropertyMetadata;
-use Cubiche\Core\Metadata\MergeableClassMetadata;
 
 /**
  * XmlDriver class.
@@ -25,7 +25,7 @@ class XmlDriver extends BaseXmlDriver
     /**
      * {@inheritdoc}
      */
-    protected function addMetadataFor(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
+    protected function addMetadataFor(\SimpleXMLElement $xmlRoot, ClassMetadataInterface $classMetadata)
     {
         foreach ($xmlRoot->xpath('//cubiche:coordinate') as $item) {
             // get the field tag
@@ -52,7 +52,8 @@ class XmlDriver extends BaseXmlDriver
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName, 'coordinate');
+                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata->addMetadata('namespace', 'coordinate');
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } else {

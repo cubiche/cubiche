@@ -10,10 +10,10 @@
 
 namespace Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\Driver;
 
-use Cubiche\Infrastructure\Collections\Doctrine\ODM\MongoDB\Metadata\CollectionPropertyMetadata;
+use Cubiche\Core\Metadata\ClassMetadataInterface;
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver as BaseXmlDriver;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Exception\MappingException;
-use Cubiche\Core\Metadata\MergeableClassMetadata;
 
 /**
  * XmlDriver class.
@@ -25,7 +25,7 @@ class XmlDriver extends BaseXmlDriver
     /**
      * {@inheritdoc}
      */
-    protected function addMetadataFor(\SimpleXMLElement $xmlRoot, MergeableClassMetadata $classMetadata)
+    protected function addMetadataFor(\SimpleXMLElement $xmlRoot, ClassMetadataInterface $classMetadata)
     {
         foreach ($xmlRoot->xpath('//cubiche:collection') as $item) {
             // get the field tag
@@ -44,6 +44,16 @@ class XmlDriver extends BaseXmlDriver
 
             $collectionType = $itemMapping['type'];
             $collectionOf = $itemMapping['of'];
+
+            $typeClassName = sprintf(
+                'Cubiche\\Infrastructure\\Collections\\Doctrine\\ODM\\MongoDB\\Types\\%sType',
+                $collectionType
+            );
+
+            $persistenClassName = sprintf(
+                'Cubiche\\Infrastructure\\Collections\\Doctrine\\Common\\Collections\\Persistent%s',
+                $collectionType
+            );
 
             if ($field->getName() == 'field') {
                 if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
@@ -64,9 +74,13 @@ class XmlDriver extends BaseXmlDriver
                     );
                 }
 
-                $propertyMetadata = new CollectionPropertyMetadata($classMetadata->name, $fieldName);
-                $propertyMetadata->setType($collectionType);
-                $propertyMetadata->setOf($collectionOf);
+                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+
+                $propertyMetadata->addMetadata('namespace', 'collection');
+                $propertyMetadata->addMetadata('type', $collectionType);
+                $propertyMetadata->addMetadata('of', $collectionOf);
+                $propertyMetadata->addMetadata('typeClassName', $typeClassName);
+                $propertyMetadata->addMetadata('persistenClassName', $persistenClassName);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } elseif ($field->getName() == 'embed-many' || $field->getName() == 'reference-many') {
@@ -80,8 +94,12 @@ class XmlDriver extends BaseXmlDriver
                     );
                 }
 
-                $propertyMetadata = new CollectionPropertyMetadata($classMetadata->name, $field);
-                $propertyMetadata->setType($collectionType);
+                $propertyMetadata = new PropertyMetadata($classMetadata->name, $field);
+
+                $propertyMetadata->addMetadata('namespace', 'collection');
+                $propertyMetadata->addMetadata('type', $collectionType);
+                $propertyMetadata->addMetadata('typeClassName', $typeClassName);
+                $propertyMetadata->addMetadata('persistenClassName', $persistenClassName);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } else {

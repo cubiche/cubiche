@@ -11,6 +11,7 @@
 
 namespace Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\EventListener;
 
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Event\RegisterDriverMetadataEventArgs;
 use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Metadata\Driver\XmlDriver;
 use Cubiche\Infrastructure\Identity\Doctrine\ODM\MongoDB\Types\DynamicIdType;
@@ -52,12 +53,13 @@ class EventListener
     {
         foreach ($classMetadata->fieldMappings as $fieldName => $mapping) {
             if (isset($mapping['cubiche:id'])) {
-                $idMapping = $mapping['cubiche:id'];
+                /** @var PropertyMetadata $propertyMetadata */
+                $propertyMetadata = $mapping['cubiche:id'];
 
-                $type = str_replace('\\', '.', $idMapping['type']);
+                $type = str_replace('\\', '.', $propertyMetadata->getMetadata('type'));
                 if (!Type::hasType($type)) {
                     Type::registerType($type, DynamicIdType::class);
-                    Type::getType($type)->setTargetClass($idMapping['type']);
+                    Type::getType($type)->setTargetClass($propertyMetadata->getMetadata('type'));
                 }
 
                 $classMetadata->fieldMappings[$fieldName]['type'] = $type;

@@ -10,7 +10,9 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
-use Cubiche\Core\Metadata\MergeableClassMetadata;
+use Cubiche\Core\Metadata\ClassMetadata;
+use Cubiche\Core\Metadata\ClassMetadataInterface;
+use Cubiche\Core\Metadata\Exception\MappingException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -22,51 +24,40 @@ use Symfony\Component\Yaml\Yaml;
 abstract class AbstractYamlDriver extends AbstractFileDriver
 {
     /**
-     * Parses the content of the file, and converts it to the desired metadata.
-     *
-     * @param \ReflectionClass $class
-     * @param string           $file
-     *
-     * @return MergeableClassMetadata|null
+     * @var string
      */
-    protected function loadMetadataFromFile(\ReflectionClass $class, $file)
+    protected $className;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function loadMetadataFromFile($className, $file)
     {
-        $config = $this->getElement($class->getName(), $file);
-        if (empty($config)) {
-            return;
+        $this->className = $className;
+        $config = $this->getElement($className, $file);
+
+        try {
+            $classMetadata = new ClassMetadata($className);
+        } catch (\ReflectionException $e) {
+            throw MappingException::classNotFound($className);
         }
 
-        $classMetadata = new MergeableClassMetadata($class->getName());
         $this->addMetadataFor($config, $classMetadata);
 
         return $classMetadata;
     }
 
     /**
-     * Loads a mapping file with the given name and returns a map
-     * from class/entity names to their corresponding file driver elements.
-     *
-     * @param string $file The mapping file to load.
-     *
-     * @return array
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
     protected function loadMappingFile($file)
     {
         try {
             return Yaml::parse(file_get_contents($file));
         } catch (ParseException $e) {
-            $e->setParsedFile($file);
-            throw $e;
+            throw MappingException::invalidMapping($this->className, $file);
         }
     }
-
-    /**
-     * @param array                  $config
-     * @param MergeableClassMetadata $classMetadata
-     */
-    abstract protected function addMetadataFor(array $config, MergeableClassMetadata $classMetadata);
 
     /**
      * {@inheritdoc}
@@ -75,4 +66,10 @@ abstract class AbstractYamlDriver extends AbstractFileDriver
     {
         return '.yml';
     }
+
+    /**
+     * @param array                  $config
+     * @param ClassMetadataInterface $classMetadata
+     */
+    abstract protected function addMetadataFor(array $config, ClassMetadataInterface $classMetadata);
 }

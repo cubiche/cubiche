@@ -7,46 +7,141 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Metadata;
 
-use Metadata\ClassHierarchyMetadata;
-use Metadata\MetadataFactory;
+use Cubiche\Core\Metadata\Cache\CacheInterface;
+use Cubiche\Core\Metadata\Driver\DriverInterface;
 
 /**
  * ClassMetadataFactory class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ClassMetadataFactory extends MetadataFactory
+class ClassMetadataFactory implements ClassMetadataFactoryInterface
 {
     /**
-     * Forces the factory to load the metadata of all classes known to the underlying
-     * mapping driver.
+     * @var DriverInterface
+     */
+    protected $driver;
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cache;
+
+    /**
+     * @var array
+     */
+    protected $loadedMetadata = array();
+
+    /**
+     * ClassMetadataFactory constructor.
      *
-     * @return array.
+     * @param DriverInterface     $driver
+     * @param CacheInterface|null $cache
+     */
+    public function __construct(DriverInterface $driver, CacheInterface $cache = null)
+    {
+        $this->driver = $driver;
+        $this->cache = $cache;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getAllMetadata()
     {
-        $metadata = [];
-        foreach ($this->getAllClassNames() as $className) {
-            $metadata[] = $this->getMetadataForClass($className);
+        $metadatas = [];
+        foreach ($this->driver->getAllClassNames() as $className) {
+            if (null !== $metadata = $this->getMetadataFor($className)) {
+                $metadatas[] = $metadata;
+            }
         }
 
-        return $metadata;
+        return $metadatas;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMetadataFor($className)
+    {
+        if (isset($this->loadedMetadata[$className])) {
+            return $this->loadedMetadata[$className];
+        }
+
+        if ($this->cache !== null) {
+            if (($cached = $this->cache->load($className)) !== null) {
+                $this->loadedMetadata[$className] = $cached;
+            } else {
+                foreach ($this->loadMetadata($className) as $loadedClassName) {
+                    $this->cache->save($this->loadedMetadata[$loadedClassName]);
+                }
+            }
+        } else {
+            $this->loadMetadata($className);
+        }
+
+        if (isset($this->loadedMetadata[$className])) {
+            return $this->loadedMetadata[$className];
+        }
+
+        return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasMetadataFor($className)
+    {
+        return isset($this->loadedMetadata[$className]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMetadataFor($className, ClassMetadataInterface $metadata)
+    {
+        $this->loadedMetadata[$className] = $metadata;
+    }
+
+    /**
+     * Loads the metadata of the class in question and all it's ancestors whose metadata
+     * is still not loaded.
+     *
+     * @param string $className
+     *
+     * @return array
+     */
+    protected function loadMetadata($className)
+    {
+        $classNames = [];
+        foreach ($this->getClassHierarchy($className) as $class) {
+            if (null !== $classMetadata = $this->driver->loadMetadataForClass($class)) {
+                $this->loadedMetadata[$class] = $classMetadata;
+                $classNames[] = $class;
+            }
+        }
+
+        return $classNames;
     }
 
     /**
      * @param string $className
      *
-     * @return ClassMetadata|MergeableClassMetadata|null
+     * @return array
      */
-    public function getMetadataForClass($className)
+    private function getClassHierarchy($className)
     {
-        $classMetadata = parent::getMetadataForClass($className);
-        if ($classMetadata !== null && $classMetadata instanceof ClassHierarchyMetadata) {
-            return $classMetadata->getOutsideClassMetadata();
-        }
+        $classes = array();
+        $refl = new \ReflectionClass($className);
 
-        return $classMetadata;
+        do {
+            $classes[] = $refl->getName();
+            $refl = $refl->getParentClass();
+        } while (false !== $refl);
+
+        return array_reverse($classes, false);
     }
 }

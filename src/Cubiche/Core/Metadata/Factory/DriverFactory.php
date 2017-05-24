@@ -12,8 +12,8 @@
 namespace Cubiche\Core\Metadata\Factory;
 
 use Cubiche\Core\Metadata\Driver\DriverInterface;
+use Cubiche\Core\Metadata\Locator\FileLocatorInterface;
 use Doctrine\Common\Annotations\Reader;
-use Metadata\Driver\FileLocatorInterface;
 
 /**
  * DriverFactory class.
