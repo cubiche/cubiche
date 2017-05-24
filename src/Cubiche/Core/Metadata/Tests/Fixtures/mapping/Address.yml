@@ -1,0 +1,11 @@
+Cubiche\Core\Metadata\Tests\Fixtures\Address:
+    fields:
+        id:
+            id:  true
+            type: AddressId
+        street:
+            type: StringLiteral
+        zipcode:
+            type: StringLiteral
+        city:
+            type: StringLiteral

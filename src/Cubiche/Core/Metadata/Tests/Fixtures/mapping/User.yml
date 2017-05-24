@@ -1,0 +1,20 @@
+Cubiche\Core\Metadata\Tests\Fixtures\User:
+    fields:
+        id:
+            id:  true
+            type: AddressId
+        name:
+            type: StringLiteral
+            name: fullName
+        username:
+            type: StringLiteral
+        age:
+            type: Integer
+        email:
+            type: EmailAddress
+        addresses:
+            type: ArraySet
+            of: Cubiche\Core\Metadata\Tests\Fixtures\Address
+        friends:
+            type: ArraySet
+            of: Cubiche\Core\Metadata\Tests\Fixtures\User

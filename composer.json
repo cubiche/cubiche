@@ -32,7 +32,10 @@
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",
-        "cubiche/cqt":                  "dev-master"
+        "cubiche/cqt":                  "dev-master",
+
+        "doctrine/common":              "2.6.1",
+        "symfony/yaml":                 "~2.3|~3.0"
     },
     "autoload": {
         "exclude-from-classmap": [

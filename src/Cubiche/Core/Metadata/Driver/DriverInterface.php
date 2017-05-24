@@ -10,13 +10,28 @@
 
 namespace Cubiche\Core\Metadata\Driver;
 
-use Metadata\Driver\AdvancedDriverInterface;
+use Cubiche\Core\Metadata\ClassMetadataInterface;
 
 /**
  * AbstractAnnotationDriver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DriverInterface extends AdvancedDriverInterface
+interface DriverInterface
 {
+    /**
+     * Loads the metadata for the specified class into the provided container.
+     *
+     * @param string $className
+     *
+     * @return ClassMetadataInterface|null
+     */
+    public function loadMetadataForClass($className);
+
+    /**
+     * Gets the names of all mapped classes known to this driver.
+     *
+     * @return array
+     */
+    public function getAllClassNames();
 }

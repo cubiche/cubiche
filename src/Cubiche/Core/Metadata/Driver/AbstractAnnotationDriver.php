@@ -56,6 +56,7 @@ abstract class AbstractAnnotationDriver implements DriverInterface
      * AbstractAnnotationDriver constructor.
      *
      * @param Reader $reader
+     * @param array  $paths
      */
     public function __construct(Reader $reader, array $paths = array())
     {

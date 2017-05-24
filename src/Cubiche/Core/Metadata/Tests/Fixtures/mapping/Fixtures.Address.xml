@@ -1,0 +1,9 @@
+<cubiche-mapping >
+    <entity name="Cubiche\Core\Metadata\Tests\Fixtures\Address">
+        <field fieldName="id" name="id" id="true" type="AddressId" />
+        <field fieldName="street" name="street" type="StringLiteral" />
+        <field fieldName="zipcode" name="zipcode" type="StringLiteral" />
+        <field fieldName="city" name="city" type="StringLiteral" />
+    </entity>
+    
+</cubiche-mapping>
