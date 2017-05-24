@@ -51,9 +51,11 @@ class MetadataEventListener
         ;
 
         foreach ($classMetadata->fieldMappings as $fieldName => &$mapping) {
-            $propertyMetadata = $cubicheClassMetadata->propertyMetadata($fieldName);
-            if ($propertyMetadata !== null) {
-                $mapping['cubiche:'.$propertyMetadata->getMetadata('namespace')] = $propertyMetadata;
+            if ($cubicheClassMetadata !== null) {
+                $propertyMetadata = $cubicheClassMetadata->propertyMetadata($fieldName);
+                if ($propertyMetadata !== null) {
+                    $mapping['cubiche:'.$propertyMetadata->getMetadata('namespace')] = $propertyMetadata;
+                }
             }
         }
     }

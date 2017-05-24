@@ -70,10 +70,6 @@ class MergeableDriver implements DriverInterface
             }
         }
 
-        if ($classMetadata === null) {
-            throw MappingException::classNotFound($className);
-        }
-
         return $classMetadata;
     }
 

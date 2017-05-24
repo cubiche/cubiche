@@ -43,6 +43,6 @@ abstract class XmlDriver extends AbstractXmlDriver
      */
     protected function getExtension()
     {
-        return '.mongodb-odm.xml';
+        return '.mongodb.xml';
     }
 }

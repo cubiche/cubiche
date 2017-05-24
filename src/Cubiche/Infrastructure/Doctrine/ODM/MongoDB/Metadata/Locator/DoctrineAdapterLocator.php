@@ -10,9 +10,9 @@
 
 namespace Cubiche\Infrastructure\Doctrine\ODM\MongoDB\Metadata\Locator;
 
+use Cubiche\Core\Metadata\Locator\FileLocatorInterface;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
-use Metadata\Driver\FileLocatorInterface;
 
 /**
  * DoctrineAdapterLocator class.
@@ -37,19 +37,24 @@ class DoctrineAdapterLocator implements FileLocatorInterface
     }
 
     /**
-     * @param \ReflectionClass $class
-     * @param string           $extension
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
-    public function findFileForClass(\ReflectionClass $class, $extension)
+    public function findMappingFile($className, $extension)
     {
         $this->locator->setFileExtension($extension);
 
         try {
-            return $this->locator->findMappingFile($class->getName());
+            return $this->locator->findMappingFile($className);
         } catch (MappingException $e) {
             return;
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllClassNames($extension)
+    {
+        return $this->locator->getAllClassNames();
     }
 }

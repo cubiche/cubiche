@@ -88,7 +88,7 @@ abstract class AbstractFileDriver implements DriverInterface
 
         $result = $this->loadMappingFile($file);
         if (!isset($result[$className])) {
-            throw MappingException::mappingNotFound($className, $file);
+            throw MappingException::invalidMapping($className, $file);
         }
 
         $this->classCache = array_merge($this->classCache, $result);

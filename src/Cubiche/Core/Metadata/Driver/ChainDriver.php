@@ -12,7 +12,6 @@ namespace Cubiche\Core\Metadata\Driver;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
-use Cubiche\Core\Metadata\Exception\MappingException;
 
 /**
  * ChainDriver class.
@@ -73,7 +72,7 @@ class ChainDriver implements DriverInterface
             return $this->defaultDriver->loadMetadataForClass($className);
         }
 
-        throw MappingException::classNotFound($className);
+        return;
     }
 
     /**

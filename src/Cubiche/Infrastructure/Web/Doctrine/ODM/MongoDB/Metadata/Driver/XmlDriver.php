@@ -50,7 +50,7 @@ class XmlDriver extends BaseXmlDriver
                 if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
                     throw MappingException::inField(
                         'The cubiche:'.$type.' configuration is only for field tags that is not an id',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
@@ -60,19 +60,19 @@ class XmlDriver extends BaseXmlDriver
                 ) {
                     throw MappingException::inField(
                         'The cubiche:'.$type.' parent should have a "type" value equal to CubicheType',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata = new PropertyMetadata($classMetadata->className(), $fieldName);
                 $propertyMetadata->addMetadata('namespace', $type);
 
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             } else {
                 throw MappingException::inField(
                     'The cubiche:'.$type.' configuration is only for id fields',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }

@@ -41,7 +41,7 @@ class XmlDriver extends BaseXmlDriver
             if (!isset($itemMapping['type'])) {
                 throw MappingException::inField(
                     'The cubiche:id definition should have a "type" value',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }
@@ -54,12 +54,12 @@ class XmlDriver extends BaseXmlDriver
                 ) {
                     throw MappingException::inField(
                         'The cubiche:id configuration is only for id fields',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata = new PropertyMetadata($classMetadata->className(), $fieldName);
 
                 $propertyMetadata->addMetadata('namespace', 'id');
                 $propertyMetadata->addMetadata('type', $idType);
@@ -68,7 +68,7 @@ class XmlDriver extends BaseXmlDriver
             } else {
                 throw MappingException::inField(
                     'The cubiche:id configuration is only for id fields',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }

@@ -141,7 +141,7 @@ class EventListener
                 if ($propertyMetadata->getMetadata('of') === null) {
                     throw MappingException::inField(
                         'The "of" option in '.$propertyMetadata->getMetadata('type').' type is missing',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
