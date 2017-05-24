@@ -16,6 +16,11 @@ use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Core\Metadata\Tests\Fixtures\User;
 use Cubiche\Core\Metadata\Tests\Units\TestCase;
+use mageekguy\atoum\adapter as Adapter;
+use mageekguy\atoum\annotations\extractor as Extractor;
+use mageekguy\atoum\asserter\generator as Generator;
+use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * CacheTestCase class.
@@ -26,7 +31,41 @@ use Cubiche\Core\Metadata\Tests\Units\TestCase;
  */
 abstract class CacheTestCase extends TestCase
 {
-    protected $cacheDirectory = __DIR__.'/Cache';
+    /**
+     * @var string
+     */
+    protected $cacheDirectory;
+
+    /**
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
+     * @param Analyzer  $analyzer
+     */
+    public function __construct(
+        Adapter $adapter = null,
+        Extractor $annotationExtractor = null,
+        Generator $asserterGenerator = null,
+        Manager $assertionManager = null,
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
+    ) {
+        parent::__construct(
+            $adapter,
+            $annotationExtractor,
+            $asserterGenerator,
+            $assertionManager,
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
+        );
+
+        $this->cacheDirectory = __DIR__.'/Cache';
+    }
 
     /**
      * @return CacheInterface

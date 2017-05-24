@@ -17,6 +17,11 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
+use mageekguy\atoum\adapter as Adapter;
+use mageekguy\atoum\annotations\extractor as Extractor;
+use mageekguy\atoum\asserter\generator as Generator;
+use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 
 /**
  * AbstractAnnotationDriverTests class.
@@ -28,7 +33,38 @@ class AbstractAnnotationDriverTests extends DriverTestCase
     /**
      * @var string
      */
-    protected $cacheDirectory = __DIR__.'/../Driver/Cache';
+    protected $cacheDirectory;
+
+    /**
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param \Closure  $reflectionClassFactory
+     * @param \Closure  $phpExtensionFactory
+     * @param Analyzer  $analyzer
+     */
+    public function __construct(
+        Adapter $adapter = null,
+        Extractor $annotationExtractor = null,
+        Generator $asserterGenerator = null,
+        Manager $assertionManager = null,
+        \Closure $reflectionClassFactory = null,
+        \Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
+    ) {
+        parent::__construct(
+            $adapter,
+            $annotationExtractor,
+            $asserterGenerator,
+            $assertionManager,
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
+        );
+
+        $this->cacheDirectory = __DIR__.'/../Driver/Cache';
+    }
 
     /**
      * Create the cache directory.
