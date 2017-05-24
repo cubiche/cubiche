@@ -55,6 +55,6 @@ class DoctrineAdapterLocator implements FileLocatorInterface
      */
     public function getAllClassNames($extension)
     {
-        return $this->locator->getAllClassNames();
+        return $this->locator->getAllClassNames(null);
     }
 }
