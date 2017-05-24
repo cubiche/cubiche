@@ -11,10 +11,12 @@
 
 namespace Cubiche\Core\Metadata\Tests\Units\Driver;
 
+use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Metadata\Driver\MergeableDriver;
 use Cubiche\Core\Metadata\Locator\DefaultFileLocator;
 use Cubiche\Core\Metadata\Tests\Fixtures\Driver\XmlDriver;
 use Cubiche\Core\Metadata\Tests\Fixtures\Driver\YamlDriver;
+use Cubiche\Core\Metadata\Tests\Fixtures\User;
 
 /**
  * MergeableDriverTests class.
@@ -39,5 +41,54 @@ class MergeableDriverTests extends DriverTestCase
         );
 
         return new MergeableDriver([$ymlDriver, $xmlDriver]);
+    }
+
+    /**
+     * Test loadMetadataForClass method.
+     */
+    public function testLoadMetadataForClass()
+    {
+        $this
+            ->given($driver = $this->createDriver())
+            ->then()
+                ->variable($driver->loadMetadataForClass('Cubiche\Core\Metadata\Tests\Fixtures\Post'))
+                    ->isNull()
+                ->variable($driver->loadMetadataForClass('Cubiche\Core\Metadata\Tests\Fixtures\Blog'))
+                    ->isNull()
+        ;
+
+        $this
+            ->given($driver = $this->createDriver())
+            ->when($classMetadata = $driver->loadMetadataForClass(User::class))
+            ->then()
+                ->object($classMetadata)
+                    ->isInstanceOf(ClassMetadata::class)
+                ->array($classMetadata->propertiesMetadata())
+                    ->hasSize(7)
+                    ->hasKey('id')
+                    ->hasKey('name')
+                    ->hasKey('username')
+                    ->hasKey('age')
+                    ->hasKey('email')
+                    ->hasKey('addresses')
+                    ->hasKey('friends')
+                ->object($propertyMetadata = $classMetadata->propertyMetadata('id'))
+                    ->isNotNull()
+                ->boolean($propertyMetadata->getMetadata('identifier'))
+                    ->isTrue()
+                ->string($propertyMetadata->getMetadata('name'))
+                    ->isEqualTo('_id')
+                ->string($classMetadata->propertyMetadata('name')->getMetadata('name'))
+                    ->isEqualTo('fullName')
+                ->string($classMetadata->propertyMetadata('addresses')->getMetadata('type'))
+                    ->isEqualTo('ArraySet')
+                ->string($classMetadata->propertyMetadata('addresses')->getMetadata('of'))
+                    ->isEqualTo('Cubiche\Core\Metadata\Tests\Fixtures\Address')
+                ->and()
+                ->when($classMetadata = $driver->loadMetadataForClass(User::class))
+                ->then()
+                    ->object($classMetadata)
+                        ->isInstanceOf(ClassMetadata::class)
+        ;
     }
 }

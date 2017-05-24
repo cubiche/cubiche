@@ -60,27 +60,12 @@ class MappingException extends RuntimeException
      *
      * @return MappingException
      */
-    public static function mappingNotFound($className, $fileName)
-    {
-        return new static(sprintf(
-            'No mapping found for class %s in file %s.',
-            $className,
-            $fileName
-        ));
-    }
-
-    /**
-     * @param string $className
-     * @param string $fileName
-     *
-     * @return MappingException
-     */
     public static function invalidMapping($className, $fileName)
     {
         return new static(sprintf(
-            'Invalid mapping for class %s in file %s.',
-            $className,
-            $fileName
+            'Invalid mapping file %s for class %s.',
+            $fileName,
+            $className
         ));
     }
 }

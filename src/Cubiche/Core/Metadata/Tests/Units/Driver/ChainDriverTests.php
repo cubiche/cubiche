@@ -12,7 +12,6 @@
 namespace Cubiche\Core\Metadata\Tests\Units\Driver;
 
 use Cubiche\Core\Metadata\Driver\ChainDriver;
-use Cubiche\Core\Metadata\Exception\MappingException;
 use Cubiche\Core\Metadata\Locator\DefaultFileLocator;
 use Cubiche\Core\Metadata\Tests\Fixtures\Address;
 use Cubiche\Core\Metadata\Tests\Fixtures\Driver\XmlDriver;
@@ -103,9 +102,8 @@ class ChainDriverTests extends DriverTestCase
         $this
             ->given($driver = $this->createEmptyDriver())
             ->then()
-                ->exception(function () use ($driver) {
-                    $driver->loadMetadataForClass(User::class);
-                })->isInstanceOf(MappingException::class)
+                ->variable($driver->loadMetadataForClass(User::class))
+                    ->isNull()
         ;
     }
 

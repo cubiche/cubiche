@@ -42,7 +42,7 @@ class XmlDriver extends BaseXmlDriver
             if (!isset($itemMapping['type'])) {
                 throw MappingException::inField(
                     'The cubiche:valueobject definition should have a "type" value',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }
@@ -52,7 +52,7 @@ class XmlDriver extends BaseXmlDriver
                 if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
                     throw MappingException::inField(
                         'The cubiche:valueobject configuration is only for field tags that is not an id',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
@@ -62,12 +62,12 @@ class XmlDriver extends BaseXmlDriver
                 ) {
                     throw MappingException::inField(
                         'The cubiche:valueobject parent should have a "type" value equal to CubicheType',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata = new PropertyMetadata($classMetadata->className(), $fieldName);
 
                 $propertyMetadata->addMetadata('namespace', 'valueobject');
                 $propertyMetadata->addMetadata('type', $valueObjectType);
@@ -76,7 +76,7 @@ class XmlDriver extends BaseXmlDriver
             } else {
                 throw MappingException::inField(
                     'The cubiche:valueobject configuration is only for field tags that is not an id',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }

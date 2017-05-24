@@ -37,7 +37,7 @@ class XmlDriver extends BaseXmlDriver
             if (!isset($itemMapping['type'])) {
                 throw MappingException::inField(
                     'The cubiche:collection definition should have a "type" value',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }
@@ -59,7 +59,7 @@ class XmlDriver extends BaseXmlDriver
                 if (isset($fieldMapping['id']) && $fieldMapping['id'] !== false) {
                     throw MappingException::inField(
                         'The cubiche:collection configuration is only for field tags that is not an id',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
@@ -69,12 +69,12 @@ class XmlDriver extends BaseXmlDriver
                 ) {
                     throw MappingException::inField(
                         'The cubiche:collection parent should have a "type" value equal to CubicheType',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $fieldName);
+                $propertyMetadata = new PropertyMetadata($classMetadata->className(), $fieldName);
 
                 $propertyMetadata->addMetadata('namespace', 'collection');
                 $propertyMetadata->addMetadata('type', $collectionType);
@@ -89,12 +89,12 @@ class XmlDriver extends BaseXmlDriver
                 } else {
                     throw MappingException::inField(
                         'Cannot infer a field',
-                        $classMetadata->name,
+                        $classMetadata->className(),
                         $fieldName
                     );
                 }
 
-                $propertyMetadata = new PropertyMetadata($classMetadata->name, $field);
+                $propertyMetadata = new PropertyMetadata($classMetadata->className(), $field);
 
                 $propertyMetadata->addMetadata('namespace', 'collection');
                 $propertyMetadata->addMetadata('type', $collectionType);
@@ -105,7 +105,7 @@ class XmlDriver extends BaseXmlDriver
             } else {
                 throw MappingException::inField(
                     'The cubiche:collection configuration is only for field, embed-many or reference-many tags',
-                    $classMetadata->name,
+                    $classMetadata->className(),
                     $fieldName
                 );
             }
