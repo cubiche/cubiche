@@ -101,7 +101,7 @@ class ArraySet extends ArrayCollection implements ArraySetInterface
      */
     public function remove($element)
     {
-        $criteria = Criteria::same($element);
+        $criteria = Criteria::eq($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 unset($this->elements[$key]);
