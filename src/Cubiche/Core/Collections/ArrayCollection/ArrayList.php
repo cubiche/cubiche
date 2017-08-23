@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\ArrayCollection;
 
 use Cubiche\Core\Collections\DataSource\ArrayDataSource;
@@ -50,7 +51,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function remove($element)
     {
-        $criteria = Criteria::same($element);
+        $criteria = Criteria::eq($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 unset($this->elements[$key]);
@@ -101,7 +102,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function contains($element)
     {
-        $criteria = Criteria::same($element);
+        $criteria = Criteria::eq($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 return true;
@@ -116,7 +117,7 @@ class ArrayList extends ArrayCollection implements ArrayListInterface
      */
     public function indexOf($element)
     {
-        $criteria = Criteria::same($element);
+        $criteria = Criteria::eq($element);
         foreach ($this->elements as $key => $value) {
             if ($criteria->evaluate($value)) {
                 return $key;
