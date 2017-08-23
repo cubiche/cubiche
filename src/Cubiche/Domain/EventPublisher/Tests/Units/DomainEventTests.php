@@ -22,6 +22,24 @@ use Cubiche\Domain\EventPublisher\Tests\Fixtures\IncrementCounterEvent;
 class DomainEventTests extends TestCase
 {
     /**
+     * Test eventName method.
+     */
+    public function testEventName()
+    {
+        $this
+            ->given($event = new DomainEvent())
+            ->then()
+                ->string($event->eventName())
+                    ->isEqualTo(DomainEvent::class)
+                ->and()
+                ->when($event = new DomainEvent('on_push'))
+                ->then()
+                    ->string($event->eventName())
+                        ->isEqualTo('on_push')
+        ;
+    }
+
+    /**
      * Test OccurredOn method.
      */
     public function testOccurredOn()
@@ -31,6 +49,24 @@ class DomainEventTests extends TestCase
             ->then()
                 ->object($event->occurredOn())
                     ->isInstanceOf(\DateTime::class)
+        ;
+    }
+
+    /**
+     * Test StopPropagation method.
+     */
+    public function testStopPropagation()
+    {
+        $this
+            ->given($event = new DomainEvent())
+            ->then()
+                ->boolean($event->isPropagationStopped())
+                    ->isFalse()
+                ->and()
+                ->when($event->stopPropagation())
+                ->then()
+                    ->boolean($event->isPropagationStopped())
+                        ->isTrue()
         ;
     }
 

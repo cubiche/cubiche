@@ -32,9 +32,13 @@ class DomainEvent extends Event implements DomainEventInterface
 
     /**
      * DomainEvent constructor.
+     *
+     * @param string|null $eventName
      */
-    public function __construct()
+    public function __construct($eventName = null)
     {
+        parent::__construct($eventName);
+
         $this->setMetadata('occurredOn', new DateTime());
         $this->setMetadata('eventType', parent::eventName());
         $this->setMetadata('propagationStopped', parent::isPropagationStopped());
