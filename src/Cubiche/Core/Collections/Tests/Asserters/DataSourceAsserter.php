@@ -7,10 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Asserters;
 
 use Cubiche\Core\Collections\DataSource\DataSourceInterface;
-use mageekguy\atoum\asserters\object as ObjectAsserter;
+use mageekguy\atoum\asserters\phpObject as ObjectAsserter;
 
 /**
  * DataSourceAsserter class.

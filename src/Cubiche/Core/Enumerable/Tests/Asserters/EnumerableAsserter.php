@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Enumerable\Tests\Asserters;
 
 use Cubiche\Core\Enumerable\EnumerableInterface;
-use mageekguy\atoum\asserters\object as ObjectAsserter;
+use mageekguy\atoum\asserters\phpObject as ObjectAsserter;
 use Cubiche\Core\Equatable\EqualityComparer;
 
 /**

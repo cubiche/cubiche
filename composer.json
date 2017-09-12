@@ -28,11 +28,11 @@
         "react/event-loop":             "^0.4.2",
         "respect/validation":           "1.1.12",
         "jms/metadata":                 "~1.1",
-        "webmozart/console":            "~1.0@beta"
+        "webmozart/console":            "~1.0@beta",
+        "cubiche/cqt": "dev-master"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",
-        "cubiche/cqt":                  "dev-master",
 
         "doctrine/common":              "2.6.1",
         "symfony/yaml":                 "~2.3|~3.0"
