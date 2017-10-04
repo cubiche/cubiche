@@ -62,6 +62,24 @@ interface ClassMetadataInterface
     public function propertyMetadata($propertyName);
 
     /**
+     * @return array
+     */
+    public function metadata();
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function addMetadata($key, $value);
+
+    /**
+     * @param string $key
+     *
+     * @return mixed|null
+     */
+    public function getMetadata($key);
+
+    /**
      * @param ClassMetadataInterface $object
      *
      * @return ClassMetadataInterface

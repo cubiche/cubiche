@@ -63,9 +63,9 @@ class ClassMetadataTests extends TestCase
     }
 
     /**
-     * Test AddMethodMetadata method.
+     * Test methodMetadata methods.
      */
-    public function testAddMethodMetadata()
+    public function testMethodMetadata()
     {
         $this
             ->given($className = User::class)
@@ -85,9 +85,9 @@ class ClassMetadataTests extends TestCase
     }
 
     /**
-     * Test AddPropertyMetadata method.
+     * Test propertyMetadata methods.
      */
-    public function testAddPropertyMetadata()
+    public function testPropertyMetadata()
     {
         $this
             ->given($className = User::class)
@@ -107,6 +107,27 @@ class ClassMetadataTests extends TestCase
     }
 
     /**
+     * Test metadata methods.
+     */
+    public function testMetadata()
+    {
+        $this
+            ->given($className = User::class)
+            ->and($classMetadata = $this->createClassMetadata($className))
+            ->and($classMetadata->addMetadata('collection', 'some_collection_name'))
+            ->and($classMetadata->addMetadata('embedded', false))
+            ->then()
+                ->array($classMetadata->metadata())
+                    ->hasKey('collection')
+                    ->hasKey('embedded')
+                ->boolean($classMetadata->getMetadata('embedded'))
+                    ->isFalse()
+                ->string($classMetadata->getMetadata('collection'))
+                    ->isEqualTo('some_collection_name')
+        ;
+    }
+
+    /**
      * Test merge method.
      */
     public function testMerge()
@@ -118,6 +139,7 @@ class ClassMetadataTests extends TestCase
             ->and($classMetadata1 = $this->createClassMetadata(User::class))
             ->and($classMetadata1->addPropertyMetadata(new PropertyMetadata(User::class, 'age')))
             ->and($classMetadata1->addMethodMetadata(new MethodMetadata(User::class, 'addresses')))
+            ->and($classMetadata1->addMetadata('collection', 'some_collection_name'))
             ->then()
                 ->array($classMetadata->propertiesMetadata())
                     ->hasSize(1)
@@ -125,6 +147,8 @@ class ClassMetadataTests extends TestCase
                 ->array($classMetadata->methodsMetadata())
                     ->hasSize(1)
                     ->notHasKey('addresses')
+                ->array($classMetadata->metadata())
+                    ->notHasKey('collection')
                 ->and()
                 ->when($classMetadata->merge($classMetadata1))
                 ->then()
@@ -134,6 +158,8 @@ class ClassMetadataTests extends TestCase
                     ->array($classMetadata->methodsMetadata())
                         ->hasSize(2)
                         ->hasKey('addresses')
+                    ->string($classMetadata->getMetadata('collection'))
+                        ->isEqualTo('some_collection_name')
         ;
     }
 

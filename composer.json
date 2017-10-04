@@ -29,7 +29,8 @@
         "respect/validation":           "1.1.12",
         "jms/metadata":                 "~1.1",
         "webmozart/console":            "~1.0@beta",
-        "cubiche/cqt": "dev-master"
+        "cubiche/cqt": "dev-master",
+        "alcaeus/mongo-php-adapter": "^1.1@dev"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",

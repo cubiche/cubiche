@@ -37,12 +37,21 @@ class FileCacheTests extends CacheTestCase
             ->given($invalidCacheDir = __DIR__.'/Invalid')
             ->given($nonWritableCacheDir = '/root')
             ->then()
-                ->exception(function () use ($invalidCacheDir) {
-                    new FileCache($invalidCacheDir);
-                })->isInstanceOf(\InvalidArgumentException::class)
                 ->exception(function () use ($nonWritableCacheDir) {
                     new FileCache($nonWritableCacheDir);
                 })->isInstanceOf(\InvalidArgumentException::class)
+                ->boolean(is_dir($invalidCacheDir))
+                    ->isFalse()
+                ->and()
+                ->when(new FileCache($invalidCacheDir))
+                ->then()
+                    ->boolean(is_dir($invalidCacheDir))
+                        ->isTrue()
+                    ->and()
+                    ->when($this->rmdir($invalidCacheDir))
+                    ->then()
+                        ->boolean(is_dir($invalidCacheDir))
+                            ->isFalse()
         ;
     }
 }
