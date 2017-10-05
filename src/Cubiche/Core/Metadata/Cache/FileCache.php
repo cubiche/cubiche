@@ -32,7 +32,7 @@ class FileCache implements CacheInterface
     public function __construct($cacheDirectory)
     {
         if (!is_dir($cacheDirectory)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist.', $cacheDirectory));
+            mkdir($cacheDirectory, 0755, true);
         }
 
         if (!is_writable($cacheDirectory)) {

@@ -41,6 +41,11 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     protected $propertiesMetadata;
 
     /**
+     * @var ArrayHashMapInterface
+     */
+    protected $metadata;
+
+    /**
      * ClassMetadata constructor.
      *
      * @param string $className
@@ -52,6 +57,7 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
         $this->reflection = new \ReflectionClass($className);
         $this->methodsMetadata = new ArrayHashMap();
         $this->propertiesMetadata = new ArrayHashMap();
+        $this->metadata = new ArrayHashMap();
     }
 
     /**
@@ -123,6 +129,33 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     }
 
     /**
+     * @return array
+     */
+    public function metadata()
+    {
+        return $this->metadata->toArray();
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function addMetadata($key, $value)
+    {
+        $this->metadata->set($key, $value);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed|null
+     */
+    public function getMetadata($key)
+    {
+        return $this->metadata->get($key);
+    }
+
+    /**
      * @param ClassMetadataInterface $object
      *
      * @return ClassMetadataInterface
@@ -139,6 +172,10 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
         foreach ($object->propertiesMetadata() as $propertyName => $metadata) {
             $this->addPropertyMetadata($metadata);
         }
+
+        foreach ($object->metadata() as $key => $value) {
+            $this->addMetadata($key, $value);
+        }
     }
 
     /**
@@ -150,6 +187,7 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
             $this->className,
             $this->methodsMetadata->toArray(),
             $this->propertiesMetadata->toArray(),
+            $this->metadata->toArray(),
         ));
     }
 
@@ -161,10 +199,13 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
         list(
             $this->className,
             $methodsMetadata,
-            $propertiesMetadata) = unserialize($str);
+            $propertiesMetadata,
+            $metadata
+        ) = unserialize($str);
 
         $this->reflection = new \ReflectionClass($this->className);
         $this->methodsMetadata = new ArrayHashMap($methodsMetadata);
         $this->propertiesMetadata = new ArrayHashMap($propertiesMetadata);
+        $this->metadata = new ArrayHashMap($metadata);
     }
 }
