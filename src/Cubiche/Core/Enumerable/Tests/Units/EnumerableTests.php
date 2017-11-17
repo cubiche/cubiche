@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Enumerable\Tests\Units;
 
 use Cubiche\Core\Enumerable\Enumerable;
@@ -76,6 +77,15 @@ class EnumerableTests extends AbstractEnumerableTestCase
                 ->enumerable($empty)
                     ->isEmpty()
         ;
+    }
+    /**
+     * Test contains method.
+     *
+     * @dataProvider containsDataProvider
+     */
+    public function testContains($value, callable $equalityComparer = null, $expected = true)
+    {
+        $this->skip('skipped');
     }
 
     /**

@@ -8,14 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventDispatcher;
+
+use Cubiche\Core\Bus\Message;
 
 /**
  * Event class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Event implements EventInterface
+class Event extends Message implements EventInterface
 {
     /**
      * The event name.
@@ -38,6 +41,8 @@ class Event implements EventInterface
      */
     public function __construct($eventName = null)
     {
+        parent::__construct();
+
         $this->eventName = $eventName;
     }
 

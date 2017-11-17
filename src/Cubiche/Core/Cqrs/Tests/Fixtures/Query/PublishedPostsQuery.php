@@ -7,16 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Query;
 
-use Cubiche\Core\Cqrs\Query\QueryInterface;
+use Cubiche\Core\Cqrs\Query\Query;
 
 /**
  * PublishedPostsQuery class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PublishedPostsQuery implements QueryInterface
+class PublishedPostsQuery extends Query
 {
     /**
      * @var \DateTime

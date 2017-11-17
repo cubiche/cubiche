@@ -14,9 +14,10 @@ namespace Cubiche\Domain\Repository\Tests\Units;
 use Cubiche\Core\Collections\Tests\Units\CollectionTestCase;
 use Cubiche\Core\Comparable\Comparator;
 use Cubiche\Core\Specification\Criteria;
+use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
-use Cubiche\Domain\Repository\Tests\Fixtures\User;
-use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
+use Cubiche\Domain\Repository\Tests\Fixtures\Address;
+use Cubiche\Domain\Repository\Tests\Fixtures\AddressId;
 use mageekguy\atoum\adapter as Adapter;
 use mageekguy\atoum\annotations\extractor as Extractor;
 use mageekguy\atoum\asserter\generator as Generator;
@@ -116,7 +117,14 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
      */
     protected function randomValue()
     {
-        return new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100), $this->faker->email);
+        return new Address(
+            AddressId::next(),
+            'Address-'.\rand(1, 100),
+            $this->faker->streetName,
+            $this->faker->postcode,
+            $this->faker->city,
+            Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
+        );
     }
 
     /**
@@ -124,7 +132,14 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
      */
     protected function uniqueValue()
     {
-        return new User(UserId::next(), 'Methuselah', 1000, $this->faker->email);
+        return new Address(
+            AddressId::next(),
+            'My Address',
+            'My Street',
+            'BG23',
+            'Bigtown',
+            Coordinate::fromLatLng(38.8951, -77.0364)
+        );
     }
 
     /**
@@ -132,7 +147,7 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
      */
     protected function comparator()
     {
-        return Comparator::by(Criteria::property('age'));
+        return Comparator::by(Criteria::property('name'));
     }
 
     /**
@@ -168,27 +183,18 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
         ;
 
         $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->persist($id);
-                })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-
-        $this
             ->given($repository = $this->emptyRepository())
             ->and($value = $this->randomValue())
-            ->and($age = $value->age())
-            ->when(function () use ($repository, $value, $age) {
+            ->and($name = $value->name())
+            ->when(function () use ($repository, $value, $name) {
                 $repository->persist($value);
-                $value->setAge($age + 1);
+                $value->setName('Ivan');
                 $repository->persist($value);
             })
             ->then()
                 ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
-                    ->integer($other->age())
-                        ->isEqualTo($age + 1)
+                    ->string($other->name())
+                        ->isEqualTo('Ivan')
         ;
     }
 
@@ -217,26 +223,26 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
 
         $this
             ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
+            ->given($id = AddressId::next())
             ->then()
                 ->exception(function () use ($repository, $id) {
                     $repository->persistAll([$id]);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(\TypeError::class)
         ;
 
         $this
             ->given($repository = $this->emptyRepository())
             ->and($value = $this->randomValue())
-            ->and($age = $value->age())
-            ->when(function () use ($repository, $value, $age) {
-                $repository->persistAll([$value]);
-                $value->setAge($age + 1);
-                $repository->persistAll([$value]);
+            ->and($name = $value->name())
+            ->when(function () use ($repository, $value, $name) {
+                $repository->persist($value);
+                $value->setName('Ivan');
+                $repository->persist($value);
             })
             ->then()
-                ->object($other = $repository->get($value->id()))
-                    ->integer($other->age())
-                        ->isEqualTo($age + 1)
+                ->object($other = $repository->findOne(Criteria::property('id')->eq($value->id())))
+                    ->string($other->name())
+                        ->isEqualTo('Ivan')
         ;
     }
 
@@ -257,15 +263,6 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
             ->then()
                 ->variable($repository->get($unique->id()))
                     ->isNull()
-        ;
-
-        $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->remove($id);
-                })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }
 

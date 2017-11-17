@@ -7,16 +7,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Tests\Fixtures\Command;
 
-use Cubiche\Core\Cqrs\Command\CommandInterface;
+use Cubiche\Core\Cqrs\Command\Command;
 
 /**
  * CreateBlogCommand class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CreateBlogCommand implements CommandInterface
+class CreateBlogCommand extends Command
 {
     /**
      * @var string

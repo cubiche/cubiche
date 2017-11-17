@@ -11,7 +11,6 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Core\Cqrs\WriteModelInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 use Cubiche\Domain\Model\AggregateRootInterface;
@@ -21,7 +20,7 @@ use Cubiche\Domain\Model\AggregateRootInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventSourcedAggregateRootInterface extends AggregateRootInterface, WriteModelInterface
+interface EventSourcedAggregateRootInterface extends AggregateRootInterface
 {
     /**
      * @return DomainEventInterface[]

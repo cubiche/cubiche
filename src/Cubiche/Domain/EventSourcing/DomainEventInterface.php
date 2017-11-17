@@ -22,11 +22,6 @@ use Cubiche\Domain\Model\IdInterface;
 interface DomainEventInterface extends BaseDomainEventInterface
 {
     /**
-     * @return DomainEventId
-     */
-    public function eventId();
-
-    /**
      * @return IdInterface
      */
     public function aggregateId();

@@ -11,8 +11,8 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel;
 
-use Cubiche\Core\Cqrs\ReadModelInterface;
 use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\Model\ReadModelInterface;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
@@ -22,6 +22,11 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
  */
 class PublishedPost extends AggregateRoot implements ReadModelInterface
 {
+    /**
+     * @var string
+     */
+    protected $title;
+
     /**
      * Post constructor.
      *
@@ -49,5 +54,24 @@ class PublishedPost extends AggregateRoot implements ReadModelInterface
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize()
+    {
+        return array(
+            'id' => $this->id()->toNative(),
+            'title' => $this->title,
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function deserialize(array $data)
+    {
+        return new self(PostId::fromNative($data['id']), $data['title']);
     }
 }

@@ -7,10 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\Tests\Units\InMemory;
 
 use Cubiche\Domain\Repository\InMemory\InMemoryQueryRepository;
-use Cubiche\Domain\Repository\Tests\Fixtures\User;
 use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Domain\Repository\Tests\Units\QueryRepositoryTestCase;
 
@@ -27,19 +27,19 @@ class InMemoryQueryRepositoryTests extends QueryRepositoryTestCase
      */
     protected function emptyRepository()
     {
-        return new InMemoryQueryRepository(User::class);
+        return new InMemoryQueryRepository();
     }
 
-    /**
-     * Test create.
-     */
-    public function testCreate()
-    {
-        $this
-            ->exception(function () {
-                new InMemoryQueryRepository(UserId::class);
-            })
-            ->isInstanceOf(\LogicException::class)
-        ;
-    }
+//    /**
+//     * Test create.
+//     */
+//    public function testCreate()
+//    {
+//        $this
+//            ->exception(function () {
+//                new InMemoryQueryRepository(UserId::class);
+//            })
+//            ->isInstanceOf(\LogicException::class)
+//        ;
+//    }
 }

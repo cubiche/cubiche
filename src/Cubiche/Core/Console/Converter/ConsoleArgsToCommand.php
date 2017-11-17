@@ -7,10 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Console\Converter;
 
 use Cubiche\Core\Console\Command\ConsoleCommandInterface;
 use Cubiche\Core\Cqrs\Command\CommandConverterInterface;
+use Cubiche\Core\Cqrs\Command\CommandInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Webmozart\Console\Api\Args\Args;
 use Webmozart\Console\Api\Args\Format\ArgsFormat;
@@ -59,7 +61,15 @@ class ConsoleArgsToCommand implements CommandConverterInterface
             $instance = $reflector->newInstanceWithoutConstructor();
 
             foreach ($reflector->getProperties() as $property) {
-                if ($instance instanceof ConsoleCommandInterface && $property->getName() == 'io') {
+                if ($instance instanceof ConsoleCommandInterface &&
+                    (in_array($property->getName(), array('id', 'io')))
+                ) {
+                    continue;
+                }
+
+                if ($instance instanceof CommandInterface &&
+                    (in_array($property->getName(), array('id')))
+                ) {
                     continue;
                 }
 

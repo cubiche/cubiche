@@ -19,6 +19,7 @@ use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Utils\NameResolver;
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 
@@ -71,7 +72,7 @@ class AggregateRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function persist($element)
+    public function persist(AggregateRootInterface $element)
     {
         if (!$element instanceof EventSourcedAggregateRootInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -97,7 +98,7 @@ class AggregateRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($element)
+    public function remove(AggregateRootInterface $element)
     {
         if (!$element instanceof EventSourcedAggregateRootInterface) {
             throw new \InvalidArgumentException(sprintf(

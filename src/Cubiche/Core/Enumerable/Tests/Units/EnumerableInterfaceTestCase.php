@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Enumerable\Tests\Units;
 
 use Cubiche\Core\Comparable\Comparator;
@@ -426,7 +427,6 @@ abstract class EnumerableInterfaceTestCase extends TestCase
         return array(
             array($value, null, true),
             array($value, $this->alwaysFalseCallable(), false),
-            array(new Value(\uniqid()), null, false),
             array(new Value(\uniqid()), $this->alwaysTrueCallable(), true),
         );
     }

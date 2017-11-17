@@ -12,6 +12,7 @@
 namespace Cubiche\Core\Serializer\Tests\Fixtures;
 
 use Cubiche\Core\Serializer\SerializableInterface;
+use DateTime;
 
 /**
  * Person class.
@@ -26,36 +27,20 @@ class Person implements SerializableInterface
     protected $name;
 
     /**
-     * @var Address
+     * @var \DateTime
      */
-    protected $address;
+    protected $createdAt;
 
     /**
      * Person constructor.
      *
-     * @param string  $name
-     * @param Address $address
+     * @param string        $name
+     * @param DateTime|null $createdAt
      */
-    public function __construct($name, Address $address)
+    public function __construct($name, DateTime $createdAt = null)
     {
         $this->setName($name);
-        $this->setAddress($address);
-    }
-
-    /**
-     * @return Address
-     */
-    public function address()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param Address $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
+        $this->createdAt = $createdAt ? $createdAt : new DateTime();
     }
 
     /**
@@ -75,14 +60,51 @@ class Person implements SerializableInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function createdAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * @param Person $other
      *
      * @return bool
      */
     public function equals(Person $other)
     {
-        return $this->address() == $other->address() &&
-            $this->name() == $other->name()
+        return $this->name() == $other->name() &&
+            $this->createdAt() == $other->createdAt()
         ;
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize()
+    {
+        return array(
+            'name' => $this->name(),
+            'createdAt' => $this->createdAt,
+        );
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data)
+    {
+        return new self($data['name'], $data['createdAt']);
     }
 }

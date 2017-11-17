@@ -17,4 +17,15 @@ namespace Cubiche\Core\Serializer;
  */
 interface SerializableInterface
 {
+    /**
+     * @return array
+     */
+    public function serialize();
+
+    /**
+     * @param array $data
+     *
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data);
 }

@@ -1,0 +1,12 @@
+<cubiche-mapping>
+    <aggregate-root name="Cubiche\Core\Serializer\Tests\Fixtures\Address">
+        <field fieldName="name" name="fullName" type="string" />
+        <field fieldName="street" name="street" type="string" />
+        <field fieldName="number" name="number" type="integer" />
+        <field fieldName="zipcode" name="zipcode" type="string" />
+        <field fieldName="city" name="city" type="string" />
+
+        <field fieldName="contacts" name="contacts" type="array" of="Cubiche\Core\Serializer\Tests\Fixtures\Person" />
+    </aggregate-root>
+    
+</cubiche-mapping>

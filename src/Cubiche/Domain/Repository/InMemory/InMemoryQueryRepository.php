@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository\InMemory;
 
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
@@ -15,7 +16,8 @@ use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\SpecificationInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\Repository\QueryRepository;
+use Cubiche\Domain\Model\ReadModelInterface;
+use Cubiche\Domain\Repository\QueryRepositoryInterface;
 
 /**
  * InMemoryQueryRepository Class.
@@ -23,7 +25,7 @@ use Cubiche\Domain\Repository\QueryRepository;
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class InMemoryQueryRepository extends QueryRepository
+class InMemoryQueryRepository implements QueryRepositoryInterface
 {
     /**
      * @var ArraySet
@@ -31,12 +33,10 @@ class InMemoryQueryRepository extends QueryRepository
     protected $collection;
 
     /**
-     * @param string $entityName
+     * InMemoryQueryRepository constructor.
      */
-    public function __construct($entityName)
+    public function __construct()
     {
-        parent::__construct($entityName);
-
         $this->collection = new ArraySet();
     }
 
@@ -123,9 +123,8 @@ class InMemoryQueryRepository extends QueryRepository
     /**
      * {@inheritdoc}
      */
-    public function persist($element)
+    public function persist(ReadModelInterface $element)
     {
-        $this->checkType($element);
         $this->collection->add($element);
     }
 
@@ -142,9 +141,8 @@ class InMemoryQueryRepository extends QueryRepository
     /**
      * {@inheritdoc}
      */
-    public function remove($element)
+    public function remove(ReadModelInterface $element)
     {
-        $this->checkType($element);
         $this->collection->remove($element);
     }
 }

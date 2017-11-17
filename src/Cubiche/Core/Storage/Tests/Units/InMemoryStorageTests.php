@@ -11,7 +11,7 @@
 
 namespace Cubiche\Core\Storage\Tests\Units;
 
-use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Serializer\ReflectionSerializer;
 use Cubiche\Core\Storage\InMemoryStorage;
 use Cubiche\Core\Storage\StorageInterface;
 
@@ -28,7 +28,7 @@ class InMemoryStorageTests extends StorageTestCase
     public function testCreate()
     {
         $this
-            ->given($storage = new InMemoryStorage(new DefaultSerializer(), array('foo' => 'bar')))
+            ->given($storage = new InMemoryStorage(new ReflectionSerializer(), array('foo' => 'bar')))
             ->then()
                 ->string($storage->get('foo'))
                     ->isEqualTo('bar')
@@ -40,6 +40,6 @@ class InMemoryStorageTests extends StorageTestCase
      */
     protected function createStorage()
     {
-        return new InMemoryStorage(new DefaultSerializer());
+        return new InMemoryStorage(new ReflectionSerializer());
     }
 }

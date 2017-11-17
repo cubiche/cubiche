@@ -1,0 +1,50 @@
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+                http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd"
+                xmlns:cubiche="cubiche">
+
+    <document name="Cubiche\Domain\Repository\Tests\Fixtures\User" collection="user">
+        <field name="id" id="true" type="Identifier" strategy="none">
+            <cubiche:id type="Cubiche\Domain\Repository\Tests\Fixtures\UserId" />
+        </field>
+
+        <field fieldName="name" name="name" type="string" />
+        <field fieldName="age" name="age" type="integer" />
+
+        <field fieldName="email" name="email" type="CubicheType">
+            <cubiche:email />
+        </field>
+
+        <field fieldName="fullName" name="fullName" type="CubicheType">
+            <cubiche:string />
+        </field>
+
+        <field fieldName="fax" name="fax" type="CubicheType">
+            <cubiche:valueobject type="Cubiche\Domain\Repository\Tests\Fixtures\Phonenumber" />
+        </field>
+
+        <field fieldName="mainRole" name="mainRole" type="CubicheType">
+            <cubiche:enum type="Cubiche\Domain\Repository\Tests\Fixtures\Role" />
+        </field>
+
+        <field fieldName="phonenumbers" name="phonenumbers" type="CubicheType">
+            <cubiche:collection type="ArrayList" of="Phonenumber" />
+        </field>
+
+        <field fieldName="roles" name="roles" type="CubicheType">
+            <cubiche:collection type="ArraySet" of="Role" />
+        </field>
+        <field fieldName="languagesLevel" name="languagesLevel" type="CubicheType">
+            <cubiche:collection type="ArrayHashMap" of="integer" />
+        </field>
+
+        <!--<embed-many field="addresses" target-document="Cubiche\Domain\Repository\Tests\Fixtures\Address">-->
+            <!--<cubiche:collection type="ArraySet" />-->
+        <!--</embed-many>-->
+        <reference-many field="friends" target-document="Cubiche\Domain\Repository\Tests\Fixtures\User">
+            <cubiche:collection type="ArraySet" />
+        </reference-many>
+    </document>
+    
+</doctrine-mongo-mapping>

@@ -51,7 +51,7 @@ trait MongoClientTestCaseTrait
      */
     protected function createMongoClient()
     {
-        return new \MongoClient(DOCTRINE_MONGODB_SERVER);
+        return new \MongoClient('mongodb://mongo:27017');
     }
 
     /**

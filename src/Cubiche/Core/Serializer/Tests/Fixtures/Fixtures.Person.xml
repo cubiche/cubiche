@@ -1,0 +1,7 @@
+<cubiche-mapping>
+    <aggregate-root name="Cubiche\Core\Serializer\Tests\Fixtures\Person">
+        <field fieldName="name" name="name" type="StringLiteral" />
+        <field fieldName="createdAt" name="createdAt" type="DateTime" />
+    </aggregate-root>
+    
+</cubiche-mapping>

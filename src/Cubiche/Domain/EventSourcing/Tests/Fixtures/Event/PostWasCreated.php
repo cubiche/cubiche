@@ -24,6 +24,16 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 class PostWasCreated extends DomainEvent
 {
     /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
      * PostWasCreated constructor.
      *
      * @param PostId $id
@@ -34,16 +44,8 @@ class PostWasCreated extends DomainEvent
     {
         parent::__construct($id);
 
-        $this->setPayload('title', $title);
-        $this->setPayload('content', $content);
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
+        $this->title = $title;
+        $this->content = $content;
     }
 
     /**
@@ -51,7 +53,7 @@ class PostWasCreated extends DomainEvent
      */
     public function title()
     {
-        return $this->getPayload('title');
+        return $this->title;
     }
 
     /**
@@ -59,7 +61,7 @@ class PostWasCreated extends DomainEvent
      */
     public function content()
     {
-        return $this->getPayload('content');
+        return $this->content;
     }
 
     /**
@@ -67,7 +69,7 @@ class PostWasCreated extends DomainEvent
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addMethodConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addMethodConstraint('content', Assert::stringType());
+        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
+        $classMetadata->addPropertyConstraint('content', Assert::stringType());
     }
 }

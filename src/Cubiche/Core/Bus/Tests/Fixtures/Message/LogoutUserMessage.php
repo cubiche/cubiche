@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
+use Cubiche\Core\Bus\Message;
 use Cubiche\Core\Bus\MessageNamedInterface;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -19,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserMessage implements MessageNamedInterface
+class LogoutUserMessage extends Message implements MessageNamedInterface
 {
     /**
      * @var string

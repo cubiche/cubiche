@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Repository;
 
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -24,28 +26,28 @@ interface RepositoryInterface
      *
      * @param IdInterface $id
      *
-     * @return mixed
+     * @return AggregateRootInterface
      */
     public function get(IdInterface $id);
 
     /**
      * Persist the element in the collection.
      *
-     * @param mixed $element
+     * @param AggregateRootInterface $element
      */
-    public function persist($element);
+    public function persist(AggregateRootInterface $element);
 
     /**
      * Persist all elements in the collection.
      *
-     * @param array|\Traversable $elements
+     * @param AggregateRootInterface[] $elements
      */
     public function persistAll($elements);
 
     /**
      * Remove a given element from the collection.
      *
-     * @param mixed $element
+     * @param AggregateRootInterface $element
      */
-    public function remove($element);
+    public function remove(AggregateRootInterface $element);
 }

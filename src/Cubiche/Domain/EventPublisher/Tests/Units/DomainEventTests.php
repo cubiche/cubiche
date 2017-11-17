@@ -86,50 +86,24 @@ class DomainEventTests extends TestCase
     }
 
     /**
-     * Test ToArray method.
+     * Test serialize/deserialize method.
      */
-    public function testToArray()
+    public function testSerializeDeserialize()
     {
         $this
             ->given($event = new IncrementCounterEvent(3))
+            ->and($eventDeserialized = IncrementCounterEvent::deserialize($event->serialize()))
             ->then()
-                ->array($event->toArray())
-                    ->child['metadata'](function ($metadata) {
-                        $metadata
-                            ->hasKey('occurredOn')
-                            ->string['eventType']
-                                ->isEqualTo(IncrementCounterEvent::class)
-                        ;
-                    })
-                    ->child['payload'](function ($payload) {
-                        $payload
-                            ->isEqualTo(array(
-                                'step' => 3,
-                            ))
-                        ;
-                    })
-        ;
-    }
-
-    /**
-     * Test FromArray method.
-     */
-    public function testFromArray()
-    {
-        $this
-            ->given($event = new IncrementCounterEvent(3))
-            ->and($eventFromArray = IncrementCounterEvent::fromArray($event->toArray()))
-            ->then()
-                ->object($eventFromArray)
+                ->object($eventDeserialized)
                     ->isInstanceOf(IncrementCounterEvent::class)
                 ->object($event->occurredOn())
-                    ->isEqualTo($eventFromArray->occurredOn())
+                    ->isEqualTo($eventDeserialized->occurredOn())
                 ->string($event->eventName())
-                    ->isEqualTo($eventFromArray->eventName())
+                    ->isEqualTo($eventDeserialized->eventName())
                 ->integer($event->step())
-                    ->isEqualTo($eventFromArray->step())
+                    ->isEqualTo($eventDeserialized->step())
                 ->boolean($event->isPropagationStopped())
-                    ->isEqualTo($eventFromArray->isPropagationStopped())
+                    ->isEqualTo($eventDeserialized->isPropagationStopped())
         ;
     }
 }

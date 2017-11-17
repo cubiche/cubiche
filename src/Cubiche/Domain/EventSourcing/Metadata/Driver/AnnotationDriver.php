@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Metadata\Driver;
 
 use Cubiche\Core\Metadata\Driver\AbstractAnnotationDriver;
@@ -23,11 +24,11 @@ class AnnotationDriver extends AbstractAnnotationDriver
     /**
      * {@inheritdoc}
      */
-    public function loadMetadataForClass(\ReflectionClass $class)
+    public function loadMetadataForClass($className)
     {
-        $classMetadata = new ClassMetadata($class->getName());
+        $classMetadata = new ClassMetadata($className);
 
-        $classAnnotations = $this->reader->getClassAnnotations($class);
+        $classAnnotations = $this->reader->getClassAnnotations($classMetadata->reflection());
         foreach ($classAnnotations as $annotation) {
             if ($annotation instanceof Migratable) {
                 $classMetadata->setIsMigratable(true);

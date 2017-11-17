@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Command;
 
+use Cubiche\Core\Cqrs\Command\Command;
 use Cubiche\Core\Cqrs\Command\CommandNamedInterface;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -19,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserCommand implements CommandNamedInterface
+class LogoutUserCommand extends Command implements CommandNamedInterface
 {
     /**
      * @var string
