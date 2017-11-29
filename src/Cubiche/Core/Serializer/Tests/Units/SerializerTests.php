@@ -13,6 +13,7 @@ namespace Cubiche\Core\Serializer\Tests\Units;
 
 use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
 use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
+use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
 use Cubiche\Core\Serializer\Encoder\NativeEncoder;
 use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
 use Cubiche\Core\Serializer\Encoder\ValueObjectEncoder;
@@ -27,34 +28,6 @@ use Cubiche\Core\Serializer\Tests\Fixtures\Person;
  */
 class SerializerTests extends ClassMetadataFactoryTests
 {
-    //    /**
-//     * Test serialize/deserialize serializable object.
-//     */
-//    public function testSerializable()
-//    {
-//        $this
-//            ->given($serializer = new Serializer())
-//            ->and($address = new Address('Casa', 'Avinguda Vilares, Montgat', 5, '08390', 'Barcelona'))
-//            ->and($person = new Person('Ivannis Suarez Jerez'))
-//            ->and($person1 = new Person('Carla Fernandez Couso'))
-//            ->when($data = $serializer->serialize($person))
-//            ->then()
-//                ->boolean($person->equals($serializer->deserialize($data, Person::class)))
-//                    ->isTrue()
-//                ->boolean($person1->equals($serializer->deserialize($data, Person::class)))
-//                    ->isFalse()
-//                ->exception(function () use ($serializer, $address) {
-//                    $serializer->serialize($address);
-//                })->isInstanceOf(\RuntimeException::class)
-//                ->exception(function () use ($serializer) {
-//                    $serializer->deserialize(
-//                        array('class' => TestCase::class, 'payload' => array('foo')),
-//                        Address::class
-//                    );
-//                })->isInstanceOf(\RuntimeException::class)
-//        ;
-//    }
-
     /**
      * Test serialize/deserialize object.
      */
@@ -66,8 +39,9 @@ class SerializerTests extends ClassMetadataFactoryTests
                 $encoders = array(
                     new ValueObjectEncoder(),
                     new DateTimeEncoder(),
-                    new ObjectEncoder($metadataFactory),
-                    new ArrayEncoder($metadataFactory),
+                    new MetadataObjectEncoder($metadataFactory),
+                    new ObjectEncoder(),
+                    new ArrayEncoder(),
                     new NativeEncoder(),
                 )
             )
@@ -77,7 +51,6 @@ class SerializerTests extends ClassMetadataFactoryTests
             ->and($person = new Person('Ivannis Suarez Jerez'))
             ->and($person1 = new Person('Carla Fernandez Couso'))
             ->and($address->setContacts(array($person, $person1)))
-//            ->when($data = $serializer->serialize($address))
             ->then()
                 ->variable($data = $serializer->serialize($address))
                     ->isNotNull()

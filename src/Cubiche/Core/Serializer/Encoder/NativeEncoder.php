@@ -25,7 +25,7 @@ class NativeEncoder implements EncoderInterface
      */
     public function supports($className)
     {
-        return in_array($className, array('boolean', 'integer', 'double', 'string', 'NULL'));
+        return in_array($className, array('boolean', 'integer', 'double', 'string', 'NULL', null));
     }
 
     /**

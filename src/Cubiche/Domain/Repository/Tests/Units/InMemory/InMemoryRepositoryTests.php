@@ -11,7 +11,6 @@
 namespace Cubiche\Domain\Repository\Tests\Units\InMemory;
 
 use Cubiche\Domain\Repository\InMemory\InMemoryRepository;
-use Cubiche\Domain\Repository\Tests\Fixtures\UserId;
 use Cubiche\Domain\Repository\Tests\Units\RepositoryTestCase;
 
 /**
@@ -29,17 +28,4 @@ class InMemoryRepositoryTests extends RepositoryTestCase
     {
         return new InMemoryRepository();
     }
-
-//    /**
-//     * Test create.
-//     */
-//    public function testCreate()
-//    {
-//        $this
-//            ->exception(function () {
-//                new InMemoryRepository(UserId::class);
-//            })
-//            ->isInstanceOf(\LogicException::class)
-//        ;
-//    }
 }

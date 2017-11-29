@@ -86,38 +86,4 @@ class DomainEventTests extends TestCase
                         ->isEqualTo(165)
         ;
     }
-
-    /**
-     * Test serialize/deserialize method.
-     */
-    public function testSerializeDeserialize()
-    {
-        $this
-            ->given(
-                $postId = PostId::fromNative(md5(rand())),
-                $title = $this->faker->sentence,
-                $content = $this->faker->sentence
-            )
-            ->and()
-            ->when($event = new PostWasCreated($postId, $title, $content))
-            ->and($eventFromArray = PostWasCreated::deserialize($event->serialize()))
-            ->then()
-                ->object($eventFromArray)
-                    ->isInstanceOf(PostWasCreated::class)
-                ->object($event->id())
-                    ->isEqualTo($eventFromArray->id())
-                ->string($event->eventName())
-                    ->isEqualTo(PostWasCreated::class)
-                ->object($event->occurredOn())
-                    ->isEqualTo($eventFromArray->occurredOn())
-                ->string($event->eventName())
-                    ->isEqualTo($eventFromArray->eventName())
-                ->string($event->title())
-                    ->isEqualTo($eventFromArray->title())
-                ->string($event->content())
-                    ->isEqualTo($eventFromArray->content())
-                ->boolean($event->isPropagationStopped())
-                    ->isEqualTo($eventFromArray->isPropagationStopped())
-        ;
-    }
 }

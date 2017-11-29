@@ -11,7 +11,14 @@
 
 namespace Cubiche\Core\Storage\Tests\Units;
 
-use Cubiche\Core\Serializer\ReflectionSerializer;
+use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
+use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
+use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
+use Cubiche\Core\Serializer\Encoder\NativeEncoder;
+use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
+use Cubiche\Core\Serializer\Encoder\ValueObjectEncoder;
+use Cubiche\Core\Serializer\Serializer;
+use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Core\Storage\InMemoryStorage;
 use Cubiche\Core\Storage\StorageInterface;
 
@@ -22,17 +29,23 @@ use Cubiche\Core\Storage\StorageInterface;
  */
 class InMemoryStorageTests extends StorageTestCase
 {
+    use ClassMetadataFactoryTrait;
+
     /**
-     * Test get method.
+     * @return SerializerInterface
      */
-    public function testCreate()
+    protected function createSerializer()
     {
-        $this
-            ->given($storage = new InMemoryStorage(new ReflectionSerializer(), array('foo' => 'bar')))
-            ->then()
-                ->string($storage->get('foo'))
-                    ->isEqualTo('bar')
-        ;
+        $metadataFactory = $this->createFactory();
+
+        return new Serializer(array(
+            new ValueObjectEncoder(),
+            new DateTimeEncoder(),
+            new MetadataObjectEncoder($metadataFactory),
+            new ObjectEncoder(),
+            new ArrayEncoder(),
+            new NativeEncoder(),
+        ));
     }
 
     /**
@@ -40,6 +53,19 @@ class InMemoryStorageTests extends StorageTestCase
      */
     protected function createStorage()
     {
-        return new InMemoryStorage(new ReflectionSerializer());
+        return new InMemoryStorage($this->createSerializer());
+    }
+
+    /**
+     * Test get method.
+     */
+    public function testCreate()
+    {
+        $this
+            ->given($storage = new InMemoryStorage($this->createSerializer(), array('foo' => 'bar')))
+            ->then()
+                ->string($storage->get('foo'))
+                    ->isEqualTo('bar')
+        ;
     }
 }

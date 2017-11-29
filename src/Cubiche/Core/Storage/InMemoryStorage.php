@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Storage;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
@@ -47,7 +48,13 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
     {
         $this->validateKey($key);
 
-        $this->store->set($key, $this->serializer->serialize($value));
+        $this->store->set(
+            $key,
+            array(
+                'type' => is_object($value) ? get_class($value) : gettype($value),
+                'data' => $this->serializer->serialize($value),
+            )
+        );
     }
 
     /**
@@ -60,7 +67,9 @@ class InMemoryStorage extends AbstractStorage implements StorageInterface
             return $default;
         }
 
-        return $this->serializer->deserialize($this->store->get($key));
+        $serialized = $this->store->get($key);
+
+        return $this->serializer->deserialize($serialized['data'], $serialized['type']);
     }
 
     /**

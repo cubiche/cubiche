@@ -10,8 +10,6 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Core\Serializer\ReflectionSerializer;
-use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
 
@@ -20,7 +18,7 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Snapshot implements SerializableInterface
+class Snapshot
 {
     /**
      * @var string
@@ -94,27 +92,5 @@ class Snapshot implements SerializableInterface
     protected function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        $serializer = new ReflectionSerializer();
-
-        return $serializer->serialize($this);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return MessageInterface
-     */
-    public static function deserialize(array $data)
-    {
-        $serializer = new ReflectionSerializer();
-
-        return $serializer->deserialize($data);
     }
 }

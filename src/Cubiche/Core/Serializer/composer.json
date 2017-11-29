@@ -19,7 +19,9 @@
     ],
     "require": {
         "php":                      "^5.5.9|^7.0",
-        "cubiche/metadata":         "dev-master"
+        "cubiche/metadata":         "dev-master",
+        "cubiche/model":            "dev-master",
+        "cubiche/system":           "dev-master"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"

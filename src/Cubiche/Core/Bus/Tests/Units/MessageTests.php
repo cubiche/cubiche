@@ -10,10 +10,8 @@
 
 namespace Cubiche\Core\Bus\Tests\Units;
 
-use Cubiche\Core\Bus\Message;
 use Cubiche\Core\Bus\MessageId;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
-use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
 
 /**
  * MessageTests class.
@@ -32,26 +30,6 @@ class MessageTests extends TestCase
             ->then()
                 ->object($message->id())
                     ->isInstanceOf(MessageId::class)
-        ;
-    }
-
-    /**
-     * Test serialize/deserialize method.
-     */
-    public function testSerializeDeserialize()
-    {
-        $this
-            ->given($message = new LoginUserMessage('ivan@cubiche.com'))
-            ->then()
-                ->variable($message->id())
-                    ->isNull()
-                ->and()
-                ->when($data = $message->serialize())
-                ->then()
-                    ->object($message)
-                        ->isEqualTo($newMessage = Message::deserialize($data))
-                    ->object($newMessage->id())
-                        ->isInstanceOf(MessageId::class)
         ;
     }
 }

@@ -44,9 +44,6 @@ class CubicheCoreExtension extends AbstractExtension
             $config['document_manager']
         );
 
-//        $container
-//            ->setDefinition($serviceId, $container->getDefinition($documentManagerId))
-//        ;
         $container->setAlias($serviceId, $documentManagerId);
 
         $container
@@ -66,9 +63,6 @@ class CubicheCoreExtension extends AbstractExtension
             $config['document_manager']
         );
 
-//        $container
-//            ->setDefinition($serviceId, $container->getDefinition($documentManagerId))
-//        ;
         $container->setAlias($serviceId, $documentManagerId);
         $container
             ->setParameter('cubiche.mongodb.snapshot_store.database', $config['database'])

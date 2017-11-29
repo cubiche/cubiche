@@ -186,9 +186,6 @@ class EnumerableAsserter extends ObjectAsserter
     ) {
         foreach ($enumerable as $value) {
             if (!$this->valueAsEnumerable()->contains($value, $equalityComparer)) {
-                //                 var_export($this->valueAsEnumerable());
-//                 var_export($enumerable);
-//                 var_export($value);
                 $this->fail($failMessage);
             }
         }

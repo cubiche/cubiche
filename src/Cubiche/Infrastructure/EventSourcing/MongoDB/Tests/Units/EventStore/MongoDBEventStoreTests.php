@@ -11,7 +11,13 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\EventStore;
 
-use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
+use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
+use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
+use Cubiche\Core\Serializer\Encoder\NativeEncoder;
+use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
+use Cubiche\Core\Serializer\Serializer;
+use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
@@ -19,6 +25,7 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\EventStore\EventStoreTestCase;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore\MongoDBEventStore;
+use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\ClassMetadataFactoryTrait;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCaseTrait;
 
 /**
@@ -31,13 +38,30 @@ use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCase
 class MongoDBEventStoreTests extends EventStoreTestCase
 {
     use MongoClientTestCaseTrait;
+    use ClassMetadataFactoryTrait;
 
     /**
      * @return EventStoreInterface
      */
     protected function createStore()
     {
-        return new MongoDBEventStore($this->client(), $this->getDatabaseName(), new DefaultSerializer());
+        return new MongoDBEventStore($this->client(), $this->getDatabaseName(), $this->createSerializer());
+    }
+
+    /**
+     * @return SerializerInterface
+     */
+    protected function createSerializer()
+    {
+        $metadataFactory = $this->createFactory();
+
+        return new Serializer(array(
+            new DateTimeEncoder(),
+            new MetadataObjectEncoder($metadataFactory),
+            new ObjectEncoder(),
+            new ArrayEncoder(),
+            new NativeEncoder(),
+        ));
     }
 
     /**

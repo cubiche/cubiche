@@ -84,26 +84,4 @@ class DomainEventTests extends TestCase
                     ->isEqualTo(5)
         ;
     }
-
-    /**
-     * Test serialize/deserialize method.
-     */
-    public function testSerializeDeserialize()
-    {
-        $this
-            ->given($event = new IncrementCounterEvent(3))
-            ->and($eventDeserialized = IncrementCounterEvent::deserialize($event->serialize()))
-            ->then()
-                ->object($eventDeserialized)
-                    ->isInstanceOf(IncrementCounterEvent::class)
-                ->object($event->occurredOn())
-                    ->isEqualTo($eventDeserialized->occurredOn())
-                ->string($event->eventName())
-                    ->isEqualTo($eventDeserialized->eventName())
-                ->integer($event->step())
-                    ->isEqualTo($eventDeserialized->step())
-                ->boolean($event->isPropagationStopped())
-                    ->isEqualTo($eventDeserialized->isPropagationStopped())
-        ;
-    }
 }

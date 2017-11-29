@@ -21,7 +21,7 @@ interface EncoderInterface
     /**
      * @param string $className
      *
-     * @return mixed
+     * @return bool
      */
     public function supports($className);
 

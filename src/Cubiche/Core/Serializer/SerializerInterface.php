@@ -35,4 +35,11 @@ interface SerializerInterface
      * @return object
      */
     public function deserialize($data, $className);
+
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
+    public function supports($className);
 }

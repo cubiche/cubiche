@@ -56,4 +56,14 @@ class DefaultSerializer implements SerializerInterface
 
         return $data['class']::deserialize($data['payload']);
     }
+
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
+    public function supports($className)
+    {
+        return in_array(SerializableInterface::class, class_implements($className));
+    }
 }

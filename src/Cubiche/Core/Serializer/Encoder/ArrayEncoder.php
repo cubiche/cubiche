@@ -30,7 +30,11 @@ class ArrayEncoder implements SerializerAwareInterface
      */
     public function supports($className)
     {
-        return $className == 'array';
+        if ($className == 'array') {
+            return true;
+        }
+
+        return '[]' === substr($className, -2) && $this->serializer->supports(substr($className, 0, -2));
     }
 
     /**
@@ -39,7 +43,7 @@ class ArrayEncoder implements SerializerAwareInterface
     public function encode($object)
     {
         $result = array();
-        foreach ($object as $key => $item) {
+        foreach ((array) $object as $key => $item) {
             $result[$key] = $this->serializer->serialize($item);
         }
 
@@ -51,12 +55,28 @@ class ArrayEncoder implements SerializerAwareInterface
      */
     public function decode($data, $className)
     {
+        if ('[]' === substr($className, -2)) {
+            $className = substr($className, 0, -2);
+        }
+
         $result = array();
         foreach ($data as $key => $item) {
-            $result[$key] = $this
-                ->serializer
-                ->deserialize($item, is_object($item) ? get_class($item) : gettype($item))
-            ;
+            if (is_array($item) && isset($item['class']) && isset($item['payload'])) {
+                $result[$key] = $this
+                    ->serializer
+                    ->deserialize($item['payload'], $item['class'])
+                ;
+            } elseif (is_array($item) && isset($item['datetime']) && isset($item['timezone'])) {
+                $result[$key] = $this
+                    ->serializer
+                    ->deserialize($item, 'DateTime')
+                ;
+            } else {
+                $result[$key] = $this
+                    ->serializer
+                    ->deserialize($item, $className)
+                ;
+            }
         }
 
         return $result;

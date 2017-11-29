@@ -11,7 +11,6 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore;
 
-use Cubiche\Core\Bus\Message;
 use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
@@ -155,7 +154,7 @@ class MongoDBEventStore implements EventStoreInterface
             'aggregate_id' => $event->aggregateId()->toNative(),
             'event_type' => $event->eventName(),
             'version' => $event->version(),
-            'payload' => $event->serialize(),
+            'payload' => $this->serializer->serialize($event),
             'created_at' => $event->occurredOn()->format('Y-m-d\TH:i:s.u'),
         );
     }
@@ -167,7 +166,7 @@ class MongoDBEventStore implements EventStoreInterface
      */
     private function arrayToEvent(array $eventData)
     {
-        return Message::deserialize($eventData['payload']);
+        return $this->serializer->deserialize($eventData['payload']['payload'], $eventData['payload']['class']);
     }
 
     /**

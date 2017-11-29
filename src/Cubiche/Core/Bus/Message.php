@@ -11,8 +11,6 @@
 
 namespace Cubiche\Core\Bus;
 
-use Cubiche\Core\Serializer\ReflectionSerializer;
-
 /**
  * Message interface.
  *
@@ -49,28 +47,5 @@ class Message implements MessageInterface
         if ($this->id === null) {
             $this->id = MessageId::next();
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        $serializer = new ReflectionSerializer();
-        $this->initIdentifier();
-
-        return $serializer->serialize($this);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return MessageInterface
-     */
-    public static function deserialize(array $data)
-    {
-        $serializer = new ReflectionSerializer();
-
-        return $serializer->deserialize($data);
     }
 }

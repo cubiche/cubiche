@@ -81,7 +81,7 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
         ));
 
         if ($document !== null) {
-            return $this->serializer->deserialize($document['payload']);
+            return $this->serializer->deserialize($document['payload']['payload'], Snapshot::class);
         }
 
         return;

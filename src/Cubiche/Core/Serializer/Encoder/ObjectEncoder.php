@@ -11,9 +11,6 @@
 
 namespace Cubiche\Core\Serializer\Encoder;
 
-use Cubiche\Core\Metadata\ClassMetadata;
-use Cubiche\Core\Metadata\ClassMetadataFactoryInterface;
-use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Core\Serializer\Exception\SerializationException;
 use Cubiche\Core\Serializer\SerializerAwareInterface;
 use Cubiche\Core\Serializer\SerializerAwareTrait;
@@ -26,21 +23,6 @@ use Cubiche\Core\Serializer\SerializerAwareTrait;
 class ObjectEncoder implements SerializerAwareInterface
 {
     use SerializerAwareTrait;
-
-    /**
-     * @var ClassMetadataFactoryInterface
-     */
-    protected $metadataFactory;
-
-    /**
-     * ObjectEncoder constructor.
-     *
-     * @param ClassMetadataFactoryInterface $metadataFactory
-     */
-    public function __construct(ClassMetadataFactoryInterface $metadataFactory)
-    {
-        $this->metadataFactory = $metadataFactory;
-    }
 
     /**
      * @param string $className
@@ -63,21 +45,23 @@ class ObjectEncoder implements SerializerAwareInterface
      */
     public function encode($object)
     {
+        $reflection = new \ReflectionClass($object);
+
         $result = array();
+        foreach ($reflection->getProperties() as $property) {
+            $propertyName = $property->getName();
 
-        $classMetadata = $this->getClassMetadata(get_class($object));
-        if ($classMetadata === null) {
-            throw SerializationException::invalidMapping(get_class($object));
+            $property->setAccessible(true);
+            $value = $property->getValue($object);
+            $property->setAccessible(false);
+
+            $result[$propertyName] = $this->serializer->serialize($value);
         }
 
-        /** @var PropertyMetadata $propertyMetadata */
-        foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
-            $result[$propertyMetadata->propertyName()] = $this->serializer->serialize(
-                $propertyMetadata->getValue($object)
-            );
-        }
-
-        return $result;
+        return array(
+            'class' => $reflection->getName(),
+            'payload' => $result,
+        );
     }
 
     /**
@@ -85,64 +69,35 @@ class ObjectEncoder implements SerializerAwareInterface
      */
     public function decode($data, $className)
     {
-        $classMetadata = $this->getClassMetadata($className);
-        if ($classMetadata === null) {
-            throw SerializationException::invalidMapping($className);
-        }
+        $reflection = new \ReflectionClass($className);
+        $object = $reflection->newInstanceWithoutConstructor();
 
-        $object = $classMetadata->reflection()->newInstanceWithoutConstructor();
-        /** @var PropertyMetadata $propertyMetadata */
-        foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
-            if (!array_key_exists($propertyMetadata->propertyName(), $data)) {
-                throw SerializationException::propertyNotFound($propertyMetadata->propertyName(), $className);
+        foreach ($reflection->getProperties() as $property) {
+            $propertyName = $property->getName();
+
+            if (!array_key_exists($propertyName, $data)) {
+                throw SerializationException::propertyNotFound($propertyName, $className);
             }
 
-            $propertyValue = $data[$propertyMetadata->propertyName()];
-            $propertyType = $propertyMetadata->getMetadata('type');
-            if ($propertyMetadata->getMetadata('of') !== null) {
-                $propertyType = $propertyMetadata->getMetadata('of');
-            }
-
-            if ($propertyType === null) {
+            $propertyValue = $data[$propertyName];
+            if (is_array($propertyValue) && isset($propertyValue['class']) && isset($propertyValue['payload'])) {
+                $propertyType = $propertyValue['class'];
+                $propertyValue = $propertyValue['payload'];
+            } elseif (is_array($propertyValue)
+                && isset($propertyValue['datetime'])
+                && isset($propertyValue['timezone'])) {
+                $propertyType = 'DateTime';
+            } else {
                 $propertyType = is_object($propertyValue) ? get_class($propertyValue) : gettype($propertyValue);
             }
 
             $propertyValue = $this->serializer->deserialize($propertyValue, $propertyType);
 
-            $propertyMetadata->setValue($object, $propertyValue);
+            $property->setAccessible(true);
+            $property->setValue($object, $propertyValue);
+            $property->setAccessible(false);
         }
 
         return $object;
-
-//        $reflection = new \ReflectionClass($className);
-//        $object = $reflection->newInstanceWithoutConstructor();
-
-//        foreach ($reflection->getProperties() as $property) {
-//            $propertyName = $property->getName();
-
-//            if (!array_key_exists($propertyName, $data)) {
-//                throw SerializationException::propertyNotFound($propertyName, $className);
-//            }
-
-//            $propertyValue = $this->encoder->decode($data[$propertyName]);
-
-//            $property->setAccessible(true);
-//            $property->setValue($object, $propertyValue);
-//            $property->setAccessible(false);
-//        }
-
-//        return $object;
-    }
-
-    /**
-     * Returns the metadata for a class.
-     *
-     * @param string $className
-     *
-     * @return ClassMetadata
-     */
-    protected function getClassMetadata($className)
-    {
-        return $this->metadataFactory->getMetadataFor(ltrim($className, '\\'));
     }
 }

@@ -11,14 +11,12 @@
 
 namespace Cubiche\Core\Bus;
 
-use Cubiche\Core\Serializer\SerializableInterface;
-
 /**
  * Message interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface MessageInterface extends SerializableInterface
+interface MessageInterface
 {
     /**
      * @return MessageId

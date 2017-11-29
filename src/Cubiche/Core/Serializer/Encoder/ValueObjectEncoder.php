@@ -12,6 +12,12 @@
 namespace Cubiche\Core\Serializer\Encoder;
 
 use Cubiche\Domain\Model\NativeValueObjectInterface;
+use Cubiche\Domain\System\Decimal;
+use Cubiche\Domain\System\DecimalInfinite;
+use Cubiche\Domain\System\Enum;
+use Cubiche\Domain\System\Integer;
+use Cubiche\Domain\System\Real;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * ValueObjectEncoder class.
@@ -20,6 +26,18 @@ use Cubiche\Domain\Model\NativeValueObjectInterface;
  */
 class ValueObjectEncoder implements EncoderInterface
 {
+    /**
+     * @var array
+     */
+    protected $aliases = array(
+        'Decimal' => Decimal::class,
+        'DecimalInfinite' => DecimalInfinite::class,
+        'Enum' => Enum::class,
+        'Integer' => Integer::class,
+        'Real' => Real::class,
+        'StringLiteral' => StringLiteral::class,
+    );
+
     /**
      * @param string $className
      *
@@ -32,7 +50,7 @@ class ValueObjectEncoder implements EncoderInterface
 
             return $reflection->implementsInterface(NativeValueObjectInterface::class);
         } catch (\ReflectionException $exception) {
-            return false;
+            return isset($this->aliases[$className]);
         }
     }
 
@@ -51,6 +69,14 @@ class ValueObjectEncoder implements EncoderInterface
      */
     public function decode($data, $className)
     {
+        try {
+            new \ReflectionClass($className);
+        } catch (\ReflectionException $exception) {
+            if (isset($this->aliases[$className])) {
+                $className = $this->aliases[$className];
+            }
+        }
+
         return $className::fromNative($data);
     }
 }
