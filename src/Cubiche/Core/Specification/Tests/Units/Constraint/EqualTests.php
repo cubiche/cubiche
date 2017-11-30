@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Specification\Tests\Units\Constraint;
 
 use Cubiche\Core\Equatable\Tests\Fixtures\Value;
@@ -55,6 +56,12 @@ class EqualTests extends BinaryConstraintOperatorTestCase
                 ->boolean($eq->evaluate(new Value(5.0)))
                     ->isTrue()
                 ->boolean($eq->evaluate(new Value(4)))
+                    ->isFalse();
+
+        $this
+            ->given($eq = Criteria::eq('foo'))
+            ->then()
+                ->boolean($eq->evaluate(0))
                     ->isFalse();
     }
 }

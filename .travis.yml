@@ -9,7 +9,7 @@ cache:
 
 env:
   global:
-    - COMPOSER_ARGS="--dev --no-interaction"
+    - COMPOSER_ARGS="--no-interaction"
     - MONGO_DRIVER=mongodb
 
 matrix:
@@ -28,7 +28,6 @@ before_install:
 install:
   - travis_retry composer global require "hirak/prestissimo:^0.3"
   - travis_retry composer install $COMPOSER_ARGS
-  - composer show
 
 script:
   - bin/atoum -c .atoum.travis.php +verbose

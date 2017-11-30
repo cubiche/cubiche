@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Selector\Tests\Units;
 
 /**
@@ -36,6 +37,16 @@ class ValueTests extends SelectorTestCase
                 ->integer($value->value())
                     ->isEqualTo(5)
                 ->integer($value->value())
+                    ->isEqualTo($value->apply(null))
+        ;
+
+        $this
+            /* @var \Cubiche\Core\Selector\Value $value */
+            ->given($value = $this->newTestedInstance('foo'))
+            ->then()
+                ->string($value->value())
+                    ->isEqualTo('foo')
+                ->string($value->value())
                     ->isEqualTo($value->apply(null))
         ;
     }
