@@ -13,6 +13,8 @@ namespace Cubiche\Core\Metadata\Tests\Fixtures;
 
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
+use Cubiche\Core\Metadata\ClassMetadata;
+use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Core\Metadata\Tests\Fixtures\Annotations as Cubiche;
 use Cubiche\Domain\Model\AggregateRoot;
 use Cubiche\Domain\System\Integer;
@@ -53,7 +55,7 @@ class User extends AggregateRoot
 
     /**
      * @var EmailAddress
-     * @Cubiche\Field(type="EmailAddress")
+     * @Cubiche\Field(type="EmailAddress", name="email_address")
      */
     protected $email;
 
@@ -150,5 +152,86 @@ class User extends AggregateRoot
     public function addFriend(User $friend)
     {
         return $this->friends->add($friend);
+    }
+
+    /**
+     * @param ClassMetadata $classMetadata
+     */
+    public static function loadMetadata(ClassMetadata $classMetadata)
+    {
+        // id
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'id'
+        );
+
+        $propertyMetadata->addMetadata('identifier', true);
+        $propertyMetadata->addMetadata('name', '_id');
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // name
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'name'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('name', 'fullName');
+        $propertyMetadata->addMetadata('type', 'StringLiteral');
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // username
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'username'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('type', 'StringLiteral');
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // age
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'age'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('type', 'Integer');
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // email
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'email'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('type', 'EmailAddress');
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // addresses
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'addresses'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('type', 'ArraySet');
+        $propertyMetadata->addMetadata('of', 'Cubiche\Core\Metadata\Tests\Fixtures\Address');
+
+        $classMetadata->addPropertyMetadata($propertyMetadata);
+
+        // friends
+        $propertyMetadata = new PropertyMetadata(
+            $classMetadata->className(),
+            'friends'
+        );
+
+        $propertyMetadata->addMetadata('identifier', false);
+        $propertyMetadata->addMetadata('type', 'ArraySet');
+        $propertyMetadata->addMetadata('of', 'Cubiche\Core\Metadata\Tests\Fixtures\User');
+
+        $classMetadata->addPropertyMetadata($propertyMetadata);
     }
 }

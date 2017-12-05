@@ -51,17 +51,43 @@ class Serializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize($object)
+    public function serialize($object, $className = null)
     {
+        // If the value is an object:
+        // - 1. If the object implement the SerializableInterface serialize using the custom methods
+        // - 2. If there is a className as a parameter, try to find a decoder using this class name
+        // - 3. Try to find a decoder from the object class name
+        // - 4. Try to find a 'object' decoder
+
+        // If the value is not an object:
+        // - 1. If there is a className as a parameter, try to find a decoder using this class name
+        // - 2. Try to find a decoder using the value type
+
         if (is_object($object)) {
             if ($object instanceof SerializableInterface) {
                 return $object->serialize();
             }
 
             try {
-                // try to find first a custom class decoder
+                if ($className !== null) {
+                    try {
+                        // try to find a className decoder
+                        return $this->getDecoder($className)->encode($object);
+                    } catch (RuntimeException $e) {
+                    }
+                }
+
+                // otherwise try to find a custom class decoder
                 return $this->getDecoder(get_class($object))->encode($object);
             } catch (RuntimeException $e) {
+            }
+        } else {
+            if ($className !== null) {
+                try {
+                    // try to find a className decoder
+                    return $this->getDecoder($className)->encode($object);
+                } catch (RuntimeException $e) {
+                }
             }
         }
 

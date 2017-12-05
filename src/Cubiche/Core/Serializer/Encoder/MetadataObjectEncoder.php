@@ -72,9 +72,13 @@ class MetadataObjectEncoder implements SerializerAwareInterface
 
         /** @var PropertyMetadata $propertyMetadata */
         foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
-            $result[$propertyMetadata->propertyName()] = $this->serializer->serialize(
-                $propertyMetadata->getValue($object)
-            );
+            $propertyName = $propertyMetadata->propertyName();
+            $propertyType = $propertyMetadata->getMetadata('type');
+            if ($propertyMetadata->getMetadata('name') !== null) {
+                $propertyName = $propertyMetadata->getMetadata('name');
+            }
+
+            $result[$propertyName] = $this->serializer->serialize($propertyMetadata->getValue($object), $propertyType);
         }
 
         return $result;
@@ -93,11 +97,16 @@ class MetadataObjectEncoder implements SerializerAwareInterface
         $object = $classMetadata->reflection()->newInstanceWithoutConstructor();
         /** @var PropertyMetadata $propertyMetadata */
         foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
-            if (!array_key_exists($propertyMetadata->propertyName(), $data)) {
-                throw SerializationException::propertyNotFound($propertyMetadata->propertyName(), $className);
+            $propertyName = $propertyMetadata->propertyName();
+            if ($propertyMetadata->getMetadata('name') !== null) {
+                $propertyName = $propertyMetadata->getMetadata('name');
             }
 
-            $propertyValue = $data[$propertyMetadata->propertyName()];
+            if (!array_key_exists($propertyName, $data)) {
+                throw SerializationException::propertyNotFound($propertyName, $className);
+            }
+
+            $propertyValue = $data[$propertyName];
             $propertyType = $propertyMetadata->getMetadata('type');
             if ($propertyMetadata->getMetadata('of') !== null) {
                 $propertyType = $propertyMetadata->getMetadata('of');
@@ -124,5 +133,13 @@ class MetadataObjectEncoder implements SerializerAwareInterface
     protected function getClassMetadata($className)
     {
         return $this->metadataFactory->getMetadataFor(ltrim($className, '\\'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function priority()
+    {
+        return 400;
     }
 }

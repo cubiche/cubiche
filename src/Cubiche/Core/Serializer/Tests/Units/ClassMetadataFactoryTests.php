@@ -93,7 +93,7 @@ class ClassMetadataFactoryTests extends TestCase
 
         return new XmlDriver(
             new DefaultFileLocator([
-                $mappingDirectory => 'Cubiche\Core\Serializer\Tests',
+                $mappingDirectory => 'Cubiche\Core\Serializer\Tests\Fixtures',
             ])
         );
     }

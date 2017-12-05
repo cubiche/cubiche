@@ -1,2 +1,0 @@
-# Cubiche - Doctrine Adapter
-[![Build Status](https://travis-ci.org/cubiche/doctrine-adapter.svg?branch=master)](https://travis-ci.org/cubiche/doctrine-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/doctrine-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/doctrine-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/doctrine-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/doctrine-adapter/?branch=master) 

@@ -18,6 +18,13 @@ use Cubiche\Domain\System\Enum;
 use Cubiche\Domain\System\Integer;
 use Cubiche\Domain\System\Real;
 use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\Web\EmailAddress;
+use Cubiche\Domain\Web\Host;
+use Cubiche\Domain\Web\HostName;
+use Cubiche\Domain\Web\IPAddress;
+use Cubiche\Domain\Web\Path;
+use Cubiche\Domain\Web\Port;
+use Cubiche\Domain\Web\Url;
 
 /**
  * ValueObjectEncoder class.
@@ -36,6 +43,13 @@ class ValueObjectEncoder implements EncoderInterface
         'Integer' => Integer::class,
         'Real' => Real::class,
         'StringLiteral' => StringLiteral::class,
+        'EmailAddress' => EmailAddress::class,
+        'Host' => Host::class,
+        'HostName' => HostName::class,
+        'IPAddress' => IPAddress::class,
+        'Path' => Path::class,
+        'Port' => Port::class,
+        'Url' => Url::class,
     );
 
     /**
@@ -61,7 +75,11 @@ class ValueObjectEncoder implements EncoderInterface
      */
     public function encode($object)
     {
-        return $object->toNative();
+        if ($object !== null) {
+            return $object->toNative();
+        }
+
+        return $object;
     }
 
     /**
@@ -69,14 +87,26 @@ class ValueObjectEncoder implements EncoderInterface
      */
     public function decode($data, $className)
     {
-        try {
-            new \ReflectionClass($className);
-        } catch (\ReflectionException $exception) {
-            if (isset($this->aliases[$className])) {
-                $className = $this->aliases[$className];
+        if ($data !== null) {
+            try {
+                new \ReflectionClass($className);
+            } catch (\ReflectionException $exception) {
+                if (isset($this->aliases[$className])) {
+                    $className = $this->aliases[$className];
+                }
             }
+
+            return $className::fromNative($data);
         }
 
-        return $className::fromNative($data);
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function priority()
+    {
+        return 600;
     }
 }

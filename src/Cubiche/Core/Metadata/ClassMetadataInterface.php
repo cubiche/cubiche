@@ -33,14 +33,14 @@ interface ClassMetadataInterface
     public function methodsMetadata();
 
     /**
-     * @param MethodMetadata $metadata
+     * @param MethodMetadataInterface $metadata
      */
-    public function addMethodMetadata(MethodMetadata $metadata);
+    public function addMethodMetadata(MethodMetadataInterface $metadata);
 
     /**
      * @param string $methodName
      *
-     * @return MethodMetadata|null
+     * @return MethodMetadataInterface|null
      */
     public function methodMetadata($methodName);
 
@@ -50,14 +50,14 @@ interface ClassMetadataInterface
     public function propertiesMetadata();
 
     /**
-     * @param PropertyMetadata $metadata
+     * @param PropertyMetadataInterface $metadata
      */
-    public function addPropertyMetadata(PropertyMetadata $metadata);
+    public function addPropertyMetadata(PropertyMetadataInterface $metadata);
 
     /**
      * @param string $propertyName
      *
-     * @return PropertyMetadata|null
+     * @return PropertyMetadataInterface|null
      */
     public function propertyMetadata($propertyName);
 

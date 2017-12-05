@@ -29,8 +29,9 @@ class YamlDriver extends AbstractYamlDriver
     {
         if (isset($config['fields'])) {
             foreach ($config['fields'] as $fieldName => $mapping) {
-                if (!isset($mapping['fieldName'])) {
-                    $mapping['fieldName'] = $fieldName;
+                $mapping['fieldName'] = $fieldName;
+                if (!isset($mapping['name'])) {
+                    $mapping['name'] = $fieldName;
                 }
 
                 $booleanAttributes = array('id', 'unique');

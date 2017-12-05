@@ -48,7 +48,7 @@ class EventStreamTests extends TestCase
             ->and($streamName = 'Posts-'.$postId)
             ->and($eventStream = new EventStream($streamName, $postId, []))
             ->then()
-                ->object($eventStream->aggregateId())
+                ->object($eventStream->id())
                     ->isEqualTo($postId)
         ;
     }

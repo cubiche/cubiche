@@ -25,7 +25,7 @@ class DefaultSerializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize($object)
+    public function serialize($object, $className = null)
     {
         if (is_object($object) && $object instanceof SerializableInterface) {
             return array(

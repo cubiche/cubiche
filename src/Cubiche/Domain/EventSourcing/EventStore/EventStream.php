@@ -11,6 +11,7 @@
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
+use Cubiche\Domain\Identity\IdentifiableInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -18,7 +19,7 @@ use Cubiche\Domain\Model\IdInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventStream
+class EventStream implements IdentifiableInterface
 {
     /**
      * @var string
@@ -73,7 +74,7 @@ class EventStream
     /**
      * @return IdInterface
      */
-    public function aggregateId()
+    public function id()
     {
         return $this->aggregateId;
     }

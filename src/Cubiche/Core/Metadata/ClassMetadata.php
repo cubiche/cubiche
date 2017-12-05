@@ -85,9 +85,9 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     }
 
     /**
-     * @param MethodMetadata $metadata
+     * @param MethodMetadataInterface $metadata
      */
-    public function addMethodMetadata(MethodMetadata $metadata)
+    public function addMethodMetadata(MethodMetadataInterface $metadata)
     {
         $this->methodsMetadata->set($metadata->methodName(), $metadata);
     }
@@ -95,7 +95,7 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     /**
      * @param string $methodName
      *
-     * @return MethodMetadata|null
+     * @return MethodMetadataInterface|null
      */
     public function methodMetadata($methodName)
     {
@@ -111,9 +111,9 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     }
 
     /**
-     * @param PropertyMetadata $metadata
+     * @param PropertyMetadataInterface $metadata
      */
-    public function addPropertyMetadata(PropertyMetadata $metadata)
+    public function addPropertyMetadata(PropertyMetadataInterface $metadata)
     {
         $this->propertiesMetadata->set($metadata->propertyName(), $metadata);
     }
@@ -121,7 +121,7 @@ class ClassMetadata implements \Serializable, ClassMetadataInterface
     /**
      * @param string $propertyName
      *
-     * @return PropertyMetadata|null
+     * @return PropertyMetadataInterface|null
      */
     public function propertyMetadata($propertyName)
     {

@@ -11,8 +11,9 @@
 
 namespace Cubiche\Core\Validator\Mapping;
 
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Validator\Assert;
-use Metadata\MethodMetadata as BaseMethodMetadata;
+use Cubiche\Core\Metadata\MethodMetadata as BaseMethodMetadata;
 
 /**
  * MethodMetadata class.
@@ -34,23 +35,7 @@ class MethodMetadata extends BaseMethodMetadata
     /**
      * @return string
      */
-    public function getClassName()
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethodName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultGroup()
+    public function defaultGroup()
     {
         return $this->defaultGroup;
     }
@@ -60,7 +45,7 @@ class MethodMetadata extends BaseMethodMetadata
      *
      * @return string
      */
-    protected function getGroup($group = null)
+    protected function group($group = null)
     {
         return $group === null || empty($group) ? $this->defaultGroup : $group;
     }
@@ -71,7 +56,7 @@ class MethodMetadata extends BaseMethodMetadata
      */
     public function addConstraint(Assert $constraint, $group = null)
     {
-        $group = $this->getGroup($group);
+        $group = $this->group($group);
         if (!isset($this->constraintsByGroup[$group])) {
             $this->constraintsByGroup[$group] = array();
         }
@@ -93,7 +78,7 @@ class MethodMetadata extends BaseMethodMetadata
     /**
      * @return array
      */
-    public function getConstraints()
+    public function constraints()
     {
         return $this->constraintsByGroup;
     }
@@ -103,7 +88,7 @@ class MethodMetadata extends BaseMethodMetadata
      *
      * @return array
      */
-    public function getConstraintsByGroup($group)
+    public function constraintsByGroup($group)
     {
         return isset($this->constraintsByGroup[$group]) ? $this->constraintsByGroup[$group] : array();
     }
@@ -115,7 +100,7 @@ class MethodMetadata extends BaseMethodMetadata
      */
     public function mergeConstraints(MethodMetadata $source)
     {
-        foreach ($source->getConstraints() as $group => $constraints) {
+        foreach ($source->constraints() as $group => $constraints) {
             $this->addConstraints($constraints, $group);
         }
     }
@@ -126,8 +111,9 @@ class MethodMetadata extends BaseMethodMetadata
     public function serialize()
     {
         return serialize(array(
-            $this->class,
-            $this->name,
+            $this->className,
+            $this->methodName,
+            $this->metadata->toArray(),
             $this->defaultGroup,
             $this->constraintsByGroup,
         ));
@@ -139,12 +125,16 @@ class MethodMetadata extends BaseMethodMetadata
     public function unserialize($str)
     {
         list(
-            $this->class,
-            $this->name,
+            $this->className,
+            $this->methodName,
+            $metadata,
             $this->defaultGroup,
-            $this->constraintsByGroup) = unserialize($str);
+            $this->constraintsByGroup
+        ) = unserialize($str);
 
-        $this->reflection = new \ReflectionMethod($this->class, $this->name);
+        $this->reflection = new \ReflectionMethod($this->className, $this->methodName);
         $this->reflection->setAccessible(true);
+
+        $this->metadata = new ArrayHashMap($metadata);
     }
 }

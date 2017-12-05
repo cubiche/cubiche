@@ -166,7 +166,7 @@ class AbstractAnnotationDriverTests extends DriverTestCase
             ->and($classNames = $driver->getAllClassNames())
             ->then()
                 ->array($classNames)
-                    ->hasSize(4)
+                    ->hasSize(5)
         ;
 
         $this

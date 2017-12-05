@@ -46,6 +46,11 @@ class XmlDriver extends AbstractXmlDriver
      */
     protected function addMetadataFor(\SimpleXMLElement $xmlRoot, ClassMetadataInterface $classMetadata)
     {
+        $collectionName = (string) $xmlRoot['collection'];
+        if (!empty($collectionName)) {
+            $classMetadata->addMetadata('collection', $collectionName);
+        }
+
         if (isset($xmlRoot->field)) {
             foreach ($xmlRoot->field as $field) {
                 $mapping = $this->getMappingAttributes($field);

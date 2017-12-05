@@ -100,4 +100,12 @@ class ObjectEncoder implements SerializerAwareInterface
 
         return $object;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function priority()
+    {
+        return 300;
+    }
 }

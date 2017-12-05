@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Serializer\Encoder;
 
+use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Serializer\SerializerAwareInterface;
 use Cubiche\Core\Serializer\SerializerAwareTrait;
 
@@ -42,8 +43,14 @@ class ArrayEncoder implements SerializerAwareInterface
      */
     public function encode($object)
     {
+        if (is_object($object)) {
+            if ($object instanceof CollectionInterface) {
+                $object = $object->toArray();
+            }
+        }
+
         $result = array();
-        foreach ((array) $object as $key => $item) {
+        foreach ($object as $key => $item) {
             $result[$key] = $this->serializer->serialize($item);
         }
 
@@ -80,5 +87,13 @@ class ArrayEncoder implements SerializerAwareInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function priority()
+    {
+        return 200;
     }
 }

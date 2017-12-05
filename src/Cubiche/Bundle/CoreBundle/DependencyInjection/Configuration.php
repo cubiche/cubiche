@@ -30,8 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('cubiche_core');
 
-        $this->addEventStoreSection($rootNode);
-        $this->addSnapshotStoreSection($rootNode);
+        $this->addMongoDBSection($rootNode);
 
         return $treeBuilder;
     }
@@ -41,38 +40,80 @@ class Configuration implements ConfigurationInterface
      *
      * @return ArrayNodeDefinition
      */
-    protected function addEventStoreSection(ArrayNodeDefinition $node)
+    protected function addMongoDBSection(ArrayNodeDefinition $node)
     {
         $node
             ->children()
-                ->arrayNode('event_store')
+                ->arrayNode('mongodb')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('document_manager')->defaultValue('event_store')->end()
-                        ->scalarNode('database')->defaultValue('event_store_database')->end()
+                        ->arrayNode('default')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('server')->defaultValue('server')->end()
+                                ->scalarNode('database')->defaultValue('database')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('event_store')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('server')->defaultValue('server')->end()
+                                ->scalarNode('database')->defaultValue('database')->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('snapshot_store')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('server')->defaultValue('server')->end()
+                                ->scalarNode('database')->defaultValue('database')->end()
+                            ->end()
+                        ->end()
+//                        ->scalarNode('database')->defaultValue('database')->end()
+//                        ->scalarNode('event_store_database')->defaultValue('event_store_database')->end()
+//                        ->scalarNode('snapshot_store_database')->defaultValue('snapshot_store_database')->end()
                     ->end()
                 ->end()
             ->end()
         ;
     }
 
-    /**
-     * @param ArrayNodeDefinition $node
-     *
-     * @return ArrayNodeDefinition
-     */
-    protected function addSnapshotStoreSection(ArrayNodeDefinition $node)
-    {
-        $node
-            ->children()
-                ->arrayNode('snapshot_store')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('document_manager')->defaultValue('snapshot_store')->end()
-                        ->scalarNode('database')->defaultValue('snapshot_store_database')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
-    }
+//    /**
+//     * @param ArrayNodeDefinition $node
+//     *
+//     * @return ArrayNodeDefinition
+//     */
+//    protected function addEventStoreSection(ArrayNodeDefinition $node)
+//    {
+//        $node
+//            ->children()
+//                ->arrayNode('event_store')
+//                    ->addDefaultsIfNotSet()
+//                    ->children()
+//                        ->scalarNode('document_manager')->defaultValue('event_store')->end()
+//                        ->scalarNode('database')->defaultValue('event_store_database')->end()
+//                    ->end()
+//                ->end()
+//            ->end()
+//        ;
+//    }
+
+//    /**
+//     * @param ArrayNodeDefinition $node
+//     *
+//     * @return ArrayNodeDefinition
+//     */
+//    protected function addSnapshotStoreSection(ArrayNodeDefinition $node)
+//    {
+//        $node
+//            ->children()
+//                ->arrayNode('snapshot_store')
+//                    ->addDefaultsIfNotSet()
+//                    ->children()
+//                        ->scalarNode('document_manager')->defaultValue('snapshot_store')->end()
+//                        ->scalarNode('database')->defaultValue('snapshot_store_database')->end()
+//                    ->end()
+//                ->end()
+//            ->end()
+//        ;
+//    }
 }

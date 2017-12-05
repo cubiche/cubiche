@@ -10,12 +10,14 @@
 
 namespace Cubiche\Core\Validator;
 
+use Cubiche\Core\Metadata\ClassMetadataFactory;
+use Cubiche\Core\Metadata\ClassMetadataFactoryInterface;
+use Cubiche\Core\Metadata\Driver\ChainDriver;
 use Cubiche\Core\Validator\Exception\ValidationException;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
-use Cubiche\Core\Validator\Mapping\Driver\StaticDriver;
-use Metadata\Driver\DriverChain;
-use Metadata\MetadataFactory;
-use Metadata\MetadataFactoryInterface;
+use Cubiche\Core\Validator\Mapping\Driver\StaticPHPDriver;
+use Cubiche\Core\Validator\Mapping\MethodMetadata;
+use Cubiche\Core\Validator\Mapping\PropertyMetadata;
 use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
@@ -36,7 +38,7 @@ class Validator implements ValidatorInterface
     protected $defaultGroup;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ClassMetadataFactoryInterface
      */
     protected $metadataFactory;
 
@@ -48,19 +50,19 @@ class Validator implements ValidatorInterface
     /**
      * Validator constructor.
      *
-     * @param MetadataFactoryInterface $metadataFactory
-     * @param string                   $defaultGroup
+     * @param ClassMetadataFactoryInterface $metadataFactory
+     * @param string                        $defaultGroup
      */
-    private function __construct(MetadataFactoryInterface $metadataFactory, $defaultGroup = Assert::DEFAULT_GROUP)
+    private function __construct(ClassMetadataFactoryInterface $metadataFactory, $defaultGroup = Assert::DEFAULT_GROUP)
     {
         $this->metadataFactory = $metadataFactory;
         $this->defaultGroup = $defaultGroup;
     }
 
     /**
-     * @param MetadataFactoryInterface $metadataFactory
+     * @param ClassMetadataFactoryInterface $metadataFactory
      */
-    public static function setMetadataFactory(MetadataFactoryInterface $metadataFactory)
+    public static function setMetadataFactory(ClassMetadataFactoryInterface $metadataFactory)
     {
         static::create()->metadataFactory = $metadataFactory;
     }
@@ -80,7 +82,7 @@ class Validator implements ValidatorInterface
     {
         if (static::$instance === null) {
             static::$instance = new static(
-                new MetadataFactory(new DriverChain(array(new StaticDriver())))
+                new ClassMetadataFactory(new ChainDriver(array(new StaticPHPDriver())))
             );
         }
 
@@ -291,35 +293,34 @@ class Validator implements ValidatorInterface
      */
     protected function addObjectConstraints($object)
     {
-        $metadata = $this->metadataFactory->getMetadataForClass(get_class($object));
-        if ($metadata !== null) {
-            /** @var ClassMetadata $classMetadata */
-            $classMetadata = $metadata->getRootClassMetadata();
-
-            foreach ($classMetadata->getPropertiesMetadata() as $propertyMetadata) {
-                foreach ($propertyMetadata->getConstraints() as $group => $constraints) {
+        $classMetadata = $this->metadataFactory->getMetadataFor(get_class($object));
+        if ($classMetadata !== null) {
+            /** @var PropertyMetadata $propertyMetadata */
+            foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
+                foreach ($propertyMetadata->constraints() as $group => $constraints) {
                     $allOf = Assert::create();
                     foreach ($constraints as $constraint) {
                         $allOf->addRules($constraint->getRules());
                     }
 
                     $this->addConstraint(
-                        Assert::create()->attribute($propertyMetadata->getPropertyName(), $allOf),
+                        Assert::create()->attribute($propertyMetadata->propertyName(), $allOf),
                         get_class($object),
                         $group
                     );
                 }
             }
 
-            foreach ($classMetadata->getMethodsMetadata() as $methodMetadata) {
-                foreach ($methodMetadata->getConstraints() as $group => $constraints) {
+            /** @var MethodMetadata $methodMetadata */
+            foreach ($classMetadata->methodsMetadata() as $methodMetadata) {
+                foreach ($methodMetadata->constraints() as $group => $constraints) {
                     $allOf = Assert::create();
                     foreach ($constraints as $constraint) {
                         $allOf->addRules($constraint->getRules());
                     }
 
                     $this->addConstraint(
-                        Assert::create()->call([$object, $methodMetadata->getMethodName()], $allOf),
+                        Assert::create()->call([$object, $methodMetadata->methodName()], $allOf),
                         get_class($object),
                         $group
                     );
@@ -335,7 +336,7 @@ class Validator implements ValidatorInterface
      */
     public static function getMetadataForClass($className)
     {
-        return self::create()->metadataFactory->getMetadataForClass($className);
+        return self::create()->metadataFactory->getMetadataFor($className);
     }
 
     /**
@@ -381,7 +382,7 @@ class Validator implements ValidatorInterface
      */
     protected function normalizeGroup($group = null)
     {
-        return $group === null || empty($group)  ? $this->defaultGroup : $group;
+        return $group === null || empty($group) ? $this->defaultGroup : $group;
     }
 
     /**

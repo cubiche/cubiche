@@ -46,8 +46,8 @@ abstract class EventStoreTestCase extends TestCase
             ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated]))
             ->when($store->persist($eventStream))
             ->then()
-                ->object($store->load($streamName)->aggregateId())
-                    ->isEqualTo($eventStream->aggregateId())
+                ->object($store->load($streamName)->id())
+                    ->isEqualTo($eventStream->id())
         ;
 
         $this
@@ -56,13 +56,17 @@ abstract class EventStoreTestCase extends TestCase
             ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
-                $postWasCreated->setVersion(32)
+                $postWasCreated->setVersion(1),
+                $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
+                $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated]))
+            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated, $postTitleWasChanged]))
             ->when($expextedVersion = $store->persist($eventStream))
             ->then()
                 ->integer($expextedVersion)
-                    ->isEqualTo(32)
+                    ->isEqualTo(2)
+                ->object($store->load($streamName, 2)->id())
+                    ->isEqualTo($eventStream->id())
         ;
     }
 
@@ -98,8 +102,8 @@ abstract class EventStoreTestCase extends TestCase
                 ->when($store->persist($eventStream1))
                 ->and($result = $store->load($streamName1))
                 ->then()
-                    ->object($result->aggregateId())
-                        ->isEqualTo($eventStream1->aggregateId())
+                    ->object($result->id())
+                        ->isEqualTo($eventStream1->id())
         ;
 
         $this
@@ -155,8 +159,8 @@ abstract class EventStoreTestCase extends TestCase
             ->and($store->persist($eventStream))
             ->when($store->remove($streamNameFake))
             ->then()
-                ->object($store->load($streamName)->aggregateId())
-                    ->isEqualTo($eventStream->aggregateId())
+                ->object($store->load($streamName)->id())
+                    ->isEqualTo($eventStream->id())
                 ->and()
                 ->when($store->remove($streamName))
                 ->then()

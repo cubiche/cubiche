@@ -110,7 +110,7 @@ trait EventSourcedAggregateRoot
 
         /** @var EventSourcedAggregateRootInterface $aggregateRoot */
         $aggregateRoot = $reflector->newInstanceWithoutConstructor();
-        $aggregateRoot->id = $history->aggregateId();
+        $aggregateRoot->id = $history->id();
         $aggregateRoot->replay($history);
 
         return $aggregateRoot;

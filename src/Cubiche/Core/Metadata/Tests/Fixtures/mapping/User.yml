@@ -2,7 +2,7 @@ Cubiche\Core\Metadata\Tests\Fixtures\User:
     fields:
         id:
             id:  true
-            type: AddressId
+            type: UserId
         name:
             type: StringLiteral
             name: fullName

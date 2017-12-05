@@ -1,0 +1,46 @@
+{
+    "name": "cubiche/mongodb",
+    "type": "library",
+    "description": "Mongodb ODM.",
+    "keywords": [
+        "mongodb",
+        "odm",
+        "query",
+        "query-builder"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                              "^7.0|^7.1",
+        "ext-mongodb":                      "^1.3.0",
+        "mongodb/mongodb":                  "^1.2.0",
+
+        "cubiche/identity":                 "dev-master",
+        "cubiche/metadata":                 "dev-master",
+        "cubiche/model":                    "dev-master",
+        "cubiche/serializer":               "dev-master",
+
+        "monolog/monolog":                  "~1.23"
+    },
+    "require-dev": {
+        "cubiche/tests":                    "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Infrastructure\\MongoDB\\": ""
+        }
+    }
+}

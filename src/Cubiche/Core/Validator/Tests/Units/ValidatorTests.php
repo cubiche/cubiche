@@ -8,17 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Tests\Units;
 
+use Cubiche\Core\Metadata\ClassMetadataFactory;
+use Cubiche\Core\Metadata\Driver\ChainDriver;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Exception\ValidationException;
-use Cubiche\Core\Validator\Mapping\Driver\StaticDriver;
+use Cubiche\Core\Validator\Mapping\Driver\StaticPHPDriver;
 use Cubiche\Core\Validator\Tests\Fixtures\Blog;
 use Cubiche\Core\Validator\Tests\Fixtures\Post;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Core\Validator\ValidatorInterface;
-use Metadata\Driver\DriverChain;
-use Metadata\MetadataFactory;
 
 /**
  * ValidatorTests class.
@@ -69,7 +70,7 @@ class ValidatorTests extends TestCase
     {
         $this
             ->given($validator = $this->createValidator())
-            ->and($metadataFactory = new MetadataFactory(new DriverChain(array(new StaticDriver()))))
+            ->and($metadataFactory = new ClassMetadataFactory(new ChainDriver(array(new StaticPHPDriver()))))
             ->when($validator->setMetadataFactory($metadataFactory))
             ->then()
                 ->boolean(true)

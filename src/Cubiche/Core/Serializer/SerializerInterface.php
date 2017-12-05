@@ -20,11 +20,12 @@ interface SerializerInterface
     /**
      * Serializes object to array.
      *
-     * @param mixed $object
+     * @param mixed  $object
+     * @param string $className
      *
      * @return array
      */
-    public function serialize($object);
+    public function serialize($object, $className = null);
 
     /**
      * Deserializes data to object.

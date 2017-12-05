@@ -11,9 +11,10 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot;
 
-use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
+use Cubiche\Infrastructure\MongoDB\Common\Connection;
+use MongoDB\Database;
 
 /**
  * MongoDBSnapshotStore class.
@@ -23,32 +24,29 @@ use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 class MongoDBSnapshotStore implements SnapshotStoreInterface
 {
     /**
-     * @var \MongoClient
+     * @var Connection
      */
-    protected $mongoClient;
+    protected $connection;
 
     /**
-     * @var string
+     * @var Database
      */
-    protected $databaseName;
+    protected $database;
 
     /**
-     * @var SerializerInterface
+     * @var array
      */
-    protected $serializer;
+    protected $collections;
 
     /**
      * MongoDBSnapshotStore constructor.
      *
-     * @param \MongoClient        $mongoClient
-     * @param string              $databaseName
-     * @param SerializerInterface $serializer
+     * @param Connection $connection
      */
-    public function __construct(\MongoClient $mongoClient, $databaseName, SerializerInterface $serializer)
+    public function __construct(Connection $connection)
     {
-        $this->mongoClient = $mongoClient;
-        $this->databaseName = $databaseName;
-        $this->serializer = $serializer;
+        $this->connection = $connection;
+        $this->database = new Database($this->connection->manager(), $this->connection->database());
     }
 
     /**
@@ -57,11 +55,11 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     public function persist(Snapshot $snapshot)
     {
         $collection = $this->getCollection($snapshot->snapshotName());
-        $collection->update(
+        $collection->findOneAndUpdate(
             array('_id' => $snapshot->aggregate()->id()->toNative()),
             array(
                 '$set' => array(
-                    'payload' => $this->serializer->serialize($snapshot),
+                    'payload' => serialize($snapshot),
                 ),
             ),
             array('upsert' => true)
@@ -81,7 +79,7 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
         ));
 
         if ($document !== null) {
-            return $this->serializer->deserialize($document['payload']['payload'], Snapshot::class);
+            return unserialize($document['payload']);
         }
 
         return;
@@ -95,28 +93,9 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
         $collection = $this->getCollection($snapshotName);
         $aggregateId = $this->snapshotNameToAggregareId($snapshotName);
 
-        $collection->remove(array(
+        $collection->deleteMany(array(
             '_id' => $aggregateId,
         ));
-    }
-
-    /**
-     * Get mongo db stream collection.
-     *
-     * @param string $snapshotName
-     *
-     * @return \MongoCollection
-     */
-    private function getCollection($snapshotName)
-    {
-        $collection = $this->mongoClient->selectCollection(
-            $this->databaseName,
-            $this->snapshotNameToCollectionName($snapshotName)
-        );
-
-        $collection->setReadPreference(\MongoClient::RP_PRIMARY);
-
-        return $collection;
     }
 
     /**
@@ -140,5 +119,24 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     private function snapshotNameToAggregareId($snapshotName)
     {
         return substr($snapshotName, strpos($snapshotName, '-') + 1);
+    }
+
+    /**
+     * Returns the Collection instance for a class.
+     *
+     * @param string $snapshotName
+     *
+     * @return \MongoDB\Collection
+     */
+    public function getCollection($snapshotName)
+    {
+        $collectionName = $this->snapshotNameToCollectionName($snapshotName);
+        if (!isset($this->collections[$collectionName])) {
+            $collection = $this->database->selectCollection($collectionName);
+
+            $this->collections[$collectionName] = $collection;
+        }
+
+        return $this->collections[$collectionName];
     }
 }

@@ -79,4 +79,12 @@ class DateTimeEncoder implements EncoderInterface
                 throw new \RuntimeException('unsupported type: '.$data['class']);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function priority()
+    {
+        return 500;
+    }
 }

@@ -11,18 +11,10 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\Snapshot;
 
-use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
-use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
-use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\NativeEncoder;
-use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
-use Cubiche\Core\Serializer\Serializer;
-use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Units\Snapshot\SnapshotStoreTestCase;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot\MongoDBSnapshotStore;
-use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\ClassMetadataFactoryTrait;
-use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCaseTrait;
+use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoDBTestCaseTrait;
 
 /**
  * MongoDBSnapshotStoreTests class.
@@ -33,23 +25,14 @@ use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCase
  */
 class MongoDBSnapshotStoreTests extends SnapshotStoreTestCase
 {
-    use MongoClientTestCaseTrait;
-    use ClassMetadataFactoryTrait;
+    use MongoDBTestCaseTrait;
 
     /**
-     * @return SerializerInterface
+     * @return string
      */
-    protected function createSerializer()
+    protected function databaseName()
     {
-        $metadataFactory = $this->createFactory();
-
-        return new Serializer(array(
-            new DateTimeEncoder(),
-            new MetadataObjectEncoder($metadataFactory),
-            new ObjectEncoder(),
-            new ArrayEncoder(),
-            new NativeEncoder(),
-        ));
+        return DOCTRINE_MONGODB_DATABASE.'_snapshot_store';
     }
 
     /**
@@ -57,6 +40,6 @@ class MongoDBSnapshotStoreTests extends SnapshotStoreTestCase
      */
     protected function createStore()
     {
-        return new MongoDBSnapshotStore($this->client(), $this->getDatabaseName(), $this->createSerializer());
+        return new MongoDBSnapshotStore($this->getConnection());
     }
 }

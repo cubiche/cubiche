@@ -10,15 +10,16 @@
 
 namespace Cubiche\Core\Serializer\Tests\Fixtures;
 
-use Cubiche\Domain\System\Integer;
-use Cubiche\Domain\System\StringLiteral;
+use Cubiche\Domain\Geolocation\Coordinate;
+use Cubiche\Domain\Model\Entity;
+use Cubiche\Domain\Model\ReadModelInterface;
 
 /**
- * Address class.
+ * Address.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Address
+class Address extends Entity implements ReadModelInterface
 {
     /**
      * @var string
@@ -31,11 +32,6 @@ class Address
     protected $street;
 
     /**
-     * @var int
-     */
-    protected $number;
-
-    /**
      * @var string
      */
     protected $zipcode;
@@ -46,28 +42,29 @@ class Address
     protected $city;
 
     /**
-     * @var array
+     * @var Coordinate
      */
-    protected $contacts;
+    protected $coordinate;
 
     /**
      * Address constructor.
      *
-     * @param string $name
-     * @param string $street
-     * @param int    $number
-     * @param string $zipcode
-     * @param string $city
-     * @param array  $contacts
+     * @param AddressId  $id
+     * @param string     $name
+     * @param string     $street
+     * @param string     $zipcode
+     * @param string     $city
+     * @param Coordinate $coordinate
      */
-    public function __construct($name, $street, $number, $zipcode, $city, array $contacts = array())
+    public function __construct(AddressId $id, $name, $street, $zipcode, $city, Coordinate $coordinate)
     {
-        $this->setName($name);
-        $this->setStreet($street);
-        $this->setNumber($number);
-        $this->setZipcode($zipcode);
-        $this->setCity($city);
-        $this->setContacts($contacts);
+        parent::__construct($id);
+
+        $this->name = $name;
+        $this->street = $street;
+        $this->zipcode = $zipcode;
+        $this->city = $city;
+        $this->coordinate = $coordinate;
     }
 
     /**
@@ -95,30 +92,6 @@ class Address
     }
 
     /**
-     * @param string $street
-     */
-    public function setStreet($street)
-    {
-        $this->street = $street;
-    }
-
-    /**
-     * @return int
-     */
-    public function number()
-    {
-        return $this->number;
-    }
-
-    /**
-     * @param int $number
-     */
-    public function setNumber($number)
-    {
-        $this->number = Integer::fromNative($number);
-    }
-
-    /**
      * @return string
      */
     public function zipcode()
@@ -127,15 +100,7 @@ class Address
     }
 
     /**
-     * @param string $zipcode
-     */
-    public function setZipcode($zipcode)
-    {
-        $this->zipcode = $zipcode;
-    }
-
-    /**
-     * @return StringLiteral
+     * @return string
      */
     public function city()
     {
@@ -143,41 +108,45 @@ class Address
     }
 
     /**
-     * @param string $city
+     * @return Coordinate
      */
-    public function setCity($city)
+    public function coordinate()
     {
-        $this->city = StringLiteral::fromNative($city);
+        return $this->coordinate;
     }
 
     /**
      * @return array
      */
-    public function contacts()
+    public function serialize()
     {
-        return $this->contacts;
+        return array(
+            'id' => $this->id->toNative(),
+            'name' => $this->name,
+            'street' => $this->street,
+            'zipcode' => $this->zipcode,
+            'city' => $this->city,
+            'coordinate' => array(
+                'lat' => $this->coordinate->latitude()->toNative(),
+                'lng' => $this->coordinate->longitude()->toNative(),
+            ),
+        );
     }
 
     /**
-     * @param array $contacts
-     */
-    public function setContacts(array $contacts)
-    {
-        $this->contacts = $contacts;
-    }
-
-    /**
-     * @param Address $other
+     * @param array $data
      *
-     * @return bool
+     * @return mixed The object instance
      */
-    public function equals(Address $other)
+    public static function deserialize(array $data)
     {
-        return $this->name() == $other->name() &&
-            $this->street() == $other->street() &&
-            $this->number() == $other->number() &&
-            $this->zipcode() == $other->zipcode() &&
-            $this->city() == $other->city()
-        ;
+        return new self(
+            AddressId::fromNative($data['id']),
+            $data['name'],
+            $data['street'],
+            $data['zipcode'],
+            $data['city'],
+            Coordinate::fromLatLng($data['coordinate']['lat'], $data['coordinate']['lng'])
+        );
     }
 }

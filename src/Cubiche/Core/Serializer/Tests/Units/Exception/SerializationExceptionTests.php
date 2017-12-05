@@ -106,4 +106,22 @@ class SerializationExceptionTests extends TestCase
                     ->isNull()
         ;
     }
+
+    /*
+     * Test invalidMapping method.
+     */
+    public function testInvalidMapping()
+    {
+        $this
+            ->given($cause = new \Exception('some cause'))
+            ->when($exception = SerializationException::invalidMapping('foo', $cause))
+            ->then()
+                ->object($exception)
+                    ->isInstanceOf(SerializationException::class)
+                ->integer($exception->getCode())
+                    ->isEqualTo(0)
+                ->object($exception->getPrevious())
+                    ->isIdenticalTo($cause)
+        ;
+    }
 }
