@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -9,13 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Model;
+namespace Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures;
+
+use Cubiche\Domain\System\Enum;
 
 /**
- * ReadModel interface.
+ * Role Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface ReadModelInterface
+class Role extends Enum
 {
+    const ROLE_ANONYMOUS = 'ROLE_ANONYMOUS';
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
 }

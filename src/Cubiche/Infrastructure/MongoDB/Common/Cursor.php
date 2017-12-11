@@ -11,10 +11,9 @@
 
 namespace Cubiche\Infrastructure\MongoDB\Common;
 
+use ArrayIterator;
 use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Serializer\SerializerInterface;
-use IteratorIterator;
-use MongoDB\Driver\Cursor as MongoDBCursor;
 
 /**
  * Cursor class.
@@ -26,7 +25,7 @@ class Cursor implements Iterator
     /**
      * The MongoDB Cursor instance being wrapped.
      *
-     * @var IteratorIterator
+     * @var ArrayIterator
      */
     protected $iterator;
 
@@ -43,13 +42,13 @@ class Cursor implements Iterator
     /**
      * Cursor constructor.
      *
-     * @param MongoDBCursor       $cursor
+     * @param array               $elements
      * @param SerializerInterface $serializer
      * @param ClassMetadata       $classMetadata
      */
-    public function __construct(MongoDBCursor $cursor, SerializerInterface $serializer, ClassMetadata $classMetadata)
+    public function __construct(array $elements, SerializerInterface $serializer, ClassMetadata $classMetadata)
     {
-        $this->iterator = new IteratorIterator($cursor);
+        $this->iterator = new ArrayIterator($elements);
         $this->serializer = $serializer;
         $this->classMetadata = $classMetadata;
     }
@@ -61,7 +60,7 @@ class Cursor implements Iterator
      */
     public function count()
     {
-        return count($this->getBaseCursor()->toArray());
+        return $this->iterator->count();
     }
 
     /**
@@ -77,15 +76,7 @@ class Cursor implements Iterator
      */
     public function dead()
     {
-        return $this->getBaseCursor()->isDead();
-    }
-
-    /**
-     * @return MongoDBCursor
-     */
-    public function getBaseCursor()
-    {
-        return $this->iterator->getInnerIterator();
+        return true;
     }
 
     /**
@@ -146,7 +137,17 @@ class Cursor implements Iterator
      */
     public function toArray()
     {
-        return $this->getBaseCursor()->toArray();
+        $result = array();
+
+        // Iterator all docs
+        $this->rewind();
+        while ($doc = $this->current()) {
+            $result[] = $doc;
+
+            $this->next();
+        }
+
+        return $result;
     }
 
     /**

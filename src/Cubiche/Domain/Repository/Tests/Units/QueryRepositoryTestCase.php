@@ -222,15 +222,6 @@ abstract class QueryRepositoryTestCase extends CollectionTestCase
         ;
 
         $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = AddressId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->persistAll([$id]);
-                })->isInstanceOf(\TypeError::class)
-        ;
-
-        $this
             ->given($repository = $this->emptyRepository())
             ->and($value = $this->randomValue())
             ->and($name = $value->name())

@@ -115,7 +115,7 @@ class Query
                 ));
 
                 return new Cursor(
-                    $this->collection->find($this->querySettings, $this->options),
+                    $this->collection->find($this->querySettings, $this->options)->toArray(),
                     $this->serializer,
                     $this->classMetadata
                 );
@@ -126,6 +126,7 @@ class Query
                     'operation' => 'deleteMany',
                     'parameters' => array($this->querySettings, $this->options),
                 ));
+
                 $this->collection->deleteMany($this->querySettings, $this->options);
                 break;
             case self::TYPE_COUNT:
@@ -218,7 +219,6 @@ class Query
             }
 
             $this->iterator = $cursor;
-//            $this->iterator = new Cursor($cursor, $this->serializer, $this->classMetadata);
         }
 
         return $this->iterator;

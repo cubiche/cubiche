@@ -43,12 +43,4 @@ class NativeEncoder implements EncoderInterface
     {
         return $data;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function priority()
-    {
-        return 100;
-    }
 }

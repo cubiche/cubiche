@@ -20,7 +20,7 @@ use Cubiche\Core\Serializer\SerializerAwareTrait;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ArrayEncoder implements SerializerAwareInterface
+class ArrayEncoder implements SerializerAwareInterface, EncoderInterface
 {
     use SerializerAwareTrait;
 
@@ -34,6 +34,8 @@ class ArrayEncoder implements SerializerAwareInterface
         if ($className == 'array') {
             return true;
         }
+
+        return preg_match('/(.+)\\[(.+)\\]/', $className, $output) === 1;
 
         return '[]' === substr($className, -2) && $this->serializer->supports(substr($className, 0, -2));
     }
@@ -62,8 +64,10 @@ class ArrayEncoder implements SerializerAwareInterface
      */
     public function decode($data, $className)
     {
-        if ('[]' === substr($className, -2)) {
-            $className = substr($className, 0, -2);
+        $classType = null;
+        if (preg_match('/(.+)\\[(.+)\\]/', $className, $output) === 1) {
+            $classType = $output[1];
+            $className = $output[2];
         }
 
         $result = array();
@@ -71,29 +75,42 @@ class ArrayEncoder implements SerializerAwareInterface
             if (is_array($item) && isset($item['class']) && isset($item['payload'])) {
                 $result[$key] = $this
                     ->serializer
-                    ->deserialize($item['payload'], $item['class'])
-                ;
+                    ->deserialize($item['payload'], $item['class']);
             } elseif (is_array($item) && isset($item['datetime']) && isset($item['timezone'])) {
                 $result[$key] = $this
                     ->serializer
-                    ->deserialize($item, 'DateTime')
-                ;
+                    ->deserialize($item, 'DateTime');
             } else {
                 $result[$key] = $this
                     ->serializer
-                    ->deserialize($item, $className)
-                ;
+                    ->deserialize($item, $className);
             }
         }
 
-        return $result;
+        return $this->normalizeArray($result, $classType);
     }
 
     /**
-     * {@inheritdoc}
+     * @param array       $result
+     * @param string|null $type
+     *
+     * @return mixed
      */
-    public function priority()
+    protected function normalizeArray($result, $type = null)
     {
-        return 200;
+        if ($type === null) {
+            return $result;
+        }
+
+        switch ($type) {
+            case 'array':
+                return $result;
+            case 'ArrayList':
+            case 'ArraySet':
+            case 'ArrayHashMap':
+                $collectionType = "Cubiche\\Core\\Collections\\ArrayCollection\\$type";
+
+                return new $collectionType($result);
+        }
     }
 }

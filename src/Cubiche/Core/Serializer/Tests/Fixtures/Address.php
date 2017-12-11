@@ -10,16 +10,16 @@
 
 namespace Cubiche\Core\Serializer\Tests\Fixtures;
 
+use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Model\Entity;
-use Cubiche\Domain\Model\ReadModelInterface;
 
 /**
  * Address.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Address extends Entity implements ReadModelInterface
+class Address extends Entity implements SerializableInterface
 {
     /**
      * @var string

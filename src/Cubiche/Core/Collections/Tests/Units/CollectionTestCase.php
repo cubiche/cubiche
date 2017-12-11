@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Collections\Tests\Units;
 
 use Cubiche\Core\Collections\CollectionInterface;
@@ -134,7 +135,8 @@ abstract class CollectionTestCase extends TestCase
             ->given($collection = $this->randomCollection())
             ->when($array = $collection->toArray())
                 ->array($array)
-                    ->isEqualTo(\iterator_to_array($collection->getIterator()));
+                    ->isEqualTo(\iterator_to_array($collection->getIterator()))
+        ;
     }
 
     /**

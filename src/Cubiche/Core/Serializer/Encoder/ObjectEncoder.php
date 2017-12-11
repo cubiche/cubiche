@@ -20,7 +20,7 @@ use Cubiche\Core\Serializer\SerializerAwareTrait;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ObjectEncoder implements SerializerAwareInterface
+class ObjectEncoder implements SerializerAwareInterface, EncoderInterface
 {
     use SerializerAwareTrait;
 
@@ -99,13 +99,5 @@ class ObjectEncoder implements SerializerAwareInterface
         }
 
         return $object;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function priority()
-    {
-        return 300;
     }
 }

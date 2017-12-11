@@ -101,12 +101,4 @@ class ValueObjectEncoder implements EncoderInterface
 
         return $data;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function priority()
-    {
-        return 600;
-    }
 }

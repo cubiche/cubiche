@@ -39,11 +39,4 @@ interface EncoderInterface
      * @return mixed
      */
     public function decode($data, $className);
-
-    /**
-     * The higher priority value, the earlier an encoder will be used in the chain (defaults to 0).
-     *
-     * @return int
-     */
-    public function priority();
 }

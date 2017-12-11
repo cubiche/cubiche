@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\MongoDB\Tests\Fixtures;
+namespace Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
@@ -18,6 +18,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
 use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\Model\ReadModelInterface;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\Web\EmailAddress;
 
@@ -26,7 +27,7 @@ use Cubiche\Domain\Web\EmailAddress;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class User extends AggregateRoot
+class User extends AggregateRoot implements ReadModelInterface
 {
     /**
      * @var string
@@ -120,6 +121,14 @@ class User extends AggregateRoot
     public function name()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     /**

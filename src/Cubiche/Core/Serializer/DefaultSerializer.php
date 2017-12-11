@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Serializer;
 
+use Cubiche\Core\Serializer\Encoder\EncoderInterface;
 use Cubiche\Core\Serializer\Exception\SerializationException;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Validator;
@@ -65,5 +66,12 @@ class DefaultSerializer implements SerializerInterface
     public function supports($className)
     {
         return in_array(SerializableInterface::class, class_implements($className));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addEncoder(EncoderInterface $encoder, $priority = 0)
+    {
     }
 }

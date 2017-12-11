@@ -8,11 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\MongoDB\Tests\Fixtures;
+namespace Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures;
 
 use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\Geolocation\Coordinate;
+use Cubiche\Domain\Geolocation\Latitude;
+use Cubiche\Domain\Geolocation\Longitude;
 use Cubiche\Domain\Model\Entity;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * Address.
@@ -27,7 +30,7 @@ class Address extends Entity implements SerializableInterface
     protected $name;
 
     /**
-     * @var string
+     * @var StringLiteral
      */
     protected $street;
 
@@ -61,7 +64,7 @@ class Address extends Entity implements SerializableInterface
         parent::__construct($id);
 
         $this->name = $name;
-        $this->street = $street;
+        $this->street = StringLiteral::fromNative($street);
         $this->zipcode = $zipcode;
         $this->city = $city;
         $this->coordinate = $coordinate;
@@ -84,7 +87,7 @@ class Address extends Entity implements SerializableInterface
     }
 
     /**
-     * @return string
+     * @return StringLiteral
      */
     public function street()
     {
@@ -123,7 +126,7 @@ class Address extends Entity implements SerializableInterface
         return array(
             'id' => $this->id->toNative(),
             'name' => $this->name,
-            'street' => $this->street,
+            'street' => $this->street->toNative(),
             'zipcode' => $this->zipcode,
             'city' => $this->city,
             'coordinate' => array(

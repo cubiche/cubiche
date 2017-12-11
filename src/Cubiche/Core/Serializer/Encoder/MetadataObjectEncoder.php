@@ -23,7 +23,7 @@ use Cubiche\Core\Serializer\SerializerAwareTrait;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MetadataObjectEncoder implements SerializerAwareInterface
+class MetadataObjectEncoder implements SerializerAwareInterface, EncoderInterface
 {
     use SerializerAwareTrait;
 
@@ -133,13 +133,5 @@ class MetadataObjectEncoder implements SerializerAwareInterface
     protected function getClassMetadata($className)
     {
         return $this->metadataFactory->getMetadataFor(ltrim($className, '\\'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function priority()
-    {
-        return 400;
     }
 }

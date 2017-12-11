@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -9,13 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Model;
+namespace Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures;
+
+use Cubiche\Domain\Identity\UUID;
 
 /**
- * ReadModel interface.
+ * Address Id Class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface ReadModelInterface
+class AddressId extends UUID
 {
 }

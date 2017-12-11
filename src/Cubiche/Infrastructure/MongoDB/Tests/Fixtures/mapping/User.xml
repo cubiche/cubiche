@@ -7,10 +7,10 @@
         <field fieldName="email" type="EmailAddress" />
         <field fieldName="fax" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Phonenumber" />
         <field fieldName="mainRole" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Role" />
-        <field fieldName="phonenumbers" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Phonenumber[]" />
-        <field fieldName="roles" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Role[]" />
-        <field fieldName="languagesLevel" type="integer[]" />
-        <field fieldName="addresses" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Address[]" />
+        <field fieldName="phonenumbers" type="array[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Phonenumber]" />
+        <field fieldName="roles" type="ArraySet[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Role]" />
+        <field fieldName="languagesLevel" type="ArrayHashMap[integer]" />
+        <field fieldName="addresses" type="ArrayList[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Address]" />
     </aggregate-root>
     
 </cubiche-mapping>

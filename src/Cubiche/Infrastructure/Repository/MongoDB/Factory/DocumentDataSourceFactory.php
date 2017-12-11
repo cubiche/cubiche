@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Infrastructure\MongoDB\Factory;
+namespace Cubiche\Infrastructure\Repository\MongoDB\Factory;
 
 use Cubiche\Infrastructure\MongoDB\DocumentManager;
 use Cubiche\Infrastructure\Repository\MongoDB\DocumentDataSource;

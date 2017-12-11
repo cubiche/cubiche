@@ -11,6 +11,8 @@
 
 namespace Cubiche\Core\Serializer;
 
+use Cubiche\Core\Collections\ArrayCollection\ArrayList;
+use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
 use Cubiche\Core\Serializer\Encoder\EncoderInterface;
 use RuntimeException;
 
@@ -22,7 +24,7 @@ use RuntimeException;
 class Serializer implements SerializerInterface
 {
     /**
-     * @var EncoderInterface[]
+     * @var SortedArrayHashMap
      */
     protected $encoders;
 
@@ -32,20 +34,32 @@ class Serializer implements SerializerInterface
     protected $encoderByType;
 
     /**
-     * ChainDecoder constructor.
+     * Serializer constructor.
      *
      * @param array $encoders
      */
     public function __construct(array $encoders = array())
     {
-        $this->encoders = array();
-        foreach ($encoders as $encoder) {
+        $this->encoders = new SortedArrayHashMap();
+        foreach ($encoders as $priority => $encoder) {
             if ($encoder instanceof SerializerAwareInterface) {
                 $encoder->setSerializer($this);
             }
 
-            $this->encoders[] = $encoder;
+            $this->addEncoder($encoder, $priority);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addEncoder(EncoderInterface $encoder, $priority = 0)
+    {
+        if (!$this->encoders->containsKey($priority)) {
+            $this->encoders->set($priority, new ArrayList());
+        }
+
+        $this->encoders->get($priority)->add($encoder);
     }
 
     /**
@@ -163,11 +177,13 @@ class Serializer implements SerializerInterface
             return $this->encoderByType[$type];
         }
 
-        foreach ($this->encoders as $decoder) {
-            if ($decoder->supports($type)) {
-                $this->encoderByType[$type] = $decoder;
+        foreach ($this->encoders as $priority => $encoders) {
+            foreach ($encoders as $encoder) {
+                if ($encoder->supports($type)) {
+                    $this->encoderByType[$type] = $encoder;
 
-                return $decoder;
+                    return $encoder;
+                }
             }
         }
 

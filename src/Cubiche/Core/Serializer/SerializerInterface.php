@@ -10,6 +10,8 @@
 
 namespace Cubiche\Core\Serializer;
 
+use Cubiche\Core\Serializer\Encoder\EncoderInterface;
+
 /**
  * Serializer interface.
  *
@@ -36,6 +38,15 @@ interface SerializerInterface
      * @return object
      */
     public function deserialize($data, $className);
+
+    /**
+     * Adds a serializer encoder. The smaller the priority value,
+     * the earlier an encoder will be used in the chain (default is 0).
+     *
+     * @param EncoderInterface $encoder
+     * @param int              $priority
+     */
+    public function addEncoder(EncoderInterface $encoder, $priority = 0);
 
     /**
      * @param string $className

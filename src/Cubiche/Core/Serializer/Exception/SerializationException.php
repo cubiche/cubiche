@@ -75,7 +75,7 @@ class SerializationException extends RuntimeException
     public static function propertyNotFound($propertyName, $className, Exception $cause = null)
     {
         return new static(sprintf(
-            'Property %s not found for object %s.',
+            'Property `%s` not found for object %s.',
             $propertyName,
             $className
         ), 0, $cause);
