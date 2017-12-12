@@ -12,15 +12,22 @@ env:
     - COMPOSER_ARGS="--no-interaction"
     - MONGO_DRIVER=mongodb
 
+addons: &common_addons
+  apt:
+    sources: [ mongodb-3.4-precise ]
+    packages: [ mongodb-org ]
+
 matrix:
   include:
     - php: 7.1
-      env:
-        - DRIVER_VERSION=1.3.3
+      env: DRIVER_VERSION=1.3.3
+      addons: *common_addons
 
 services: mongodb
 
 before_install:
+  - mongod --version
+  - mongo --eval 'var v = db.runCommand({buildInfo:1}).versionArray; if ((v[0] == 3 && v[1] >= 4) || v[0] >= 4) db.adminCommand({setFeatureCompatibilityVersion:"3.4"});'
   - yes '' | pecl -q install -f $MONGO_DRIVER-${DRIVER_VERSION}
   - php --ri $MONGO_DRIVER
   - travis_retry composer self-update
