@@ -15,8 +15,14 @@ env:
 matrix:
   include:
     - php: 7.1
-      env:
-        - DRIVER_VERSION=1.3.3
+      env: DRIVER_VERSION=1.3.3
+      addons:
+        apt:
+          sources:
+            - sourceline: "deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+              key_url: "https://www.mongodb.org/static/pgp/server-3.4.asc"
+            - "mongodb-upstart"
+          packages: ['mongodb-org-server']
 
 services: mongodb
 
@@ -30,5 +36,5 @@ install:
   - travis_retry composer install $COMPOSER_ARGS
 
 script:
-  - vendor/bin/atoum -c .atoum.travis.php +verbose
+  - bin/atoum -c .atoum.travis.php +verbose
   

@@ -37,4 +37,3 @@ install:
 
 script:
   - bin/atoum -c .atoum.travis.php +verbose
-  
