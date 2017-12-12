@@ -19,12 +19,12 @@
         }
     ],
     "require": {
-        "php":                              "^5.5.9|^7.0",
+        "php":                          "^7.0|^7.1",
 
-        "cubiche/event-bus":                "dev-master"
+        "cubiche/event-bus":            "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":                    "dev-master"
+        "cubiche/tests":                "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

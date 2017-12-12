@@ -18,20 +18,14 @@
         }
     ],
     "require": {
-        "php":                              "^5.5.9|^7.0",
+        "php":                              "^7.0|^7.1",
 
         "cubiche/bus-adapter":              "dev-master",
-        "cubiche/collections-adapter":      "dev-master",
         "cubiche/cqrs-adapter":             "dev-master",
         "cubiche/event-bus-adapter":        "dev-master",
         "cubiche/event-sourcing-adapter":   "dev-master",
-        "cubiche/geolocation-adapter":      "dev-master",
-        "cubiche/identity-adapter":         "dev-master",
-        "cubiche/model-adapter":            "dev-master",
         "cubiche/repository-adapter":       "dev-master",
         "cubiche/storage-adapter":          "dev-master",
-        "cubiche/system-adapter":           "dev-master",
-        "cubiche/web-adapter":              "dev-master",
         "symfony/framework-bundle":         "^3.2"
     },
     "require-dev": {

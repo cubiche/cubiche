@@ -1,11 +1,10 @@
 {
-    "name": "cubiche/event-sourcing-adapter",
+    "name": "cubiche/repository-adapter",
     "type": "library",
-    "description": "Event sourcing adapter library.",
+    "description": "Repository adapter library.",
     "keywords": [
-        "event-store",
-        "event-stream",
-        "snapshot"
+        "repository",
+        "query"
     ],
     "license": "MIT",
     "authors": [
@@ -19,12 +18,12 @@
         }
     ],
     "require": {
-        "php":                              "^7.0|^7.1",
+        "php":                          "^7.0|^7.1",
 
-        "cubiche/event-sourcing":           "dev-master"
+        "cubiche/repository":           "dev-master"
     },
     "require-dev": {
-        "cubiche/tests":                    "dev-master"
+        "cubiche/tests":                "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -32,7 +31,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Infrastructure\\EventSourcing\\": ""
+            "Cubiche\\Infrastructure\\Repository\\": ""
         }
     }
 }
