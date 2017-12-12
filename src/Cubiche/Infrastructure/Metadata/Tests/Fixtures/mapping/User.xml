@@ -1,0 +1,13 @@
+<cubiche-mapping>
+    <aggregate-root name="Cubiche\Infrastructure\Metadata\Tests\Fixtures\User" collection="user">
+        <field fieldName="id" name="id" id="true" type="Cubiche\Infrastructure\Metadata\Tests\Fixtures\UserId" />
+        <field fieldName="name" name="fullName" type="string" />
+        <field fieldName="username" type="StringLiteral" />
+        <field fieldName="age" name="age" type="Integer" />
+        <field fieldName="email" name="email" type="EmailAddress" />
+
+        <field fieldName="addresses" name="addresses" type="ArrayList[Cubiche\Infrastructure\Metadata\Tests\Fixtures\Address]" />
+        <field fieldName="friends" name="friends" type="ArraySet[Cubiche\Infrastructure\Metadata\Tests\Fixtures\User]" />
+    </aggregate-root>
+    
+</cubiche-mapping>
