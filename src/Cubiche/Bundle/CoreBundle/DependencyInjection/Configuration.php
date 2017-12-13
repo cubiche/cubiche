@@ -31,6 +31,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('cubiche_core');
 
         $this->addMongoDBSection($rootNode);
+        $this->addMetadataSection($rootNode);
 
         return $treeBuilder;
     }
@@ -47,73 +48,78 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('mongodb')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('default')
+                        ->arrayNode('connections')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('server')->defaultValue('server')->end()
-                                ->scalarNode('database')->defaultValue('database')->end()
+                                ->arrayNode('default')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('server')->defaultValue('server')->end()
+                                        ->scalarNode('database')->defaultValue('database')->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('event_store')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('server')->defaultValue('server')->end()
+                                        ->scalarNode('database')->defaultValue('database')->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('snapshot_store')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('server')->defaultValue('server')->end()
+                                        ->scalarNode('database')->defaultValue('database')->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('event_store')
+                        ->arrayNode('document_manager')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('server')->defaultValue('server')->end()
-                                ->scalarNode('database')->defaultValue('database')->end()
+                                ->arrayNode('mappings')
+                                    ->useAttributeAsKey('name')
+                                    ->prototype('array')
+                                        ->beforeNormalization()
+                                            ->ifString()
+                                            ->then(function ($v) {
+                                                return ['type' => $v];
+                                            })
+                                        ->end()
+                                        ->treatNullLike([])
+                                        ->performNoDeepMerging()
+                                        ->children()
+                                            ->scalarNode('type')->end()
+                                            ->scalarNode('dir')->end()
+                                            ->scalarNode('prefix')->end()
+                                            ->scalarNode('separator')->defaultValue('.')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('snapshot_store')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->scalarNode('server')->defaultValue('server')->end()
-                                ->scalarNode('database')->defaultValue('database')->end()
-                            ->end()
-                        ->end()
-//                        ->scalarNode('database')->defaultValue('database')->end()
-//                        ->scalarNode('event_store_database')->defaultValue('event_store_database')->end()
-//                        ->scalarNode('snapshot_store_database')->defaultValue('snapshot_store_database')->end()
                     ->end()
                 ->end()
             ->end()
         ;
     }
 
-//    /**
-//     * @param ArrayNodeDefinition $node
-//     *
-//     * @return ArrayNodeDefinition
-//     */
-//    protected function addEventStoreSection(ArrayNodeDefinition $node)
-//    {
-//        $node
-//            ->children()
-//                ->arrayNode('event_store')
-//                    ->addDefaultsIfNotSet()
-//                    ->children()
-//                        ->scalarNode('document_manager')->defaultValue('event_store')->end()
-//                        ->scalarNode('database')->defaultValue('event_store_database')->end()
-//                    ->end()
-//                ->end()
-//            ->end()
-//        ;
-//    }
-
-//    /**
-//     * @param ArrayNodeDefinition $node
-//     *
-//     * @return ArrayNodeDefinition
-//     */
-//    protected function addSnapshotStoreSection(ArrayNodeDefinition $node)
-//    {
-//        $node
-//            ->children()
-//                ->arrayNode('snapshot_store')
-//                    ->addDefaultsIfNotSet()
-//                    ->children()
-//                        ->scalarNode('document_manager')->defaultValue('snapshot_store')->end()
-//                        ->scalarNode('database')->defaultValue('snapshot_store_database')->end()
-//                    ->end()
-//                ->end()
-//            ->end()
-//        ;
-//    }
+    /**
+     * @param ArrayNodeDefinition $node
+     *
+     * @return ArrayNodeDefinition
+     */
+    protected function addMetadataSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('metadata')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('cache_dir')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
 }

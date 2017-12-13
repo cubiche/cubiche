@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!--  connection  -->
+        <service id="cubiche.mongodb.connection.default" class="Cubiche\Infrastructure\MongoDB\Common\Connection">
+            <argument>%cubiche.mongodb.connection.default.server%</argument>
+            <argument>%cubiche.mongodb.connection.default.database%</argument>
+        </service>
+
+        <service id="cubiche.mongodb.connection.event_store" class="Cubiche\Infrastructure\MongoDB\Common\Connection">
+            <argument>%cubiche.mongodb.connection.event_store.server%</argument>
+            <argument>%cubiche.mongodb.connection.event_store.database%</argument>
+        </service>
+
+        <service id="cubiche.mongodb.connection.snapshot_store" class="Cubiche\Infrastructure\MongoDB\Common\Connection">
+            <argument>%cubiche.mongodb.connection.snapshot_store.server%</argument>
+            <argument>%cubiche.mongodb.connection.snapshot_store.database%</argument>
+        </service>
+
+        <!--  document manager  -->
+        <service id="cubiche.mongodb.document_manager" class="Cubiche\Infrastructure\MongoDB\DocumentManager">
+            <argument type="service" id="cubiche.mongodb.connection.default"/>
+            <argument type="service" id="cubiche.mongodb.metadata_factory"/>
+            <argument type="service" id="cubiche.serializer"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="cubiche.mongodb.collector" />
+        </service>
+
+        <service id="cubiche.document_manager" alias="cubiche.mongodb.document_manager" />
+
+        <!--  collector  -->
+        <service id="cubiche.mongodb.collector" class="Cubiche\Bundle\CoreBundle\DataCollector\MongoDBDataCollector" public="false">
+            <tag name="data_collector"
+                 template="@CubicheCore/Collector/mongodb.html.twig"
+                 id="cubiche.mongodb_collector"
+            />
+        </service>
+    </services>
+</container>

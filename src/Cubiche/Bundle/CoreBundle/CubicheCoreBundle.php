@@ -11,7 +11,6 @@
 
 namespace Cubiche\Bundle\CoreBundle;
 
-use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\ConfigureDoctrinePass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusHandlerPass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterEventListenerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,6 +27,5 @@ class CubicheCoreBundle extends Bundle
 
         $container->addCompilerPass(new RegisterBusHandlerPass());
         $container->addCompilerPass(new RegisterEventListenerPass());
-        $container->addCompilerPass(new ConfigureDoctrinePass());
     }
 }
