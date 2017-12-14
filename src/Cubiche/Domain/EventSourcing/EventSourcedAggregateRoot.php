@@ -121,7 +121,7 @@ trait EventSourcedAggregateRoot
      */
     public function replay(EventStream $history)
     {
-        foreach ($history->events() as $event) {
+        foreach ($history as $event) {
             $this->applyEvent($event);
         }
     }

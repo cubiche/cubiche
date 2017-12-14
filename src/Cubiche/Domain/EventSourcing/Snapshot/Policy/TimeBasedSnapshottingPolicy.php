@@ -13,7 +13,6 @@ namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
-use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -81,14 +80,6 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        return $this->snapshotStore->load($this->streamName($id));
-    }
-
-    /**
-     * @return string
-     */
-    protected function streamName(IdInterface $id)
-    {
-        return NameResolver::resolve($this->aggregateClassName, $id);
+        return $this->snapshotStore->load($id);
     }
 }

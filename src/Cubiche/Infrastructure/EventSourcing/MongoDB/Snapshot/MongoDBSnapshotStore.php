@@ -11,9 +11,11 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot;
 
-use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
+use Cubiche\Domain\EventSourcing\Snapshot\SnapshotInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
+use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Infrastructure\MongoDB\Common\Connection;
+use MongoDB\Collection;
 use MongoDB\Database;
 
 /**
@@ -34,9 +36,9 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     protected $database;
 
     /**
-     * @var array
+     * @var Collection
      */
-    protected $collections;
+    protected $collection;
 
     /**
      * MongoDBSnapshotStore constructor.
@@ -47,16 +49,16 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     {
         $this->connection = $connection;
         $this->database = new Database($this->connection->manager(), $this->connection->database());
+        $this->collection = $this->database->selectCollection('snapshots');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function persist(Snapshot $snapshot)
+    public function persist(SnapshotInterface $snapshot)
     {
-        $collection = $this->getCollection($snapshot->snapshotName());
-        $collection->findOneAndUpdate(
-            array('_id' => $snapshot->aggregate()->id()->toNative()),
+        $this->collection->findOneAndUpdate(
+            array('_id' => $snapshot->id()->toNative()),
             array(
                 '$set' => array(
                     'payload' => serialize($snapshot),
@@ -69,13 +71,10 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function load($snapshotName)
+    public function load(IdInterface $id)
     {
-        $collection = $this->getCollection($snapshotName);
-        $aggregateId = $this->snapshotNameToAggregareId($snapshotName);
-
-        $document = $collection->findOne(array(
-            '_id' => $aggregateId,
+        $document = $this->collection->findOne(array(
+            '_id' => $id->toNative(),
         ));
 
         if ($document !== null) {
@@ -88,55 +87,10 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($snapshotName)
+    public function remove(IdInterface $id)
     {
-        $collection = $this->getCollection($snapshotName);
-        $aggregateId = $this->snapshotNameToAggregareId($snapshotName);
-
-        $collection->deleteMany(array(
-            '_id' => $aggregateId,
+        $this->collection->deleteMany(array(
+            '_id' => $id->toNative(),
         ));
-    }
-
-    /**
-     * @param string $snapshotName
-     *
-     * @return string
-     */
-    private function snapshotNameToCollectionName($snapshotName)
-    {
-        $snapshotName = substr($snapshotName, 0, strpos($snapshotName, '-'));
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $snapshotName)));
-
-        return strtolower(implode('_', $pieces)).'_snapshot';
-    }
-
-    /**
-     * @param string $snapshotName
-     *
-     * @return string
-     */
-    private function snapshotNameToAggregareId($snapshotName)
-    {
-        return substr($snapshotName, strpos($snapshotName, '-') + 1);
-    }
-
-    /**
-     * Returns the Collection instance for a class.
-     *
-     * @param string $snapshotName
-     *
-     * @return \MongoDB\Collection
-     */
-    public function getCollection($snapshotName)
-    {
-        $collectionName = $this->snapshotNameToCollectionName($snapshotName);
-        if (!isset($this->collections[$collectionName])) {
-            $collection = $this->database->selectCollection($collectionName);
-
-            $this->collections[$collectionName] = $collection;
-        }
-
-        return $this->collections[$collectionName];
     }
 }

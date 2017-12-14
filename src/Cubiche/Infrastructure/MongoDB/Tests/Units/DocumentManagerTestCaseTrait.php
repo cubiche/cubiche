@@ -100,7 +100,7 @@ trait DocumentManagerTestCaseTrait
      */
     protected function getConnection()
     {
-        return new Connection(DOCTRINE_MONGODB_SERVER, $this->databaseName());
+        return new Connection(MONGODB_SERVER, $this->databaseName());
     }
 
     /**
@@ -118,7 +118,7 @@ trait DocumentManagerTestCaseTrait
      */
     protected function databaseName()
     {
-        return DOCTRINE_MONGODB_DATABASE;
+        return MONGODB_DATABASE;
     }
 
     /**

@@ -9,5 +9,5 @@
  * file that was distributed with this source code.
  */
 
-define('DOCTRINE_MONGODB_SERVER', 'mongodb://127.0.0.1:27017');
-define('DOCTRINE_MONGODB_DATABASE', 'doctrine_odm_tests');
+define('MONGODB_SERVER', 'mongodb://127.0.0.1:27017');
+define('MONGODB_DATABASE', 'cubiche_mongodb_tests');

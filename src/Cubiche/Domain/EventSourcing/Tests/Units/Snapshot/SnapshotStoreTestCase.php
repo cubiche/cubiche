@@ -15,6 +15,7 @@ use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
+use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * SnapshotStoreTestCase class.
@@ -41,11 +42,10 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->when($store->persist($snapshot))
             ->then()
-                ->object($store->load($snapshotName))
+                ->object($store->load($post->id()))
                     ->isEqualTo($snapshot)
         ;
     }
@@ -63,15 +63,14 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshotNameFake = 'Blogs-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshotNameFake = PostId::fromNative(md5(rand())))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->when($store->persist($snapshot))
             ->then()
                 ->variable($store->load($snapshotNameFake))
                     ->isNull()
                 ->and()
-                ->when($result = $store->load($snapshotName))
+                ->when($result = $store->load($post->id()))
                 ->then()
                     ->object($result)
                         ->isEqualTo($snapshot);
@@ -90,18 +89,17 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshotNameFake = 'Blogs-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshotNameFake = PostId::fromNative(md5(rand())))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->and($store->persist($snapshot))
             ->when($store->remove($snapshotNameFake))
             ->then()
-                ->object($store->load($snapshotName))
+                ->object($store->load($post->id()))
                     ->isEqualTo($snapshot)
                 ->and()
-                ->when($store->remove($snapshotName))
+                ->when($store->remove($post->id()))
                 ->then()
-                    ->variable($store->load($snapshotName))
+                    ->variable($store->load($post->id()))
                         ->isNull()
         ;
     }

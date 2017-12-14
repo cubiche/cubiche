@@ -32,7 +32,7 @@ class MongoDBSnapshotStoreTests extends SnapshotStoreTestCase
      */
     protected function databaseName()
     {
-        return DOCTRINE_MONGODB_DATABASE.'_snapshot_store';
+        return MONGODB_DATABASE.'_snapshot_store';
     }
 
     /**

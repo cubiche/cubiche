@@ -11,6 +11,7 @@
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * InMemorySnapshotStore class.
@@ -35,24 +36,24 @@ class InMemorySnapshotStore implements SnapshotStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function persist(Snapshot $snapshot)
+    public function persist(SnapshotInterface $snapshot)
     {
-        $this->store->set($snapshot->snapshotName(), $snapshot);
+        $this->store->set($snapshot->id()->toNative(), $snapshot);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove($snapshotName)
+    public function remove(IdInterface $id)
     {
-        $this->store->removeAt($snapshotName);
+        $this->store->removeAt($id->toNative());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($snapshotName)
+    public function load(IdInterface $id)
     {
-        return $this->store->get($snapshotName);
+        return $this->store->get($id->toNative());
     }
 }

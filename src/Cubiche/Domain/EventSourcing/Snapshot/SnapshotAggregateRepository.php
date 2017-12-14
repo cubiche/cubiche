@@ -97,7 +97,7 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        return $this->snapshotStore->load($this->streamName($id));
+        return $this->snapshotStore->load($id);
     }
 
     /**
@@ -107,7 +107,7 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
     {
-        $snapshot = new Snapshot($this->streamName($aggregateRoot->id()), $aggregateRoot);
+        $snapshot = new Snapshot($aggregateRoot->id(), $aggregateRoot);
 
         $this->snapshotStore->persist($snapshot);
     }
@@ -120,7 +120,7 @@ class SnapshotAggregateRepository extends AggregateRepository
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {
         $history = $this->eventStore->load(
-            $this->streamName($snapshot->aggregate()->id()),
+            $snapshot->id(),
             $snapshot->version()
         );
 

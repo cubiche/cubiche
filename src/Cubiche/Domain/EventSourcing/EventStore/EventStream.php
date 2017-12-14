@@ -11,25 +11,20 @@
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
-use Cubiche\Domain\Identity\IdentifiableInterface;
 use Cubiche\Domain\Model\IdInterface;
+use ArrayIterator;
 
 /**
  * EventStream class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class EventStream implements IdentifiableInterface
+class EventStream implements EventStreamInterface
 {
-    /**
-     * @var string
-     */
-    protected $streamName;
-
     /**
      * @var IdInterface
      */
-    protected $aggregateId;
+    protected $id;
 
     /**
      * @var DomainEventInterface[]
@@ -37,17 +32,15 @@ class EventStream implements IdentifiableInterface
     protected $events = [];
 
     /**
-     * EntityDomainEvent constructor.
+     * EventStream constructor.
      *
-     * @param string                 $streamName
-     * @param IdInterface            $aggregateId
+     * @param IdInterface            $id
      * @param DomainEventInterface[] $events
      */
-    public function __construct($streamName, IdInterface $aggregateId, array $events)
+    public function __construct(IdInterface $id, array $events)
     {
-        $this->streamName = $streamName;
-        $this->aggregateId = $aggregateId;
-
+        $this->id = $id;
+        $this->events = new ArrayIterator();
         foreach ($events as $event) {
             if (!$event instanceof DomainEventInterface) {
                 throw new \InvalidArgumentException(
@@ -64,26 +57,58 @@ class EventStream implements IdentifiableInterface
     }
 
     /**
-     * @return string
-     */
-    public function streamName()
-    {
-        return $this->streamName;
-    }
-
-    /**
      * @return IdInterface
      */
     public function id()
     {
-        return $this->aggregateId;
+        return $this->id;
     }
 
     /**
-     * @return DomainEventInterface[]
+     * @return Iterator
      */
     public function events()
     {
         return $this->events;
+    }
+
+    /**
+     * @return DomainEventInterface
+     */
+    public function current()
+    {
+        return $this->events->current();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function next()
+    {
+        return $this->events->next();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function key()
+    {
+        return $this->events->key();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function valid()
+    {
+        return $this->events->valid();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rewind()
+    {
+        return $this->events->rewind();
     }
 }

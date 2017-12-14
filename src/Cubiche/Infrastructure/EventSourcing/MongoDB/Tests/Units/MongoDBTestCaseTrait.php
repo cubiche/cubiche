@@ -29,7 +29,7 @@ trait MongoDBTestCaseTrait
      */
     protected function getConnection()
     {
-        return new Connection(DOCTRINE_MONGODB_SERVER, $this->databaseName());
+        return new Connection(MONGODB_SERVER, $this->databaseName());
     }
 
     /**
@@ -37,7 +37,7 @@ trait MongoDBTestCaseTrait
      */
     protected function databaseName()
     {
-        return DOCTRINE_MONGODB_DATABASE;
+        return MONGODB_DATABASE;
     }
 
     /**

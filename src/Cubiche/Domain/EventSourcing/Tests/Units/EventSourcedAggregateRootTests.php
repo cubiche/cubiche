@@ -104,7 +104,6 @@ class EventSourcedAggregateRootTests extends TestCase
             ->and($post->changeTitle($newTitle))
             ->and(
                 $eventStream = new EventStream(
-                    PostEventSourced::class.'-'.$post->id(),
                     $post->id(),
                     [
                         new PostWasCreated($post->id(), $title, $content),

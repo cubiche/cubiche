@@ -37,7 +37,7 @@ class MongoDBEventStoreTests extends EventStoreTestCase
      */
     protected function databaseName()
     {
-        return DOCTRINE_MONGODB_DATABASE.'_event_store';
+        return MONGODB_DATABASE.'_event_store';
     }
 
     /**
@@ -58,7 +58,6 @@ class MongoDBEventStoreTests extends EventStoreTestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -67,7 +66,7 @@ class MongoDBEventStoreTests extends EventStoreTestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(1)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
             ->then()
                 ->exception(function () use ($store, $eventStream) {
                     $store->persist($eventStream);

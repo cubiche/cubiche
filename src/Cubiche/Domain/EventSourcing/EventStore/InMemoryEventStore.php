@@ -16,6 +16,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * InMemoryEventStore class.
@@ -40,18 +41,18 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function persist(EventStream $eventStream)
+    public function persist(EventStreamInterface $eventStream)
     {
         $version = 0;
-        if (!$this->store->containsKey($eventStream->streamName())) {
-            $this->store->set($eventStream->streamName(), new ArrayList());
+        if (!$this->store->containsKey($eventStream->id()->toNative())) {
+            $this->store->set($eventStream->id()->toNative(), new ArrayList());
         }
 
         /** @var ArrayList $streamCollection */
-        $streamCollection = $this->store->get($eventStream->streamName());
+        $streamCollection = $this->store->get($eventStream->id()->toNative());
 
         /** @var DomainEventInterface $event */
-        foreach ($eventStream->events() as $event) {
+        foreach ($eventStream as $event) {
             $streamCollection->add($event);
 
             $version = $event->version();
@@ -63,26 +64,23 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($streamName)
+    public function remove(IdInterface $id)
     {
-        $this->store->removeAt($streamName);
+        $this->store->removeAt($id->toNative());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($streamName, $version = 0)
+    public function load(IdInterface $id, $version = 0)
     {
         /** @var ArrayList $streamCollection */
-        $streamCollection = $this->store->get($streamName);
+        $streamCollection = $this->store->get($id->toNative());
 
         if ($streamCollection !== null) {
             $events = $streamCollection->find(Criteria::method('version')->gte($version))->toArray();
             if (count($events) > 0) {
-                /** @var DomainEventInterface $event */
-                $event = $events[0];
-
-                return new EventStream($streamName, $event->aggregateId(), $events);
+                return new EventStream($id, $events);
             }
         }
 

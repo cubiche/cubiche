@@ -17,7 +17,6 @@ use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 
 /**
  * TimeBasedSnapshottingPolicyTests class.
@@ -40,7 +39,7 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->and($snapshot->createdAt()->modify('-2 hours'))
             ->and($snapshotStore->persist($snapshot))
             ->then()
@@ -62,7 +61,7 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->and($snapshotStore->persist($snapshot))
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
