@@ -50,7 +50,7 @@ abstract class Repository implements RepositoryInterface
             throw new \InvalidArgumentException(\sprintf(
                 'Expected %s instance, instance of %s given',
                 $this->entityReflectionClass->name,
-                \is_object($item) ? \gettype($item) : \get_class($item)
+                \is_object($item) ? \get_class($item) : \gettype($item)
             ));
         }
     }
