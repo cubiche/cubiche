@@ -12,9 +12,7 @@
         <!--  event store  -->
         <service id="cubiche.event_store.inmemory" class="Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore" />
         <service id="cubiche.event_store.mongodb" class="Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore\MongoDBEventStore">
-            <argument type="service" id="cubiche.mongodb.client.event_store"/>
-            <argument>%cubiche.mongodb.event_store.database%</argument>
-            <argument type="service" id="cubiche.serializer"/>
+            <argument type="service" id="cubiche.mongodb.connection.event_store"/>
         </service>
 
         <service id="cubiche.event_store" alias="cubiche.event_store.mongodb" />
@@ -22,9 +20,7 @@
         <!--  snapshot store  -->
         <service id="cubiche.snapshot_store.inmemory" class="Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore" />
         <service id="cubiche.snapshot_store.mongodb" class="Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot\MongoDBSnapshotStore">
-            <argument type="service" id="cubiche.mongodb.client.snapshot_store"/>
-            <argument>%cubiche.mongodb.snapshot_store.database%</argument>
-            <argument type="service" id="cubiche.serializer"/>
+            <argument type="service" id="cubiche.mongodb.connection.snapshot_store"/>
         </service>
 
         <service id="cubiche.snapshot_store" alias="cubiche.snapshot_store.mongodb" />

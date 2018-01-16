@@ -11,10 +11,15 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore;
 
-use Cubiche\Core\Serializer\SerializerInterface;
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\EventStreamInterface;
+use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Infrastructure\MongoDB\Common\Connection;
+use MongoDB\Database;
+use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\WriteConcern;
 
 /**
  * MongoDBEventStore class.
@@ -24,67 +29,61 @@ use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 class MongoDBEventStore implements EventStoreInterface
 {
     /**
-     * @var \MongoClient
+     * @var Connection
      */
-    protected $mongoClient;
+    protected $connection;
 
     /**
-     * @var string
+     * @var Database
      */
-    protected $databaseName;
+    protected $database;
 
     /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-
-    /**
-     * Mongo DB write concern
-     * The default options can be overridden with the constructor.
-     *
      * @var array
      */
-    protected $writeConcern = [
-        'w' => 1,
-    ];
+    protected $collections;
 
     /**
      * MongoDBEventStore constructor.
      *
-     * @param \MongoClient        $mongoClient
-     * @param string              $databaseName
-     * @param SerializerInterface $serializer
+     * @param Connection $connection
      */
-    public function __construct(\MongoClient $mongoClient, $databaseName, SerializerInterface $serializer)
+    public function __construct(Connection $connection)
     {
-        $this->mongoClient = $mongoClient;
-        $this->databaseName = $databaseName;
-        $this->serializer = $serializer;
+        $this->connection = $connection;
+        $this->database = new Database($this->connection->manager(), $this->connection->database());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function persist(EventStream $eventStream)
+    public function persist(EventStreamInterface $eventStream)
     {
+        $collection = $this->getCollection($eventStream->id()->toNative());
+
         $version = 0;
         if (count($eventStream->events()) > 0) {
-            $this->ensureIndex($eventStream->streamName());
-            $batch = $this->getInsertBatch($eventStream->streamName());
-
+            $bulkWrite = new BulkWrite(['ordered' => true]);
+            /** @var DomainEventInterface $event */
             foreach ($eventStream->events() as $event) {
                 $version = $event->version();
-                $batch->add($this->eventToArray($event));
+                $bulkWrite->update(
+                    array(
+                        '_id' => $event->id()->toNative(),
+                        'version' => $event->version(),
+                    ),
+                    array('$set' => $this->eventToArray($event)),
+                    array('upsert' => true)
+                );
             }
 
-            try {
-                $batch->execute();
-            } catch (\MongoWriteConcernException $e) {
-                $code = $e->getDocument()['writeErrors'][0]['code'];
-                if (in_array($code, [11000, 11001, 12582])) {
-                    throw new \Exception('At least one event with same version exists already', 0, $e);
-                }
-            }
+            $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 1000);
+
+            $this->database->getManager()->executeBulkWrite(
+                $collection->getNamespace(),
+                $bulkWrite,
+                $writeConcern
+            );
         }
 
         return $version;
@@ -93,24 +92,19 @@ class MongoDBEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function load($streamName, $version = 0)
+    public function load(IdInterface $id, $version = 0)
     {
-        $collection = $this->getCollection($streamName);
-        $aggregateId = $this->streamNameToAggregareId($streamName);
-
-        $query = array(
-            'aggregate_id' => $aggregateId,
-        );
+        $collection = $this->getCollection($id->toNative());
+        $query = array();
 
         if ($version > 0) {
-            $query['version'] = array(
-                '$gte' => $version,
+            $query = array(
+                'version' => array('$gte' => $version),
             );
         }
 
         $documents = $collection
-            ->find($query)
-            ->sort(array('version' => $collection::ASCENDING))
+            ->find($query, array('sort' => array('version' => 1)))
         ;
 
         $domainEvents = [];
@@ -119,11 +113,7 @@ class MongoDBEventStore implements EventStoreInterface
         }
 
         if (count($domainEvents) > 0) {
-            return new EventStream(
-                $streamName,
-                $domainEvents[0]->aggregateId(),
-                $domainEvents
-            );
+            return new EventStream($id, $domainEvents);
         }
 
         return;
@@ -132,14 +122,10 @@ class MongoDBEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($streamName)
+    public function remove(IdInterface $id)
     {
-        $collection = $this->getCollection($streamName);
-        $aggregateId = $this->streamNameToAggregareId($streamName);
-
-        $collection->remove(array(
-            'aggregate_id' => $aggregateId,
-        ));
+        $collection = $this->getCollection($id->toNative());
+        $collection->drop();
     }
 
     /**
@@ -149,16 +135,9 @@ class MongoDBEventStore implements EventStoreInterface
      */
     private function eventToArray(DomainEventInterface $event)
     {
-        $eventData = $event->toArray();
-
         return array(
-            '_id' => $event->eventId()->toNative(),
-            'aggregate_id' => $event->aggregateId()->toNative(),
-            'event_type' => $event->eventName(),
-            'version' => $event->version(),
-            'payload' => $this->serializer->serialize($eventData['payload']),
-            'metadata' => $this->serializer->serialize($eventData['metadata']),
-            'created_at' => $event->occurredOn()->format('Y-m-d\TH:i:s.u'),
+            'eventType' => $event->eventName(),
+            'payload' => serialize($event),
         );
     }
 
@@ -167,87 +146,36 @@ class MongoDBEventStore implements EventStoreInterface
      *
      * @return DomainEventInterface
      */
-    private function arrayToEvent(array $eventData)
+    private function arrayToEvent($eventData)
     {
-        return call_user_func(
-            array($eventData['event_type'], 'fromArray'),
-            array(
-                'payload' => $this->serializer->deserialize($eventData['payload']),
-                'metadata' => $this->serializer->deserialize($eventData['metadata']),
-            )
-        );
-    }
-
-    /**
-     * Get mongo db insert batch.
-     *
-     * @param string $streamName
-     *
-     * @return \MongoInsertBatch
-     */
-    private function getInsertBatch($streamName)
-    {
-        return new \MongoInsertBatch($this->getCollection($streamName), $this->writeConcern);
-    }
-
-    /**
-     * @param string $streamName
-     */
-    private function ensureIndex($streamName)
-    {
-        $collection = $this->getCollection($streamName);
-        $collection->createIndex(array(
-            'aggregate_id' => 1,
-            'version' => 1,
-        ), array(
-            'unique' => true,
-        ));
-
-        $collection->createIndex(array(
-            'created_at' => 1,
-            'version' => 1,
-        ));
-    }
-
-    /**
-     * Get mongo db stream collection.
-     *
-     * @param string $streamName
-     *
-     * @return \MongoCollection
-     */
-    private function getCollection($streamName)
-    {
-        $collection = $this->mongoClient->selectCollection(
-            $this->databaseName,
-            $this->streamNameToCollectionName($streamName)
+        $eventData = json_decode(
+            json_encode($eventData),
+            true
         );
 
-        $collection->setReadPreference(\MongoClient::RP_PRIMARY);
-
-        return $collection;
+        return unserialize($eventData['payload']);
     }
 
     /**
-     * @param string $streamName
+     * Returns the Collection instance for a class.
      *
-     * @return string
-     */
-    private function streamNameToCollectionName($streamName)
-    {
-        $streamName = substr($streamName, 0, strpos($streamName, '-'));
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $streamName)));
-
-        return strtolower(implode('_', $pieces)).'_stream';
-    }
-
-    /**
-     * @param string $streamName
+     * @param string $collectionName
      *
-     * @return string
+     * @return \MongoDB\Collection
      */
-    private function streamNameToAggregareId($streamName)
+    public function getCollection($collectionName)
     {
-        return substr($streamName, strpos($streamName, '-') + 1);
+        if (!isset($this->collections[$collectionName])) {
+            $collection = $this->database->selectCollection($collectionName);
+            $collection->createIndex(array(
+                'version' => 1,
+            ), array(
+                'unique' => true,
+            ));
+
+            $this->collections[$collectionName] = $collection;
+        }
+
+        return $this->collections[$collectionName];
     }
 }

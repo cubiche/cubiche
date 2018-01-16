@@ -18,18 +18,9 @@
         }
     ],
     "require": {
-        "php":                          "^5.5.9|^7.0",
+        "php":                          "^7.0|^7.1",
 
-        "cubiche/repository":           "dev-master",
-        "cubiche/comparable":           "dev-master",
-        "cubiche/collections":          "dev-master",
-        "cubiche/delegate":             "dev-master",
-        "cubiche/model":                "dev-master",
-        "cubiche/selector":             "dev-master",
-        "cubiche/specification":        "dev-master",
-        "cubiche/visitor":              "dev-master",
-
-        "cubiche/doctrine-adapter":     "dev-master"
+        "cubiche/repository":           "dev-master"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master"

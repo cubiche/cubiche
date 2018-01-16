@@ -8,10 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Mapping;
 
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Validator\Assert;
-use Metadata\PropertyMetadata as BasePropertyMetadata;
+use Cubiche\Core\Metadata\PropertyMetadata as BasePropertyMetadata;
 
 /**
  * PropertyMetadata class.
@@ -33,23 +35,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @return string
      */
-    public function getClassName()
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPropertyName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultGroup()
+    public function defaultGroup()
     {
         return $this->defaultGroup;
     }
@@ -59,7 +45,7 @@ class PropertyMetadata extends BasePropertyMetadata
      *
      * @return string
      */
-    protected function getGroup($group = null)
+    protected function group($group = null)
     {
         return $group === null || empty($group) ? $this->defaultGroup : $group;
     }
@@ -70,7 +56,7 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     public function addConstraint(Assert $constraint, $group = null)
     {
-        $group = $this->getGroup($group);
+        $group = $this->group($group);
         if (!isset($this->constraintsByGroup[$group])) {
             $this->constraintsByGroup[$group] = array();
         }
@@ -92,7 +78,7 @@ class PropertyMetadata extends BasePropertyMetadata
     /**
      * @return array
      */
-    public function getConstraints()
+    public function constraints()
     {
         return $this->constraintsByGroup;
     }
@@ -102,7 +88,7 @@ class PropertyMetadata extends BasePropertyMetadata
      *
      * @return array
      */
-    public function getConstraintsByGroup($group)
+    public function constraintsByGroup($group)
     {
         return isset($this->constraintsByGroup[$group]) ? $this->constraintsByGroup[$group] : array();
     }
@@ -114,7 +100,7 @@ class PropertyMetadata extends BasePropertyMetadata
      */
     public function mergeConstraints(PropertyMetadata $source)
     {
-        foreach ($source->getConstraints() as $group => $constraints) {
+        foreach ($source->constraints() as $group => $constraints) {
             $this->addConstraints($constraints, $group);
         }
     }
@@ -125,8 +111,9 @@ class PropertyMetadata extends BasePropertyMetadata
     public function serialize()
     {
         return serialize(array(
-            $this->class,
-            $this->name,
+            $this->className,
+            $this->propertyName,
+            $this->metadata->toArray(),
             $this->defaultGroup,
             $this->constraintsByGroup,
         ));
@@ -138,12 +125,16 @@ class PropertyMetadata extends BasePropertyMetadata
     public function unserialize($str)
     {
         list(
-            $this->class,
-            $this->name,
+            $this->className,
+            $this->propertyName,
+            $metadata,
             $this->defaultGroup,
-            $this->constraintsByGroup) = unserialize($str);
+            $this->constraintsByGroup
+        ) = unserialize($str);
 
-        $this->reflection = new \ReflectionProperty($this->class, $this->name);
+        $this->reflection = new \ReflectionProperty($this->className, $this->propertyName);
         $this->reflection->setAccessible(true);
+
+        $this->metadata = new ArrayHashMap($metadata);
     }
 }

@@ -12,7 +12,7 @@ namespace Cubiche\Domain\EventSourcing\Event;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
-use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\EventStreamInterface;
 
 /**
  * PostPersistEvent class.
@@ -35,9 +35,9 @@ class PostPersistEvent extends DomainEvent
      * PostPersistEvent constructor.
      *
      * @param EventSourcedAggregateRootInterface $aggregate
-     * @param EventStream                        $eventStream
+     * @param EventStreamInterface               $eventStream
      */
-    public function __construct(EventSourcedAggregateRootInterface $aggregate, EventStream $eventStream)
+    public function __construct(EventSourcedAggregateRootInterface $aggregate, EventStreamInterface $eventStream)
     {
         parent::__construct();
 
@@ -54,7 +54,7 @@ class PostPersistEvent extends DomainEvent
     }
 
     /**
-     * @return EventStream
+     * @return EventStreamInterface
      */
     public function eventStream()
     {

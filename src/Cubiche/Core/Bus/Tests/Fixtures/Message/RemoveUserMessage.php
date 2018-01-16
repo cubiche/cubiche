@@ -11,7 +11,7 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
-use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\Message;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -20,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class RemoveUserMessage implements MessageInterface
+class RemoveUserMessage extends Message
 {
     /**
      * @var string
@@ -58,9 +58,6 @@ class RemoveUserMessage implements MessageInterface
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint(
-            'email',
-            Assert::email()
-        );
+        $classMetadata->addPropertyConstraint('email', Assert::email());
     }
 }

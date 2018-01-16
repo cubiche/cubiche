@@ -8,15 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Query;
 
-use Cubiche\Core\Bus\ExecutableMessageInterface;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * Query interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface QueryInterface extends ExecutableMessageInterface
+interface QueryInterface extends MessageInterface
 {
 }

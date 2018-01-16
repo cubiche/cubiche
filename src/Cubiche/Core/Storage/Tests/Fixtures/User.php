@@ -82,4 +82,26 @@ class User extends Equatable implements SerializableInterface
             $this->email() == $other->email()
         ;
     }
+
+    /**
+     * @return array
+     */
+    public function serialize()
+    {
+        return array(
+            'name' => $this->name,
+            'age' => $this->age,
+            'email' => $this->email,
+        );
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data)
+    {
+        return new self($data['name'], $data['age'], $data['email']);
+    }
 }

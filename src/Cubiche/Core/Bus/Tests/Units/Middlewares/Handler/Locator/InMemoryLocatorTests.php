@@ -40,10 +40,6 @@ class InMemoryLocatorTests extends LocatorTestCase
         $this
             ->given($handler = new LoginUserMessageListener())
             ->then()
-//                ->exception(function () use ($handler) {
-//                    new InMemoryLocator([255 => $handler]);
-//                })
-//                ->isInstanceOf(\InvalidArgumentException::class)
                 ->exception(function () use ($handler) {
                     new InMemoryLocator([LoginUserMessage::class => 255]);
                 })

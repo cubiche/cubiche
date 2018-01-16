@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
+use Cubiche\Domain\Model\IdInterface;
+
 /**
  * SnapshotStore interface.
  *
@@ -19,19 +21,19 @@ namespace Cubiche\Domain\EventSourcing\Snapshot;
 interface SnapshotStoreInterface
 {
     /**
-     * @param Snapshot $snapshot
+     * @param SnapshotInterface $snapshot
      */
-    public function persist(Snapshot $snapshot);
+    public function persist(SnapshotInterface $snapshot);
 
     /**
-     * @param string $snapshotName
+     * @param IdInterface $id
      */
-    public function remove($snapshotName);
+    public function remove(IdInterface $id);
 
     /**
-     * @param string $snapshotName
+     * @param IdInterface $id
      *
-     * @return Snapshot|null
+     * @return SnapshotInterface|null
      */
-    public function load($snapshotName);
+    public function load(IdInterface $id);
 }

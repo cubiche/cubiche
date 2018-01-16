@@ -11,13 +11,12 @@
 namespace Cubiche\Core\EventBus\Event;
 
 use Cubiche\Core\EventDispatcher\EventInterface as DispatcherEventInterface;
-use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * Event interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventInterface extends MessageInterface, DispatcherEventInterface
+interface EventInterface extends DispatcherEventInterface
 {
 }

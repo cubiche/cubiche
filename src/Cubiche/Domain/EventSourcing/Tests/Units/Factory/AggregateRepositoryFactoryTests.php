@@ -45,9 +45,6 @@ class AggregateRepositoryFactoryTests extends TestCase
             ->then()
                 ->object($repository)
                     ->isInstanceOf(AggregateRepository::class)
-                ->and()
-                ->string($this->invoke($repository)->streamName($postId))
-                    ->isEqualTo('PostEventSourced-'.$postId)
         ;
     }
 }

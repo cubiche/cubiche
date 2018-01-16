@@ -7,15 +7,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Serializer\Tests\Fixtures;
 
+use Cubiche\Core\Serializer\SerializableInterface;
+use Cubiche\Domain\Geolocation\Coordinate;
+use Cubiche\Domain\Model\Entity;
+
 /**
- * Address class.
+ * Address.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Address
+class Address extends Entity implements SerializableInterface
 {
+    /**
+     * @var string
+     */
+    protected $name;
+
     /**
      * @var string
      */
@@ -32,49 +42,45 @@ class Address
     protected $city;
 
     /**
+     * @var Coordinate
+     */
+    protected $coordinate;
+
+    /**
      * Address constructor.
      *
-     * @param string $street
-     * @param string $zipcode
-     * @param string $city
+     * @param AddressId  $id
+     * @param string     $name
+     * @param string     $street
+     * @param string     $zipcode
+     * @param string     $city
+     * @param Coordinate $coordinate
      */
-    public function __construct($street, $zipcode, $city)
+    public function __construct(AddressId $id, $name, $street, $zipcode, $city, Coordinate $coordinate)
     {
-        $this->setStreet($street);
-        $this->setZipcode($zipcode);
-        $this->setCity($city);
-    }
+        parent::__construct($id);
 
-    /**
-     * @return string
-     */
-    public function zipcode()
-    {
-        return $this->zipcode;
-    }
-
-    /**
-     * @param string $zipcode
-     */
-    public function setZipcode($zipcode)
-    {
+        $this->name = $name;
+        $this->street = $street;
         $this->zipcode = $zipcode;
+        $this->city = $city;
+        $this->coordinate = $coordinate;
     }
 
     /**
      * @return string
      */
-    public function city()
+    public function name()
     {
-        return $this->city;
+        return $this->name;
     }
 
     /**
-     * @param string $city
+     * @param string $name
      */
-    public function setCity($city)
+    public function setName($name)
     {
-        $this->city = $city;
+        $this->name = $name;
     }
 
     /**
@@ -86,23 +92,61 @@ class Address
     }
 
     /**
-     * @param string $street
+     * @return string
      */
-    public function setStreet($street)
+    public function zipcode()
     {
-        $this->street = $street;
+        return $this->zipcode;
     }
 
     /**
-     * @param Address $other
-     *
-     * @return bool
+     * @return string
      */
-    public function equals(Address $other)
+    public function city()
     {
-        return $this->street() == $other->street() &&
-            $this->zipcode() == $other->zipcode() &&
-            $this->city() == $other->city()
-        ;
+        return $this->city;
+    }
+
+    /**
+     * @return Coordinate
+     */
+    public function coordinate()
+    {
+        return $this->coordinate;
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize()
+    {
+        return array(
+            'id' => $this->id->toNative(),
+            'name' => $this->name,
+            'street' => $this->street,
+            'zipcode' => $this->zipcode,
+            'city' => $this->city,
+            'coordinate' => array(
+                'lat' => $this->coordinate->latitude()->toNative(),
+                'lng' => $this->coordinate->longitude()->toNative(),
+            ),
+        );
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data)
+    {
+        return new self(
+            AddressId::fromNative($data['id']),
+            $data['name'],
+            $data['street'],
+            $data['zipcode'],
+            $data['city'],
+            Coordinate::fromLatLng($data['coordinate']['lat'], $data['coordinate']['lng'])
+        );
     }
 }

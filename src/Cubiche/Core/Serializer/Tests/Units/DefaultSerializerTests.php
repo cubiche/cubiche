@@ -8,11 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Serializer\Tests\Units;
 
 use Cubiche\Core\Serializer\DefaultSerializer;
+use Cubiche\Core\Serializer\Exception\SerializationException;
+use Cubiche\Core\Serializer\Serializer;
 use Cubiche\Core\Serializer\Tests\Fixtures\Address;
-use Cubiche\Core\Serializer\Tests\Fixtures\Person;
+use Cubiche\Core\Serializer\Tests\Fixtures\AddressId;
+use Cubiche\Core\Serializer\Tests\Fixtures\City;
+use Cubiche\Core\Serializer\Tests\Fixtures\User;
+use Cubiche\Core\Serializer\Tests\Fixtures\UserId;
+use Cubiche\Domain\Geolocation\Coordinate;
 
 /**
  * DefaultSerializer class.
@@ -22,42 +29,61 @@ use Cubiche\Core\Serializer\Tests\Fixtures\Person;
 class DefaultSerializerTests extends TestCase
 {
     /**
-     * Test serialize/deserialize method.
+     * @return Serializer
      */
-    public function testSerializeDeserialize()
+    protected function createSerializer()
+    {
+        return new DefaultSerializer();
+    }
+
+    /**
+     * @return User
+     */
+    protected function createUser()
+    {
+        return new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100), $this->faker->email);
+    }
+
+    /**
+     * @return Address
+     */
+    protected function createAddress()
+    {
+        return new Address(
+            AddressId::next(),
+            'Home',
+            $this->faker->streetName,
+            $this->faker->postcode,
+            $this->faker->city,
+            Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
+        );
+    }
+
+    /**
+     * Test serialize/deserialize object.
+     */
+    public function testSerialize()
     {
         $this
-            ->given($serializer = new DefaultSerializer())
-            ->when($data = $serializer->serialize(10.32))
+            ->given($serializer = $this->createSerializer())
+            ->and($address = $this->createAddress())
+            ->and($user = $this->createUser())
             ->then()
-                ->float($serializer->deserialize($data))
-                    ->isEqualTo(10.32)
-            ->and()
-            ->when($data = $serializer->serialize('test'))
-            ->then()
-                ->string($serializer->deserialize($data))
-                    ->isEqualTo('test')
-            ->and()
-            ->when($data = $serializer->serialize(array('foo' => 'bar')))
-            ->then()
-                ->array($serializer->deserialize($data))
-                    ->isEqualTo(array('foo' => 'bar'))
-        ;
-
-        $this
-            ->given($serializer = new DefaultSerializer())
-            ->and($address = new Address('Avinguda Vilares, 5, Montgar', '08390', 'Barcelona'))
-            ->and($person = new Person('Ivannis Suarez Jerez', $address))
-            ->and($person1 = new Person('Carla Fernandez Couso', $address))
-            ->when($data = $serializer->serialize($person))
-            ->then()
-                ->boolean($person->equals($serializer->deserialize($data)))
-                    ->isTrue()
-                ->boolean($person1->equals($serializer->deserialize($data)))
+                ->boolean($serializer->supports(User::class))
                     ->isFalse()
-                ->exception(function () use ($serializer, $address) {
-                    $serializer->serialize($address);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                ->variable($data = $serializer->serialize($address))
+                    ->isNotNull()
+                ->boolean($address->equals($serializer->deserialize($data, Address::class)))
+                    ->isTrue()
+                ->exception(function () use ($serializer, $user) {
+                    $serializer->serialize($user);
+                })->isInstanceOf(SerializationException::class)
+                ->exception(function () use ($serializer, $user) {
+                    $serializer->deserialize(
+                        array('class' => User::class, 'payload' => array('name' => 'foo')),
+                        User::class
+                    );
+                })->isInstanceOf(SerializationException::class)
         ;
     }
 }

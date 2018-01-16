@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- classes -->
+        <parameter key="cubiche.metadata.driver_chain.class">Cubiche\Core\Metadata\Driver\ChainDriver</parameter>
+        <parameter key="cubiche.metadata.xml.class">Cubiche\Infrastructure\Metadata\Driver\XmlDriver</parameter>
+        <parameter key="cubiche.metadata.yml.class">Cubiche\Infrastructure\Metadata\Driver\YamlDriver</parameter>
+        <parameter key="cubiche.metadata.annotation.class">Cubiche\Infrastructure\Metadata\Driver\AnnotationDriver</parameter>
+        <parameter key="cubiche.metadata.default_locator.class">Cubiche\Core\Metadata\Locator\DefaultFileLocator</parameter>
+        <parameter key="cubiche.metadata.factory.class">Cubiche\Core\Metadata\ClassMetadataFactory</parameter>
+    </parameters>
+
+    <services>
+        <!--  annotation  -->
+        <service id="cubiche.metadata.cached_reader" class="Doctrine\Common\Annotations\CachedReader">
+            <argument type="service" id="cubiche.metadata.annotation_reader" />
+            <argument type="service" id="cubiche.metadata.annotation_cache" />
+        </service>
+
+        <service id="cubiche.metadata.annotation_reader" class="Doctrine\Common\Annotations\AnnotationReader">
+            <call method="addGlobalIgnoredName">
+                <argument>required</argument>
+                <argument type="service">
+                    <!-- dummy arg to register class_exists as annotation loader only when required -->
+                    <service class="Doctrine\Common\Annotations\AnnotationRegistry">
+                        <call method="registerLoader">
+                            <argument>class_exists</argument>
+                        </call>
+                    </service>
+                </argument>
+            </call>
+        </service>
+
+        <service id="cubiche.metadata.annotation_cache" class="Doctrine\Common\Cache\FilesystemCache">
+            <argument>%cubiche.metadata.cache_directory%/annotation</argument>
+            <argument>%kernel.debug%</argument>
+        </service>
+
+        <!--  cache  -->
+        <service id="cubiche.metadata.cache" class="Cubiche\Core\Metadata\Cache\FileCache">
+            <argument>%cubiche.metadata.cache_directory%/metadata</argument>
+        </service>
+    </services>
+</container>

@@ -20,4 +20,10 @@ use Cubiche\Domain\Identity\UUID;
  */
 class UserId extends UUID
 {
+    /**
+     * @param ClassMetadata $classMetadata
+     */
+    public function loadMetadata(ClassMetadata $classMetadata)
+    {
+    }
 }

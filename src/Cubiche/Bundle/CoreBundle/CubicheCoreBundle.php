@@ -11,12 +11,16 @@
 
 namespace Cubiche\Bundle\CoreBundle;
 
-use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\ConfigureDoctrinePass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusHandlerPass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterEventListenerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * CubicheCoreBundle class.
+ *
+ * @author Ivan Suárez Jerez <ivan@howaboutsales.com>
+ */
 class CubicheCoreBundle extends Bundle
 {
     /**
@@ -28,6 +32,5 @@ class CubicheCoreBundle extends Bundle
 
         $container->addCompilerPass(new RegisterBusHandlerPass());
         $container->addCompilerPass(new RegisterEventListenerPass());
-        $container->addCompilerPass(new ConfigureDoctrinePass());
     }
 }

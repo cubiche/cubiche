@@ -11,7 +11,7 @@
 
 namespace Cubiche\Infrastructure\Cqrs\Tests\Fixtures\Query;
 
-use Cubiche\Core\Cqrs\Query\QueryInterface;
+use Cubiche\Core\Cqrs\Query\Query;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -20,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FindOneUserByIdQuery implements QueryInterface
+class FindOneUserByIdQuery extends Query
 {
     /**
      * @var string

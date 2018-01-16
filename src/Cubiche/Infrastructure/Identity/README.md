@@ -1,2 +1,0 @@
-# Cubiche - Identity Adapter
-[![Build Status](https://travis-ci.org/cubiche/identity-adapter.svg?branch=master)](https://travis-ci.org/cubiche/identity-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/identity-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/identity-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/identity-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/identity-adapter/?branch=master) 

@@ -11,7 +11,6 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\EventStore;
 
-use Cubiche\Core\Serializer\DefaultSerializer;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
@@ -19,7 +18,8 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\EventStore\EventStoreTestCase;
 use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore\MongoDBEventStore;
-use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCaseTrait;
+use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoDBTestCaseTrait;
+use MongoDB\Driver\Exception\BulkWriteException;
 
 /**
  * MongoDBEventStoreTests class.
@@ -30,14 +30,22 @@ use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoClientTestCase
  */
 class MongoDBEventStoreTests extends EventStoreTestCase
 {
-    use MongoClientTestCaseTrait;
+    use MongoDBTestCaseTrait;
+
+    /**
+     * @return string
+     */
+    protected function databaseName()
+    {
+        return MONGODB_DATABASE.'_event_store';
+    }
 
     /**
      * @return EventStoreInterface
      */
     protected function createStore()
     {
-        return new MongoDBEventStore($this->client(), $this->getDatabaseName(), new DefaultSerializer());
+        return new MongoDBEventStore($this->getConnection());
     }
 
     /**
@@ -50,7 +58,6 @@ class MongoDBEventStoreTests extends EventStoreTestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -59,11 +66,11 @@ class MongoDBEventStoreTests extends EventStoreTestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(1)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
             ->then()
                 ->exception(function () use ($store, $eventStream) {
                     $store->persist($eventStream);
-                })->isInstanceOf(\Exception::class)
+                })->isInstanceOf(BulkWriteException::class)
         ;
     }
 }

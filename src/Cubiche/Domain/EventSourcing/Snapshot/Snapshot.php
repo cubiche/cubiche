@@ -10,21 +10,21 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Core\Serializer\SerializableInterface;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\Model\IdInterface;
 
 /**
  * Snapshot class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Snapshot implements SerializableInterface
+class Snapshot implements SnapshotInterface
 {
     /**
-     * @var string
+     * @var IdInterface
      */
-    protected $snapshotName;
+    protected $id;
 
     /**
      * @var EventSourcedAggregateRootInterface
@@ -44,23 +44,23 @@ class Snapshot implements SerializableInterface
     /**
      * Snapshot constructor.
      *
-     * @param string                             $snapshotName
+     * @param IdInterface                        $id
      * @param EventSourcedAggregateRootInterface $aggregate
      */
-    public function __construct($snapshotName, EventSourcedAggregateRootInterface $aggregate)
+    public function __construct(IdInterface $id, EventSourcedAggregateRootInterface $aggregate)
     {
-        $this->snapshotName = $snapshotName;
+        $this->id = $id;
         $this->aggregate = $aggregate;
         $this->version = $aggregate->version();
         $this->createdAt = new \DateTime();
     }
 
     /**
-     * @return string
+     * @return IdInterface
      */
-    public function snapshotName()
+    public function id()
     {
-        return $this->snapshotName;
+        return $this->id;
     }
 
     /**
@@ -86,4 +86,12 @@ class Snapshot implements SerializableInterface
     {
         return $this->createdAt;
     }
+
+//    /**
+//     * @param \DateTime $createdAt
+//     */
+//    protected function setCreatedAt($createdAt)
+//    {
+//        $this->createdAt = $createdAt;
+//    }
 }

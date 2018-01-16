@@ -18,19 +18,20 @@
         }
     ],
     "require": {
-        "php":                          "^5.5.9|^7.0",
-        "doctrine/mongodb-odm":         "^1.0.5",
+        "php":                          "^7.0|^7.1",
+        "ext-mongodb":                  "^1.3.0",
+        "mongodb/mongodb":              "^1.2.0",
+
         "ramsey/uuid":                  "^3.2",
-        "symfony/dependency-injection": "^3.0",
-        "symfony/http-foundation":      "^3.0",
-        "symfony/property-access":      "^3.0",
-        "symfony/polyfill-mbstring":    "^1.2",
+        "symfony/dependency-injection": "^3.4",
+        "symfony/http-foundation":      "^3.4",
+        "symfony/property-access":      "^3.4",
+        "symfony/polyfill-mbstring":    "^1.3",
+        "symfony/framework-bundle":     "^3.4",
         "react/event-loop":             "^0.4.2",
         "respect/validation":           "1.1.12",
-        "jms/metadata":                 "~1.1",
-        "webmozart/console":            "~1.0@beta",
-        "cubiche/cqt": "dev-master",
-        "alcaeus/mongo-php-adapter": "^1.1@dev"
+        "monolog/monolog":              "~1.23",
+        "cubiche/cqt":                  "dev-master"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master",

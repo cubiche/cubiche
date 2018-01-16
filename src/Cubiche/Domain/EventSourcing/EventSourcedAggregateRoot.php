@@ -110,7 +110,7 @@ trait EventSourcedAggregateRoot
 
         /** @var EventSourcedAggregateRootInterface $aggregateRoot */
         $aggregateRoot = $reflector->newInstanceWithoutConstructor();
-        $aggregateRoot->id = $history->aggregateId();
+        $aggregateRoot->id = $history->id();
         $aggregateRoot->replay($history);
 
         return $aggregateRoot;
@@ -121,7 +121,7 @@ trait EventSourcedAggregateRoot
      */
     public function replay(EventStream $history)
     {
-        foreach ($history->events() as $event) {
+        foreach ($history as $event) {
             $this->applyEvent($event);
         }
     }

@@ -1,0 +1,6 @@
+<cubiche-mapping >
+    <entity name="Cubiche\Infrastructure\Metadata\Tests\Fixtures\AddressId">
+        <field  />
+    </entity>
+    
+</cubiche-mapping>

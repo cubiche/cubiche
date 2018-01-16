@@ -1,0 +1,45 @@
+{
+    "name": "cubiche/repository-mongodb-adapter",
+    "type": "library",
+    "description": "Repository mongodb adapter library.",
+    "keywords": [
+        "repository",
+        "query"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                              "^7.0|^7.1",
+
+        "cubiche/collections":               "dev-master",
+        "cubiche/comparable":                "dev-master",
+        "cubiche/delegate":                  "dev-master",
+        "cubiche/model":                     "dev-master",
+        "cubiche/mongodb":                   "dev-master",
+        "cubiche/repository":                "dev-master",
+        "cubiche/selector":                  "dev-master",
+        "cubiche/specification":             "dev-master",
+        "cubiche/visitor":                   "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":                     "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Infrastructure\\Repository\\MongoDB\\": ""
+        }
+    }
+}

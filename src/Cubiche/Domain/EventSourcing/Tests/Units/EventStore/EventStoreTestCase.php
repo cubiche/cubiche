@@ -38,31 +38,33 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated]))
+            ->and($eventStream = new EventStream($postId, [$postWasCreated]))
             ->when($store->persist($eventStream))
             ->then()
-                ->object($store->load($streamName)->aggregateId())
-                    ->isEqualTo($eventStream->aggregateId())
+                ->object($store->load($postId)->id())
+                    ->isEqualTo($eventStream->id())
         ;
 
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
-                $postWasCreated->setVersion(32)
+                $postWasCreated->setVersion(1),
+                $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
+                $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated]))
+            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
             ->when($expextedVersion = $store->persist($eventStream))
             ->then()
                 ->integer($expextedVersion)
-                    ->isEqualTo(32)
+                    ->isEqualTo(2)
+                ->object($store->load($postId, 2)->id())
+                    ->isEqualTo($eventStream->id())
         ;
     }
 
@@ -75,8 +77,6 @@ abstract class EventStoreTestCase extends TestCase
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($postId1 = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
-            ->and($streamName1 = 'Posts-'.$postId1)
             ->and(
                 $postWasCreated = new PostWasCreated($postId1, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -85,27 +85,25 @@ abstract class EventStoreTestCase extends TestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId1, 'new title'),
                 $postTitleWasChanged->setVersion(2)
             )
-            ->and($streamNameFake = 'Blogs-'.$postId)
-            ->and($eventStream = new EventStream($streamName, $postId, []))
-            ->and($eventStream1 = new EventStream($streamName1, $postId1, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($postId, []))
+            ->and($eventStream1 = new EventStream($postId1, [$postWasCreated, $postTitleWasChanged]))
             ->when($store->persist($eventStream))
             ->then()
-                ->variable($store->load($streamName))
+                ->variable($store->load($postId))
                     ->isNull()
-                ->variable($store->load($streamNameFake))
+                ->variable($store->load(PostId::fromNative(md5(rand()))))
                     ->isNull()
                 ->and()
                 ->when($store->persist($eventStream1))
-                ->and($result = $store->load($streamName1))
+                ->and($result = $store->load($postId1))
                 ->then()
-                    ->object($result->aggregateId())
-                        ->isEqualTo($eventStream1->aggregateId())
+                    ->object($result->id())
+                        ->isEqualTo($eventStream1->id())
         ;
 
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -120,15 +118,14 @@ abstract class EventStoreTestCase extends TestCase
             )
             ->and(
                 $eventStream = new EventStream(
-                    $streamName,
                     $postId,
                     [$postWasCreated, $postTitleWasChanged, $postTitleWasChangedAgain]
                 )
             )
             ->and($store->persist($eventStream))
-            ->when($stream = $store->load($streamName, 2))
+            ->when($stream = $store->load($postId, 2))
             ->then()
-                ->array($stream->events())
+                ->array(iterator_to_array($stream->events()))
                     ->hasSize(2)
         ;
     }
@@ -141,8 +138,6 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($streamName = 'Posts-'.$postId)
-            ->and($streamNameFake = 'Blogs-'.$postId)
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -151,16 +146,16 @@ abstract class EventStoreTestCase extends TestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($streamName, $postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
             ->and($store->persist($eventStream))
-            ->when($store->remove($streamNameFake))
+            ->when($store->remove(PostId::fromNative(md5(rand()))))
             ->then()
-                ->object($store->load($streamName)->aggregateId())
-                    ->isEqualTo($eventStream->aggregateId())
+                ->object($store->load($postId)->id())
+                    ->isEqualTo($eventStream->id())
                 ->and()
-                ->when($store->remove($streamName))
+                ->when($store->remove($postId))
                 ->then()
-                    ->variable($store->load($streamName))
+                    ->variable($store->load($postId))
                         ->isNull()
         ;
     }

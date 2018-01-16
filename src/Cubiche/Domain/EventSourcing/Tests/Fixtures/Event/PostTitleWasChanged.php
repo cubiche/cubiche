@@ -23,6 +23,11 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 class PostTitleWasChanged extends DomainEvent
 {
     /**
+     * @var string
+     */
+    protected $title;
+
+    /**
      * PostTitleWasChanged constructor.
      *
      * @param PostId $id
@@ -32,15 +37,7 @@ class PostTitleWasChanged extends DomainEvent
     {
         parent::__construct($id);
 
-        $this->setPayload('title', $title);
-    }
-
-    /**
-     * @return PostId
-     */
-    public function id()
-    {
-        return $this->aggregateId();
+        $this->title = $title;
     }
 
     /**
@@ -48,7 +45,7 @@ class PostTitleWasChanged extends DomainEvent
      */
     public function title()
     {
-        return $this->getPayload('title');
+        return $this->title;
     }
 
     /**
@@ -56,6 +53,6 @@ class PostTitleWasChanged extends DomainEvent
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addMethodConstraint('title', Assert::stringType()->notBlank());
+        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
     }
 }

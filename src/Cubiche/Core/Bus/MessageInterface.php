@@ -8,15 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Cubiche\Core\Bus;
 
-use Cubiche\Core\Serializer\SerializableInterface;
+namespace Cubiche\Core\Bus;
 
 /**
  * Message interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface MessageInterface extends SerializableInterface
+interface MessageInterface
 {
+    /**
+     * @return MessageId
+     */
+    public function id();
 }

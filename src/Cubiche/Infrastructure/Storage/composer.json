@@ -19,13 +19,13 @@
         }
     ],
     "require": {
-        "php":                              "^5.5.9|^7.0",
+        "php":                          "^7.0|^7.1",
 
-        "cubiche/storage":                  "dev-master",
-        "symfony/http-foundation":          "^3.0"
+        "cubiche/storage":              "dev-master",
+        "symfony/http-foundation":      "^3.4"
     },
     "require-dev": {
-        "cubiche/tests":                    "dev-master"
+        "cubiche/tests":                "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {

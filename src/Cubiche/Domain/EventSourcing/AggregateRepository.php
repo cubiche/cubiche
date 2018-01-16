@@ -18,7 +18,7 @@ use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\EventSourcing\Utils\NameResolver;
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 
@@ -71,7 +71,7 @@ class AggregateRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function persist($element)
+    public function persist(AggregateRootInterface $element)
     {
         if (!$element instanceof EventSourcedAggregateRootInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -97,7 +97,7 @@ class AggregateRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($element)
+    public function remove(AggregateRootInterface $element)
     {
         if (!$element instanceof EventSourcedAggregateRootInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -110,7 +110,7 @@ class AggregateRepository implements RepositoryInterface
         DomainEventPublisher::publish(new PreRemoveEvent($element));
 
         // remove the event stream
-        $this->eventStore->remove($this->streamName($element->id()));
+        $this->eventStore->remove($element->id());
 
         DomainEventPublisher::publish(new PostRemoveEvent($element));
     }
@@ -124,7 +124,7 @@ class AggregateRepository implements RepositoryInterface
      */
     protected function loadHistory(IdInterface $id)
     {
-        return $this->eventStore->load($this->streamName($id));
+        return $this->eventStore->load($id);
     }
 
     /**
@@ -143,7 +143,6 @@ class AggregateRepository implements RepositoryInterface
 
             // create the eventStream and persist it
             $eventStream = new EventStream(
-                $this->streamName($aggregateRoot->id()),
                 $aggregateRoot->id(),
                 $recordedEvents
             );
@@ -152,15 +151,5 @@ class AggregateRepository implements RepositoryInterface
 
             DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
         }
-    }
-
-    /**
-     * @param IdInterface $id
-     *
-     * @return string
-     */
-    protected function streamName(IdInterface $id)
-    {
-        return NameResolver::resolve($this->aggregateClassName, $id);
     }
 }

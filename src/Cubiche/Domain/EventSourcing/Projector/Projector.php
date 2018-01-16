@@ -11,12 +11,13 @@
 
 namespace Cubiche\Domain\EventSourcing\Projector;
 
-use Cubiche\Core\Cqrs\ReadModelInterface;
-use Cubiche\Core\Cqrs\WriteModelInterface;
 use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\Model\ReadModelInterface;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
+use Iterator;
 
 /**
  * Projector class.
@@ -84,9 +85,9 @@ abstract class Projector implements DomainEventSubscriberInterface
 
     /**
      * @param Projection $projection
-     * @param array      $events
+     * @param Iterator   $events
      */
-    protected function projectEvents(Projection $projection, array $events)
+    protected function projectEvents(Projection $projection, Iterator $events)
     {
         foreach ($events as $event) {
             $classParts = explode('\\', get_class($event));
@@ -134,11 +135,11 @@ abstract class Projector implements DomainEventSubscriberInterface
     abstract protected function readModelsFromRepository(IdInterface $writeModelId);
 
     /**
-     * @param WriteModelInterface $writeModel
+     * @param AggregateRootInterface $writeModel
      *
      * @return array
      */
-    abstract protected function readModelsFromWriteModel(WriteModelInterface $writeModel);
+    abstract protected function readModelsFromWriteModel(AggregateRootInterface $writeModel);
 
     /**
      * @return string

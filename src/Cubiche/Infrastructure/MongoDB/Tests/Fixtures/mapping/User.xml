@@ -1,0 +1,16 @@
+<cubiche-mapping>
+    <aggregate-root name="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\User" collection="user">
+        <field fieldName="id" id="true" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\UserId" />
+        <field fieldName="name" type="string" />
+        <field fieldName="fullName" type="StringLiteral" />
+        <field fieldName="age" type="integer" />
+        <field fieldName="email" type="EmailAddress" />
+        <field fieldName="fax" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Phonenumber" />
+        <field fieldName="mainRole" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Role" />
+        <field fieldName="phonenumbers" type="array[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Phonenumber]" />
+        <field fieldName="roles" type="ArraySet[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Role]" />
+        <field fieldName="languagesLevel" type="ArrayHashMap[integer]" />
+        <field fieldName="addresses" type="ArrayList[Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Address]" />
+    </aggregate-root>
+    
+</cubiche-mapping>

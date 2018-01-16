@@ -18,9 +18,9 @@
         }
     ],
     "require": {
-        "php":                  "^5.5.9|^7.0",
+        "php":                  "^7.0|^7.1",
         "respect/validation":   "1.1.12",
-        "jms/metadata":         "~1.1"
+        "cuboche/metadata":     "dev-master"
     },
     "require-dev": {
         "cubiche/tests":        "dev-master"

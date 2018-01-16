@@ -33,13 +33,13 @@ class SerializationExceptionTests extends TestCase
     }
 
     /*
-     * Test forObject method.
+     * Test invalidObject method.
      */
-    public function testForObject()
+    public function testInvalidObject()
     {
         $this
             ->given($cause = new \Exception('some cause'))
-            ->when($exception = SerializationException::forObject('foo', $cause))
+            ->when($exception = SerializationException::invalidObject('foo', $cause))
             ->then()
                 ->object($exception)
                     ->isInstanceOf(SerializationException::class)
@@ -50,10 +50,78 @@ class SerializationExceptionTests extends TestCase
         ;
 
         $this
-            ->given($exception = SerializationException::forObject('bar'))
+            ->given($exception = SerializationException::invalidObject('bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()
+        ;
+    }
+
+    /*
+     * Test invalidClass method.
+     */
+    public function testInvalidClass()
+    {
+        $this
+            ->given($cause = new \Exception('some cause'))
+            ->when($exception = SerializationException::invalidClass('foo', $cause))
+            ->then()
+                ->object($exception)
+                    ->isInstanceOf(SerializationException::class)
+                ->integer($exception->getCode())
+                    ->isEqualTo(0)
+                ->object($exception->getPrevious())
+                    ->isIdenticalTo($cause)
+        ;
+
+        $this
+            ->given($exception = SerializationException::invalidClass('bar'))
+            ->then()
+                ->variable($exception->getPrevious())
+                    ->isNull()
+        ;
+    }
+
+    /*
+     * Test propertyNotFound method.
+     */
+    public function testPropertyNotFound()
+    {
+        $this
+            ->given($cause = new \Exception('some cause'))
+            ->when($exception = SerializationException::propertyNotFound('foo', TestCase::class, $cause))
+            ->then()
+                ->object($exception)
+                    ->isInstanceOf(SerializationException::class)
+                ->integer($exception->getCode())
+                    ->isEqualTo(0)
+                ->object($exception->getPrevious())
+                    ->isIdenticalTo($cause)
+        ;
+
+        $this
+            ->given($exception = SerializationException::propertyNotFound('bar', TestCase::class))
+            ->then()
+                ->variable($exception->getPrevious())
+                    ->isNull()
+        ;
+    }
+
+    /*
+     * Test invalidMapping method.
+     */
+    public function testInvalidMapping()
+    {
+        $this
+            ->given($cause = new \Exception('some cause'))
+            ->when($exception = SerializationException::invalidMapping('foo', $cause))
+            ->then()
+                ->object($exception)
+                    ->isInstanceOf(SerializationException::class)
+                ->integer($exception->getCode())
+                    ->isEqualTo(0)
+                ->object($exception->getPrevious())
+                    ->isIdenticalTo($cause)
         ;
     }
 }

@@ -1,2 +1,0 @@
-# Cubiche - System Adapter
-[![Build Status](https://travis-ci.org/cubiche/system-adapter.svg?branch=master)](https://travis-ci.org/cubiche/system-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/system-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/system-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/system-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/system-adapter/?branch=master) 

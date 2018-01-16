@@ -18,7 +18,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayHashMapInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class MethodMetadata implements \Serializable
+class MethodMetadata implements MethodMetadataInterface
 {
     /**
      * @var string

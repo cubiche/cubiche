@@ -22,7 +22,6 @@ use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\AggregateRepositoryTests;
-use Cubiche\Domain\EventSourcing\Utils\NameResolver;
 
 /**
  * SnapshotAggregateRepositoryTests class.
@@ -65,7 +64,7 @@ class SnapshotAggregateRepositoryTests extends AggregateRepositoryTests
             )
             ->and($post->changeTitle($this->faker->sentence))
             ->and(
-                $snapshot = new Snapshot(NameResolver::resolve(get_class($post), $post->id()), $post, new \DateTime())
+                $snapshot = new Snapshot($post->id(), $post, new \DateTime())
             )
             ->when($repository->persist($post))
             ->then()

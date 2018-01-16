@@ -4,8 +4,29 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="cubiche.serializer.default" class="Cubiche\Core\Serializer\DefaultSerializer" />
+        <!--  encoders  -->
+        <service id="cubiche.serializer.encoder.value_object" class="Cubiche\Core\Serializer\Encoder\ValueObjectEncoder" />
+        <service id="cubiche.serializer.encoder.date_time" class="Cubiche\Core\Serializer\Encoder\DateTimeEncoder" />
+        <service id="cubiche.serializer.encoder.metadata_object" class="Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder" >
+            <argument type="service" id="cubiche.mongodb.metadata_factory" />
+        </service>
+        <service id="cubiche.serializer.encoder.object" class="Cubiche\Core\Serializer\Encoder\ObjectEncoder" />
+        <service id="cubiche.serializer.encoder.array" class="Cubiche\Core\Serializer\Encoder\ArrayEncoder" />
+        <service id="cubiche.serializer.encoder.native" class="Cubiche\Core\Serializer\Encoder\NativeEncoder" />
 
-        <service id="cubiche.serializer" alias="cubiche.serializer.default" />
+        <!--  serializer  -->
+        <service id="cubiche.serializer.default" class="Cubiche\Core\Serializer\DefaultSerializer" />
+        <service id="cubiche.serializer.mongodb" class="Cubiche\Core\Serializer\Serializer" >
+            <argument type="collection">
+                <argument key="100" type="service" id="cubiche.serializer.encoder.value_object" />
+                <argument key="200" type="service" id="cubiche.serializer.encoder.date_time" />
+                <argument key="300" type="service" id="cubiche.serializer.encoder.metadata_object" />
+                <argument key="400" type="service" id="cubiche.serializer.encoder.object" />
+                <argument key="500" type="service" id="cubiche.serializer.encoder.array" />
+                <argument key="600" type="service" id="cubiche.serializer.encoder.native" />
+            </argument>
+        </service>
+
+        <service id="cubiche.serializer" alias="cubiche.serializer.mongodb" />
     </services>
 </container>

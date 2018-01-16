@@ -24,9 +24,9 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 class SnapshotTests extends TestCase
 {
     /**
-     * Test snapshotName method.
+     * Test id method.
      */
-    public function testSnapshotName()
+    public function testId()
     {
         $this
             ->given(
@@ -35,11 +35,10 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->then()
-                ->string($snapshot->snapshotName())
-                    ->isEqualTo($snapshotName)
+                ->object($snapshot->id())
+                    ->isEqualTo($post->id())
         ;
     }
 
@@ -55,8 +54,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->then()
                 ->object($snapshot->aggregate())
                     ->isEqualTo($post)
@@ -76,8 +74,7 @@ class SnapshotTests extends TestCase
                 )
             )
             ->and($post->setVersion(345))
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->then()
                 ->integer($snapshot->version())
                     ->isEqualTo($post->version())
@@ -97,8 +94,7 @@ class SnapshotTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotName = 'Posts-'.$post->id()->toNative())
-            ->and($snapshot = new Snapshot($snapshotName, $post))
+            ->and($snapshot = new Snapshot($post->id(), $post))
             ->then()
                 ->object($snapshot->createdAt())
                     ->isInstanceOf(\DateTime::class)

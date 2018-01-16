@@ -11,7 +11,6 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Projector;
 
-use Cubiche\Core\Cqrs\WriteModelInterface;
 use Cubiche\Domain\EventSourcing\Projector\Action;
 use Cubiche\Domain\EventSourcing\Projector\Projection;
 use Cubiche\Domain\EventSourcing\Projector\Projector;
@@ -20,6 +19,7 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasPublished;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasUnPublished;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel\PublishedPost;
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -75,7 +75,7 @@ class PublishedPostProjector extends Projector
     /**
      * {@inheritdoc}
      */
-    protected function readModelsFromWriteModel(WriteModelInterface $writeModel)
+    protected function readModelsFromWriteModel(AggregateRootInterface $writeModel)
     {
         /** @var PostEventSourced $aggregate */
         $aggregate = $writeModel;

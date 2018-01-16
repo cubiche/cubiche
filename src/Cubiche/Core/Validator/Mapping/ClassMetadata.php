@@ -11,8 +11,9 @@
 
 namespace Cubiche\Core\Validator\Mapping;
 
+use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Validator\Assert;
-use Metadata\ClassMetadata as BaseClassMetadata;
+use Cubiche\Core\Metadata\ClassMetadata as BaseClassMetadata;
 
 /**
  * ClassMetadata class.
@@ -27,33 +28,15 @@ class ClassMetadata extends BaseClassMetadata
     public $defaultGroup;
 
     /**
-     * @return string
-     */
-    public function getClassName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $property
-     *
-     * @return PropertyMetadata|null
-     */
-    protected function getPropertyMetadata($property)
-    {
-        return isset($this->propertyMetadata[$property]) ? $this->propertyMetadata[$property] : null;
-    }
-
-    /**
      * @param string $property
      * @param Assert $constraint
      * @param string $group
      */
     public function addPropertyConstraint($property, Assert $constraint, $group = null)
     {
-        $propertyMetadata = $this->getPropertyMetadata($property);
+        $propertyMetadata = $this->propertyMetadata($property);
         if ($propertyMetadata === null) {
-            $propertyMetadata = new PropertyMetadata($this->getClassName(), $property);
+            $propertyMetadata = new PropertyMetadata($this->className(), $property);
             $propertyMetadata->defaultGroup = $this->defaultGroup;
         }
 
@@ -75,33 +58,15 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
-     * @return PropertyMetadata[]
-     */
-    public function getPropertiesMetadata()
-    {
-        return $this->propertyMetadata;
-    }
-
-    /**
-     * @param string $method
-     *
-     * @return MethodMetadata|null
-     */
-    protected function getMethodMetadata($method)
-    {
-        return isset($this->methodMetadata[$method]) ? $this->methodMetadata[$method] : null;
-    }
-
-    /**
      * @param string $method
      * @param Assert $constraint
      * @param string $group
      */
     public function addMethodConstraint($method, Assert $constraint, $group = null)
     {
-        $methodMetadata = $this->getMethodMetadata($method);
+        $methodMetadata = $this->methodMetadata($method);
         if ($methodMetadata === null) {
-            $methodMetadata = new MethodMetadata($this->getClassName(), $method);
+            $methodMetadata = new MethodMetadata($this->className(), $method);
             $methodMetadata->defaultGroup = $this->defaultGroup;
         }
 
@@ -123,28 +88,22 @@ class ClassMetadata extends BaseClassMetadata
     }
 
     /**
-     * @return MethodMetadata[]
-     */
-    public function getMethodsMetadata()
-    {
-        return $this->methodMetadata;
-    }
-
-    /**
      * Merges the constraints of the given metadata into this object.
      *
      * @param ClassMetadata $source
      */
     public function mergeConstraints(ClassMetadata $source)
     {
-        foreach ($source->getPropertiesMetadata() as $property => $propertyMetadata) {
-            foreach ($propertyMetadata->getConstraints() as $group => $constraints) {
+        /** @var PropertyMetadata $propertyMetadata */
+        foreach ($source->propertiesMetadata() as $property => $propertyMetadata) {
+            foreach ($propertyMetadata->constraints() as $group => $constraints) {
                 $this->addPropertyConstraints($property, $constraints, $group);
             }
         }
 
-        foreach ($source->getMethodsMetadata() as $method => $methodMetadata) {
-            foreach ($methodMetadata->getConstraints() as $group => $constraints) {
+        /** @var MethodMetadata $methodMetadata */
+        foreach ($source->methodsMetadata() as $method => $methodMetadata) {
+            foreach ($methodMetadata->constraints() as $group => $constraints) {
                 $this->addMethodConstraints($method, $constraints, $group);
             }
         }
@@ -156,11 +115,10 @@ class ClassMetadata extends BaseClassMetadata
     public function serialize()
     {
         return serialize(array(
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
+            $this->className,
+            $this->methodsMetadata->toArray(),
+            $this->propertiesMetadata->toArray(),
+            $this->metadata->toArray(),
             $this->defaultGroup,
         ));
     }
@@ -171,13 +129,16 @@ class ClassMetadata extends BaseClassMetadata
     public function unserialize($str)
     {
         list(
-            $this->name,
-            $this->methodMetadata,
-            $this->propertyMetadata,
-            $this->fileResources,
-            $this->createdAt,
-            $this->defaultGroup) = unserialize($str);
+            $this->className,
+            $methodsMetadata,
+            $propertiesMetadata,
+            $metadata,
+            $this->defaultGroup
+        ) = unserialize($str);
 
-        $this->reflection = new \ReflectionClass($this->name);
+        $this->reflection = new \ReflectionClass($this->className);
+        $this->methodsMetadata = new ArrayHashMap($methodsMetadata);
+        $this->propertiesMetadata = new ArrayHashMap($propertiesMetadata);
+        $this->metadata = new ArrayHashMap($metadata);
     }
 }

@@ -20,6 +20,11 @@ use Cubiche\Domain\EventPublisher\DomainEvent;
 class DecrementCounterEvent extends DomainEvent
 {
     /**
+     * @var int
+     */
+    protected $step;
+
+    /**
      * IncrementCounterEvent constructor.
      *
      * @param $step
@@ -28,7 +33,7 @@ class DecrementCounterEvent extends DomainEvent
     {
         parent::__construct();
 
-        $this->setPayload('step', $step);
+        $this->step = $step;
     }
 
     /**
@@ -36,6 +41,6 @@ class DecrementCounterEvent extends DomainEvent
      */
     public function step()
     {
-        return $this->getPayload('step');
+        return $this->step;
     }
 }

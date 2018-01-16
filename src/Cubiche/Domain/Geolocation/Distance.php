@@ -118,6 +118,16 @@ class Distance implements ValueObjectInterface, ComparableInterface
      */
     public function __toString()
     {
-        return\sprintf('%F %s', $this->value()->toNative(), $this->unit()->toNative());
+        return \sprintf('%F %s', $this->value()->toNative(), $this->unit()->toNative());
+    }
+
+    /**
+     * Return hash id.
+     *
+     * @return string
+     */
+    public function hashCode()
+    {
+        return \sprintf('%F %s', $this->value()->toNative(), $this->unit()->toNative());
     }
 }

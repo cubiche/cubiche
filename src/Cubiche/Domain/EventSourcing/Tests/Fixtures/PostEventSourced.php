@@ -26,7 +26,6 @@ use Cubiche\Domain\Model\Tests\Fixtures\PostId;
  * PostEventSourced class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
- * @ES\Migratable
  */
 class PostEventSourced extends Post implements EventSourcedAggregateRootInterface
 {

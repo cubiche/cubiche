@@ -15,6 +15,7 @@ use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Policy\SnapshottingPolicyInterface;
+use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -70,7 +71,7 @@ class SnapshotAggregateRepository extends AggregateRepository
     /**
      * {@inheritdoc}
      */
-    public function persist($element)
+    public function persist(AggregateRootInterface $element)
     {
         if (!$element instanceof EventSourcedAggregateRootInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -96,7 +97,7 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function loadSnapshot(IdInterface $id)
     {
-        return $this->snapshotStore->load($this->streamName($id));
+        return $this->snapshotStore->load($id);
     }
 
     /**
@@ -106,7 +107,7 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
     {
-        $snapshot = new Snapshot($this->streamName($aggregateRoot->id()), $aggregateRoot);
+        $snapshot = new Snapshot($aggregateRoot->id(), $aggregateRoot);
 
         $this->snapshotStore->persist($snapshot);
     }
@@ -119,7 +120,7 @@ class SnapshotAggregateRepository extends AggregateRepository
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {
         $history = $this->eventStore->load(
-            $this->streamName($snapshot->aggregate()->id()),
+            $snapshot->id(),
             $snapshot->version()
         );
 

@@ -68,4 +68,34 @@ class MappingException extends RuntimeException
             $className
         ));
     }
+
+    /**
+     * @param string $className
+     * @param string $fieldName
+     *
+     * @return MappingException
+     */
+    public static function invalidAbstractMethod($className, $fieldName)
+    {
+        return new static(sprintf(
+            'The method %s::%s should not be abstract.',
+            $className,
+            $fieldName
+        ));
+    }
+
+    /**
+     * @param string $className
+     * @param string $fieldName
+     *
+     * @return MappingException
+     */
+    public static function invalidStaticMethod($className, $fieldName)
+    {
+        return new static(sprintf(
+            'The method %s::%s should be static.',
+            $className,
+            $fieldName
+        ));
+    }
 }

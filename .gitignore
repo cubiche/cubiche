@@ -8,6 +8,7 @@ build/
 .atoum.config.php
 phpunit.xml
 
+src/Cubiche/Domain/Web/Tests/Units/*.cache
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Proxies/
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Hydrators/
 src/Cubiche/Infrastructure/Repository/Doctrine/Tests/Units/ODM/MongoDB/Cache/

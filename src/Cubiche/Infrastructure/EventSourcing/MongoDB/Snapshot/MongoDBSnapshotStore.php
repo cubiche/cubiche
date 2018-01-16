@@ -11,9 +11,12 @@
 
 namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Snapshot;
 
-use Cubiche\Core\Serializer\SerializerInterface;
-use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
+use Cubiche\Domain\EventSourcing\Snapshot\SnapshotInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
+use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Infrastructure\MongoDB\Common\Connection;
+use MongoDB\Collection;
+use MongoDB\Database;
 
 /**
  * MongoDBSnapshotStore class.
@@ -23,45 +26,42 @@ use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 class MongoDBSnapshotStore implements SnapshotStoreInterface
 {
     /**
-     * @var \MongoClient
+     * @var Connection
      */
-    protected $mongoClient;
+    protected $connection;
 
     /**
-     * @var string
+     * @var Database
      */
-    protected $databaseName;
+    protected $database;
 
     /**
-     * @var SerializerInterface
+     * @var Collection
      */
-    protected $serializer;
+    protected $collection;
 
     /**
      * MongoDBSnapshotStore constructor.
      *
-     * @param \MongoClient        $mongoClient
-     * @param string              $databaseName
-     * @param SerializerInterface $serializer
+     * @param Connection $connection
      */
-    public function __construct(\MongoClient $mongoClient, $databaseName, SerializerInterface $serializer)
+    public function __construct(Connection $connection)
     {
-        $this->mongoClient = $mongoClient;
-        $this->databaseName = $databaseName;
-        $this->serializer = $serializer;
+        $this->connection = $connection;
+        $this->database = new Database($this->connection->manager(), $this->connection->database());
+        $this->collection = $this->database->selectCollection('snapshots');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function persist(Snapshot $snapshot)
+    public function persist(SnapshotInterface $snapshot)
     {
-        $collection = $this->getCollection($snapshot->snapshotName());
-        $collection->update(
-            array('_id' => $snapshot->aggregate()->id()->toNative()),
+        $this->collection->findOneAndUpdate(
+            array('_id' => $snapshot->id()->toNative()),
             array(
                 '$set' => array(
-                    'payload' => $this->serializer->serialize($snapshot),
+                    'payload' => serialize($snapshot),
                 ),
             ),
             array('upsert' => true)
@@ -71,17 +71,14 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function load($snapshotName)
+    public function load(IdInterface $id)
     {
-        $collection = $this->getCollection($snapshotName);
-        $aggregateId = $this->snapshotNameToAggregareId($snapshotName);
-
-        $document = $collection->findOne(array(
-            '_id' => $aggregateId,
+        $document = $this->collection->findOne(array(
+            '_id' => $id->toNative(),
         ));
 
         if ($document !== null) {
-            return $this->serializer->deserialize($document['payload']);
+            return unserialize($document['payload']);
         }
 
         return;
@@ -90,55 +87,10 @@ class MongoDBSnapshotStore implements SnapshotStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($snapshotName)
+    public function remove(IdInterface $id)
     {
-        $collection = $this->getCollection($snapshotName);
-        $aggregateId = $this->snapshotNameToAggregareId($snapshotName);
-
-        $collection->remove(array(
-            '_id' => $aggregateId,
+        $this->collection->deleteMany(array(
+            '_id' => $id->toNative(),
         ));
-    }
-
-    /**
-     * Get mongo db stream collection.
-     *
-     * @param string $snapshotName
-     *
-     * @return \MongoCollection
-     */
-    private function getCollection($snapshotName)
-    {
-        $collection = $this->mongoClient->selectCollection(
-            $this->databaseName,
-            $this->snapshotNameToCollectionName($snapshotName)
-        );
-
-        $collection->setReadPreference(\MongoClient::RP_PRIMARY);
-
-        return $collection;
-    }
-
-    /**
-     * @param string $snapshotName
-     *
-     * @return string
-     */
-    private function snapshotNameToCollectionName($snapshotName)
-    {
-        $snapshotName = substr($snapshotName, 0, strpos($snapshotName, '-'));
-        $pieces = explode(' ', trim(preg_replace('([A-Z])', ' $0', $snapshotName)));
-
-        return strtolower(implode('_', $pieces)).'_snapshot';
-    }
-
-    /**
-     * @param string $snapshotName
-     *
-     * @return string
-     */
-    private function snapshotNameToAggregareId($snapshotName)
-    {
-        return substr($snapshotName, strpos($snapshotName, '-') + 1);
     }
 }

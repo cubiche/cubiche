@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="cubiche.repository.mongodb.comparator_visitor_factory" class="Cubiche\Infrastructure\Repository\MongoDB\Visitor\ComparatorVisitorFactory" />
+        <service id="cubiche.repository.mongodb.specification_visitor_factory" class="Cubiche\Infrastructure\Repository\MongoDB\Visitor\SpecificationVisitorFactory" />
+
+        <service id="cubiche.repository.mongodb.document_datasource_factory" class="Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentDataSourceFactory">
+            <argument type="service" id="cubiche.document_manager" />
+            <argument type="service" id="cubiche.repository.mongodb.specification_visitor_factory" />
+            <argument type="service" id="cubiche.repository.mongodb.comparator_visitor_factory" />
+        </service>
+
+        <service id="cubiche.repository.mongodb.document_repository_factory" class="Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentRepositoryFactory">
+            <argument type="service" id="cubiche.document_manager" />
+        </service>
+
+        <service id="cubiche.repository.mongodb.document_query_repository_factory" class="Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentQueryRepositoryFactory">
+            <argument type="service" id="cubiche.document_manager" />
+            <argument type="service" id="cubiche.repository.mongodb.document_datasource_factory" />
+        </service>
+    </services>
+</container>

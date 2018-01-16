@@ -8,16 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\EventDispatcher;
 
-use Cubiche\Core\Serializer\SerializableInterface;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * Event interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventInterface extends SerializableInterface
+interface EventInterface extends MessageInterface
 {
     /**
      * Stop event propagation.

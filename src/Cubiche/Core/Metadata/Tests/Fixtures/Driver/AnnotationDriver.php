@@ -48,16 +48,21 @@ class AnnotationDriver extends AbstractAnnotationDriver
                 $classMetadata = new ClassMetadata($className);
                 foreach ($classMetadata->reflection()->getProperties() as $propertyReflection) {
                     foreach ($this->reader->getPropertyAnnotations($propertyReflection) as $annotation) {
+                        $name = $propertyReflection->getName();
+                        $fieldName = $propertyReflection->getName();
+
                         if ($annotation instanceof Field) {
+                            if (!empty($annotation->name)) {
+                                $name = $annotation->name;
+                            }
+
                             $propertyMetadata = new PropertyMetadata(
                                 $classMetadata->className(),
-                                $propertyReflection->getName()
+                                $fieldName
                             );
 
                             $propertyMetadata->addMetadata('identifier', $annotation->id);
-                            if (!empty($annotation->name)) {
-                                $propertyMetadata->addMetadata('name', $annotation->name);
-                            }
+                            $propertyMetadata->addMetadata('name', $name);
 
                             if (!empty($annotation->type)) {
                                 $propertyMetadata->addMetadata('type', $annotation->type);
@@ -70,7 +75,7 @@ class AnnotationDriver extends AbstractAnnotationDriver
                         } elseif ($annotation instanceof Id) {
                             $propertyMetadata = new PropertyMetadata(
                                 $classMetadata->className(),
-                                $propertyReflection->getName()
+                                $fieldName
                             );
 
                             $propertyMetadata->addMetadata('identifier', true);

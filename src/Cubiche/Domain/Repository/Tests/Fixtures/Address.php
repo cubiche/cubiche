@@ -12,13 +12,14 @@ namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
 use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Model\Entity;
+use Cubiche\Domain\Model\ReadModelInterface;
 
 /**
  * Address.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Address extends Entity
+class Address extends Entity implements ReadModelInterface
 {
     /**
      * @var string
@@ -75,6 +76,14 @@ class Address extends Entity
     }
 
     /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
      * @return string
      */
     public function street()
@@ -104,5 +113,35 @@ class Address extends Entity
     public function coordinate()
     {
         return $this->coordinate;
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize()
+    {
+        return array(
+            'name' => $this->name,
+            'street' => $this->street,
+            'zipcode' => $this->zipcode,
+            'city' => $this->city,
+            'coordinate' => $this->coordinate,
+        );
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return mixed The object instance
+     */
+    public static function deserialize(array $data)
+    {
+        return new self(
+            $data['name'],
+            $data['street'],
+            $data['zipcode'],
+            $data['city'],
+            $data['coordinate']
+        );
     }
 }

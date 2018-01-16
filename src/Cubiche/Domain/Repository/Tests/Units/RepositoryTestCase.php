@@ -167,15 +167,6 @@ abstract class RepositoryTestCase extends TestCase
         ;
 
         $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->persist($id);
-                })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-
-        $this
             ->given($repository = $this->emptyRepository())
             ->and($value = $this->randomValue())
             ->and($age = $value->age())
@@ -215,15 +206,6 @@ abstract class RepositoryTestCase extends TestCase
         ;
 
         $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->persistAll([$id]);
-                })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-
-        $this
             ->given($repository = $this->emptyRepository())
             ->and($value = $this->randomValue())
             ->and($age = $value->age())
@@ -256,15 +238,6 @@ abstract class RepositoryTestCase extends TestCase
             ->then()
                 ->variable($repository->get($unique->id()))
                     ->isNull()
-        ;
-
-        $this
-            ->given($repository = $this->randomRepository())
-            ->given($id = UserId::next())
-            ->then()
-                ->exception(function () use ($repository, $id) {
-                    $repository->remove($id);
-                })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }
 }

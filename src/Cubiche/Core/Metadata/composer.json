@@ -20,13 +20,13 @@
         }
     ],
     "require": {
-        "php":                      "^5.5.9|^7.0",
+        "php":                      "^7.0|^7.1",
 
         "doctrine/common":          "2.6.1"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master",
-        "symfony/yaml":             "~2.3|~3.0"
+        "symfony/yaml":             "^3.4"
     },
     "minimum-stability": "dev",
     "autoload": {

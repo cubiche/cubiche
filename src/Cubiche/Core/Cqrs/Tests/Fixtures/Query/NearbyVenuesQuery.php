@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Query;
 
+use Cubiche\Core\Cqrs\Query\Query;
 use Cubiche\Core\Cqrs\Query\QueryNamedInterface;
 
 /**
@@ -18,7 +19,7 @@ use Cubiche\Core\Cqrs\Query\QueryNamedInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NearbyVenuesQuery implements QueryNamedInterface
+class NearbyVenuesQuery extends Query implements QueryNamedInterface
 {
     /**
      * @var float

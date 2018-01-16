@@ -22,7 +22,17 @@ use Cubiche\Domain\Model\IdInterface;
 class DomainEvent extends BaseDomainEvent implements DomainEventInterface
 {
     /**
-     * EntityDomainEvent constructor.
+     * @var IdInterface
+     */
+    protected $aggregateId;
+
+    /**
+     * @var int
+     */
+    protected $version;
+
+    /**
+     * DomainEvent constructor.
      *
      * @param IdInterface $aggregateId
      */
@@ -30,17 +40,8 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
     {
         parent::__construct();
 
-        $this->setMetadata('aggregateId', $aggregateId);
-        $this->setMetadata('eventId', DomainEventId::next());
-        $this->setVersion(0);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function eventId()
-    {
-        return $this->getMetadata('eventId');
+        $this->aggregateId = $aggregateId;
+        $this->version = 0;
     }
 
     /**
@@ -48,7 +49,7 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function aggregateId()
     {
-        return $this->getMetadata('aggregateId');
+        return $this->aggregateId;
     }
 
     /**
@@ -56,7 +57,7 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function version()
     {
-        return $this->getMetadata('version');
+        return $this->version;
     }
 
     /**
@@ -64,6 +65,6 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
      */
     public function setVersion($version)
     {
-        $this->setMetadata('version', $version);
+        $this->version = $version;
     }
 }

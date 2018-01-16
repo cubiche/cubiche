@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Serializer;
 
-use Cubiche\Core\Serializer\Exception\SerializationException;
+use Cubiche\Core\Serializer\Encoder\EncoderInterface;
 
 /**
  * Serializer interface.
@@ -19,24 +20,38 @@ use Cubiche\Core\Serializer\Exception\SerializationException;
 interface SerializerInterface
 {
     /**
-     * Serializes data.
+     * Serializes object to array.
      *
-     * @param mixed $object
+     * @param mixed  $object
+     * @param string $className
      *
-     * @return string
-     *
-     * @throws SerializationException
+     * @return array
      */
-    public function serialize($object);
+    public function serialize($object, $className = null);
 
     /**
-     * Deserializes data.
+     * Deserializes data to object.
      *
-     * @param string $data
+     * @param mixed  $data
+     * @param string $className
      *
-     * @return mixed
-     *
-     * @throws SerializationException
+     * @return object
      */
-    public function deserialize($data);
+    public function deserialize($data, $className);
+
+    /**
+     * Adds a serializer encoder. The smaller the priority value,
+     * the earlier an encoder will be used in the chain (default is 0).
+     *
+     * @param EncoderInterface $encoder
+     * @param int              $priority
+     */
+    public function addEncoder(EncoderInterface $encoder, $priority = 0);
+
+    /**
+     * @param string $className
+     *
+     * @return bool
+     */
+    public function supports($className);
 }

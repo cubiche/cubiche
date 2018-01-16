@@ -11,7 +11,7 @@
 
 namespace Cubiche\Infrastructure\Cqrs\Tests\Fixtures\Command;
 
-use Cubiche\Core\Cqrs\Command\CommandInterface;
+use Cubiche\Core\Cqrs\Command\Command;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -20,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CreateUserCommand implements CommandInterface
+class CreateUserCommand extends Command
 {
     /**
      * @var string
