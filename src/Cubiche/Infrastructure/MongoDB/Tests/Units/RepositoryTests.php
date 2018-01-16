@@ -27,6 +27,8 @@ use Cubiche\Infrastructure\MongoDB\Tests\Fixtures\UserId;
 /**
  * RepositoryTests Class.
  *
+ * @engine isolate
+ *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class RepositoryTests extends BaseRepositoryTestCase

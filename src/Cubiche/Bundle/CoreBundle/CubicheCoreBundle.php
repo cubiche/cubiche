@@ -16,6 +16,11 @@ use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterEventListener
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * CubicheCoreBundle class.
+ *
+ * @author Ivan Suárez Jerez <ivan@howaboutsales.com>
+ */
 class CubicheCoreBundle extends Bundle
 {
     /**

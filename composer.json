@@ -27,9 +27,9 @@
         "symfony/http-foundation":      "^3.0",
         "symfony/property-access":      "^3.0",
         "symfony/polyfill-mbstring":    "^1.2",
+        "symfony/framework-bundle":     "^3.2",
         "react/event-loop":             "^0.4.2",
         "respect/validation":           "1.1.12",
-        "webmozart/console":            "~1.0@beta",
         "monolog/monolog":              "~1.23",
         "cubiche/cqt":                  "dev-master"
     },
