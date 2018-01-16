@@ -1,0 +1,46 @@
+{
+    "name": "cubiche/localizable",
+    "type": "library",
+    "description": "Localizable library.",
+    "keywords": [
+        "locale",
+        "localizable",
+        "internationalization",
+        "i18n"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^7.0|^7.1",
+
+        "cubiche/system":           "dev-master",
+        "cubiche/web":              "dev-master",
+        "cubiche/model":            "dev-master",
+
+        "cubiche/selector":         "dev-master",
+        "cubiche/specification":    "dev-master",
+        "cubiche/equatable":        "dev-master",
+        "cubiche/validator":        "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Domain\\Localizable\\": ""
+        }
+    }
+}
