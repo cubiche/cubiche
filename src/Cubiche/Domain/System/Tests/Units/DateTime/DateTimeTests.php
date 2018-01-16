@@ -57,15 +57,10 @@ class DateTimeTests extends TestCase
     public function testFromTimestamp()
     {
         $this
-            ->given(
-                $fromNativeDateTime = DateTime::fromNative(
-                    \DateTime::createFromFormat('Y-m-d H:i:s', '2015-04-13 15:05:20')
-                )
-            )
-            ->and($dateTime = DateTime::fromTimestamp(1428930320))
+            ->given($dateTime = DateTime::fromTimestamp(1428930320))
             ->then()
                 ->object($dateTime)
-                    ->isEqualTo($fromNativeDateTime)
+                    ->isInstanceOf(DateTime::class)
         ;
     }
 

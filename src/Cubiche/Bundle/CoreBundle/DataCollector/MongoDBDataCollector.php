@@ -112,4 +112,12 @@ class MongoDBDataCollector extends DataCollector implements QueryLoggerInterface
     {
         return 'cubiche.mongodb_collector';
     }
+
+    /**
+     * Resets this data collector to its initial state.
+     */
+    public function reset()
+    {
+        $this->data = array();
+    }
 }

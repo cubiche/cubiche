@@ -22,7 +22,7 @@
         "php":                          "^7.0|^7.1",
 
         "cubiche/storage":              "dev-master",
-        "symfony/http-foundation":      "^3.0"
+        "symfony/http-foundation":      "^3.4"
     },
     "require-dev": {
         "cubiche/tests":                "dev-master"
