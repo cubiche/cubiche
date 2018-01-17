@@ -501,4 +501,41 @@ class LocalizableUrlTests extends TestCase
                        ->isEqualTo('http://foo.es')
         ;
     }
+
+    /**
+     * Test fromArray method.
+     */
+    public function testFromArray()
+    {
+        $this
+            ->given(
+                $localizableString = LocalizableString::fromArray(
+                    array('en' => 'http://www.google.com', 'es' => 'http://www.google.es'),
+                    'en'
+                )
+            )
+            ->then()
+                ->boolean($localizableString->locale()->equals(LocaleCode::EN()))
+                    ->isTrue()
+                ->string($localizableString->translate(LocaleCode::EN()))
+                    ->isEqualTo('http://www.google.com')
+                ->string($localizableString->translate(LocaleCode::ES()))
+                   ->isEqualTo('http://www.google.es')
+        ;
+    }
+
+    /**
+     * Test toArray method.
+     */
+    public function testToArray()
+    {
+        $this
+            ->given($localizableString = new LocalizableString(LocaleCode::EN()))
+            ->when($localizableString->addNative('http://www.google.com', LocaleCode::EN()))
+            ->and($localizableString->addNative('http://www.google.es', LocaleCode::ES()))
+            ->then()
+                ->array($localizableString->toArray())
+                    ->isEqualTo(array('en' => 'http://www.google.com', 'es' => 'http://www.google.es'))
+        ;
+    }
 }

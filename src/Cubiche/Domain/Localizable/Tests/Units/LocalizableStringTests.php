@@ -297,4 +297,36 @@ class LocalizableStringTests extends TestCase
                         ->isEqualTo('Hola mundo')
         ;
     }
+
+    /**
+     * Test fromArray method.
+     */
+    public function testFromArray()
+    {
+        $this
+            ->given($localizableString = LocalizableString::fromArray(array('en' => 'foo', 'es' => 'fuu'), 'en'))
+            ->then()
+                ->boolean($localizableString->locale()->equals(LocaleCode::EN()))
+                    ->isTrue()
+                ->string($localizableString->translate(LocaleCode::EN()))
+                    ->isEqualTo('foo')
+                ->string($localizableString->translate(LocaleCode::ES()))
+                    ->isEqualTo('fuu')
+        ;
+    }
+
+    /**
+     * Test toArray method.
+     */
+    public function testToArray()
+    {
+        $this
+            ->given($localizableString = new LocalizableString(LocaleCode::EN()))
+            ->when($localizableString->addNative('foo', LocaleCode::EN()))
+            ->and($localizableString->addNative('fuu', LocaleCode::ES()))
+            ->then()
+                ->array($localizableString->toArray())
+                    ->isEqualTo(array('en' => 'foo', 'es' => 'fuu'))
+        ;
+    }
 }

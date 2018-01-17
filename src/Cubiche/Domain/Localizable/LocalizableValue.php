@@ -172,6 +172,36 @@ trait LocalizableValue
     }
 
     /**
+     * @param array  $translations
+     * @param string $locale
+     *
+     * @return LocalizableString
+     */
+    public static function fromArray(array $translations, $locale = LocalizableValueInterface::DEFAULT_LOCALE)
+    {
+        $localizableString = new static(LocaleCode::fromNative($locale));
+        foreach ($translations as $localeCode => $translation) {
+            $localizableString->addNative($translation, LocaleCode::fromNative($localeCode));
+        }
+
+        return $localizableString;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function toArray()
+    {
+        $translations = array();
+        /** @var NativeValueObjectInterface $translation */
+        foreach ($this->translations as $locale => $translation) {
+            $translations[$locale] = $translation->toNative();
+        }
+
+        return $translations;
+    }
+
+    /**
      * @param ValueObjectInterface $localizableValue
      *
      * @return bool
