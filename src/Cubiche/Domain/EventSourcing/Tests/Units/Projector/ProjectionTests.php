@@ -15,7 +15,7 @@ use Cubiche\Domain\EventSourcing\Projector\Action;
 use Cubiche\Domain\EventSourcing\Projector\Projection;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel\PublishedPost;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * ProjectionTests class.

@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Projector;
 
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Projector\Action;
 use Cubiche\Domain\EventSourcing\Projector\Projection;
 use Cubiche\Domain\EventSourcing\Projector\Projector;
@@ -19,7 +20,6 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasPublished;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasUnPublished;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel\PublishedPost;
-use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**

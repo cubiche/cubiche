@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -12,15 +12,14 @@
 namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\Model\AggregateRootInterface;
+use Cubiche\Domain\Model\EntityInterface;
 
 /**
- * EventSourcedAggregateRoot interface.
+ * Aggregate Root Interface.
  *
- * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface EventSourcedAggregateRootInterface extends AggregateRootInterface
+interface AggregateRootInterface extends EntityInterface
 {
     /**
      * @return DomainEventInterface[]

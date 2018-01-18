@@ -19,7 +19,7 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Projector\PublishedPostProjector;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel\PublishedPost;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 use Cubiche\Domain\Repository\InMemory\InMemoryQueryRepository;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 

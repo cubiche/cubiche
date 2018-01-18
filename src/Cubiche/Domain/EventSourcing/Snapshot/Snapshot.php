@@ -10,8 +10,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -27,7 +26,7 @@ class Snapshot implements SnapshotInterface
     protected $id;
 
     /**
-     * @var EventSourcedAggregateRootInterface
+     * @var AggregateRootInterface
      */
     protected $aggregate;
 
@@ -44,10 +43,10 @@ class Snapshot implements SnapshotInterface
     /**
      * Snapshot constructor.
      *
-     * @param IdInterface                        $id
-     * @param EventSourcedAggregateRootInterface $aggregate
+     * @param IdInterface            $id
+     * @param AggregateRootInterface $aggregate
      */
-    public function __construct(IdInterface $id, EventSourcedAggregateRootInterface $aggregate)
+    public function __construct(IdInterface $id, AggregateRootInterface $aggregate)
     {
         $this->id = $id;
         $this->aggregate = $aggregate;
@@ -72,7 +71,7 @@ class Snapshot implements SnapshotInterface
     }
 
     /**
-     * @return EventSourcedAggregateRootInterface
+     * @return AggregateRootInterface
      */
     public function aggregate()
     {

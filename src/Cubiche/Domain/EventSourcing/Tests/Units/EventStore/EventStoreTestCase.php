@@ -16,7 +16,7 @@ use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * EventStoreTestCase class.

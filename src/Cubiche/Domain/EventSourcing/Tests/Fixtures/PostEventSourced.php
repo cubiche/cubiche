@@ -11,25 +11,34 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRoot;
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
-use Cubiche\Domain\EventSourcing\Metadata\Annotations as ES;
+use Cubiche\Domain\EventSourcing\AggregateRoot;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasPublished;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasRemoved;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasUnPublished;
-use Cubiche\Domain\Model\Tests\Fixtures\Post;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
 
 /**
  * PostEventSourced class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostEventSourced extends Post implements EventSourcedAggregateRootInterface
+class PostEventSourced extends AggregateRoot
 {
-    use EventSourcedAggregateRoot;
+    /**
+     * @var string
+     */
+    protected $title;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var bool
+     */
+    protected $published = false;
 
     /**
      * Post constructor.
@@ -40,11 +49,35 @@ class PostEventSourced extends Post implements EventSourcedAggregateRootInterfac
      */
     public function __construct(PostId $id, $title, $content)
     {
-        $this->id = $id;
+        parent::__construct($id);
 
         $this->recordApplyAndPublishEvent(
             new PostWasCreated($this->id(), $title, $content)
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function content()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return bool
+     */
+    public function published()
+    {
+        return $this->published;
     }
 
     /**
@@ -118,5 +151,17 @@ class PostEventSourced extends Post implements EventSourcedAggregateRootInterfac
     protected function applyPostWasUnPublished(PostWasUnPublished $event)
     {
         $this->published = false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function equals($other)
+    {
+        return parent::equals($other) &&
+            $this->title() == $other->title() &&
+            $this->content() == $other->content() &&
+            $this->published() == $other->published()
+        ;
     }
 }

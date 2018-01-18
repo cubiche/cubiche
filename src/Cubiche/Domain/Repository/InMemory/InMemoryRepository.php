@@ -13,7 +13,7 @@ namespace Cubiche\Domain\Repository\InMemory;
 
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Specification\Criteria;
-use Cubiche\Domain\Model\AggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 

@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Model\Tests\Units;
 
 use Cubiche\Domain\Model\Tests\Fixtures\Category;
@@ -31,6 +32,42 @@ class EntityTests extends TestCase
             ->then()
                 ->boolean($entity->id()->equals($id))
                     ->isTrue()
+        ;
+    }
+
+    /**
+     * Test setId method.
+     */
+    public function testSetId()
+    {
+        $this
+            ->given($id = CategoryId::fromNative($this->faker->ean13()))
+            ->when($anotherId = CategoryId::fromNative($this->faker->ean13()))
+            ->and($entity = new Category($id))
+            ->then()
+                ->boolean($entity->id()->equals($id))
+                    ->isTrue()
+                ->and()
+                ->when($entity->setId($anotherId))
+                ->then()
+                    ->boolean($entity->id()->equals($id))
+                        ->isFalse()
+                    ->boolean($entity->id()->equals($anotherId))
+                        ->isTrue()
+        ;
+    }
+
+    /**
+     * Test hashCode method.
+     */
+    public function testHashCode()
+    {
+        $this
+            ->given($id = CategoryId::fromNative($this->faker->ean13()))
+            ->and($entity = new Category($id))
+            ->then()
+                ->string($entity->hashCode())
+                    ->isEqualTo($id->hashCode())
         ;
     }
 

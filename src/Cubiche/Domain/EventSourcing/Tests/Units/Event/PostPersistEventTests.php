@@ -15,7 +15,7 @@ use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * PostPersistEventTests class.

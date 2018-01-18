@@ -16,7 +16,7 @@ use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Factory\AggregateRepositoryFactory;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * AggregateRepositoryFactoryTests class.

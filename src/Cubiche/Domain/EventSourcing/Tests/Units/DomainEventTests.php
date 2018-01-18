@@ -13,7 +13,7 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
 use Cubiche\Core\Bus\MessageId;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * DomainEventTests class.

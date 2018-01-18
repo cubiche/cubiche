@@ -15,8 +15,8 @@ use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Comparable\ComparatorInterface;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Core\Specification\SpecificationInterface;
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\Model\ReadModelInterface;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 
 /**

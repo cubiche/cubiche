@@ -12,10 +12,10 @@
 namespace Cubiche\Domain\EventSourcing\Projector;
 
 use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
-use Cubiche\Domain\Model\AggregateRootInterface;
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\Model\ReadModelInterface;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 use Iterator;
 

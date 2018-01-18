@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
@@ -13,21 +13,21 @@ namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\EventSourcing\Versioning\VersionManager;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\Model\Entity;
 
 /**
- * EventSourcedAggregateRoot trait.
+ * Abstract Aggregate Root Class.
  *
+ * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-trait EventSourcedAggregateRoot
+abstract class AggregateRoot extends Entity implements AggregateRootInterface
 {
     /**
      * @var int
      */
-    protected $version;
+    protected $version = 0;
 
     /**
      * @var DomainEventInterface[]
@@ -41,7 +41,7 @@ trait EventSourcedAggregateRoot
     {
         Validator::assert($event);
 
-        $this->incrementVersion();
+        $this->version += 1;
         $event->setVersion($this->version());
 
         $this->recordEvent($event);
@@ -108,7 +108,7 @@ trait EventSourcedAggregateRoot
     {
         $reflector = new \ReflectionClass(static::class);
 
-        /** @var EventSourcedAggregateRootInterface $aggregateRoot */
+        /** @var AggregateRootInterface $aggregateRoot */
         $aggregateRoot = $reflector->newInstanceWithoutConstructor();
         $aggregateRoot->id = $history->id();
         $aggregateRoot->replay($history);
@@ -131,22 +131,7 @@ trait EventSourcedAggregateRoot
      */
     public function version()
     {
-        if ($this->version === null) {
-            $this->version = VersionManager::versionOf($this);
-        }
-
         return $this->version;
-    }
-
-    /**
-     * Increment the current version.
-     */
-    protected function incrementVersion()
-    {
-        $version = $this->version();
-        ++$version;
-
-        $this->setVersion($version);
     }
 
     /**

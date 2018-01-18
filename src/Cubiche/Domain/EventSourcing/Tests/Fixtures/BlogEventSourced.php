@@ -10,21 +10,15 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRoot;
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
-use Cubiche\Domain\EventSourcing\Metadata\Annotations as ES;
-use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\AggregateRoot;
 
 /**
  * BlogEventSourced class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class BlogEventSourced extends AggregateRoot implements EventSourcedAggregateRootInterface
+class BlogEventSourced extends AggregateRoot
 {
-    use EventSourcedAggregateRoot;
-
     /**
      * Blog constructor.
      *

@@ -7,10 +7,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Event;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 
 /**
  * PrePersistEvent class.
@@ -20,16 +21,16 @@ use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 class PrePersistEvent extends DomainEvent
 {
     /**
-     * @var EventSourcedAggregateRootInterface
+     * @var AggregateRootInterface
      */
     protected $aggregate;
 
     /**
      * PrePersistEvent constructor.
      *
-     * @param EventSourcedAggregateRootInterface $aggregate
+     * @param AggregateRootInterface $aggregate
      */
-    public function __construct(EventSourcedAggregateRootInterface $aggregate)
+    public function __construct(AggregateRootInterface $aggregate)
     {
         parent::__construct();
 
@@ -37,7 +38,7 @@ class PrePersistEvent extends DomainEvent
     }
 
     /**
-     * @return EventSourcedAggregateRootInterface
+     * @return AggregateRootInterface
      */
     public function aggregate()
     {

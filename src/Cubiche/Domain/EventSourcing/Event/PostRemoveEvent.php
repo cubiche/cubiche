@@ -8,10 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Event;
 
 use Cubiche\Domain\EventPublisher\DomainEvent;
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 
 /**
  * PostRemoveEvent class.
@@ -21,16 +22,16 @@ use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 class PostRemoveEvent extends DomainEvent
 {
     /**
-     * @var EventSourcedAggregateRootInterface
+     * @var AggregateRootInterface
      */
     protected $aggregate;
 
     /**
      * PrePersistEvent constructor.
      *
-     * @param EventSourcedAggregateRootInterface $aggregate
+     * @param AggregateRootInterface $aggregate
      */
-    public function __construct(EventSourcedAggregateRootInterface $aggregate)
+    public function __construct(AggregateRootInterface $aggregate)
     {
         parent::__construct();
 
@@ -38,7 +39,7 @@ class PostRemoveEvent extends DomainEvent
     }
 
     /**
-     * @return EventSourcedAggregateRootInterface
+     * @return AggregateRootInterface
      */
     public function aggregate()
     {

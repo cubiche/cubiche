@@ -25,6 +25,7 @@
         "cubiche/specification":    "dev-master",
         "cubiche/model":            "dev-master",
         "cubiche/identity":         "dev-master",
+        "cubiche/event-sourcing":   "dev-master",
         "cubiche/web":              "dev-master"
     },
     "require-dev": {

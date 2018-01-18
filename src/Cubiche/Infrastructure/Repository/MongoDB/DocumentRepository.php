@@ -11,7 +11,7 @@
 
 namespace Cubiche\Infrastructure\Repository\MongoDB;
 
-use Cubiche\Domain\Model\AggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 use Cubiche\Infrastructure\MongoDB\Repository;

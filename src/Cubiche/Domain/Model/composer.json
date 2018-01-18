@@ -4,8 +4,7 @@
     "description": "Model library.",
     "keywords": [
         "model",
-        "entity",
-        "aggregateroot"
+        "entity"
     ],
     "license": "MIT",
     "authors": [
@@ -21,13 +20,9 @@
     "require": {
         "php":                      "^7.0|^7.1",
 
-        "cubiche/serializer":       "dev-master",
-        "cubiche/storage":          "dev-master",
-        "cubiche/event-publisher":  "dev-master",
         "cubiche/selector":         "dev-master",
         "cubiche/specification":    "dev-master",
-        "cubiche/equatable":        "dev-master",
-        "cubiche/validator":        "dev-master"
+        "cubiche/equatable":        "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"

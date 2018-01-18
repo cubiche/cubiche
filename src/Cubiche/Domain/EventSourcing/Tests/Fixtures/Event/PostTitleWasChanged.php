@@ -13,7 +13,7 @@ namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 use Cubiche\Domain\EventSourcing\DomainEvent;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * PostTitleWasChanged class.

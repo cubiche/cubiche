@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Projector;
 
-use Cubiche\Domain\Model\ReadModelInterface;
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
 
 /**
  * Projection class.

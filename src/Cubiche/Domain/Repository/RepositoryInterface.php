@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Repository;
 
-use Cubiche\Domain\Model\AggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**

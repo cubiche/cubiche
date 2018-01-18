@@ -10,7 +10,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\Model\IdInterface;
@@ -55,12 +55,12 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
     /**
      * {@inheritdoc}
      */
-    public function shouldCreateSnapshot(EventSourcedAggregateRootInterface $eventSourcedAggregateRoot)
+    public function shouldCreateSnapshot(AggregateRootInterface $aggregateRoot)
     {
-        $recordedEvents = $eventSourcedAggregateRoot->recordedEvents();
+        $recordedEvents = $aggregateRoot->recordedEvents();
 
         if (count($recordedEvents) > 0) {
-            $lastSnapshot = $this->loadSnapshot($eventSourcedAggregateRoot->id());
+            $lastSnapshot = $this->loadSnapshot($aggregateRoot->id());
             $threshold = new \DateTime(date('c', strtotime('-'.$this->threshold)));
 
             if ($lastSnapshot !== null && $lastSnapshot->createdAt() < $threshold) {

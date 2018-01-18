@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 
 use Cubiche\Domain\EventSourcing\DomainEvent;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * PostWasRemoved class.

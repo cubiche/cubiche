@@ -15,7 +15,7 @@ use Cubiche\Domain\EventSourcing\Snapshot\Snapshot;
 use Cubiche\Domain\EventSourcing\Snapshot\SnapshotStoreInterface;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 
 /**
  * SnapshotStoreTestCase class.

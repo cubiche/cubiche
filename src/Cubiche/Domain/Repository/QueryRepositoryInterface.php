@@ -12,8 +12,8 @@ namespace Cubiche\Domain\Repository;
 
 use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Specification\SpecificationInterface;
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
 use Cubiche\Domain\Model\IdInterface;
-use Cubiche\Domain\Model\ReadModelInterface;
 
 /**
  * QueryRepository interface.

@@ -11,16 +11,16 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\ReadModel;
 
-use Cubiche\Domain\Model\AggregateRoot;
-use Cubiche\Domain\Model\ReadModelInterface;
-use Cubiche\Domain\Model\Tests\Fixtures\PostId;
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
+use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
+use Cubiche\Domain\Model\Entity;
 
 /**
  * PublishedPost class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PublishedPost extends AggregateRoot implements ReadModelInterface
+class PublishedPost extends Entity implements ReadModelInterface
 {
     /**
      * @var string

@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 
 /**
  * SnapshottingPolicy interface.
@@ -19,9 +20,9 @@ use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
 interface SnapshottingPolicyInterface
 {
     /**
-     * @param EventSourcedAggregateRootInterface $eventSourcedAggregateRoot
+     * @param AggregateRootInterface $aggregateRoot
      *
      * @return bool
      */
-    public function shouldCreateSnapshot(EventSourcedAggregateRootInterface $eventSourcedAggregateRoot);
+    public function shouldCreateSnapshot(AggregateRootInterface $aggregateRoot);
 }

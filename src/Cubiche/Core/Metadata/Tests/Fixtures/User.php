@@ -16,7 +16,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
 use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Metadata\PropertyMetadata;
 use Cubiche\Core\Metadata\Tests\Fixtures\Annotations as Cubiche;
-use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\Model\Entity;
 use Cubiche\Domain\System\Integer;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\Web\EmailAddress;
@@ -27,7 +27,7 @@ use Cubiche\Domain\Web\EmailAddress;
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @Cubiche\AggregateRoot
  */
-class User extends AggregateRoot
+class User extends Entity
 {
     /**
      * @var IdInterface

@@ -18,7 +18,6 @@ use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
-use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
 
@@ -73,14 +72,6 @@ class AggregateRepository implements RepositoryInterface
      */
     public function persist(AggregateRootInterface $element)
     {
-        if (!$element instanceof EventSourcedAggregateRootInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'The object must be an instance of %s. Instance of %s given',
-                EventSourcedAggregateRootInterface::class,
-                is_object($element) ? get_class($element) : gettype($element)
-            ));
-        }
-
         $this->saveHistory($element);
     }
 
@@ -99,14 +90,6 @@ class AggregateRepository implements RepositoryInterface
      */
     public function remove(AggregateRootInterface $element)
     {
-        if (!$element instanceof EventSourcedAggregateRootInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'The object must be an instance of %s. Instance of %s given',
-                EventSourcedAggregateRootInterface::class,
-                is_object($element) ? get_class($element) : gettype($element)
-            ));
-        }
-
         DomainEventPublisher::publish(new PreRemoveEvent($element));
 
         // remove the event stream
@@ -130,9 +113,9 @@ class AggregateRepository implements RepositoryInterface
     /**
      * Save the aggregate history.
      *
-     * @param EventSourcedAggregateRootInterface $aggregateRoot
+     * @param AggregateRootInterface $aggregateRoot
      */
-    protected function saveHistory(EventSourcedAggregateRootInterface $aggregateRoot)
+    protected function saveHistory(AggregateRootInterface $aggregateRoot)
     {
         $recordedEvents = $aggregateRoot->recordedEvents();
         if (count($recordedEvents) > 0) {

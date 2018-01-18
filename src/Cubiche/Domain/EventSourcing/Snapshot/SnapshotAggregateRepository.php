@@ -12,10 +12,9 @@
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
 use Cubiche\Domain\EventSourcing\AggregateRepository;
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\Snapshot\Policy\SnapshottingPolicyInterface;
-use Cubiche\Domain\Model\AggregateRootInterface;
 use Cubiche\Domain\Model\IdInterface;
 
 /**
@@ -73,14 +72,6 @@ class SnapshotAggregateRepository extends AggregateRepository
      */
     public function persist(AggregateRootInterface $element)
     {
-        if (!$element instanceof EventSourcedAggregateRootInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'The object must be an instance of %s. Instance of %s given',
-                EventSourcedAggregateRootInterface::class,
-                is_object($element) ? get_class($element) : gettype($element)
-            ));
-        }
-
         if ($this->snapshottingPolicy->shouldCreateSnapshot($element)) {
             $this->saveSnapshot($element);
         }
@@ -103,9 +94,9 @@ class SnapshotAggregateRepository extends AggregateRepository
     /**
      * Save the aggregate snapshot.
      *
-     * @param EventSourcedAggregateRootInterface $aggregateRoot
+     * @param AggregateRootInterface $aggregateRoot
      */
-    protected function saveSnapshot(EventSourcedAggregateRootInterface $aggregateRoot)
+    protected function saveSnapshot(AggregateRootInterface $aggregateRoot)
     {
         $snapshot = new Snapshot($aggregateRoot->id(), $aggregateRoot);
 
@@ -115,7 +106,7 @@ class SnapshotAggregateRepository extends AggregateRepository
     /**
      * @param Snapshot $snapshot
      *
-     * @return EventSourcedAggregateRootInterface
+     * @return AggregateRootInterface
      */
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {

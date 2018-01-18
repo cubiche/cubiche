@@ -10,9 +10,9 @@
 
 namespace Cubiche\Domain\Repository\Tests\Fixtures;
 
+use Cubiche\Domain\EventSourcing\ReadModelInterface;
 use Cubiche\Domain\Geolocation\Coordinate;
 use Cubiche\Domain\Model\Entity;
-use Cubiche\Domain\Model\ReadModelInterface;
 
 /**
  * Address.

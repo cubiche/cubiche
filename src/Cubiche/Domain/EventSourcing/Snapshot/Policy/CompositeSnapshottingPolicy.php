@@ -7,9 +7,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\EventSourcing\Snapshot\Policy;
 
-use Cubiche\Domain\EventSourcing\EventSourcedAggregateRootInterface;
+use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 
 /**
  * CompositeSnapshottingPolicy class.
@@ -42,10 +43,10 @@ class CompositeSnapshottingPolicy implements SnapshottingPolicyInterface
     /**
      * {@inheritdoc}
      */
-    public function shouldCreateSnapshot(EventSourcedAggregateRootInterface $eventSourcedAggregateRoot)
+    public function shouldCreateSnapshot(AggregateRootInterface $aggregateRoot)
     {
         foreach ($this->policies as $policy) {
-            if (!$policy->shouldCreateSnapshot($eventSourcedAggregateRoot)) {
+            if (!$policy->shouldCreateSnapshot($aggregateRoot)) {
                 return false;
             }
         }

@@ -17,7 +17,7 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
-use Cubiche\Domain\Model\AggregateRoot;
+use Cubiche\Domain\EventSourcing\AggregateRoot;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\Web\EmailAddress;
 

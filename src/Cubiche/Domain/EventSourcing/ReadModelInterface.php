@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Model;
+namespace Cubiche\Domain\EventSourcing;
 
 /**
- * Abstract Aggregate Root Class.
+ * ReadModel interface.
  *
- * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class AggregateRoot extends Entity implements AggregateRootInterface
+interface ReadModelInterface
 {
 }
