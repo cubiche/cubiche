@@ -42,6 +42,14 @@ abstract class Entity implements EntityInterface
     /**
      * {@inheritdoc}
      */
+    public function setId(IdInterface $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function equals($other)
     {
         return $other instanceof static && $this->id()->equals($other->id());

@@ -45,6 +45,10 @@ class ArrayEncoder implements SerializerAwareInterface, EncoderInterface
      */
     public function encode($object)
     {
+        if ($object === null) {
+            return array();
+        }
+
         if (is_object($object)) {
             if ($object instanceof CollectionInterface) {
                 $object = $object->toArray();

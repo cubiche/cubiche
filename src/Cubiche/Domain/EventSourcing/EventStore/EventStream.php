@@ -65,6 +65,16 @@ class EventStream implements EventStreamInterface
     }
 
     /**
+     * @param IdInterface $id
+     *
+     * @return mixed
+     */
+    public function setId(IdInterface $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return Iterator
      */
     public function events()

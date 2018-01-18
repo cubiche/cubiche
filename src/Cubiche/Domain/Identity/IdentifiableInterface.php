@@ -24,4 +24,11 @@ interface IdentifiableInterface
      * @return IdInterface
      */
     public function id();
+
+    /**
+     * @param IdInterface $id
+     *
+     * @return mixed
+     */
+    public function setId(IdInterface $id);
 }
