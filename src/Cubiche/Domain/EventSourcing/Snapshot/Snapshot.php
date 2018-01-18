@@ -56,11 +56,19 @@ class Snapshot implements SnapshotInterface
     }
 
     /**
-     * @return IdInterface
+     * {@inheritdoc}
      */
     public function id()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setId(IdInterface $id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -86,12 +94,4 @@ class Snapshot implements SnapshotInterface
     {
         return $this->createdAt;
     }
-
-//    /**
-//     * @param \DateTime $createdAt
-//     */
-//    protected function setCreatedAt($createdAt)
-//    {
-//        $this->createdAt = $createdAt;
-//    }
 }
