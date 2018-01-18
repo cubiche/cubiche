@@ -5,6 +5,7 @@
 
     <services>
         <!--  encoders  -->
+        <service id="cubiche.serializer.encoder.localizable_value_object" class="Cubiche\Core\Serializer\Encoder\LocalizableValueObjectEncoder" />
         <service id="cubiche.serializer.encoder.value_object" class="Cubiche\Core\Serializer\Encoder\ValueObjectEncoder" />
         <service id="cubiche.serializer.encoder.date_time" class="Cubiche\Core\Serializer\Encoder\DateTimeEncoder" />
         <service id="cubiche.serializer.encoder.metadata_object" class="Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder" >
@@ -18,12 +19,13 @@
         <service id="cubiche.serializer.default" class="Cubiche\Core\Serializer\DefaultSerializer" />
         <service id="cubiche.serializer.mongodb" class="Cubiche\Core\Serializer\Serializer" >
             <argument type="collection">
-                <argument key="100" type="service" id="cubiche.serializer.encoder.value_object" />
-                <argument key="200" type="service" id="cubiche.serializer.encoder.date_time" />
-                <argument key="300" type="service" id="cubiche.serializer.encoder.metadata_object" />
-                <argument key="400" type="service" id="cubiche.serializer.encoder.object" />
-                <argument key="500" type="service" id="cubiche.serializer.encoder.array" />
-                <argument key="600" type="service" id="cubiche.serializer.encoder.native" />
+                <argument key="100" type="service" id="cubiche.serializer.encoder.localizable_value_object" />
+                <argument key="200" type="service" id="cubiche.serializer.encoder.value_object" />
+                <argument key="300" type="service" id="cubiche.serializer.encoder.date_time" />
+                <argument key="400" type="service" id="cubiche.serializer.encoder.metadata_object" />
+                <argument key="500" type="service" id="cubiche.serializer.encoder.object" />
+                <argument key="600" type="service" id="cubiche.serializer.encoder.array" />
+                <argument key="700" type="service" id="cubiche.serializer.encoder.native" />
             </argument>
         </service>
 

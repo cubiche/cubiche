@@ -75,4 +75,17 @@ interface LocalizableValueInterface extends NativeValueObjectInterface
      * @return NativeValueObjectInterface
      */
     public function value(LocaleCode $locale);
+
+    /**
+     * @param array  $translations
+     * @param string $locale
+     *
+     * @return LocalizableString
+     */
+    public static function fromArray(array $translations, $locale = self::DEFAULT_LOCALE);
+
+    /**
+     * @return mixed
+     */
+    public function toArray();
 }

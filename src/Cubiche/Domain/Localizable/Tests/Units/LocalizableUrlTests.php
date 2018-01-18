@@ -509,7 +509,7 @@ class LocalizableUrlTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = LocalizableString::fromArray(
+                $localizableString = LocalizableUrl::fromArray(
                     array('en' => 'http://www.google.com', 'es' => 'http://www.google.es'),
                     'en'
                 )
@@ -530,7 +530,7 @@ class LocalizableUrlTests extends TestCase
     public function testToArray()
     {
         $this
-            ->given($localizableString = new LocalizableString(LocaleCode::EN()))
+            ->given($localizableString = new LocalizableUrl(LocaleCode::EN()))
             ->when($localizableString->addNative('http://www.google.com', LocaleCode::EN()))
             ->and($localizableString->addNative('http://www.google.es', LocaleCode::ES()))
             ->then()
