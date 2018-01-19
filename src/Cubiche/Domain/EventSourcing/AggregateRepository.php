@@ -119,6 +119,7 @@ class AggregateRepository implements RepositoryInterface
     {
         $recordedEvents = $aggregateRoot->recordedEvents();
         if (count($recordedEvents) > 0) {
+            // trigger pre-persist event
             DomainEventPublisher::publish(new PrePersistEvent($aggregateRoot));
 
             // clear events
@@ -132,6 +133,12 @@ class AggregateRepository implements RepositoryInterface
 
             $this->eventStore->persist($eventStream);
 
+            // publish all the recorded events
+            foreach ($recordedEvents as $recordedEvent) {
+                DomainEventPublisher::publish($recordedEvent);
+            }
+
+            // trigger post-persist event
             DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
         }
     }

@@ -51,7 +51,7 @@ class PostEventSourced extends AggregateRoot
     {
         parent::__construct($id);
 
-        $this->recordApplyAndPublishEvent(
+        $this->recordAndApplyEvent(
             new PostWasCreated($this->id(), $title, $content)
         );
     }
@@ -85,7 +85,7 @@ class PostEventSourced extends AggregateRoot
      */
     public function changeTitle($newTitle)
     {
-        $this->recordApplyAndPublishEvent(
+        $this->recordAndApplyEvent(
             new PostTitleWasChanged($this->id, $newTitle)
         );
     }
@@ -95,7 +95,7 @@ class PostEventSourced extends AggregateRoot
      */
     public function publish()
     {
-        $this->recordApplyAndPublishEvent(
+        $this->recordAndApplyEvent(
             new PostWasPublished($this->id())
         );
     }
@@ -105,7 +105,7 @@ class PostEventSourced extends AggregateRoot
      */
     public function unpublish()
     {
-        $this->recordApplyAndPublishEvent(
+        $this->recordAndApplyEvent(
             new PostWasUnPublished($this->id())
         );
     }
@@ -115,7 +115,7 @@ class PostEventSourced extends AggregateRoot
      */
     public function remove()
     {
-        $this->recordApplyAndPublishEvent(
+        $this->recordAndApplyEvent(
             new PostWasRemoved($this->id())
         );
     }

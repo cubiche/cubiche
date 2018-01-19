@@ -12,12 +12,11 @@
 namespace Cubiche\Domain\EventSourcing;
 
 use Cubiche\Core\Validator\Validator;
-use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\Entity;
 
 /**
- * Abstract Aggregate Root Class.
+ * Abstract aggregate root class.
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
@@ -37,7 +36,7 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     /**
      * @param DomainEventInterface $event
      */
-    protected function recordApplyAndPublishEvent(DomainEventInterface $event)
+    protected function recordAndApplyEvent(DomainEventInterface $event)
     {
         Validator::assert($event);
 
@@ -46,7 +45,6 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
 
         $this->recordEvent($event);
         $this->applyEvent($event);
-        $this->publishEvent($event);
     }
 
     /**
@@ -65,14 +63,6 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
 
         $this->$method($event);
         $this->setVersion($event->version());
-    }
-
-    /**
-     * @param DomainEventInterface $event
-     */
-    protected function publishEvent(DomainEventInterface $event)
-    {
-        DomainEventPublisher::publish($event);
     }
 
     /**

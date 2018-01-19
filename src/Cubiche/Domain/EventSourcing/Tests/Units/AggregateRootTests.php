@@ -27,9 +27,9 @@ use Cubiche\Domain\EventSourcing\Versioning\Version;
 class AggregateRootTests extends TestCase
 {
     /**
-     * Test recordApplyAndPublishEvent method.
+     * Test recordAndApplyEvent method.
      */
-    public function testRecordApplyAndPublishEvent()
+    public function testRecordAndApplyEvent()
     {
         $this
             ->given(

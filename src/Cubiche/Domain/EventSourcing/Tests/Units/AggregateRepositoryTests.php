@@ -20,7 +20,6 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PrePersistSubscriber;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PreRemoveSubscriber;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\Post;
 
 /**
  * AggregateRepositoryTests class.
@@ -71,18 +70,6 @@ class AggregateRepositoryTests extends TestCase
                 ->variable($repository->get($post->id()))
                     ->isNull()
         ;
-
-//        $this
-//            ->given($repository = $this->createRepository())
-//            ->and(
-//                $post = new Post()
-//            )
-//            ->then()
-//                ->exception(function () use ($repository, $post) {
-//                    $repository->persist($post);
-//                })
-//                ->isInstanceOf(\InvalidArgumentException::class)
-//        ;
 
         $this
             ->given($repository = $this->createRepository())
