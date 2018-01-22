@@ -12,11 +12,13 @@
 namespace Cubiche\Domain\EventSourcing\Tests\Units\EventStore;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasUnPublished;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * EventStreamTests class.
@@ -26,38 +28,20 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 class EventStreamTests extends TestCase
 {
     /**
-     * Test id method.
+     * Test streamName method.
      */
-    public function testId()
+    public function testStreamName()
     {
         $this
             ->given($postId = PostId::fromNative(md5(rand())))
-            ->and($eventStream = new EventStream($postId, []))
+            ->and($eventStream = new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), []))
             ->then()
-                ->object($eventStream->id())
+                ->object($eventStream->streamName()->id())
                     ->isEqualTo($postId)
-        ;
-    }
-
-    /**
-     * Test setId method.
-     */
-    public function testSetId()
-    {
-        $this
-            ->given($postId = PostId::fromNative(md5(rand())))
-            ->when($anotherId = PostId::fromNative(md5(rand())))
-            ->and($eventStream = new EventStream($postId, []))
-            ->then()
-                ->boolean($eventStream->id()->equals($postId))
-                    ->isTrue()
-                ->and()
-                ->when($eventStream->setId($anotherId))
-                ->then()
-                    ->boolean($eventStream->id()->equals($postId))
-                        ->isFalse()
-                    ->boolean($eventStream->id()->equals($anotherId))
-                        ->isTrue()
+                ->string($eventStream->streamName()->category()->toNative())
+                    ->isEqualTo('post')
+                ->string($eventStream->streamName()->name()->toNative())
+                    ->isEqualTo('post-'.$postId)
         ;
     }
 
@@ -75,7 +59,7 @@ class EventStreamTests extends TestCase
             )
             ->and(
                 $eventStream = new EventStream(
-                    $postId,
+                    new StreamName($postId, StringLiteral::fromNative('post')),
                     [$event1, $event2, $event3]
                 )
             )
@@ -114,7 +98,7 @@ class EventStreamTests extends TestCase
     {
         $this
             ->given($postId = PostId::fromNative(md5(rand())))
-            ->and($eventStream = new EventStream($postId, []))
+            ->and($eventStream = new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), []))
             ->then()
                 ->array(iterator_to_array($eventStream->events()))
                     ->isEmpty()
@@ -122,7 +106,15 @@ class EventStreamTests extends TestCase
 
         $this
             ->given($postId = PostId::fromNative(md5(rand())))
-            ->and($eventStream = new EventStream($postId, [new PostWasCreated($postId, 'foo', 'bar')]))
+            ->and(
+                $eventStream = new EventStream(
+                    new StreamName(
+                        $postId,
+                        StringLiteral::fromNative('post')
+                    ),
+                    [new PostWasCreated($postId, 'foo', 'bar')]
+                )
+            )
             ->then()
                 ->array(iterator_to_array($eventStream->events()))
                     ->hasSize(1)
@@ -132,7 +124,7 @@ class EventStreamTests extends TestCase
             ->given($postId = PostId::fromNative(md5(rand())))
             ->then()
                 ->exception(function () use ($postId) {
-                    new EventStream($postId, ['bar']);
+                    new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), ['bar']);
                 })->isInstanceOf(\InvalidArgumentException::class)
         ;
     }

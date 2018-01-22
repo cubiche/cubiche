@@ -111,7 +111,7 @@ class SnapshotAggregateRepository extends AggregateRepository
     protected function snapshotToAggregateRoot(Snapshot $snapshot)
     {
         $history = $this->eventStore->load(
-            $snapshot->id(),
+            $this->streamName($snapshot->id()),
             $snapshot->version()
         );
 

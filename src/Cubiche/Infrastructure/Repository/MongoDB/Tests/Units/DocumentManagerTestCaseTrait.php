@@ -82,30 +82,30 @@ trait DocumentManagerTestCaseTrait
         return $this->dm;
     }
 
-//    /**
-//     * @param string $testMethod
-//     */
-//    public function afterTestMethod($testMethod)
-//    {
-//        $database = $this->database();
-//        /** @var CollectionInfo $collection */
-//        foreach ($database->listCollections() as $collection) {
-//            $operation = new DropCollection(
-//                $database->getDatabaseName(),
-//                $collection->getName(),
-//                ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000)]
-//            );
+    /**
+     * @param string $testMethod
+     */
+    public function afterTestMethod($testMethod)
+    {
+        $database = $this->database();
+        /** @var CollectionInfo $collection */
+        foreach ($database->listCollections() as $collection) {
+            $operation = new DropCollection(
+                $database->getDatabaseName(),
+                $collection->getName(),
+                ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000)]
+            );
 
-//            $operation->execute($database->getManager()->getServers()[0]);
-//        }
-//    }
+            $operation->execute($database->getManager()->getServers()[0]);
+        }
+    }
 
     /**
      * @return Connection
      */
     protected function getConnection()
     {
-        return new Connection(MONGODB_SERVER, $this->databaseName());
+        return new Connection('mongodb://mongo:27017', $this->databaseName());
     }
 
     /**
@@ -123,7 +123,7 @@ trait DocumentManagerTestCaseTrait
      */
     private function databaseName()
     {
-        return MONGODB_DATABASE;
+        return 'cubiche_mongodb_tests';
     }
 
     /**

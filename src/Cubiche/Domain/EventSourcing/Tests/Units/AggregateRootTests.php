@@ -13,11 +13,12 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
 use Cubiche\Core\Validator\Exception\ValidationException;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourced;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * AggregateRootTests class.
@@ -104,7 +105,7 @@ class AggregateRootTests extends TestCase
             ->and($post->changeTitle($newTitle))
             ->and(
                 $eventStream = new EventStream(
-                    $post->id(),
+                    new StreamName($post->id(), StringLiteral::fromNative('post')),
                     [
                         new PostWasCreated($post->id(), $title, $content),
                         new PostTitleWasChanged($post->id(), $newTitle),

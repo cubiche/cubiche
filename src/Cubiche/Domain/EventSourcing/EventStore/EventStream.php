@@ -10,9 +10,8 @@
 
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\EventSourcing\DomainEventInterface;
-use Cubiche\Domain\Model\IdInterface;
 use ArrayIterator;
+use Cubiche\Domain\EventSourcing\DomainEventInterface;
 
 /**
  * EventStream class.
@@ -22,9 +21,9 @@ use ArrayIterator;
 class EventStream implements EventStreamInterface
 {
     /**
-     * @var IdInterface
+     * @var StreamName
      */
-    protected $id;
+    protected $streamName;
 
     /**
      * @var DomainEventInterface[]
@@ -34,12 +33,12 @@ class EventStream implements EventStreamInterface
     /**
      * EventStream constructor.
      *
-     * @param IdInterface            $id
+     * @param StreamName             $streamName
      * @param DomainEventInterface[] $events
      */
-    public function __construct(IdInterface $id, array $events)
+    public function __construct(StreamName $streamName, array $events)
     {
-        $this->id = $id;
+        $this->streamName = $streamName;
         $this->events = new ArrayIterator();
         foreach ($events as $event) {
             if (!$event instanceof DomainEventInterface) {
@@ -57,21 +56,11 @@ class EventStream implements EventStreamInterface
     }
 
     /**
-     * @return IdInterface
+     * @return StreamName
      */
-    public function id()
+    public function streamName()
     {
-        return $this->id;
-    }
-
-    /**
-     * @param IdInterface $id
-     *
-     * @return mixed
-     */
-    public function setId(IdInterface $id)
-    {
-        $this->id = $id;
+        return $this->streamName;
     }
 
     /**

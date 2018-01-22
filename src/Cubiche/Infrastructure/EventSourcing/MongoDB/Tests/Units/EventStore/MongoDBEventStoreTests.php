@@ -13,10 +13,12 @@ namespace Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\EventStore;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
 use Cubiche\Domain\EventSourcing\Tests\Units\EventStore\EventStoreTestCase;
+use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\EventStore\MongoDBEventStore;
 use Cubiche\Infrastructure\EventSourcing\MongoDB\Tests\Units\MongoDBTestCaseTrait;
 use MongoDB\Driver\Exception\BulkWriteException;
@@ -66,7 +68,12 @@ class MongoDBEventStoreTests extends EventStoreTestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(1)
             )
-            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and(
+                $eventStream = new EventStream(
+                    new StreamName($postId, StringLiteral::fromNative('post')),
+                    [$postWasCreated, $postTitleWasChanged]
+                )
+            )
             ->then()
                 ->exception(function () use ($store, $eventStream) {
                     $store->persist($eventStream);

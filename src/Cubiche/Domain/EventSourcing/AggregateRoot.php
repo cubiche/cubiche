@@ -100,7 +100,7 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
 
         /** @var AggregateRootInterface $aggregateRoot */
         $aggregateRoot = $reflector->newInstanceWithoutConstructor();
-        $aggregateRoot->id = $history->id();
+        $aggregateRoot->id = $history->streamName()->id();
         $aggregateRoot->replay($history);
 
         return $aggregateRoot;

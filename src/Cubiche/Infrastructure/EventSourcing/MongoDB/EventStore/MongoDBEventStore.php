@@ -15,7 +15,7 @@ use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\EventSourcing\EventStore\EventStreamInterface;
-use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Infrastructure\MongoDB\Common\Connection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -59,7 +59,7 @@ class MongoDBEventStore implements EventStoreInterface
      */
     public function persist(EventStreamInterface $eventStream)
     {
-        $collection = $this->getCollection($eventStream->id()->toNative());
+        $collection = $this->getCollection($eventStream->streamName()->name()->toNative());
 
         $version = 0;
         if (count($eventStream->events()) > 0) {
@@ -92,9 +92,9 @@ class MongoDBEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function load(IdInterface $id, $version = 0)
+    public function load(StreamName $streamName, $version = 0)
     {
-        $collection = $this->getCollection($id->toNative());
+        $collection = $this->getCollection($streamName->name()->toNative());
         $query = array();
 
         if ($version > 0) {
@@ -113,7 +113,7 @@ class MongoDBEventStore implements EventStoreInterface
         }
 
         if (count($domainEvents) > 0) {
-            return new EventStream($id, $domainEvents);
+            return new EventStream($streamName, $domainEvents);
         }
 
         return;
@@ -122,9 +122,9 @@ class MongoDBEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(IdInterface $id)
+    public function remove(StreamName $streamName)
     {
-        $collection = $this->getCollection($id->toNative());
+        $collection = $this->getCollection($streamName->name()->toNative());
         $collection->drop();
     }
 

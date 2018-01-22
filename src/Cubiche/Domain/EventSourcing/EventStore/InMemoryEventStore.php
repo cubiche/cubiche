@@ -16,7 +16,6 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
 use Cubiche\Domain\EventSourcing\Versioning\Version;
-use Cubiche\Domain\Model\IdInterface;
 
 /**
  * InMemoryEventStore class.
@@ -44,12 +43,12 @@ class InMemoryEventStore implements EventStoreInterface
     public function persist(EventStreamInterface $eventStream)
     {
         $version = 0;
-        if (!$this->store->containsKey($eventStream->id()->toNative())) {
-            $this->store->set($eventStream->id()->toNative(), new ArrayList());
+        if (!$this->store->containsKey($eventStream->streamName()->__toString())) {
+            $this->store->set($eventStream->streamName()->__toString(), new ArrayList());
         }
 
         /** @var ArrayList $streamCollection */
-        $streamCollection = $this->store->get($eventStream->id()->toNative());
+        $streamCollection = $this->store->get($eventStream->streamName()->__toString());
 
         /** @var DomainEventInterface $event */
         foreach ($eventStream as $event) {
@@ -64,23 +63,23 @@ class InMemoryEventStore implements EventStoreInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(IdInterface $id)
+    public function remove(StreamName $streamName)
     {
-        $this->store->removeAt($id->toNative());
+        $this->store->removeAt($streamName->__toString());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load(IdInterface $id, $version = 0)
+    public function load(StreamName $streamName, $version = 0)
     {
         /** @var ArrayList $streamCollection */
-        $streamCollection = $this->store->get($id->toNative());
+        $streamCollection = $this->store->get($streamName->__toString());
 
         if ($streamCollection !== null) {
             $events = $streamCollection->find(Criteria::method('version')->gte($version))->toArray();
             if (count($events) > 0) {
-                return new EventStream($id, $events);
+                return new EventStream($streamName, $events);
             }
         }
 

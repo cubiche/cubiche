@@ -11,7 +11,6 @@
 
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\Identity\IdentifiableInterface;
 use Iterator;
 
 /**
@@ -19,8 +18,13 @@ use Iterator;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EventStreamInterface extends IdentifiableInterface, Iterator
+interface EventStreamInterface extends Iterator
 {
+    /**
+     * @return StreamName
+     */
+    public function streamName();
+
     /**
      * @return Iterator
      */

@@ -18,8 +18,10 @@ use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\RepositoryInterface;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * AggregateRepository class.
@@ -93,7 +95,7 @@ class AggregateRepository implements RepositoryInterface
         DomainEventPublisher::publish(new PreRemoveEvent($element));
 
         // remove the event stream
-        $this->eventStore->remove($element->id());
+        $this->eventStore->remove($this->streamName($element->id()));
 
         DomainEventPublisher::publish(new PostRemoveEvent($element));
     }
@@ -107,7 +109,7 @@ class AggregateRepository implements RepositoryInterface
      */
     protected function loadHistory(IdInterface $id)
     {
-        return $this->eventStore->load($id);
+        return $this->eventStore->load($this->streamName($id));
     }
 
     /**
@@ -127,7 +129,7 @@ class AggregateRepository implements RepositoryInterface
 
             // create the eventStream and persist it
             $eventStream = new EventStream(
-                $aggregateRoot->id(),
+                $this->streamName($aggregateRoot->id()),
                 $recordedEvents
             );
 
@@ -141,5 +143,27 @@ class AggregateRepository implements RepositoryInterface
             // trigger post-persist event
             DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
         }
+    }
+
+    /**
+     * @param IdInterface $id
+     *
+     * @return StreamName
+     */
+    protected function streamName(IdInterface $id)
+    {
+        return new StreamName($id, $this->shortClassName($this->aggregateClassName));
+    }
+
+    /**
+     * @param mixed $aggregateRoot
+     *
+     * @return StringLiteral
+     */
+    protected function shortClassName($aggregateRoot)
+    {
+        $shortClass = (new \ReflectionClass($aggregateRoot))->getShortName();
+
+        return StringLiteral::fromNative($shortClass);
     }
 }

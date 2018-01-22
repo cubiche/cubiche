@@ -11,8 +11,6 @@
 
 namespace Cubiche\Domain\EventSourcing\EventStore;
 
-use Cubiche\Domain\Model\IdInterface;
-
 /**
  * EventStore interface.
  *
@@ -28,17 +26,17 @@ interface EventStoreInterface
     public function persist(EventStreamInterface $eventStream);
 
     /**
-     * @param IdInterface $id
+     * @param StreamName $streamName
      *
      * @return mixed
      */
-    public function remove(IdInterface $id);
+    public function remove(StreamName $streamName);
 
     /**
-     * @param IdInterface $id
-     * @param int         $version
+     * @param StreamName $streamName
+     * @param int        $version
      *
      * @return EventStreamInterface|null
      */
-    public function load(IdInterface $id, $version = 0);
+    public function load(StreamName $streamName, $version = 0);
 }

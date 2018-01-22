@@ -13,10 +13,12 @@ namespace Cubiche\Domain\EventSourcing\Tests\Units\EventStore;
 
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
+use Cubiche\Domain\EventSourcing\EventStore\StreamName;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostTitleWasChanged;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Event\PostWasCreated;
 use Cubiche\Domain\EventSourcing\Tests\Units\TestCase;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * EventStoreTestCase class.
@@ -38,33 +40,35 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
             )
-            ->and($eventStream = new EventStream($postId, [$postWasCreated]))
+            ->and($eventStream = new EventStream($streamName, [$postWasCreated]))
             ->when($store->persist($eventStream))
             ->then()
-                ->object($store->load($postId)->id())
-                    ->isEqualTo($eventStream->id())
+                ->object($store->load($streamName)->streamName())
+                    ->isEqualTo($eventStream->streamName())
         ;
 
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1),
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($streamName, [$postWasCreated, $postTitleWasChanged]))
             ->when($expextedVersion = $store->persist($eventStream))
             ->then()
                 ->integer($expextedVersion)
                     ->isEqualTo(2)
-                ->object($store->load($postId, 2)->id())
-                    ->isEqualTo($eventStream->id())
+                ->object($store->load($streamName, 2)->streamName())
+                    ->isEqualTo($eventStream->streamName())
         ;
     }
 
@@ -77,6 +81,8 @@ abstract class EventStoreTestCase extends TestCase
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
             ->and($postId1 = PostId::fromNative(md5(rand())))
+            ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
+            ->and($streamName1 = new StreamName($postId1, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId1, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -85,25 +91,26 @@ abstract class EventStoreTestCase extends TestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId1, 'new title'),
                 $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($postId, []))
-            ->and($eventStream1 = new EventStream($postId1, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($streamName, []))
+            ->and($eventStream1 = new EventStream($streamName1, [$postWasCreated, $postTitleWasChanged]))
             ->when($store->persist($eventStream))
             ->then()
-                ->variable($store->load($postId))
+                ->variable($store->load($streamName))
                     ->isNull()
-                ->variable($store->load(PostId::fromNative(md5(rand()))))
-                    ->isNull()
+//                ->variable($store->load(PostId::fromNative(md5(rand()))))
+//                    ->isNull()
                 ->and()
                 ->when($store->persist($eventStream1))
-                ->and($result = $store->load($postId1))
+                ->and($result = $store->load($streamName1))
                 ->then()
-                    ->object($result->id())
-                        ->isEqualTo($eventStream1->id())
+                    ->object($result->streamName())
+                        ->isEqualTo($eventStream1->streamName())
         ;
 
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -118,12 +125,12 @@ abstract class EventStoreTestCase extends TestCase
             )
             ->and(
                 $eventStream = new EventStream(
-                    $postId,
+                    $streamName,
                     [$postWasCreated, $postTitleWasChanged, $postTitleWasChangedAgain]
                 )
             )
             ->and($store->persist($eventStream))
-            ->when($stream = $store->load($postId, 2))
+            ->when($stream = $store->load($streamName, 2))
             ->then()
                 ->array(iterator_to_array($stream->events()))
                     ->hasSize(2)
@@ -138,6 +145,8 @@ abstract class EventStoreTestCase extends TestCase
         $this
             ->given($store = $this->createStore())
             ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
+            ->and($streamName1 = new StreamName(PostId::fromNative(md5(rand())), StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)
@@ -146,16 +155,16 @@ abstract class EventStoreTestCase extends TestCase
                 $postTitleWasChanged = new PostTitleWasChanged($postId, 'new title'),
                 $postTitleWasChanged->setVersion(2)
             )
-            ->and($eventStream = new EventStream($postId, [$postWasCreated, $postTitleWasChanged]))
+            ->and($eventStream = new EventStream($streamName, [$postWasCreated, $postTitleWasChanged]))
             ->and($store->persist($eventStream))
-            ->when($store->remove(PostId::fromNative(md5(rand()))))
+            ->when($store->remove($streamName1))
             ->then()
-                ->object($store->load($postId)->id())
-                    ->isEqualTo($eventStream->id())
+                ->object($store->load($streamName)->streamName())
+                    ->isEqualTo($eventStream->streamName())
                 ->and()
-                ->when($store->remove($postId))
+                ->when($store->remove($streamName))
                 ->then()
-                    ->variable($store->load($postId))
+                    ->variable($store->load($streamName))
                         ->isNull()
         ;
     }

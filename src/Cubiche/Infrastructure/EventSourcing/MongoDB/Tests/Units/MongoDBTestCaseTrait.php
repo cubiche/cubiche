@@ -29,7 +29,7 @@ trait MongoDBTestCaseTrait
      */
     protected function getConnection()
     {
-        return new Connection(MONGODB_SERVER, $this->databaseName());
+        return new Connection('mongodb://mongo:27017', $this->databaseName());
     }
 
     /**
@@ -37,7 +37,7 @@ trait MongoDBTestCaseTrait
      */
     protected function databaseName()
     {
-        return MONGODB_DATABASE;
+        return 'cubiche_mongodb_tests';
     }
 
     /**
