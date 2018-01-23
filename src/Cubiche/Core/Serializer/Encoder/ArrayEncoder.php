@@ -36,8 +36,6 @@ class ArrayEncoder implements SerializerAwareInterface, EncoderInterface
         }
 
         return preg_match('/(.+)\\[(.+)\\]/', $className, $output) === 1;
-
-        return '[]' === substr($className, -2) && $this->serializer->supports(substr($className, 0, -2));
     }
 
     /**

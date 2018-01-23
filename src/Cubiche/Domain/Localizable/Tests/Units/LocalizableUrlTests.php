@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Localizable\Tests\Units;
 
-use Cubiche\Domain\Locale\Locale;
+use Cubiche\Domain\Locale\LocaleCode;
 use Cubiche\Domain\Localizable\LocalizableUrl;
 use Cubiche\Domain\Localizable\LocalizableValueMode;
 use Cubiche\Domain\System\StringLiteral;
@@ -34,8 +34,8 @@ class LocalizableUrlTests extends TestCase
     {
         $this
             ->given($localizable = LocalizableUrl::fromNative('http://foo.com'))
-            ->when($constructedLocalizable = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->and($constructedLocalizable->addNative('http://foo.com', Locale::fromNative('en_US')))
+            ->when($constructedLocalizable = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->and($constructedLocalizable->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
             ->then()
                 ->object($constructedLocalizable)
                     ->isEqualTo($localizable)
@@ -48,12 +48,12 @@ class LocalizableUrlTests extends TestCase
     public function testAddNative()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
-                ->boolean($localizableUrl->value(Locale::fromNative('en_US'))->equals(new Url('http://foo.com')))
+                ->boolean($localizableUrl->value(LocaleCode::fromNative('en_US'))->equals(new Url('http://foo.com')))
                     ->isTrue()
         ;
     }
@@ -64,12 +64,12 @@ class LocalizableUrlTests extends TestCase
     public function testAdd()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->add(new Url('http://foo.com'), Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->add(new Url('http://foo.com'), LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
-                ->boolean($localizableUrl->value(Locale::fromNative('en_US'))->equals(new Url('http://foo.com')))
+                ->boolean($localizableUrl->value(LocaleCode::fromNative('en_US'))->equals(new Url('http://foo.com')))
                     ->isTrue()
         ;
     }
@@ -80,8 +80,8 @@ class LocalizableUrlTests extends TestCase
     public function testToNative()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
             ->then()
                 ->string($localizableUrl->toNative())
                     ->isEqualTo('http://foo.com')
@@ -94,11 +94,13 @@ class LocalizableUrlTests extends TestCase
     public function testHost()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($host = Host::fromNative('foo.com'))
@@ -106,7 +108,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->host())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->host())
                         ->isEqualTo($host)
@@ -119,11 +121,13 @@ class LocalizableUrlTests extends TestCase
     public function testFragmentId()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($fragment = new StringLiteral('#fragmentidentifier'))
@@ -131,7 +135,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->fragmentId())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->fragmentId())
                         ->isEqualTo($fragment)
@@ -144,11 +148,13 @@ class LocalizableUrlTests extends TestCase
     public function testPassword()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($password = new StringLiteral('pass'))
@@ -156,7 +162,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->password())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->password())
                         ->isEqualTo($password)
@@ -169,11 +175,13 @@ class LocalizableUrlTests extends TestCase
     public function testPath()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($path = new Path('/bar'))
@@ -181,7 +189,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->path())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->path())
                         ->isEqualTo($path)
@@ -194,11 +202,13 @@ class LocalizableUrlTests extends TestCase
     public function testPort()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($port = new Port(80))
@@ -206,7 +216,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->port())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->port())
                         ->isEqualTo($port)
@@ -219,11 +229,13 @@ class LocalizableUrlTests extends TestCase
     public function testQueryString()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($queryString = new StringLiteral('?querystring'))
@@ -231,7 +243,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->queryString())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->queryString())
                         ->isEqualTo($queryString)
@@ -244,11 +256,13 @@ class LocalizableUrlTests extends TestCase
     public function testScheme()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($scheme = new StringLiteral('http'))
@@ -256,7 +270,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->scheme())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->scheme())
                         ->isEqualTo($scheme)
@@ -269,11 +283,13 @@ class LocalizableUrlTests extends TestCase
     public function testUser()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT())
+            )
             ->when(
                 $localizableUrl->addNative(
                     'http://user:pass@foo.com:80/bar?querystring#fragmentidentifier',
-                    Locale::fromNative('en_US')
+                    LocaleCode::fromNative('en_US')
                 )
             )
             ->and($user = new StringLiteral('user'))
@@ -281,7 +297,7 @@ class LocalizableUrlTests extends TestCase
                 ->variable($localizableUrl->user())
                     ->isNull()
                 ->and()
-                ->when($localizableUrl->setLocale(Locale::fromNative('en_US')))
+                ->when($localizableUrl->setLocale(LocaleCode::fromNative('en_US')))
                 ->then()
                     ->object($localizableUrl->user())
                         ->isEqualTo($user)
@@ -295,20 +311,20 @@ class LocalizableUrlTests extends TestCase
     {
         $this
             ->given(
-                $localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')),
-                $localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US'))
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')),
+                $localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US'))
             )
             ->when(
-                $localizableUrl1 = new LocalizableUrl(Locale::fromNative('en_US')),
-                $localizableUrl1->addNative('http://foo.com', Locale::fromNative('en_US'))
+                $localizableUrl1 = new LocalizableUrl(LocaleCode::fromNative('en_US')),
+                $localizableUrl1->addNative('http://foo.com', LocaleCode::fromNative('en_US'))
             )
             ->and(
-                $localizableUrl2 = new LocalizableUrl(Locale::fromNative('en_US')),
-                $localizableUrl2->addNative('http://bar.com', Locale::fromNative('en_US'))
+                $localizableUrl2 = new LocalizableUrl(LocaleCode::fromNative('en_US')),
+                $localizableUrl2->addNative('http://bar.com', LocaleCode::fromNative('en_US'))
             )
             ->and(
-                $localizableUrl3 = new LocalizableUrl(Locale::fromNative('es_ES'), LocalizableValueMode::STRICT()),
-                $localizableUrl3->addNative('http://foo.com', Locale::fromNative('en_US'))
+                $localizableUrl3 = new LocalizableUrl(LocaleCode::fromNative('es_ES'), LocalizableValueMode::STRICT()),
+                $localizableUrl3->addNative('http://foo.com', LocaleCode::fromNative('en_US'))
             )
             ->then()
                 ->boolean($localizableUrl->equals($localizableUrl1))
@@ -326,12 +342,12 @@ class LocalizableUrlTests extends TestCase
     public function testToString()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
             ->then()
                 ->string($localizableUrl->__toString())
                     ->isEqualTo('')
                 ->and()
-                ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+                ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
                 ->then()
                     ->string($localizableUrl->__toString())
                         ->isEqualTo('http://foo.com')
@@ -344,7 +360,9 @@ class LocalizableUrlTests extends TestCase
     public function testMode()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US'), LocalizableValueMode::STRICT())
+            )
             ->then()
                 ->boolean($localizableUrl->mode()->equals(LocalizableValueMode::STRICT()))
                     ->isTrue()
@@ -357,8 +375,10 @@ class LocalizableUrlTests extends TestCase
     public function testStrictMode()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US'), LocalizableValueMode::STRICT()))
-            ->when($localizableUrl->addNative('http://foo.es', Locale::fromNative('es_ES')))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US'), LocalizableValueMode::STRICT())
+            )
+            ->when($localizableUrl->addNative('http://foo.es', LocaleCode::fromNative('es_ES')))
             ->then()
                 ->variable($localizableUrl->toNative())
                     ->isNull()
@@ -371,30 +391,32 @@ class LocalizableUrlTests extends TestCase
     public function testAnyMode()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US'), LocalizableValueMode::ANY()))
-            ->when($localizableUrl->addNative('http://foo.es', Locale::fromNative('es_ES')))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US'), LocalizableValueMode::ANY())
+            )
+            ->when($localizableUrl->addNative('http://foo.es', LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableUrl->locale()->equals(Locale::fromNative('es_ES')))
+                ->boolean($localizableUrl->locale()->equals(LocaleCode::fromNative('es_ES')))
                    ->isTrue()
                 ->string($localizableUrl->toNative())
                     ->isEqualTo('http://foo.es')
         ;
 
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('fr_FR'), LocalizableValueMode::ANY()))
-            ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
-            ->and($localizableUrl->addNative('http://foo.es', Locale::fromNative('es_ES')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('fr_FR'), LocalizableValueMode::ANY()))
+            ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
+            ->and($localizableUrl->addNative('http://foo.es', LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableUrl->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->string($localizableUrl->toNative())
                     ->isEqualTo('http://foo.com')
         ;
 
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('fr_FR'), LocalizableValueMode::ANY()))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('fr_FR'), LocalizableValueMode::ANY()))
             ->then()
-                ->boolean($localizableUrl->locale()->equals(Locale::fromNative('fr_FR')))
+                ->boolean($localizableUrl->locale()->equals(LocaleCode::fromNative('fr_FR')))
                     ->isTrue()
         ;
     }
@@ -405,7 +427,9 @@ class LocalizableUrlTests extends TestCase
     public function testSetMode()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US'), LocalizableValueMode::STRICT()))
+            ->given(
+                $localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US'), LocalizableValueMode::STRICT())
+            )
             ->when($localizableUrl->setMode(LocalizableValueMode::ANY()))
             ->then()
                 ->boolean($localizableUrl->mode()->equals(LocalizableValueMode::ANY()))
@@ -419,9 +443,9 @@ class LocalizableUrlTests extends TestCase
     public function testLocale()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableUrl->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
         ;
     }
@@ -432,10 +456,10 @@ class LocalizableUrlTests extends TestCase
     public function testSetLocale()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->setLocale(Locale::fromNative('es_ES')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->setLocale(LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableUrl->locale()->equals(Locale::fromNative('es_ES')))
+                ->boolean($localizableUrl->locale()->equals(LocaleCode::fromNative('es_ES')))
                     ->isTrue()
         ;
     }
@@ -446,15 +470,15 @@ class LocalizableUrlTests extends TestCase
     public function testRemove()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->and()
-                ->when($localizableUrl->remove(Locale::fromNative('en_US')))
+                ->when($localizableUrl->remove(LocaleCode::fromNative('en_US')))
                 ->then()
-                    ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                    ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                         ->isFalse()
         ;
     }
@@ -465,14 +489,14 @@ class LocalizableUrlTests extends TestCase
     public function testHas()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                     ->isFalse()
                 ->and()
-                ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+                ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
                 ->then()
-                    ->boolean($localizableUrl->has(Locale::fromNative('en_US')))
+                    ->boolean($localizableUrl->has(LocaleCode::fromNative('en_US')))
                         ->isTrue()
         ;
     }
@@ -483,21 +507,21 @@ class LocalizableUrlTests extends TestCase
     public function testTranslate()
     {
         $this
-            ->given($localizableUrl = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableUrl->addNative('http://foo.com', Locale::fromNative('en_US')))
+            ->given($localizableUrl = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableUrl->addNative('http://foo.com', LocaleCode::fromNative('en_US')))
             ->then()
-                ->variable($localizableUrl->translate(Locale::fromNative('es_ES')))
+                ->variable($localizableUrl->translate(LocaleCode::fromNative('es_ES')))
                     ->isNull()
                 ->array($localizableUrl->translations())
                     ->hasSize(1)
                 ->and()
-                ->when($localizableUrl->addNative('http://foo.es', Locale::fromNative('es_ES')))
+                ->when($localizableUrl->addNative('http://foo.es', LocaleCode::fromNative('es_ES')))
                 ->then()
                     ->array($localizableUrl->translations())
                         ->hasSize(2)
-                    ->string($localizableUrl->translate(Locale::fromNative('en_US')))
+                    ->string($localizableUrl->translate(LocaleCode::fromNative('en_US')))
                         ->isEqualTo('http://foo.com')
-                    ->string($localizableUrl->translate(Locale::fromNative('es_ES')))
+                    ->string($localizableUrl->translate(LocaleCode::fromNative('es_ES')))
                        ->isEqualTo('http://foo.es')
         ;
     }
@@ -515,11 +539,11 @@ class LocalizableUrlTests extends TestCase
                 )
             )
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
-                ->string($localizableString->translate(Locale::fromNative('en_US')))
+                ->string($localizableString->translate(LocaleCode::fromNative('en_US')))
                     ->isEqualTo('http://www.google.com')
-                ->string($localizableString->translate(Locale::fromNative('es_ES')))
+                ->string($localizableString->translate(LocaleCode::fromNative('es_ES')))
                    ->isEqualTo('http://www.google.es')
         ;
     }
@@ -530,9 +554,9 @@ class LocalizableUrlTests extends TestCase
     public function testToArray()
     {
         $this
-            ->given($localizableString = new LocalizableUrl(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('http://www.google.com', Locale::fromNative('en_US')))
-            ->and($localizableString->addNative('http://www.google.es', Locale::fromNative('es_ES')))
+            ->given($localizableString = new LocalizableUrl(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('http://www.google.com', LocaleCode::fromNative('en_US')))
+            ->and($localizableString->addNative('http://www.google.es', LocaleCode::fromNative('es_ES')))
             ->then()
                 ->array($localizableString->toArray())
                     ->isEqualTo(array('en_US' => 'http://www.google.com', 'es_ES' => 'http://www.google.es'))

@@ -3,9 +3,9 @@
     "type": "library",
     "description": "Locale library.",
     "keywords": [
-        "locale-code",
-        "country-code",
-        "locale"
+        "localeCode",
+        "countryCode",
+        "languageCode"
     ],
     "license": "MIT",
     "authors": [

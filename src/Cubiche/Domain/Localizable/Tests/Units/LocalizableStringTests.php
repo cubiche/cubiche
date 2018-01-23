@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Localizable\Tests\Units;
 
-use Cubiche\Domain\Locale\Locale;
+use Cubiche\Domain\Locale\LocaleCode;
 use Cubiche\Domain\Localizable\LocalizableString;
 use Cubiche\Domain\Localizable\LocalizableValueMode;
 use Cubiche\Domain\System\StringLiteral;
@@ -30,8 +30,8 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given($localizableString = LocalizableString::fromNative('Hello world'))
-            ->when($constructedLocalizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->and($constructedLocalizableString->addNative('Hello world', Locale::fromNative('en_US')))
+            ->when($constructedLocalizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->and($constructedLocalizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
             ->then()
                 ->object($constructedLocalizableString)
                     ->isEqualTo($localizableString)
@@ -44,13 +44,13 @@ class LocalizableStringTests extends TestCase
     public function testAddNative()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->boolean(
-                    $localizableString->value(Locale::fromNative('en_US'))->equals(new StringLiteral('Hello world'))
+                    $localizableString->value(LocaleCode::fromNative('en_US'))->equals(new StringLiteral('Hello world'))
                 )->isTrue()
         ;
     }
@@ -61,13 +61,13 @@ class LocalizableStringTests extends TestCase
     public function testAdd()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->add(new StringLiteral('Hello world'), Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->add(new StringLiteral('Hello world'), LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->boolean(
-                    $localizableString->value(Locale::fromNative('en_US'))->equals(new StringLiteral('Hello world'))
+                    $localizableString->value(LocaleCode::fromNative('en_US'))->equals(new StringLiteral('Hello world'))
                 )->isTrue()
         ;
     }
@@ -78,8 +78,8 @@ class LocalizableStringTests extends TestCase
     public function testToNative()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
             ->then()
                 ->string($localizableString->toNative())
                     ->isEqualTo('Hello world')
@@ -93,23 +93,23 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('en_US')),
-                $localizableString->addNative('Hello world', Locale::fromNative('en_US'))
+                $localizableString = new LocalizableString(LocaleCode::fromNative('en_US')),
+                $localizableString->addNative('Hello world', LocaleCode::fromNative('en_US'))
             )
             ->when(
-                $localizableString1 = new LocalizableString(Locale::fromNative('en_US')),
-                $localizableString1->addNative('Hello world', Locale::fromNative('en_US'))
+                $localizableString1 = new LocalizableString(LocaleCode::fromNative('en_US')),
+                $localizableString1->addNative('Hello world', LocaleCode::fromNative('en_US'))
             )
             ->and(
-                $localizableString2 = new LocalizableString(Locale::fromNative('en_US')),
-                $localizableString2->addNative('Good bye', Locale::fromNative('en_US'))
+                $localizableString2 = new LocalizableString(LocaleCode::fromNative('en_US')),
+                $localizableString2->addNative('Good bye', LocaleCode::fromNative('en_US'))
             )
             ->and(
                 $localizableString3 = new LocalizableString(
-                    Locale::fromNative('es_ES'),
+                    LocaleCode::fromNative('es_ES'),
                     LocalizableValueMode::STRICT()
                 ),
-                $localizableString3->addNative('Hello world', Locale::fromNative('en_US'))
+                $localizableString3->addNative('Hello world', LocaleCode::fromNative('en_US'))
             )
             ->then()
                 ->boolean($localizableString->equals($localizableString1))
@@ -127,12 +127,12 @@ class LocalizableStringTests extends TestCase
     public function testToString()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
             ->then()
                 ->string($localizableString->__toString())
                     ->isEqualTo('')
                 ->and()
-                ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+                ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
                 ->then()
                     ->string($localizableString->__toString())
                         ->isEqualTo('Hello world')
@@ -146,7 +146,10 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('en_US'), LocalizableValueMode::STRICT())
+                $localizableString = new LocalizableString(
+                    LocaleCode::fromNative('en_US'),
+                    LocalizableValueMode::STRICT()
+                )
             )
             ->then()
                 ->boolean($localizableString->mode()->equals(LocalizableValueMode::STRICT()))
@@ -161,9 +164,12 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('en_US'), LocalizableValueMode::STRICT())
+                $localizableString = new LocalizableString(
+                    LocaleCode::fromNative('en_US'),
+                    LocalizableValueMode::STRICT()
+                )
             )
-            ->when($localizableString->addNative('Hola mundo', Locale::fromNative('es_ES')))
+            ->when($localizableString->addNative('Hola mundo', LocaleCode::fromNative('es_ES')))
             ->then()
                 ->variable($localizableString->toNative())
                     ->isNull()
@@ -177,11 +183,11 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('en_US'), LocalizableValueMode::ANY())
+                $localizableString = new LocalizableString(LocaleCode::fromNative('en_US'), LocalizableValueMode::ANY())
             )
-            ->when($localizableString->addNative('Hola mundo', Locale::fromNative('es_ES')))
+            ->when($localizableString->addNative('Hola mundo', LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('es_ES')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('es_ES')))
                     ->isTrue()
                 ->string($localizableString->toNative())
                     ->isEqualTo('Hola mundo')
@@ -189,12 +195,12 @@ class LocalizableStringTests extends TestCase
 
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('fr_FR'), LocalizableValueMode::ANY())
+                $localizableString = new LocalizableString(LocaleCode::fromNative('fr_FR'), LocalizableValueMode::ANY())
             )
-            ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
-            ->and($localizableString->addNative('Hola mundo', Locale::fromNative('es_ES')))
+            ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
+            ->and($localizableString->addNative('Hola mundo', LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->string($localizableString->toNative())
                     ->isEqualTo('Hello world')
@@ -202,10 +208,10 @@ class LocalizableStringTests extends TestCase
 
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('fr_FR'), LocalizableValueMode::ANY())
+                $localizableString = new LocalizableString(LocaleCode::fromNative('fr_FR'), LocalizableValueMode::ANY())
             )
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('fr_FR')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('fr_FR')))
                     ->isTrue()
         ;
     }
@@ -217,7 +223,10 @@ class LocalizableStringTests extends TestCase
     {
         $this
             ->given(
-                $localizableString = new LocalizableString(Locale::fromNative('en_US'), LocalizableValueMode::STRICT())
+                $localizableString = new LocalizableString(
+                    LocaleCode::fromNative('en_US'),
+                    LocalizableValueMode::STRICT()
+                )
             )
             ->when($localizableString->setMode(LocalizableValueMode::ANY()))
             ->then()
@@ -232,9 +241,9 @@ class LocalizableStringTests extends TestCase
     public function testLocale()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
         ;
     }
@@ -245,10 +254,10 @@ class LocalizableStringTests extends TestCase
     public function testSetLocale()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->setLocale(Locale::fromNative('es_ES')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->setLocale(LocaleCode::fromNative('es_ES')))
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('es_ES')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('es_ES')))
                     ->isTrue()
         ;
     }
@@ -259,15 +268,15 @@ class LocalizableStringTests extends TestCase
     public function testRemove()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                     ->isTrue()
                 ->and()
-                ->when($localizableString->remove(Locale::fromNative('en_US')))
+                ->when($localizableString->remove(LocaleCode::fromNative('en_US')))
                 ->then()
-                    ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                    ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                         ->isFalse()
         ;
     }
@@ -278,14 +287,14 @@ class LocalizableStringTests extends TestCase
     public function testHas()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
             ->then()
-                ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                     ->isFalse()
                 ->and()
-                ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+                ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
                 ->then()
-                    ->boolean($localizableString->has(Locale::fromNative('en_US')))
+                    ->boolean($localizableString->has(LocaleCode::fromNative('en_US')))
                         ->isTrue()
         ;
     }
@@ -296,21 +305,21 @@ class LocalizableStringTests extends TestCase
     public function testTranslate()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('Hello world', Locale::fromNative('en_US')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('Hello world', LocaleCode::fromNative('en_US')))
             ->then()
-                ->variable($localizableString->translate(Locale::fromNative('es_ES')))
+                ->variable($localizableString->translate(LocaleCode::fromNative('es_ES')))
                     ->isNull()
                 ->array($localizableString->translations())
                     ->hasSize(1)
                 ->and()
-                ->when($localizableString->addNative('Hola mundo', Locale::fromNative('es_ES')))
+                ->when($localizableString->addNative('Hola mundo', LocaleCode::fromNative('es_ES')))
                 ->then()
                     ->array($localizableString->translations())
                         ->hasSize(2)
-                    ->string($localizableString->translate(Locale::fromNative('en_US')))
+                    ->string($localizableString->translate(LocaleCode::fromNative('en_US')))
                         ->isEqualTo('Hello world')
-                    ->string($localizableString->translate(Locale::fromNative('es_ES')))
+                    ->string($localizableString->translate(LocaleCode::fromNative('es_ES')))
                         ->isEqualTo('Hola mundo')
         ;
     }
@@ -325,11 +334,11 @@ class LocalizableStringTests extends TestCase
                 $localizableString = LocalizableString::fromArray(array('en_US' => 'foo', 'es_ES' => 'fuu'), 'en_US')
             )
             ->then()
-                ->boolean($localizableString->locale()->equals(Locale::fromNative('en_US')))
+                ->boolean($localizableString->locale()->equals(LocaleCode::fromNative('en_US')))
                     ->isTrue()
-                ->string($localizableString->translate(Locale::fromNative('en_US')))
+                ->string($localizableString->translate(LocaleCode::fromNative('en_US')))
                     ->isEqualTo('foo')
-                ->string($localizableString->translate(Locale::fromNative('es_ES')))
+                ->string($localizableString->translate(LocaleCode::fromNative('es_ES')))
                     ->isEqualTo('fuu')
         ;
     }
@@ -340,9 +349,9 @@ class LocalizableStringTests extends TestCase
     public function testToArray()
     {
         $this
-            ->given($localizableString = new LocalizableString(Locale::fromNative('en_US')))
-            ->when($localizableString->addNative('foo', Locale::fromNative('en_US')))
-            ->and($localizableString->addNative('fuu', Locale::fromNative('es_ES')))
+            ->given($localizableString = new LocalizableString(LocaleCode::fromNative('en_US')))
+            ->when($localizableString->addNative('foo', LocaleCode::fromNative('en_US')))
+            ->and($localizableString->addNative('fuu', LocaleCode::fromNative('es_ES')))
             ->then()
                 ->array($localizableString->toArray())
                     ->isEqualTo(array('en_US' => 'foo', 'es_ES' => 'fuu'))

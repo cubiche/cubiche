@@ -13,7 +13,7 @@ namespace Cubiche\Core\Serializer\Encoder;
 
 use Cubiche\Domain\Locale\CountryCode;
 use Cubiche\Domain\Locale\LanguageCode;
-use Cubiche\Domain\Locale\Locale;
+use Cubiche\Domain\Locale\LocaleCode;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
 use Cubiche\Domain\System\Decimal;
 use Cubiche\Domain\System\DecimalInfinite;
@@ -55,7 +55,7 @@ class ValueObjectEncoder implements EncoderInterface
         'Url' => Url::class,
         'LanguageCode' => LanguageCode::class,
         'CountryCode' => CountryCode::class,
-        'Locale' => Locale::class,
+        'LocaleCode' => LocaleCode::class,
     );
 
     /**

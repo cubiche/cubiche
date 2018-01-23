@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Localizable;
 
-use Cubiche\Domain\Locale\Locale;
+use Cubiche\Domain\Locale\LocaleCode;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
 
 /**
@@ -22,7 +22,7 @@ use Cubiche\Domain\Model\NativeValueObjectInterface;
  */
 interface LocalizableValueInterface extends NativeValueObjectInterface
 {
-    const DEFAULT_LOCALE = 'en_US';
+    const DEFAULT_LOCALE = LocaleCode::EN_US;
     const DEFAULT_MODE = LocalizableValueMode::ANY;
 
     /**
@@ -36,46 +36,46 @@ interface LocalizableValueInterface extends NativeValueObjectInterface
     public function setMode(LocalizableValueMode $mode);
 
     /**
-     * @return Locale
+     * @return LocaleCode
      */
     public function locale();
 
     /**
-     * @param Locale $locale
+     * @param LocaleCode $locale
      */
-    public function setLocale(Locale $locale);
+    public function setLocale(LocaleCode $locale);
 
     /**
-     * @param mixed  $value
-     * @param Locale $locale
+     * @param mixed      $value
+     * @param LocaleCode $locale
      */
-    public function addNative($value, Locale $locale);
+    public function addNative($value, LocaleCode $locale);
 
     /**
-     * @param Locale $locale
+     * @param LocaleCode $locale
      */
-    public function remove(Locale $locale);
+    public function remove(LocaleCode $locale);
 
     /**
-     * @param Locale $locale
+     * @param LocaleCode $locale
      *
      * @return bool
      */
-    public function has(Locale $locale);
+    public function has(LocaleCode $locale);
 
     /**
-     * @param Locale $locale
+     * @param LocaleCode $locale
      *
      * @return mixed
      */
-    public function translate(Locale $locale);
+    public function translate(LocaleCode $locale);
 
     /**
-     * @param Locale $locale
+     * @param LocaleCode $locale
      *
      * @return NativeValueObjectInterface
      */
-    public function value(Locale $locale);
+    public function value(LocaleCode $locale);
 
     /**
      * @param array  $translations
