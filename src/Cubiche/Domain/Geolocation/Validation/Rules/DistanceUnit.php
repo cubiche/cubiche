@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\Geolocation\Validation\Rules;
 
 use Cubiche\Domain\Geolocation\DistanceUnit as DistanceUnitEnum;
+use Respect\Validation\Rules\AbstractRule;
 
 /**
  * DistanceUnit class.

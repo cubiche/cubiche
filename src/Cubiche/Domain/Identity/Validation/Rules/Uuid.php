@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\Identity\Validation\Rules;
 
 use Cubiche\Domain\Identity\UUID as Identifier;
+use Respect\Validation\Rules\AbstractRule;
 
 /**
  * Uuid class.

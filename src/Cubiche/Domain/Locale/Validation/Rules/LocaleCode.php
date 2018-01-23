@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\Locale\Validation\Rules;
 
 use Cubiche\Domain\Locale\LocaleCode as LocaleCodeEnum;
+use Respect\Validation\Rules\AbstractRule;
 
 /**
  * LocaleCode class.

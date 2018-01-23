@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Geolocation\Validation\Rules;
 
+use Respect\Validation\Rules\AbstractRule;
+
 /**
  * Longitude class.
  *

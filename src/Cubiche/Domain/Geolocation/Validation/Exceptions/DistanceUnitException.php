@@ -22,10 +22,10 @@ class DistanceUnitException extends ValidationException
 {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => '{{name}} must be a valid distance unit.',
+            self::STANDARD => 'The {{name}} {{input}} must be a valid distance unit.',
         ],
         self::MODE_NEGATIVE => [
-            self::STANDARD => '{{name}} must not be a valid distance unit.',
+            self::STANDARD => 'The {{name}} {{input}} must not be a valid distance unit.',
         ],
     ];
 }

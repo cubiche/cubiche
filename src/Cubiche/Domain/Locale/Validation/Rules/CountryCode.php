@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\Locale\Validation\Rules;
 
 use Cubiche\Domain\Locale\CountryCode as CountryCodeEnum;
+use Respect\Validation\Rules\AbstractRule;
 
 /**
  * CountryCode class.

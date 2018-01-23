@@ -33,6 +33,15 @@ class CubicheCoreBundle extends Bundle
 
         $container->addCompilerPass(new RegisterBusHandlerPass());
         $container->addCompilerPass(new RegisterEventListenerPass());
+    }
+
+    /**
+     * Boots the Bundle.
+     */
+    public function boot()
+    {
+        // force init critical services
+        $this->container->get('cubiche.domain.event_publisher');
 
         Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
         Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
