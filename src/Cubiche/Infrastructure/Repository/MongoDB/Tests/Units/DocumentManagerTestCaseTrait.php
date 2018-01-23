@@ -105,7 +105,7 @@ trait DocumentManagerTestCaseTrait
      */
     protected function getConnection()
     {
-        return new Connection('mongodb://mongo:27017', $this->databaseName());
+        return new Connection(MONGODB_SERVER, $this->databaseName());
     }
 
     /**
@@ -123,7 +123,7 @@ trait DocumentManagerTestCaseTrait
      */
     private function databaseName()
     {
-        return 'cubiche_mongodb_tests';
+        return MONGODB_DATABASE;
     }
 
     /**
