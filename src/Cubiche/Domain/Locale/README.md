@@ -1,0 +1,2 @@
+# Cubiche - Locale
+[![Build Status](https://travis-ci.org/cubiche/locale.svg?branch=master)](https://travis-ci.org/cubiche/locale) [![Coverage Status](https://coveralls.io/repos/github/cubiche/locale/badge.svg?branch=master)](https://coveralls.io/github/cubiche/locale?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/locale/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/locale/?branch=master) 

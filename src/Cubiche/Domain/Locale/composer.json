@@ -1,12 +1,11 @@
 {
-    "name": "cubiche/localizable",
+    "name": "cubiche/locale",
     "type": "library",
-    "description": "Localizable library.",
+    "description": "Locale library.",
     "keywords": [
-        "locale",
-        "localizable",
-        "internationalization",
-        "i18n"
+        "locale-code",
+        "country-code",
+        "locale"
     ],
     "license": "MIT",
     "authors": [
@@ -22,9 +21,7 @@
     "require": {
         "php":                      "^7.0|^7.1",
 
-        "cubiche/locale":           "dev-master",
         "cubiche/system":           "dev-master",
-        "cubiche/web":              "dev-master",
         "cubiche/model":            "dev-master"
     },
     "require-dev": {
@@ -36,7 +33,7 @@
             "/Tests/"
         ],
         "psr-4": {
-            "Cubiche\\Domain\\Localizable\\": ""
+            "Cubiche\\Domain\\Locale\\": ""
         }
     }
 }

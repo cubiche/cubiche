@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Localizable;
 
+use Cubiche\Domain\Locale\Locale;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
 use Cubiche\Domain\Model\ValueObjectInterface;
 
@@ -23,7 +24,7 @@ use Cubiche\Domain\Model\ValueObjectInterface;
 trait LocalizableValue
 {
     /**
-     * @var LocaleCode
+     * @var Locale
      */
     protected $locale;
 
@@ -54,12 +55,12 @@ trait LocalizableValue
     }
 
     /**
-     * @param LocaleCode           $locale
+     * @param Locale               $locale
      * @param LocalizableValueMode $mode
      *
-     * @return LocaleCode
+     * @return Locale
      */
-    private function resolveLocale(LocaleCode $locale, LocalizableValueMode $mode)
+    private function resolveLocale(Locale $locale, LocalizableValueMode $mode)
     {
         if ($mode == LocalizableValueMode::STRICT()) {
             return $locale;
@@ -70,12 +71,12 @@ trait LocalizableValue
                 return $locale;
             }
 
-            if ($this->has(LocaleCode::fromNative(LocalizableValueInterface::DEFAULT_LOCALE))) {
-                return LocaleCode::fromNative(LocalizableValueInterface::DEFAULT_LOCALE);
+            if ($this->has(Locale::fromNative(LocalizableValueInterface::DEFAULT_LOCALE))) {
+                return Locale::fromNative(LocalizableValueInterface::DEFAULT_LOCALE);
             }
 
             if (count($this->translations) > 0) {
-                return LocaleCode::fromNative(array_keys($this->translations)[0]);
+                return Locale::fromNative(array_keys($this->translations)[0]);
             }
         }
 
@@ -83,7 +84,7 @@ trait LocalizableValue
     }
 
     /**
-     * @return LocaleCode
+     * @return Locale
      */
     public function locale()
     {
@@ -91,36 +92,36 @@ trait LocalizableValue
     }
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      */
-    public function setLocale(LocaleCode $locale)
+    public function setLocale(Locale $locale)
     {
         $this->locale = $locale;
     }
 
     /**
      * @param NativeValueObjectInterface $value
-     * @param LocaleCode                 $locale
+     * @param Locale                     $locale
      */
-    private function addTranslation(NativeValueObjectInterface $value, LocaleCode $locale)
+    private function addTranslation(NativeValueObjectInterface $value, Locale $locale)
     {
         $this->translations[$locale->toNative()] = $value;
     }
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      */
-    public function remove(LocaleCode $locale)
+    public function remove(Locale $locale)
     {
         unset($this->translations[$locale->toNative()]);
     }
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      *
      * @return bool
      */
-    public function has(LocaleCode $locale)
+    public function has(Locale $locale)
     {
         return isset($this->translations[$locale->toNative()]);
     }
@@ -134,12 +135,12 @@ trait LocalizableValue
     }
 
     /**
-     * @param LocaleCode                $locale
+     * @param Locale                    $locale
      * @param LocalizableValueMode|null $mode
      *
      * @return mixed|null
      */
-    public function translate(LocaleCode $locale, LocalizableValueMode $mode = null)
+    public function translate(Locale $locale, LocalizableValueMode $mode = null)
     {
         $locale = $this->resolveLocale($locale, $mode === null ? LocalizableValueMode::STRICT() : $mode);
         if ($this->has($locale)) {
@@ -158,11 +159,11 @@ trait LocalizableValue
     }
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      *
      * @return NativeValueObjectInterface
      */
-    public function value(LocaleCode $locale)
+    public function value(Locale $locale)
     {
         if ($this->has($locale)) {
             return $this->translations[$locale->toNative()];
@@ -179,9 +180,9 @@ trait LocalizableValue
      */
     public static function fromArray(array $translations, $locale = LocalizableValueInterface::DEFAULT_LOCALE)
     {
-        $localizableString = new static(LocaleCode::fromNative($locale));
+        $localizableString = new static(Locale::fromNative($locale));
         foreach ($translations as $localeCode => $translation) {
-            $localizableString->addNative($translation, LocaleCode::fromNative($localeCode));
+            $localizableString->addNative($translation, Locale::fromNative($localeCode));
         }
 
         return $localizableString;

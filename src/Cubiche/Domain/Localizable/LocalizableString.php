@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Localizable;
 
+use Cubiche\Domain\Locale\Locale;
 use Cubiche\Domain\System\StringLiteral;
 
 /**
@@ -24,10 +25,10 @@ class LocalizableString extends StringLiteral implements LocalizableValueInterfa
     use LocalizableValue;
 
     /**
-     * @param LocaleCode           $locale
+     * @param Locale               $locale
      * @param LocalizableValueMode $mode
      */
-    public function __construct(LocaleCode $locale, LocalizableValueMode $mode = null)
+    public function __construct(Locale $locale, LocalizableValueMode $mode = null)
     {
         $this->locale = $locale;
         $this->translations = [];
@@ -45,7 +46,7 @@ class LocalizableString extends StringLiteral implements LocalizableValueInterfa
      */
     public static function fromNative($value)
     {
-        $locale = LocaleCode::fromNative(LocalizableValueInterface::DEFAULT_LOCALE);
+        $locale = Locale::fromNative(LocalizableValueInterface::DEFAULT_LOCALE);
         $localizableValue = new static($locale);
         $localizableValue->addNative($value, $locale);
 
@@ -53,19 +54,19 @@ class LocalizableString extends StringLiteral implements LocalizableValueInterfa
     }
 
     /**
-     * @param string     $value
-     * @param LocaleCode $locale
+     * @param string $value
+     * @param Locale $locale
      */
-    public function addNative($value, LocaleCode $locale)
+    public function addNative($value, Locale $locale)
     {
         $this->add(new StringLiteral($value), $locale);
     }
 
     /**
      * @param StringLiteral $value
-     * @param LocaleCode    $locale
+     * @param Locale        $locale
      */
-    public function add(StringLiteral $value, LocaleCode $locale)
+    public function add(StringLiteral $value, Locale $locale)
     {
         $this->addTranslation($value, $locale);
     }

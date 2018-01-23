@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Localizable;
 
+use Cubiche\Domain\Locale\Locale;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
 
 /**
@@ -21,7 +22,7 @@ use Cubiche\Domain\Model\NativeValueObjectInterface;
  */
 interface LocalizableValueInterface extends NativeValueObjectInterface
 {
-    const DEFAULT_LOCALE = LocaleCode::EN;
+    const DEFAULT_LOCALE = 'en_US';
     const DEFAULT_MODE = LocalizableValueMode::ANY;
 
     /**
@@ -35,46 +36,46 @@ interface LocalizableValueInterface extends NativeValueObjectInterface
     public function setMode(LocalizableValueMode $mode);
 
     /**
-     * @return LocaleCode
+     * @return Locale
      */
     public function locale();
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      */
-    public function setLocale(LocaleCode $locale);
+    public function setLocale(Locale $locale);
 
     /**
-     * @param mixed      $value
-     * @param LocaleCode $locale
+     * @param mixed  $value
+     * @param Locale $locale
      */
-    public function addNative($value, LocaleCode $locale);
+    public function addNative($value, Locale $locale);
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      */
-    public function remove(LocaleCode $locale);
+    public function remove(Locale $locale);
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      *
      * @return bool
      */
-    public function has(LocaleCode $locale);
+    public function has(Locale $locale);
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      *
      * @return mixed
      */
-    public function translate(LocaleCode $locale);
+    public function translate(Locale $locale);
 
     /**
-     * @param LocaleCode $locale
+     * @param Locale $locale
      *
      * @return NativeValueObjectInterface
      */
-    public function value(LocaleCode $locale);
+    public function value(Locale $locale);
 
     /**
      * @param array  $translations

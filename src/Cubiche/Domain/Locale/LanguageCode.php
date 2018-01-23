@@ -9,24 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Domain\Localizable;
+namespace Cubiche\Domain\Locale;
 
 use Cubiche\Domain\System\Enum;
 
 /**
- * LocaleCode.
+ * LanguageCode.
+ *
+ * @method LanguageCode AS()
+ * @method LanguageCode OR()
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-class LocaleCode extends Enum
+class LanguageCode extends Enum
 {
     const AF = 'af';
     const SQ = 'sq';
     const AM = 'am';
     const AR = 'ar';
     const HY = 'hy';
-    const _AS_ = 'as';
     const AZ = 'az';
     const EU = 'eu';
     const BE = 'be';
@@ -81,7 +83,6 @@ class LocaleCode extends Enum
     const NE = 'ne';
     const NB = 'nb';
     const NN = 'nn';
-    const _OR_ = 'or';
     const PL = 'pl';
     const PT = 'pt';
     const PA = 'pa';
@@ -119,16 +120,26 @@ class LocaleCode extends Enum
     const ZU = 'zu';
 
     /**
-     * @param mixed $value
-     *
-     * @return \Cubiche\Domain\System\Enum
+     * @var array
      */
-    public static function fromNative($value)
-    {
-        if (strlen($value) > 2) {
-            $value = \substr($value, 0, 2);
-        }
+    protected static $aliases = array(
+        'AS' => 'as',
+        'OR' => 'or',
+    );
 
-        return parent::fromNative($value);
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($value)
+    {
+        parent::__construct(strtolower($value));
+    }
+
+    /**
+     * @return array
+     */
+    public static function toArray()
+    {
+        return array_merge(static::$aliases, parent::toArray());
     }
 }
