@@ -15,6 +15,11 @@ use Respect\Validation\Validator as Constraints;
 /**
  * Assert class.
  *
+ * @method static Assert uuid()
+ * @method static Assert countryCode()
+ * @method static Assert languageCode()
+ * @method static Assert localeCode()
+ *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class Assert extends Constraints

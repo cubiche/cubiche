@@ -22,7 +22,8 @@
         "php":                      "^7.0|^7.1",
 
         "cubiche/system":           "dev-master",
-        "cubiche/model":            "dev-master"
+        "cubiche/model":            "dev-master",
+        "cubiche/validator":        "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"

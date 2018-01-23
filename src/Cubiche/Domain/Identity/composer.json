@@ -23,6 +23,7 @@
 
         "cubiche/model":        "dev-master",
         "cubiche/system":       "dev-master",
+        "cubiche/validator":    "dev-master",
 
         "ramsey/uuid":          "^3.2"
     },
