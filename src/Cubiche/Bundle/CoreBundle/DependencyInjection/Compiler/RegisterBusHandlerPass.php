@@ -70,9 +70,20 @@ class RegisterBusHandlerPass implements CompilerPassInterface
      */
     public function registerValidators(ContainerBuilder $container)
     {
-        $taggedServices = $container->findTaggedServiceIds('cubiche.validator');
-        if (count($taggedServices) > 0 && $container->hasDefinition('cubiche.bus.validator_handler_resolver')) {
-            $validatorHandlerResolver = $container->getDefinition('cubiche.bus.validator_handler_resolver');
+        $taggedServices = $container->findTaggedServiceIds('cubiche.command.validator');
+        if (count($taggedServices) > 0 && $container->hasDefinition('cubiche.command_bus.validator_handler_resolver')) {
+            $validatorHandlerResolver = $container->getDefinition('cubiche.command_bus.validator_handler_resolver');
+
+            foreach ($taggedServices as $id => $tags) {
+                foreach ($tags as $attributes) {
+                    $validatorHandlerResolver->addMethodCall('addHandler', array($attributes['class'], $id));
+                }
+            }
+        }
+
+        $taggedServices = $container->findTaggedServiceIds('cubiche.query.validator');
+        if (count($taggedServices) > 0 && $container->hasDefinition('cubiche.query_bus.validator_handler_resolver')) {
+            $validatorHandlerResolver = $container->getDefinition('cubiche.query_bus.validator_handler_resolver');
 
             foreach ($taggedServices as $id => $tags) {
                 foreach ($tags as $attributes) {
