@@ -14,8 +14,7 @@ namespace Cubiche\Infrastructure\Cqrs\Tests\Units\Factory\Bus;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Cqrs\Query\QueryBus;
 use Cubiche\Infrastructure\Cqrs\Factory\Bus\QueryBusFactory;
-use Cubiche\Infrastructure\Cqrs\Factory\QueryHandlerResolverFactory;
-use Cubiche\Infrastructure\Cqrs\Factory\ValidatorHandlerResolverFactory;
+use Cubiche\Infrastructure\Cqrs\Factory\HandlerClassResolverFactory;
 use Cubiche\Infrastructure\Cqrs\Tests\Units\TestCase;
 
 /**
@@ -38,15 +37,14 @@ class QueryBusFactoryTests extends TestCase
      */
     public function testCreate()
     {
-        $commandHandlerResolverFactory = new QueryHandlerResolverFactory(new InMemoryLocator([]));
-        $validatorHandlerResolverFactory = new ValidatorHandlerResolverFactory(new InMemoryLocator([]));
+        $handlerClassResolverFactory = new HandlerClassResolverFactory(new InMemoryLocator([]));
 
         $this
             ->given($factory = $this->createFactory())
             ->and(
                 $bus = $factory->create(
-                    $commandHandlerResolverFactory->create(),
-                    $validatorHandlerResolverFactory->create()
+                    $handlerClassResolverFactory->createForQuery(),
+                    $handlerClassResolverFactory->createForQueryValidator()
                 )
             )
             ->then()
