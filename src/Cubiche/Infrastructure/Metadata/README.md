@@ -1,2 +1,0 @@
-# Cubiche - Metadata Adapter
-[![Build Status](https://travis-ci.org/cubiche/metadata-adapter.svg?branch=master)](https://travis-ci.org/cubiche/metadata-adapter) [![Coverage Status](https://coveralls.io/repos/github/cubiche/metadata-adapter/badge.svg?branch=master)](https://coveralls.io/github/cubiche/metadata-adapter?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/metadata-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/metadata-adapter/?branch=master) 

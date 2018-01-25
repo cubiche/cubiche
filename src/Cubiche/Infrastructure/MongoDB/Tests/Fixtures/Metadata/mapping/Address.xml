@@ -1,0 +1,9 @@
+<cubiche-mapping >
+    <entity name="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\Address">
+        <field fieldName="id" name="id" id="true" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\AddressId" />
+        <field fieldName="street" name="street" type="StringLiteral" />
+        <field fieldName="zipcode" name="zipcode" type="StringLiteral" />
+        <field fieldName="city" name="city" type="StringLiteral" />
+    </entity>
+    
+</cubiche-mapping>

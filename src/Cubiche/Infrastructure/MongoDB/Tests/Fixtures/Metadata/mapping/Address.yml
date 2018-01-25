@@ -1,0 +1,11 @@
+Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\Address:
+    fields:
+        id:
+            id:  true
+            type: Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\AddressId
+        street:
+            type: StringLiteral
+        zipcode:
+            type: StringLiteral
+        city:
+            type: StringLiteral

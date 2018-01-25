@@ -1,0 +1,2 @@
+Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\Venue:
+    fields: id: id:  true type: AddressId

@@ -1,6 +1,0 @@
-<cubiche-mapping>
-    <aggregate-root name="Cubiche\Infrastructure\Metadata\Tests\Fixtures\Post">
-        <field fieldName="id" name="id" id="true" type="PostId" />
-    </aggregate-root>
-    
-</cubiche-mapping>

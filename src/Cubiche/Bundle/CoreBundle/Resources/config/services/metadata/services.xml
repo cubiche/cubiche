@@ -6,9 +6,9 @@
     <parameters>
         <!-- classes -->
         <parameter key="cubiche.metadata.driver_chain.class">Cubiche\Core\Metadata\Driver\ChainDriver</parameter>
-        <parameter key="cubiche.metadata.xml.class">Cubiche\Infrastructure\Metadata\Driver\XmlDriver</parameter>
-        <parameter key="cubiche.metadata.yml.class">Cubiche\Infrastructure\Metadata\Driver\YamlDriver</parameter>
-        <parameter key="cubiche.metadata.annotation.class">Cubiche\Infrastructure\Metadata\Driver\AnnotationDriver</parameter>
+        <parameter key="cubiche.metadata.xml.class">Cubiche\Infrastructure\MongoDB\Metadata\Driver\XmlDriver</parameter>
+        <parameter key="cubiche.metadata.yml.class">Cubiche\Infrastructure\MongoDB\Metadata\Driver\YamlDriver</parameter>
+        <parameter key="cubiche.metadata.annotation.class">Cubiche\Infrastructure\MongoDB\Metadata\Driver\AnnotationDriver</parameter>
         <parameter key="cubiche.metadata.default_locator.class">Cubiche\Core\Metadata\Locator\DefaultFileLocator</parameter>
         <parameter key="cubiche.metadata.factory.class">Cubiche\Core\Metadata\ClassMetadataFactory</parameter>
     </parameters>

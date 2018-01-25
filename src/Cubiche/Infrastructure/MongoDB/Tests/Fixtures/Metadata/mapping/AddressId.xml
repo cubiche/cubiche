@@ -1,0 +1,6 @@
+<cubiche-mapping >
+    <entity name="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\Metadata\AddressId">
+        <field  />
+    </entity>
+    
+</cubiche-mapping>

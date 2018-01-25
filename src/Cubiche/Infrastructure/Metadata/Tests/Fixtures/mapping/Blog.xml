@@ -1,6 +1,0 @@
-<cubiche-mapping>
-    <blog name="Cubiche\Infrastructure\Metadata\Tests\Fixtures\Blog">
-        <field fieldName="id" name="id" id="true" type="BlogId" />
-    </blog>
-    
-</cubiche-mapping>
