@@ -14,9 +14,9 @@ namespace Cubiche\Infrastructure\Cqrs\Factory;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\ChainResolver as NameOfQueryChainResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromQueryNamedResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 
 /**
  * QueryHandlerResolverFactory class.
@@ -46,8 +46,8 @@ class QueryHandlerResolverFactory
     public function create()
     {
         return new HandlerClassResolver(
-            new NameOfQueryChainResolver([
-                new FromQueryNamedResolver(),
+            new ChainResolver([
+                new FromMessageNamedResolver(),
                 new FromClassNameResolver(),
             ]),
             new MethodWithShortObjectNameResolver('Query'),

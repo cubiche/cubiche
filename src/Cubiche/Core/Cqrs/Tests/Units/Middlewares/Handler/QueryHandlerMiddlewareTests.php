@@ -13,8 +13,8 @@ namespace Cubiche\Core\Cqrs\Tests\Units\Middlewares\Handler;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 use Cubiche\Core\Cqrs\Middlewares\Handler\QueryHandlerMiddleware;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromQueryNamedResolver;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Query\NearbyVenuesQuery;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Query\VenuesQueryHandler;
 use Cubiche\Core\Cqrs\Tests\Units\TestCase;
@@ -34,13 +34,13 @@ class QueryHandlerMiddlewareTests extends TestCase
         $this
             ->given(
                 $resolver = new HandlerClassResolver(
-                    new FromQueryNamedResolver(),
+                    new FromMessageNamedResolver(),
                     new MethodWithShortObjectNameResolver('Query'),
                     new InMemoryLocator()
                 )
             )
             ->and($middleware = new QueryHandlerMiddleware($resolver))
-            ->and($query = new NearByVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
+            ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
             ->and($resolver->addHandler($query->named(), $queryHandler))
             ->and($callable = function (array $result) {
@@ -65,7 +65,7 @@ class QueryHandlerMiddlewareTests extends TestCase
         $this
             ->given(
                 $resolver = new HandlerClassResolver(
-                    new FromQueryNamedResolver(),
+                    new FromMessageNamedResolver(),
                     new MethodWithShortObjectNameResolver('Query'),
                     new InMemoryLocator([NearByVenuesQuery::class => new VenuesQueryHandler()])
                 )

@@ -15,12 +15,14 @@ use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameAndSuffixResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
 use Cubiche\Core\Cqrs\Middlewares\Handler\CommandHandlerMiddleware;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\ChainResolver as NameOfCommandChainResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromCommandNamedResolver;
 
 /**
  * CommandBus class.
@@ -40,10 +42,18 @@ class CommandBus extends Bus
     public static function create()
     {
         return new static([
-            250 => new LockingMiddleware(),
+            500 => new LockingMiddleware(),
+            250 => new ValidatorMiddleware(new HandlerClassResolver(
+                new ChainResolver([
+                    new FromMessageNamedResolver(),
+                    new FromClassNameResolver(),
+                ]),
+                new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                new InMemoryLocator()
+            )),
             100 => new CommandHandlerMiddleware(new HandlerClassResolver(
-                new NameOfCommandChainResolver([
-                    new FromCommandNamedResolver(),
+                new ChainResolver([
+                    new FromMessageNamedResolver(),
                     new FromClassNameResolver(),
                 ]),
                 new MethodWithShortObjectNameResolver('Command'),

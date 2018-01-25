@@ -7,13 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Tests\Units\Middlewares\Handler;
 
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\DefaultResolver as HandlerMethodNameDefaultResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
 use Cubiche\Core\Cqrs\Middlewares\Handler\CommandHandlerMiddleware;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Command\LoginUserCommand;
 use Cubiche\Core\Cqrs\Tests\Fixtures\Command\LoginUserCommandHandler;
 use Cubiche\Core\Cqrs\Tests\Units\TestCase;

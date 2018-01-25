@@ -14,9 +14,9 @@ namespace Cubiche\Infrastructure\Cqrs\Factory;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\ChainResolver as NameOfCommandChainResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromClassNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfCommand\FromCommandNamedResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
 
 /**
  * CommandHandlerResolverFactory class.
@@ -46,8 +46,8 @@ class CommandHandlerResolverFactory
     public function create()
     {
         return new HandlerClassResolver(
-            new NameOfCommandChainResolver([
-                new FromCommandNamedResolver(),
+            new ChainResolver([
+                new FromMessageNamedResolver(),
                 new FromClassNameResolver(),
             ]),
             new MethodWithShortObjectNameResolver('Command'),

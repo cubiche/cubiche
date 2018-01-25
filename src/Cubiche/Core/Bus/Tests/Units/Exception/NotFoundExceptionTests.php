@@ -95,36 +95,6 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test nameOfCommand method.
-     */
-    public function testNameOfCommand()
-    {
-        $this
-            ->given($exception = NotFoundException::nameOfCommand('bar'))
-            ->then()
-                ->variable($exception->getPrevious())
-                    ->isNull()
-                ->integer($exception->getCode())
-                    ->isEqualTo(2)
-        ;
-    }
-
-    /**
-     * Test nameOfQuery method.
-     */
-    public function testNameOfQuery()
-    {
-        $this
-            ->given($exception = NotFoundException::nameOfQuery('bar'))
-            ->then()
-                ->variable($exception->getPrevious())
-                    ->isNull()
-                ->integer($exception->getCode())
-                    ->isEqualTo(4)
-        ;
-    }
-
-    /**
      * Test methodForObject method.
      */
     public function testMethodForObject()

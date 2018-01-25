@@ -56,31 +56,9 @@ class NotFoundException extends RuntimeException
      *
      * @return NotFoundException
      */
-    public static function nameOfCommand($object, Exception $cause = null)
-    {
-        return self::notFound('name of command', $object, 2, $cause);
-    }
-
-    /**
-     * @param mixed          $object
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
     public static function handlerMethodNameForObject($object, Exception $cause = null)
     {
         return self::notFound('handler method name', $object, 3, $cause);
-    }
-
-    /**
-     * @param mixed          $object
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    public static function nameOfQuery($object, Exception $cause = null)
-    {
-        return self::notFound('name of query', $object, 4, $cause);
     }
 
     /**

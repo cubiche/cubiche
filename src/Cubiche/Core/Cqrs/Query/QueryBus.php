@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Cqrs\Query;
 
 use Cubiche\Core\Bus\Bus;
@@ -14,11 +15,13 @@ use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameAndSuffixResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\ChainResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
+use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
+use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
 use Cubiche\Core\Cqrs\Middlewares\Handler\QueryHandlerMiddleware;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\ChainResolver as NameOfQueryChainResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromClassNameResolver;
-use Cubiche\Core\Cqrs\Middlewares\Handler\Resolver\NameOfQuery\FromQueryNamedResolver;
 
 /**
  * QueryBus class.
@@ -38,9 +41,17 @@ class QueryBus extends Bus
     public static function create()
     {
         return new static([
+            500 => new ValidatorMiddleware(new HandlerClassResolver(
+                new ChainResolver([
+                    new FromMessageNamedResolver(),
+                    new FromClassNameResolver(),
+                ]),
+                new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                new InMemoryLocator()
+            )),
             250 => new QueryHandlerMiddleware(new HandlerClassResolver(
-                new NameOfQueryChainResolver([
-                    new FromQueryNamedResolver(),
+                new ChainResolver([
+                    new FromMessageNamedResolver(),
                     new FromClassNameResolver(),
                 ]),
                 new MethodWithShortObjectNameResolver('Query'),
