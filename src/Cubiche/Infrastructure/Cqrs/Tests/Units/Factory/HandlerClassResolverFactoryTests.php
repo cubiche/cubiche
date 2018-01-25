@@ -36,7 +36,7 @@ class HandlerClassResolverFactoryTests extends TestCase
      */
     protected function createFactory()
     {
-        return new HandlerClassResolverFactory(new InMemoryLocator([]));
+        return new HandlerClassResolverFactory();
     }
 
     /**
@@ -47,13 +47,13 @@ class HandlerClassResolverFactoryTests extends TestCase
         $this
             ->given($factory = $this->createFactory())
             ->then()
-                ->object($factory->createForCommand())
+                ->object($factory->createForCommand(new InMemoryLocator([])))
                     ->isInstanceOf(HandlerClassResolver::class)
-                ->object($factory->createForCommandValidator())
+                ->object($factory->createForCommandValidator(new InMemoryLocator([])))
                     ->isInstanceOf(HandlerClassResolver::class)
-                ->object($factory->createForQuery())
+                ->object($factory->createForQuery(new InMemoryLocator([])))
                     ->isInstanceOf(HandlerClassResolver::class)
-                ->object($factory->createForQueryValidator())
+                ->object($factory->createForQueryValidator(new InMemoryLocator([])))
                     ->isInstanceOf(HandlerClassResolver::class)
         ;
     }
@@ -64,7 +64,7 @@ class HandlerClassResolverFactoryTests extends TestCase
     public function testResolveCommand()
     {
         $this
-            ->given($resolver = $this->createFactory()->createForCommand())
+            ->given($resolver = $this->createFactory()->createForCommand(new InMemoryLocator([])))
             ->and($resolver->addHandler(CreateUserCommand::class, new UserCommandHandler()))
             ->when($result = $resolver->resolve(new CreateUserCommand('ivan', 'pass', 'ivan@cubiche.com')))
             ->then()
@@ -73,7 +73,7 @@ class HandlerClassResolverFactoryTests extends TestCase
         ;
 
         $this
-            ->given($resolver = $this->createFactory()->createForCommand())
+            ->given($resolver = $this->createFactory()->createForCommand(new InMemoryLocator([])))
             ->and($resolver->addHandler(CreateUserCommand::class, new UserCommandHandler()))
             ->then()
                 ->exception(function () use ($resolver) {
@@ -89,7 +89,7 @@ class HandlerClassResolverFactoryTests extends TestCase
     public function testResolveCommandValidator()
     {
         $this
-            ->given($resolver = $this->createFactory()->createForCommandValidator())
+            ->given($resolver = $this->createFactory()->createForCommandValidator(new InMemoryLocator([])))
             ->and($validator = new UserValidatorHandler())
             ->and($resolver->addHandler(CreateUserCommand::class, $validator))
             ->when($result = $resolver->resolve(new CreateUserCommand('ivan', 'pass', 'ivan@cubiche.com')))
@@ -99,7 +99,7 @@ class HandlerClassResolverFactoryTests extends TestCase
         ;
 
         $this
-            ->given($resolver = $this->createFactory()->createForCommandValidator())
+            ->given($resolver = $this->createFactory()->createForCommandValidator(new InMemoryLocator([])))
             ->and($resolver->addHandler(CreateUserCommand::class, new UserValidatorHandler()))
             ->then()
                 ->exception(function () use ($resolver) {
@@ -115,7 +115,7 @@ class HandlerClassResolverFactoryTests extends TestCase
     public function testResolveQuery()
     {
         $this
-            ->given($resolver = $this->createFactory()->createForQuery())
+            ->given($resolver = $this->createFactory()->createForQuery(new InMemoryLocator([])))
             ->and($resolver->addHandler(FindOneUserByIdQuery::class, new UserQueryHandler()))
             ->when($result = $resolver->resolve(new FindOneUserByIdQuery('3dbb0644-70c7-42b2-bb55-21bba4f6e221')))
             ->then()
@@ -124,7 +124,7 @@ class HandlerClassResolverFactoryTests extends TestCase
         ;
 
         $this
-            ->given($resolver = $this->createFactory()->createForQuery())
+            ->given($resolver = $this->createFactory()->createForQuery(new InMemoryLocator([])))
             ->and($resolver->addHandler(FindOneUserByIdQuery::class, new UserQueryHandler()))
             ->then()
                 ->exception(function () use ($resolver) {
@@ -140,7 +140,7 @@ class HandlerClassResolverFactoryTests extends TestCase
     public function testResolveQueryCommand()
     {
         $this
-            ->given($resolver = $this->createFactory()->createForQueryValidator())
+            ->given($resolver = $this->createFactory()->createForQueryValidator(new InMemoryLocator([])))
             ->and($validator = new UserValidatorHandler())
             ->and($resolver->addHandler(FindOneUserByIdQuery::class, $validator))
             ->when($result = $resolver->resolve(new FindOneUserByIdQuery('3dbb0644-70c7-42b2-bb55-21bba4f6e221')))
@@ -150,7 +150,7 @@ class HandlerClassResolverFactoryTests extends TestCase
         ;
 
         $this
-            ->given($resolver = $this->createFactory()->createForQueryValidator())
+            ->given($resolver = $this->createFactory()->createForQueryValidator(new InMemoryLocator([])))
             ->and($resolver->addHandler(FindOneUserByIdQuery::class, new UserValidatorHandler()))
             ->then()
             ->exception(function () use ($resolver) {

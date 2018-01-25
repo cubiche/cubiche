@@ -27,69 +27,64 @@ use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamed
 class HandlerClassResolverFactory
 {
     /**
-     * @var LocatorInterface
-     */
-    protected $locator;
-
-    /**
-     * HandlerClassResolverFactory constructor.
-     *
      * @param LocatorInterface $locator
-     */
-    public function __construct(LocatorInterface $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
-     * @return HandlerClassResolver
-     */
-    public function createForCommand()
-    {
-        return $this->createFor('Command');
-    }
-
-    /**
-     * @return HandlerClassResolver
-     */
-    public function createForCommandValidator()
-    {
-        return $this->createForValidator('Command');
-    }
-
-    /**
-     * @return HandlerClassResolver
-     */
-    public function createForQuery()
-    {
-        return $this->createFor('Query');
-    }
-
-    /**
-     * @return HandlerClassResolver
-     */
-    public function createForQueryValidator()
-    {
-        return $this->createForValidator('Query');
-    }
-
-    /**
-     * @param string $suffix
      *
      * @return HandlerClassResolver
      */
-    protected function createForValidator($suffix)
+    public function createForCommand(LocatorInterface $locator)
     {
-        return $this->createFor($suffix, true);
+        return $this->createFor($locator, 'Command');
     }
 
     /**
-     * @param string $suffix
-     * @param bool   $validator
+     * @param LocatorInterface $locator
      *
      * @return HandlerClassResolver
      */
-    protected function createFor($suffix, $validator = false)
+    public function createForCommandValidator(LocatorInterface $locator)
+    {
+        return $this->createForValidator($locator, 'Command');
+    }
+
+    /**
+     * @param LocatorInterface $locator
+     *
+     * @return HandlerClassResolver
+     */
+    public function createForQuery(LocatorInterface $locator)
+    {
+        return $this->createFor($locator, 'Query');
+    }
+
+    /**
+     * @param LocatorInterface $locator
+     *
+     * @return HandlerClassResolver
+     */
+    public function createForQueryValidator(LocatorInterface $locator)
+    {
+        return $this->createForValidator($locator, 'Query');
+    }
+
+    /**
+     * @param LocatorInterface $locator
+     * @param string           $suffix
+     *
+     * @return HandlerClassResolver
+     */
+    protected function createForValidator(LocatorInterface $locator, $suffix)
+    {
+        return $this->createFor($locator, $suffix, true);
+    }
+
+    /**
+     * @param LocatorInterface $locator
+     * @param string           $suffix
+     * @param bool             $validator
+     *
+     * @return HandlerClassResolver
+     */
+    protected function createFor(LocatorInterface $locator, $suffix, $validator = false)
     {
         if ($validator) {
             $handlerMethodNameResolver = new MethodWithShortObjectNameAndSuffixResolver($suffix, 'Validator');
@@ -103,7 +98,7 @@ class HandlerClassResolverFactory
                 new FromClassNameResolver(),
             ]),
             $handlerMethodNameResolver,
-            $this->locator
+            $locator
         );
     }
 }

@@ -75,6 +75,10 @@ class ContainerLocator implements LocatorInterface
             throw NotFoundException::handlerFor($nameOfMessage);
         }
 
+        if (!$this->container->has($this->messageToServiceId[$nameOfMessage])) {
+            throw NotFoundException::handlerFor($this->messageToServiceId[$nameOfMessage]);
+        }
+
         return $this->container->get($this->messageToServiceId[$nameOfMessage]);
     }
 }

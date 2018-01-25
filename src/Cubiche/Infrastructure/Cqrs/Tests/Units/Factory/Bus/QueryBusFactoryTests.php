@@ -37,14 +37,14 @@ class QueryBusFactoryTests extends TestCase
      */
     public function testCreate()
     {
-        $handlerClassResolverFactory = new HandlerClassResolverFactory(new InMemoryLocator([]));
+        $handlerClassResolverFactory = new HandlerClassResolverFactory();
 
         $this
             ->given($factory = $this->createFactory())
             ->and(
                 $bus = $factory->create(
-                    $handlerClassResolverFactory->createForQuery(),
-                    $handlerClassResolverFactory->createForQueryValidator()
+                    $handlerClassResolverFactory->createForQuery(new InMemoryLocator([])),
+                    $handlerClassResolverFactory->createForQueryValidator(new InMemoryLocator([]))
                 )
             )
             ->then()

@@ -9,38 +9,46 @@
             <argument type="service" id="service_container"/>
         </service>
 
+        <service id="cubiche.command_bus.validator_service_container_locator" class="Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator\ContainerLocator">
+            <argument type="service" id="service_container"/>
+        </service>
+
         <service id="cubiche.query_bus.service_container_locator" class="Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator\ContainerLocator">
             <argument type="service" id="service_container"/>
         </service>
 
+        <service id="cubiche.query_bus.validator_service_container_locator" class="Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator\ContainerLocator">
+            <argument type="service" id="service_container"/>
+        </service>
+
         <!--  factory  -->
-        <service id="cubiche.bus.handler_class_resolver_factory" class="Cubiche\Infrastructure\Cqrs\Factory\HandlerClassResolverFactory">
-            <argument type="service" id="cubiche.bus.service_container_locator"/>
-        </service>
-
-        <service id="cubiche.command_bus.factory" class="Cubiche\Infrastructure\Cqrs\Factory\Bus\CommandBusFactory">
-            <argument type="service" id="cubiche.command_bus.service_container_locator"/>
-        </service>
-
-        <service id="cubiche.query_bus.factory" class="Cubiche\Infrastructure\Cqrs\Factory\Bus\QueryBusFactory">
-            <argument type="service" id="cubiche.query_bus.service_container_locator"/>
-        </service>
+        <service id="cubiche.bus.handler_class_resolver.factory" class="Cubiche\Infrastructure\Cqrs\Factory\HandlerClassResolverFactory" />
+        <service id="cubiche.command_bus.factory" class="Cubiche\Infrastructure\Cqrs\Factory\Bus\CommandBusFactory" />
+        <service id="cubiche.query_bus.factory" class="Cubiche\Infrastructure\Cqrs\Factory\Bus\QueryBusFactory" />
 
         <!--  resolver  -->
         <service id="cubiche.command_bus.handler_resolver" class="Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver">
-            <factory service="cubiche.bus.handler_class_resolver_factory" method="createForCommand" />
+            <factory service="cubiche.bus.handler_class_resolver.factory" method="createForCommand" />
+
+            <argument type="service" id="cubiche.command_bus.service_container_locator"/>
         </service>
 
         <service id="cubiche.command_bus.validator_handler_resolver" class="Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver">
-            <factory service="cubiche.bus.handler_class_resolver_factory" method="createForCommandValidator" />
+            <factory service="cubiche.bus.handler_class_resolver.factory" method="createForCommandValidator" />
+
+            <argument type="service" id="cubiche.command_bus.validator_service_container_locator"/>
         </service>
 
         <service id="cubiche.query_bus.handler_resolver" class="Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver">
-            <factory service="cubiche.bus.handler_class_resolver_factory" method="createForQuery" />
+            <factory service="cubiche.bus.handler_class_resolver.factory" method="createForQuery" />
+
+            <argument type="service" id="cubiche.query_bus.service_container_locator"/>
         </service>
 
         <service id="cubiche.query_bus.validator_handler_resolver" class="Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver">
-            <factory service="cubiche.bus.handler_class_resolver_factory" method="createForQueryValidator" />
+            <factory service="cubiche.bus.handler_class_resolver.factory" method="createForQueryValidator" />
+
+            <argument type="service" id="cubiche.query_bus.validator_service_container_locator"/>
         </service>
 
         <!--  bus  -->
