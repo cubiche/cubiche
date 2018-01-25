@@ -53,11 +53,11 @@ class MethodWithShortObjectNameAndSuffixResolverTests extends TestCase
         ;
 
         $this
-            ->given($resolver = new MethodWithShortObjectNameAndSuffixResolver('Listener', 'Resolver'))
+            ->given($resolver = new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'))
+            ->when($result = $resolver->resolve(LoginUserMessage::class))
             ->then()
-                ->exception(function () use ($resolver) {
-                    $resolver->resolve(LoginUserMessage::class);
-                })->isInstanceOf(\Exception::class)
+                ->string($result)
+                    ->isEqualTo('loginUserMessageValidator')
         ;
     }
 }

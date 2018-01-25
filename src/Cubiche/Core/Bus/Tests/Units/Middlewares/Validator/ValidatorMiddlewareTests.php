@@ -14,7 +14,6 @@ namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Validator;
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerClass\HandlerClassResolver;
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ChainResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\MethodWithShortObjectNameAndSuffixResolver;
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromClassNameResolver;
 use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
@@ -41,11 +40,7 @@ class ValidatorMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new ChainResolver([
-                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
-                    ]),
+                    new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
                     new InMemoryLocator([LoginUserMessage::class => new UserMessageValidator()])
                 )
             )
@@ -70,11 +65,7 @@ class ValidatorMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new ChainResolver([
-                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
-                    ]),
+                    new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
                     new InMemoryLocator([LoginUserMessage::class => new UserMessageValidator()])
                 )
             )
@@ -92,11 +83,7 @@ class ValidatorMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new ChainResolver([
-                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
-                    ]),
+                    new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
                     new InMemoryLocator([LogoutUserMessage::class => new UserMessageValidator()])
                 )
             )
@@ -115,11 +102,7 @@ class ValidatorMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new ChainResolver([
-                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
-                    ]),
+                    new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
                     new InMemoryLocator([])
                 )
             )
@@ -138,11 +121,7 @@ class ValidatorMiddlewareTests extends TestCase
             ->given(
                 $resolver = new HandlerClassResolver(
                     new FromClassNameResolver(),
-                    new ChainResolver([
-                        new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
-                        new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
-                    ]),
+                    new MethodWithShortObjectNameAndSuffixResolver('Message', 'Validator'),
                     new InMemoryLocator([RemoveUserMessage::class => new UserMessageValidator()])
                 )
             )

@@ -54,10 +54,10 @@ class MethodWithShortObjectNameAndSuffixResolver extends MethodWithObjectNameRes
     public function resolve($className)
     {
         $methodName = parent::resolve($className);
-        if (substr($methodName, $this->suffixLength * -1) !== $this->suffixToRemove) {
-            throw new \Exception(sprintf('Invalid suffix %s', $this->suffixToRemove));
+        if (substr($methodName, $this->suffixLength * -1) === $this->suffixToRemove) {
+            $methodName = substr($methodName, 0, strlen($methodName) - $this->suffixLength);
         }
 
-        return substr($methodName, 0, strlen($methodName) - $this->suffixLength).$this->suffixToAdd;
+        return $methodName.$this->suffixToAdd;
     }
 }
