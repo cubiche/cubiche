@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Bus\Tests\Units;
 
 use Cubiche\Core\Bus\Bus;
@@ -59,16 +60,24 @@ class BusTests extends TestCase
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($bus = new Bus([12 => $middleware]))
-            ->when($result = $bus->addMiddlewareBefore($middleware, $middleware))
             ->then()
-                ->variable($result)
-                    ->isNull()
+                ->array($bus->middlewares())
+                    ->hasSize(1)
+                ->and()
+                ->when($result = $bus->addMiddlewareBefore($middleware, $middleware))
+                ->then()
+                    ->variable($result)
+                        ->isNull()
+                    ->array($bus->middlewares())
+                        ->hasSize(2)
         ;
 
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($bus = new Bus())
             ->then()
+                ->array($bus->middlewares())
+                    ->hasSize(0)
                 ->exception(function () use ($bus, $middleware) {
                     $bus->addMiddlewareBefore($middleware, $middleware);
                 })->isInstanceOf(\InvalidArgumentException::class)
@@ -83,16 +92,24 @@ class BusTests extends TestCase
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($bus = new Bus([12 => $middleware]))
-            ->when($result = $bus->addMiddlewareAfter($middleware, $middleware))
             ->then()
-                ->variable($result)
-                    ->isNull()
+                ->array($bus->middlewares())
+                    ->hasSize(1)
+                ->and()
+                ->when($result = $bus->addMiddlewareAfter($middleware, $middleware))
+                ->then()
+                    ->variable($result)
+                        ->isNull()
+                    ->array($bus->middlewares())
+                        ->hasSize(2)
         ;
 
         $this
             ->given($middleware = new LockingMiddleware())
             ->and($bus = new Bus())
             ->then()
+                ->array($bus->middlewares())
+                    ->hasSize(0)
                 ->exception(function () use ($bus, $middleware) {
                     $bus->addMiddlewareAfter($middleware, $middleware);
                 })->isInstanceOf(\InvalidArgumentException::class)

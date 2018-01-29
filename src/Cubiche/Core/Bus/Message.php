@@ -21,31 +21,29 @@ class Message implements MessageInterface
     /**
      * @var MessageId
      */
-    protected $id;
+    protected $messageId;
 
     /**
      * Message constructor.
      */
     public function __construct()
     {
-        $this->initIdentifier();
+        $this->messageId = MessageId::next();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function id()
+    public function messageId()
     {
-        return $this->id;
+        return $this->messageId;
     }
 
     /**
-     * Set the message identifier.
+     * @param MessageId $messageId
      */
-    protected function initIdentifier()
+    public function setMessageId(MessageId $messageId)
     {
-        if ($this->id === null) {
-            $this->id = MessageId::next();
-        }
+        $this->messageId = $messageId;
     }
 }

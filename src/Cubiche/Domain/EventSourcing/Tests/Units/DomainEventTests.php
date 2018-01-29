@@ -37,7 +37,7 @@ class DomainEventTests extends TestCase
                 )
             )
             ->then()
-                ->object($event->id())
+                ->object($event->messageId())
                     ->isInstanceOf(MessageId::class)
         ;
     }

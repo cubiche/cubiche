@@ -27,9 +27,15 @@ class MessageTests extends TestCase
     {
         $this
             ->given($message = new FooMessage())
+            ->and($messageId = MessageId::next())
             ->then()
-                ->object($message->id())
+                ->object($message->messageId())
                     ->isInstanceOf(MessageId::class)
+                ->and()
+                ->when($message->setMessageId($messageId))
+                ->then()
+                    ->object($message->messageId())
+                        ->isEqualTo($messageId)
         ;
     }
 }

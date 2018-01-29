@@ -21,5 +21,10 @@ interface MessageInterface
     /**
      * @return MessageId
      */
-    public function id();
+    public function messageId();
+
+    /**
+     * @param MessageId $messageId
+     */
+    public function setMessageId(MessageId $messageId);
 }
