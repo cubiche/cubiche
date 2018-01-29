@@ -23,4 +23,9 @@ interface BusInterface
      * @return mixed
      */
     public function dispatch(MessageInterface $message);
+
+    /**
+     * @return array
+     */
+    public function middlewares();
 }

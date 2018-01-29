@@ -133,6 +133,14 @@ class Bus implements BusInterface
     }
 
     /**
+     * @return array
+     */
+    public function middlewares()
+    {
+        return $this->middlewares->toArray();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function dispatch(MessageInterface $message)
