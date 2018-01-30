@@ -36,14 +36,10 @@ class Message implements MessageInterface
      */
     public function messageId()
     {
-        return $this->messageId;
-    }
+        if ($this->messageId === null) {
+            $this->messageId = MessageId::next();
+        }
 
-    /**
-     * @param MessageId $messageId
-     */
-    public function setMessageId(MessageId $messageId)
-    {
-        $this->messageId = $messageId;
+        return $this->messageId;
     }
 }

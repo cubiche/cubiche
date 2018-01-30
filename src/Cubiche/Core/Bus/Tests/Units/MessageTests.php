@@ -31,11 +31,6 @@ class MessageTests extends TestCase
             ->then()
                 ->object($message->messageId())
                     ->isInstanceOf(MessageId::class)
-                ->and()
-                ->when($message->setMessageId($messageId))
-                ->then()
-                    ->object($message->messageId())
-                        ->isEqualTo($messageId)
         ;
     }
 }

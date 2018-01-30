@@ -69,7 +69,7 @@ class MongoDBEventStore implements EventStoreInterface
                 $version = $event->version();
                 $bulkWrite->update(
                     array(
-                        '_id' => $event->id()->toNative(),
+                        '_id' => $event->messageId()->toNative(),
                         'version' => $event->version(),
                     ),
                     array('$set' => $this->eventToArray($event)),
