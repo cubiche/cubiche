@@ -168,8 +168,8 @@ class Validator implements ValidatorInterface
                 $returnValue = $constraints->assert($value);
             } catch (NestedValidationException $e) {
                 throw new ValidationException(
-                    implode(', ', $e->getMessages()),
-                    $e->getMessages(),
+                    $e->getMessage(),
+                    $this->messagesIndexedByName($e),
                     $e->getCode(),
                     $e->getPrevious()
                 );
@@ -189,8 +189,8 @@ class Validator implements ValidatorInterface
                 $returnValue = $constraints->assert($value);
             } catch (NestedValidationException $e) {
                 throw new ValidationException(
-                    implode(', ', $e->getMessages()),
-                    $e->getMessages(),
+                    $e->getMessage(),
+                    $this->messagesIndexedByName($e),
                     $e->getCode(),
                     $e->getPrevious()
                 );
@@ -212,8 +212,8 @@ class Validator implements ValidatorInterface
                     $returnValue = $returnValue && $constraints->assert($item);
                 } catch (NestedValidationException $e) {
                     throw new ValidationException(
-                        implode(', ', $e->getMessages()),
-                        $e->getMessages(),
+                        $e->getMessage(),
+                        $this->messagesIndexedByName($e),
                         $e->getCode(),
                         $e->getPrevious()
                     );
@@ -395,5 +395,30 @@ class Validator implements ValidatorInterface
     protected function normalizeClassName($className = null)
     {
         return $className !== null ? $className : self::class;
+    }
+
+    /**
+     * @param NestedValidationException $nestedException
+     *
+     * @return array
+     */
+    public function messagesIndexedByName(NestedValidationException $nestedException)
+    {
+        $errors = array();
+        $exceptions = $nestedException->getIterator();
+
+        foreach ($exceptions as $exception) {
+            if ($exceptions[$exception]['depth'] > 1) {
+                if (isset($errors[$exception->getName()]) && !is_array($errors[$exception->getName()])) {
+                    $errors[$exception->getName()] = array();
+                }
+
+                $errors[$exception->getName()][] = $exception->getMessage();
+            } else {
+                $errors[$exception->getName()] = $exception->getMessage();
+            }
+        }
+
+        return $errors;
     }
 }

@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Exception;
 
 /**
@@ -19,26 +20,26 @@ class ValidationException extends \InvalidArgumentException
     /**
      * @var string[]
      */
-    protected $messages;
+    protected $errors;
 
     /**
      * @param string     $message
-     * @param string[]   $messages
+     * @param string[]   $errors
      * @param int        $code
      * @param \Exception $previous
      */
-    public function __construct($message, array $messages = [], $code = 0, $previous = null)
+    public function __construct($message, array $errors = [], $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        $this->messages = $messages;
+        $this->errors = $errors;
     }
 
     /**
      * @return string[]
      */
-    public function getMessages()
+    public function getErrors()
     {
-        return $this->messages;
+        return $this->errors;
     }
 }
