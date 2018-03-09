@@ -20,9 +20,11 @@ use Cubiche\Core\Selector\Value;
 use Cubiche\Core\Specification\Constraint\Equal;
 use Cubiche\Core\Specification\Constraint\GreaterThan;
 use Cubiche\Core\Specification\Constraint\GreaterThanEqual;
+use Cubiche\Core\Specification\Constraint\In;
 use Cubiche\Core\Specification\Constraint\LessThan;
 use Cubiche\Core\Specification\Constraint\LessThanEqual;
 use Cubiche\Core\Specification\Constraint\NotEqual;
+use Cubiche\Core\Specification\Constraint\NotIn;
 use Cubiche\Core\Specification\Constraint\NotSame;
 use Cubiche\Core\Specification\Constraint\Same;
 use Cubiche\Core\Specification\Quantifier\All;
@@ -269,6 +271,26 @@ class Selector extends Specification implements SelectorInterface
     public function isFalse()
     {
         return new Same($this->selector(), $this->createSelector(false));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Core\Specification\Constraint\Equal
+     */
+    public function in($value)
+    {
+        return new In($this->selector(), $this->createSelector($value));
+    }
+
+    /**
+     * @param SelectorInterface|mixed $value
+     *
+     * @return \Cubiche\Core\Specification\Constraint\Equal
+     */
+    public function notIn($value)
+    {
+        return new NotIn($this->selector(), $this->createSelector($value));
     }
 
     /**
