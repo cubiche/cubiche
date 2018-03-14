@@ -107,10 +107,18 @@ class DefaultFileLocator implements FileLocatorInterface
                         '\\'
                     );
 
-                    $classes[] = $this->prefixes[$path].
+                    $className = $this->prefixes[$path].
                         str_replace(DIRECTORY_SEPARATOR, '\\', $nsSuffix).'\\'.
                         str_replace($this->separator, '\\', $fileName)
                     ;
+
+                    try {
+                        new \ReflectionClass($className);
+
+                        $classes[] = $className;
+                    } catch (\ReflectionException $e) {
+
+                    }
                 }
             }
         }
