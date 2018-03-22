@@ -44,6 +44,11 @@ class DocumentManager
     protected $metadataFactory;
 
     /**
+     * @var SchemaManager
+     */
+    protected $schemaManager;
+
+    /**
      * @var SerializerInterface
      */
     protected $serializer;
@@ -100,6 +105,7 @@ class DocumentManager
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->queryLogger = $queryLogger;
+        $this->schemaManager = new SchemaManager($this, $metadataFactory);
     }
 
     /**
@@ -279,6 +285,14 @@ class DocumentManager
     }
 
     /**
+     * @return SchemaManager
+     */
+    public function getSchemaManager()
+    {
+        return $this->schemaManager;
+    }
+
+    /**
      * Returns the Collection instance for a class.
      *
      * @param string $documentName
@@ -320,7 +334,7 @@ class DocumentManager
      *
      * @return \MongoDB\Database
      */
-    protected function getDocumentDatabase($documentName)
+    public function getDocumentDatabase($documentName)
     {
         $documentName = ltrim($documentName, '\\');
         if (isset($this->documentDatabases[$documentName])) {

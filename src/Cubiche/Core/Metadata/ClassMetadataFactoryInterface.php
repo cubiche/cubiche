@@ -21,7 +21,7 @@ interface ClassMetadataFactoryInterface
      * Forces the factory to load the metadata of all classes known to the underlying
      * mapping driver.
      *
-     * @return array The ClassMetadata instances of all mapped classes.
+     * @return ClassMetadataInterface[] The ClassMetadata instances of all mapped classes.
      */
     public function getAllMetadata();
 
