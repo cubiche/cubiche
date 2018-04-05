@@ -14,6 +14,7 @@ namespace Cubiche\Bundle\CoreBundle;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusHandlerPass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusMiddlewarePass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterEventListenerPass;
+use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterSerializerHandlerPass;
 use Cubiche\Core\Validator\Validator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -35,6 +36,7 @@ class CubicheCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterBusHandlerPass());
         $container->addCompilerPass(new RegisterBusMiddlewarePass());
         $container->addCompilerPass(new RegisterEventListenerPass());
+        $container->addCompilerPass(new RegisterSerializerHandlerPass());
     }
 
     /**

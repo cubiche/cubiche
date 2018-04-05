@@ -4,31 +4,48 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!--  encoders  -->
-        <service id="cubiche.serializer.encoder.localizable_value_object" class="Cubiche\Core\Serializer\Encoder\LocalizableValueObjectEncoder" />
-        <service id="cubiche.serializer.encoder.value_object" class="Cubiche\Core\Serializer\Encoder\ValueObjectEncoder" />
-        <service id="cubiche.serializer.encoder.date_time" class="Cubiche\Core\Serializer\Encoder\DateTimeEncoder" />
-        <service id="cubiche.serializer.encoder.metadata_object" class="Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder" >
-            <argument type="service" id="cubiche.mongodb.metadata_factory" />
+        <!--  handlers  -->
+        <service id="cubiche.serializer.handler_manager" class="Cubiche\Core\Serializer\Handler\HandlerManager" />
+
+        <service id="cubiche.serializer.handler.collection" class="Cubiche\Core\Serializer\Handler\CollectionHandler">
+            <tag name="cubiche.serializer_handler" />
         </service>
-        <service id="cubiche.serializer.encoder.object" class="Cubiche\Core\Serializer\Encoder\ObjectEncoder" />
-        <service id="cubiche.serializer.encoder.array" class="Cubiche\Core\Serializer\Encoder\ArrayEncoder" />
-        <service id="cubiche.serializer.encoder.native" class="Cubiche\Core\Serializer\Encoder\NativeEncoder" />
+        <service id="cubiche.serializer.handler.coordinate" class="Cubiche\Core\Serializer\Handler\CoordinateHandler">
+            <tag name="cubiche.serializer_handler" />
+        </service>
+        <service id="cubiche.serializer.handler.date_range" class="Cubiche\Core\Serializer\Handler\DateRangeHandler">
+            <tag name="cubiche.serializer_handler" />
+        </service>
+        <service id="cubiche.serializer.handler.date_time" class="Cubiche\Core\Serializer\Handler\DateTimeHandler">
+            <tag name="cubiche.serializer_handler" />
+        </service>
+        <service id="cubiche.serializer.handler.date_time_value_object" class="Cubiche\Core\Serializer\Handler\DateTimeValueObjectHandler">
+            <tag name="cubiche.serializer_handler" />
+        </service>
+        <service id="cubiche.serializer.handler.localizable_value" class="Cubiche\Core\Serializer\Handler\LocalizableValueHandler">
+            <tag name="cubiche.serializer_handler" />
+        </service>
+
+        <!--  visitors  -->
+        <service id="cubiche.serializer.visitor.navigator" class="Cubiche\Core\Serializer\Visitor\VisitorNavigator" >
+            <argument type="service" id="cubiche.metadata_factory" />
+            <argument type="service" id="cubiche.serializer.handler_manager" />
+            <argument type="service" id="cubiche.event_bus" />
+        </service>
+
+        <service id="cubiche.serializer.visitor.serialization" class="Cubiche\Core\Serializer\Visitor\SerializationVisitor" >
+            <argument type="service" id="cubiche.serializer.visitor.navigator" />
+        </service>
+
+        <service id="cubiche.serializer.visitor.deserialization" class="Cubiche\Core\Serializer\Visitor\DeserializationVisitor" >
+            <argument type="service" id="cubiche.serializer.visitor.navigator" />
+        </service>
 
         <!--  serializer  -->
-        <service id="cubiche.serializer.default" class="Cubiche\Core\Serializer\DefaultSerializer" />
-        <service id="cubiche.serializer.mongodb" class="Cubiche\Core\Serializer\Serializer" >
-            <argument type="collection">
-                <argument key="100" type="service" id="cubiche.serializer.encoder.localizable_value_object" />
-                <argument key="200" type="service" id="cubiche.serializer.encoder.value_object" />
-                <argument key="300" type="service" id="cubiche.serializer.encoder.date_time" />
-                <argument key="400" type="service" id="cubiche.serializer.encoder.metadata_object" />
-                <argument key="500" type="service" id="cubiche.serializer.encoder.object" />
-                <argument key="600" type="service" id="cubiche.serializer.encoder.array" />
-                <argument key="700" type="service" id="cubiche.serializer.encoder.native" />
-            </argument>
+        <service id="cubiche.serializer" class="Cubiche\Core\Serializer\Serializer" >
+            <argument type="service" id="cubiche.serializer.visitor.navigator" />
+            <argument type="service" id="cubiche.serializer.visitor.serialization" />
+            <argument type="service" id="cubiche.serializer.visitor.deserialization" />
         </service>
-
-        <service id="cubiche.serializer" alias="cubiche.serializer.mongodb" />
     </services>
 </container>

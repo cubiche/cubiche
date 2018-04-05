@@ -56,7 +56,6 @@ class CubicheCoreExtension extends AbstractExtension
     protected function processMongoDBConfiguration(array $config, ContainerBuilder $container)
     {
         $this->processConnectionsConfiguration($config['connections'], $container);
-        $this->processDocumentManagerConfiguration($config['document_manager'], $container);
     }
 
     /**
@@ -89,16 +88,6 @@ class CubicheCoreExtension extends AbstractExtension
      * @param array            $config
      * @param ContainerBuilder $container
      */
-    protected function processDocumentManagerConfiguration(array $config, ContainerBuilder $container)
-    {
-        $this->loadMappingInformation($config['mappings'], $container);
-        $this->registerMappingDrivers($container);
-    }
-
-    /**
-     * @param array            $config
-     * @param ContainerBuilder $container
-     */
     protected function processMetadataConfiguration(array $config, ContainerBuilder $container)
     {
         $cacheDirectory = $container->getParameter('kernel.cache_dir').'/metadata';
@@ -107,6 +96,9 @@ class CubicheCoreExtension extends AbstractExtension
         }
 
         $container->setParameter('cubiche.metadata.cache_directory', $cacheDirectory);
+
+        $this->loadMappingInformation($config['mappings'], $container);
+        $this->registerMappingDrivers($container);
     }
 
     /**
@@ -116,15 +108,15 @@ class CubicheCoreExtension extends AbstractExtension
      */
     protected function registerMappingDrivers(ContainerBuilder $container)
     {
-        if ($container->hasDefinition($this->getElementName('mongodb.metadata_driver'))) {
-            $chainDriverDef = $container->getDefinition($this->getElementName('mongodb.metadata_driver'));
+        if ($container->hasDefinition($this->getElementName('metadata_driver'))) {
+            $chainDriverDef = $container->getDefinition($this->getElementName('metadata_driver'));
         } else {
             $chainDriverDef = new Definition('%'.$this->getElementName('metadata.driver_chain.class%'));
             $chainDriverDef->setPublic(false);
         }
 
-        if ($container->hasDefinition($this->getElementName('mongodb.metadata_factory'))) {
-            $metadataFactoryDef = $container->getDefinition($this->getElementName('mongodb.metadata_factory'));
+        if ($container->hasDefinition($this->getElementName('metadata_factory'))) {
+            $metadataFactoryDef = $container->getDefinition($this->getElementName('metadata_factory'));
         } else {
             $metadataFactoryDef = new Definition(
                 '%'.$this->getElementName('metadata.factory.class%'),
@@ -187,8 +179,8 @@ class CubicheCoreExtension extends AbstractExtension
             }
         }
 
-        $container->setDefinition($this->getElementName('mongodb.metadata_driver'), $chainDriverDef);
-        $container->setDefinition($this->getElementName('mongodb.metadata_factory'), $metadataFactoryDef);
+        $container->setDefinition($this->getElementName('metadata_driver'), $chainDriverDef);
+        $container->setDefinition($this->getElementName('metadata_factory'), $metadataFactoryDef);
     }
 
     /**

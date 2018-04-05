@@ -23,7 +23,7 @@
         <!--  document manager  -->
         <service id="cubiche.mongodb.document_manager" class="Cubiche\Infrastructure\MongoDB\DocumentManager">
             <argument type="service" id="cubiche.mongodb.connection.default"/>
-            <argument type="service" id="cubiche.mongodb.metadata_factory"/>
+            <argument type="service" id="cubiche.metadata_factory"/>
             <argument type="service" id="cubiche.serializer"/>
             <argument type="service" id="logger"/>
             <argument type="service" id="cubiche.mongodb.collector" />
