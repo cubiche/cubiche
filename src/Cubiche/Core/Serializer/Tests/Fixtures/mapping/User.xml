@@ -2,15 +2,21 @@
     <aggregate-root name="Cubiche\Core\Serializer\Tests\Fixtures\User" collection="user">
         <field fieldName="id" id="true" type="Cubiche\Core\Serializer\Tests\Fixtures\UserId" />
         <field fieldName="name" type="string" />
-        <field fieldName="fullName" type="StringLiteral" />
+        <field fieldName="fullName" type="Cubiche\Domain\System\StringLiteral" />
+        <field fieldName="description" type="Cubiche\Domain\Localizable\LocalizableString" />
         <field fieldName="age" type="integer" />
-        <field fieldName="email" type="EmailAddress" />
+        <field fieldName="email" type="Cubiche\Domain\Web\EmailAddress" />
+        <field fieldName="url" type="Cubiche\Domain\Localizable\LocalizableUrl" />
         <field fieldName="fax" type="Cubiche\Core\Serializer\Tests\Fixtures\Phonenumber" />
         <field fieldName="mainRole" type="Cubiche\Core\Serializer\Tests\Fixtures\Role" />
         <field fieldName="phonenumbers" type="array[Cubiche\Core\Serializer\Tests\Fixtures\Phonenumber]" />
-        <field fieldName="roles" type="ArraySet[Cubiche\Core\Serializer\Tests\Fixtures\Role]" />
-        <field fieldName="languagesLevel" type="ArrayHashMap[integer]" />
-        <field fieldName="addresses" type="ArrayList[Cubiche\Core\Serializer\Tests\Fixtures\Address]" />
+        <field fieldName="roles" type="Cubiche\Core\Collections\ArrayCollection\ArraySet[Cubiche\Core\Serializer\Tests\Fixtures\Role]" />
+        <field fieldName="languagesLevel" type="Cubiche\Core\Collections\ArrayCollection\ArrayHashMap[string,integer]" />
+        <field fieldName="addresses" type="Cubiche\Core\Collections\ArrayCollection\ArrayList[Cubiche\Core\Serializer\Tests\Fixtures\Address]" />
+        <field fieldName="createdAt" type="DateTimeImmutable" />
+        <field fieldName="lastLogin" type="Cubiche\Domain\System\DateTime\DateTime" />
+        <field fieldName="lastConnection" type="Cubiche\Domain\Geolocation\Coordinate" />
+        <field fieldName="lastCompany" type="Cubiche\Domain\System\DateTime\DateRange" />
     </aggregate-root>
     
 </cubiche-mapping>

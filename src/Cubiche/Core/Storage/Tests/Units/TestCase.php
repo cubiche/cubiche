@@ -11,6 +11,12 @@
 
 namespace Cubiche\Core\Storage\Tests\Units;
 
+use Cubiche\Core\EventBus\Event\EventBus;
+use Cubiche\Core\Serializer\Handler\HandlerManager;
+use Cubiche\Core\Serializer\Serializer;
+use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
+use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
+use Cubiche\Core\Serializer\Visitor\VisitorNavigator;
 use Cubiche\Tests\TestCase as BaseTestCase;
 
 /**
@@ -20,4 +26,20 @@ use Cubiche\Tests\TestCase as BaseTestCase;
  */
 abstract class TestCase extends BaseTestCase
 {
+    use ClassMetadataFactoryTrait;
+
+    /**
+     * @return Serializer
+     */
+    protected function createSerializer()
+    {
+        $handlerManager = new HandlerManager();
+        $eventBus = EventBus::create();
+
+        $navigator = new VisitorNavigator($this->createFactory(), $handlerManager, $eventBus);
+        $serializationVisitor = new SerializationVisitor($navigator);
+        $deserializationVisitor = new DeserializationVisitor($navigator);
+
+        return new Serializer($navigator, $serializationVisitor, $deserializationVisitor);
+    }
 }

@@ -17,9 +17,16 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Collections\ArrayCollection\ArrayListInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArraySet;
 use Cubiche\Core\Collections\ArrayCollection\ArraySetInterface;
+use Cubiche\Domain\Geolocation\Coordinate;
+use Cubiche\Domain\Localizable\LocalizableString;
+use Cubiche\Domain\Localizable\LocalizableUrl;
 use Cubiche\Domain\Model\Entity;
+use Cubiche\Domain\System\DateTime\Date;
+use Cubiche\Domain\System\DateTime\DateRange;
+use Cubiche\Domain\System\DateTime\DateTime;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\Web\EmailAddress;
+use DateTimeImmutable;
 
 /**
  * User Class.
@@ -39,6 +46,11 @@ class User extends Entity
     protected $fullName;
 
     /**
+     * @var LocalizableString
+     */
+    protected $description;
+
+    /**
      * @var int
      */
     protected $age;
@@ -47,6 +59,11 @@ class User extends Entity
      * @var EmailAddress
      */
     protected $email;
+
+    /**
+     * @var LocalizableUrl
+     */
+    protected $url;
 
     /**
      * @var ArrayListInterface
@@ -84,24 +101,60 @@ class User extends Entity
     protected $friends;
 
     /**
-     * @param UserId $id
-     * @param string $name
-     * @param int    $age
-     * @param string $email
+     * @var DateTimeImmutable
      */
-    public function __construct(UserId $id, $name, $age, $email)
-    {
+    protected $createdAt;
+
+    /**
+     * @var DateTime
+     */
+    protected $lastLogin;
+
+    /**
+     * @var Coordinate
+     */
+    protected $lastConnection;
+
+    /**
+     * @var DateRange
+     */
+    protected $lastCompany;
+
+    /**
+     * @param UserId     $id
+     * @param string     $name
+     * @param array      $description
+     * @param int        $age
+     * @param string     $email
+     * @param array      $url
+     * @param Coordinate $lastConnection
+     */
+    public function __construct(
+        UserId $id,
+        $name,
+        array $description,
+        $age,
+        $email,
+        array $url,
+        Coordinate $lastConnection
+    ) {
         parent::__construct($id);
 
         $this->name = $name;
         $this->fullName = StringLiteral::fromNative($name);
+        $this->description = LocalizableString::fromArray($description);
         $this->age = $age;
         $this->email = EmailAddress::fromNative($email);
+        $this->url = LocalizableUrl::fromArray($url);
         $this->phonenumbers = array();
         $this->roles = new ArraySet();
         $this->languagesLevel = new ArrayHashMap();
         $this->addresses = new ArrayList();
         $this->friends = new ArraySet();
+        $this->createdAt = new DateTimeImmutable('now');
+        $this->lastLogin = DateTime::now()->midnight();
+        $this->lastConnection = $lastConnection;
+        $this->lastCompany = new DateRange(Date::fromNative(date_create()->modify('-2 years')), Date::now());
     }
 
     /**
@@ -137,11 +190,27 @@ class User extends Entity
     }
 
     /**
+     * @return LocalizableString
+     */
+    public function description()
+    {
+        return $this->description;
+    }
+
+    /**
      * @return EmailAddress
      */
     public function email()
     {
         return $this->email;
+    }
+
+    /**
+     * @return LocalizableUrl
+     */
+    public function url()
+    {
+        return $this->url;
     }
 
     /**
@@ -257,5 +326,53 @@ class User extends Entity
     public function addFriend(User $friend)
     {
         return $this->friends->add($friend);
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function createdAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTimeImmutable $createdAt
+     */
+    public function setCreatedAt(DateTimeImmutable $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function lastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * @param DateTime $lastLogin
+     */
+    public function setLastLogin(DateTime $lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+    }
+
+    /**
+     * @return Coordinate
+     */
+    public function lastConnection()
+    {
+        return $this->lastConnection;
+    }
+
+    /**
+     * @param Coordinate $lastConnection
+     */
+    public function setLastConnection(Coordinate $lastConnection)
+    {
+        $this->lastConnection = $lastConnection;
     }
 }

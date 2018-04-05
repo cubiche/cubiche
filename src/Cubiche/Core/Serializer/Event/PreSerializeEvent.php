@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -9,15 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Serializer\Tests\Fixtures;
-
-use Cubiche\Domain\Identity\UUID;
+namespace Cubiche\Core\Serializer\Event;
 
 /**
- * CityId class.
+ * PreSerializeEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CityId extends UUID
+class PreSerializeEvent extends Event
 {
 }

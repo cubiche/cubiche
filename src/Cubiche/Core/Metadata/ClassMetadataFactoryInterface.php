@@ -21,14 +21,14 @@ interface ClassMetadataFactoryInterface
      * Forces the factory to load the metadata of all classes known to the underlying
      * mapping driver.
      *
-     * @return ClassMetadataInterface[] The ClassMetadata instances of all mapped classes.
+     * @return ClassMetadataInterface[] The ClassMetadata instances of all mapped classes
      */
     public function getAllMetadata();
 
     /**
      * Gets the class metadata descriptor for a class.
      *
-     * @param string $className The name of the class.
+     * @param string $className The name of the class
      *
      * @return ClassMetadataInterface|null
      */
@@ -39,7 +39,7 @@ interface ClassMetadataFactoryInterface
      *
      * @param string $className
      *
-     * @return bool TRUE if the metadata of the class in question is already loaded, FALSE otherwise.
+     * @return bool TRUE if the metadata of the class in question is already loaded, FALSE otherwise
      */
     public function hasMetadataFor($className);
 

@@ -117,7 +117,6 @@ class DefaultFileLocator implements FileLocatorInterface
 
                         $classes[] = $className;
                     } catch (\ReflectionException $e) {
-
                     }
                 }
             }

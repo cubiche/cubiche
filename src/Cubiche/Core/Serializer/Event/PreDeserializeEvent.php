@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Cubiche package.
  *
@@ -9,19 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Serializer;
+namespace Cubiche\Core\Serializer\Event;
 
 /**
- * SerializerAware interface.
+ * PreDeserializeEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface SerializerAwareInterface
+class PreDeserializeEvent extends Event
 {
-    /**
-     * Sets the serializer.
-     *
-     * @param SerializerInterface $serializer
-     */
-    public function setSerializer(SerializerInterface $serializer);
 }

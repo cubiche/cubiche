@@ -10,9 +10,8 @@
 
 namespace Cubiche\Core\Serializer\Exception;
 
-use Cubiche\Core\Serializer\SerializableInterface;
-use RuntimeException;
 use Exception;
+use RuntimeException;
 
 /**
  * SerializationException class.
@@ -21,36 +20,6 @@ use Exception;
  */
 class SerializationException extends RuntimeException
 {
-    /**
-     * @param object         $object
-     * @param Exception|null $cause
-     *
-     * @return SerializationException
-     */
-    public static function invalidObject($object, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'The object %s must be an instance of %s.',
-            is_object($object) ? get_class($object) : gettype($object),
-            SerializableInterface::class
-        ), 0, $cause);
-    }
-
-    /**
-     * @param string         $className
-     * @param Exception|null $cause
-     *
-     * @return SerializationException
-     */
-    public static function invalidClass($className, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'The class %s must be an instance of %s.',
-            $className,
-            SerializableInterface::class
-        ), 0, $cause);
-    }
-
     /**
      * @param string         $className
      * @param Exception|null $cause
@@ -61,22 +30,6 @@ class SerializationException extends RuntimeException
     {
         return new static(sprintf(
             'There is not serializer mapping file for class %s.',
-            $className
-        ), 0, $cause);
-    }
-
-    /**
-     * @param string         $propertyName
-     * @param string         $className
-     * @param Exception|null $cause
-     *
-     * @return SerializationException
-     */
-    public static function propertyNotFound($propertyName, $className, Exception $cause = null)
-    {
-        return new static(sprintf(
-            'Property `%s` not found for object %s.',
-            $propertyName,
             $className
         ), 0, $cause);
     }

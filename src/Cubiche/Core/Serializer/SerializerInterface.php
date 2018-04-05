@@ -10,7 +10,7 @@
 
 namespace Cubiche\Core\Serializer;
 
-use Cubiche\Core\Serializer\Encoder\EncoderInterface;
+use Cubiche\Core\Serializer\Context\ContextInterface;
 
 /**
  * Serializer interface.
@@ -20,38 +20,19 @@ use Cubiche\Core\Serializer\Encoder\EncoderInterface;
 interface SerializerInterface
 {
     /**
-     * Serializes object to array.
+     * @param mixed                 $data
+     * @param ContextInterface|null $context
      *
-     * @param mixed  $object
-     * @param string $className
-     *
-     * @return array
+     * @return mixed
      */
-    public function serialize($object, $className = null);
+    public function serialize($data, ContextInterface $context = null);
 
     /**
-     * Deserializes data to object.
+     * @param mixed                 $data
+     * @param string                $type
+     * @param ContextInterface|null $context
      *
-     * @param mixed  $data
-     * @param string $className
-     *
-     * @return object
+     * @return mixed
      */
-    public function deserialize($data, $className);
-
-    /**
-     * Adds a serializer encoder. The smaller the priority value,
-     * the earlier an encoder will be used in the chain (default is 0).
-     *
-     * @param EncoderInterface $encoder
-     * @param int              $priority
-     */
-    public function addEncoder(EncoderInterface $encoder, $priority = 0);
-
-    /**
-     * @param string $className
-     *
-     * @return bool
-     */
-    public function supports($className);
+    public function deserialize($data, $type, ContextInterface $context = null);
 }

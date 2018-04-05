@@ -11,20 +11,8 @@
 
 namespace Cubiche\Infrastructure\MongoDB;
 
-use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Metadata\ClassMetadataFactoryInterface;
-use Cubiche\Core\Serializer\SerializerInterface;
-use Cubiche\Domain\Identity\IdentifiableInterface;
-use Cubiche\Infrastructure\MongoDB\Common\Connection;
-use Cubiche\Infrastructure\MongoDB\Common\LoggableBulkWrite;
-use Cubiche\Infrastructure\MongoDB\Common\QueryLoggerInterface;
-use Cubiche\Infrastructure\MongoDB\Exception\MongoDBException;
-use Cubiche\Infrastructure\MongoDB\QueryBuilder\QueryBuilder;
 use MongoDB\Database;
-use MongoDB\Driver\Exception\BulkWriteException;
-use MongoDB\Driver\Exception\Exception;
-use MongoDB\Driver\WriteConcern;
-use Monolog\Logger;
 
 /**
  * SchemaManager class.
@@ -73,6 +61,7 @@ class SchemaManager
      * Drop the document database for a mapped class.
      *
      * @param string $documentName
+     *
      * @throws \InvalidArgumentException
      */
     public function dropDocumentDatabase($documentName)
