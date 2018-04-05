@@ -11,21 +11,24 @@
 
 namespace Cubiche\Core\Serializer\Tests\Units;
 
-use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
-use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
-use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\NativeEncoder;
-use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\ValueObjectEncoder;
+use Cubiche\Core\Serializer\Handler\CollectionHandler;
+use Cubiche\Core\Serializer\Handler\CoordinateHandler;
+use Cubiche\Core\Serializer\Handler\DateRangeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeValueObjectHandler;
+use Cubiche\Core\Serializer\Handler\HandlerManager;
+use Cubiche\Core\Serializer\Handler\LocalizableValueHandler;
 use Cubiche\Core\Serializer\Serializer;
 use Cubiche\Core\Serializer\Tests\Fixtures\Address;
 use Cubiche\Core\Serializer\Tests\Fixtures\AddressId;
-use Cubiche\Core\Serializer\Tests\Fixtures\City;
-use Cubiche\Core\Serializer\Tests\Fixtures\CityId;
 use Cubiche\Core\Serializer\Tests\Fixtures\Phonenumber;
 use Cubiche\Core\Serializer\Tests\Fixtures\Role;
 use Cubiche\Core\Serializer\Tests\Fixtures\User;
 use Cubiche\Core\Serializer\Tests\Fixtures\UserId;
+use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
+use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
+use Cubiche\Core\Serializer\Visitor\VisitorNavigator;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\Geolocation\Coordinate;
 
 /**
@@ -42,34 +45,29 @@ class SerializerTests extends ClassMetadataFactoryTests
     {
         $metadataFactory = $this->createFactory();
 
-        $encoders = array(
-            new ValueObjectEncoder(),
-            new DateTimeEncoder(),
-            new MetadataObjectEncoder($metadataFactory),
-            new ObjectEncoder(),
-            new ArrayEncoder(),
-            new NativeEncoder(),
-        );
+        $handlerManager = new HandlerManager();
+        $eventBus = EventBus::create();
 
-        return new Serializer($encoders);
-    }
+        // handlers
+        $collectionHandler = new CollectionHandler();
+        $dateHandler = new DateTimeHandler();
+        $coordinateHandler = new CoordinateHandler();
+        $localizableValueHandler = new LocalizableValueHandler();
+        $dateTimeValueObjectHandler = new DateTimeValueObjectHandler();
+        $dateRangeHandler = new DateRangeHandler();
 
-    /**
-     * @return Serializer
-     */
-    protected function createSerializerWithCustomEncoders()
-    {
-        $metadataFactory = $this->createFactory();
+        $handlerManager->registerSubscriberHandler($collectionHandler);
+        $handlerManager->registerSubscriberHandler($dateHandler);
+        $handlerManager->registerSubscriberHandler($coordinateHandler);
+        $handlerManager->registerSubscriberHandler($localizableValueHandler);
+        $handlerManager->registerSubscriberHandler($dateTimeValueObjectHandler);
+        $handlerManager->registerSubscriberHandler($dateRangeHandler);
 
-        $encoders = array(
-            new ValueObjectEncoder(),
-            new DateTimeEncoder(),
-            new MetadataObjectEncoder($metadataFactory),
-            new ArrayEncoder(),
-            new NativeEncoder(),
-        );
+        $navigator = new VisitorNavigator($metadataFactory, $handlerManager, $eventBus);
+        $serializationVisitor = new SerializationVisitor($navigator);
+        $deserializationVisitor = new DeserializationVisitor($navigator);
 
-        return new Serializer($encoders);
+        return new Serializer($navigator, $serializationVisitor, $deserializationVisitor);
     }
 
     /**
@@ -77,7 +75,15 @@ class SerializerTests extends ClassMetadataFactoryTests
      */
     protected function createUser()
     {
-        $user = new User(UserId::next(), 'User-'.\rand(1, 100), \rand(1, 100), $this->faker->email);
+        $user = new User(
+            UserId::next(),
+            'User-'.\rand(1, 100),
+            array('en_US' => $this->faker->sentence, 'es_ES' => $this->faker->sentence),
+            \rand(1, 100),
+            $this->faker->email,
+            array('en_US' => $this->faker->url, 'es_ES' => $this->faker->url),
+            Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
+        );
 
         $user->setFax(Phonenumber::fromNative($this->faker->phoneNumber));
         $user->setMainRole(Role::ROLE_ADMIN());
@@ -131,27 +137,6 @@ class SerializerTests extends ClassMetadataFactoryTests
                     ->isNotNull()
                 ->boolean($user->equals($serializer->deserialize($data, User::class)))
                     ->isTrue()
-        ;
-
-        $this
-            ->given($serializer = $this->createSerializerWithCustomEncoders())
-            ->and(
-                $city = new City(
-                    CityId::next(),
-                    $this->faker->city,
-                    Coordinate::fromLatLng($this->faker->latitude, $this->faker->longitude)
-                )
-            )
-            ->then()
-                ->boolean($serializer->supports('Foo'))
-                    ->isFalse()
-                ->exception(function () use ($serializer, $city) {
-                    $serializer->serialize($city);
-                })->isInstanceOf(\RuntimeException::class)
-                ->then()
-                ->exception(function () use ($serializer, $city) {
-                    $serializer->deserialize(array(), City::class);
-                })->isInstanceOf(\RuntimeException::class)
         ;
     }
 }

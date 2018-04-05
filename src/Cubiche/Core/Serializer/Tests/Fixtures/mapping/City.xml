@@ -1,8 +1,0 @@
-<cubiche-mapping>
-    <entity name="Cubiche\Core\Serializer\Tests\Fixtures\City" >
-        <field fieldName="id" name="id" id="true" type="Cubiche\Core\Serializer\Tests\Fixtures\CityId" />
-        <field fieldName="name" name="name" type="invalidType" />
-        <field fieldName="coordinate" name="coordinate" type="Coordinate" />
-    </entity>
-    
-</cubiche-mapping>

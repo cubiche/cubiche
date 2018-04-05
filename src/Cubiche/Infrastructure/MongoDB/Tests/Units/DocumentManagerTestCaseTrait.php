@@ -11,17 +11,22 @@
 
 namespace Cubiche\Infrastructure\MongoDB\Tests\Units;
 
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Metadata\Cache\FileCache;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Core\Metadata\Locator\DefaultFileLocator;
 use Cubiche\Core\Metadata\Tests\Fixtures\Driver\XmlDriver;
-use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
-use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
-use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\NativeEncoder;
-use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\ValueObjectEncoder;
+use Cubiche\Core\Serializer\Handler\CollectionHandler;
+use Cubiche\Core\Serializer\Handler\CoordinateHandler;
+use Cubiche\Core\Serializer\Handler\DateRangeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeValueObjectHandler;
+use Cubiche\Core\Serializer\Handler\HandlerManager;
+use Cubiche\Core\Serializer\Handler\LocalizableValueHandler;
 use Cubiche\Core\Serializer\Serializer;
+use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
+use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
+use Cubiche\Core\Serializer\Visitor\VisitorNavigator;
 use Cubiche\Infrastructure\MongoDB\Common\Connection;
 use Cubiche\Infrastructure\MongoDB\DocumentManager;
 use MongoDB\Database;
@@ -128,20 +133,42 @@ trait DocumentManagerTestCaseTrait
     {
         $connection = $this->getConnection();
         $metadataFactory = $this->createMetadataFactory();
-
-        $encoders = array(
-            new ValueObjectEncoder(),
-            new DateTimeEncoder(),
-            new MetadataObjectEncoder($metadataFactory),
-            new ArrayEncoder(),
-            new ObjectEncoder(),
-            new NativeEncoder(),
-        );
-
-        $serializer = new Serializer($encoders);
+        $serializer = $this->createSerializer();
         $logger = new Logger('inline_logger');
 
         return new DocumentManager($connection, $metadataFactory, $serializer, $logger);
+    }
+
+    /**
+     * @return Serializer
+     */
+    protected function createSerializer()
+    {
+        $metadataFactory = $this->createMetadataFactory();
+
+        $handlerManager = new HandlerManager();
+        $eventBus = EventBus::create();
+
+        // handlers
+        $collectionHandler = new CollectionHandler();
+        $dateHandler = new DateTimeHandler();
+        $coordinateHandler = new CoordinateHandler();
+        $localizableValueHandler = new LocalizableValueHandler();
+        $dateTimeValueObjectHandler = new DateTimeValueObjectHandler();
+        $dateRangeHandler = new DateRangeHandler();
+
+        $handlerManager->registerSubscriberHandler($collectionHandler);
+        $handlerManager->registerSubscriberHandler($dateHandler);
+        $handlerManager->registerSubscriberHandler($coordinateHandler);
+        $handlerManager->registerSubscriberHandler($localizableValueHandler);
+        $handlerManager->registerSubscriberHandler($dateTimeValueObjectHandler);
+        $handlerManager->registerSubscriberHandler($dateRangeHandler);
+
+        $navigator = new VisitorNavigator($metadataFactory, $handlerManager, $eventBus);
+        $serializationVisitor = new SerializationVisitor($navigator);
+        $deserializationVisitor = new DeserializationVisitor($navigator);
+
+        return new Serializer($navigator, $serializationVisitor, $deserializationVisitor);
     }
 
     /**

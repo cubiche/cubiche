@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Cubiche/Serializer component.
+ * This file is part of the Cubiche/Encoder component.
  *
  * Copyright (c) Cubiche
  *

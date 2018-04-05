@@ -1,7 +1,6 @@
 <?php
-
 /**
- * This file is part of the Cubiche/Serializer component.
+ * This file is part of the Cubiche package.
  *
  * Copyright (c) Cubiche
  *
@@ -9,15 +8,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Serializer\Tests\Units;
-
-use Cubiche\Tests\TestCase as BaseTestCase;
+namespace Cubiche\Core\Serializer\Event;
 
 /**
- * TestCase class.
+ * PreDeserializeEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class TestCase extends BaseTestCase
+class PreDeserializeEvent extends Event
 {
 }

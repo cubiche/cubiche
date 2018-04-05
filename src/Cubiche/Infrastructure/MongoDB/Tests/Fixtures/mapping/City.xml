@@ -2,7 +2,7 @@
     <entity name="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\City" >
         <field fieldName="id" name="id" id="true" type="Cubiche\Infrastructure\MongoDB\Tests\Fixtures\CityId" />
         <field fieldName="name" name="name" type="invalidType" />
-        <field fieldName="coordinate" name="coordinate" type="Coordinate" />
+        <field fieldName="coordinate" name="coordinate" type="Cubiche\Domain\Geolocation\Coordinate" />
     </entity>
     
 </cubiche-mapping>
