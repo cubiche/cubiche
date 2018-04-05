@@ -1,0 +1,48 @@
+{
+    "name": "cubiche/process-manager",
+    "type": "library",
+    "description": "Process manager component.",
+    "keywords": [
+        "process",
+        "state",
+        "process-manager"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Osorio",
+            "email": "osorioramirez@gmail.com"
+        },
+        {
+            "name": "Ivannis Suárez",
+            "email": "ivannis.suarez@gmail.com"
+        }
+    ],
+    "require": {
+        "php":                      "^7.0|^7.1",
+
+        "cubiche/cqrs":             "dev-master",
+        "cubiche/model":            "dev-master",
+        "cubiche/event-publisher":  "dev-master",
+        "cubiche/repository":       "dev-master",
+        "cubiche/collections":      "dev-master",
+
+        "winzou/state-machine":     "dev-master"
+    },
+    "require-dev": {
+        "cubiche/tests":            "dev-master",
+
+        "cubiche/cqrs":             "dev-master",
+        "cubiche/system":           "dev-master",
+        "cubiche/validator":        "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "exclude-from-classmap": [
+            "/Tests/"
+        ],
+        "psr-4": {
+            "Cubiche\\Domain\\ProcessManager\\": ""
+        }
+    }
+}

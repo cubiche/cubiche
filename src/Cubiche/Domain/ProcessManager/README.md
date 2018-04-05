@@ -1,0 +1,2 @@
+# Cubiche - Process Manager
+[![Build Status](https://travis-ci.org/cubiche/process-manager.svg?branch=master)](https://travis-ci.org/cubiche/process-manager) [![Coverage Status](https://coveralls.io/repos/github/cubiche/process-manager/badge.svg?branch=master)](https://coveralls.io/github/cubiche/process-manager?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/process-manager/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/process-manager/?branch=master) 

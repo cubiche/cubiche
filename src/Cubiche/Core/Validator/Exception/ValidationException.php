@@ -23,14 +23,12 @@ class ValidationException extends \InvalidArgumentException
     protected $errors;
 
     /**
-     * @param string     $message
-     * @param string[]   $errors
-     * @param int        $code
-     * @param \Exception $previous
+     * @param string   $message
+     * @param string[] $errors
      */
-    public function __construct($message, array $errors = [], $code = 0, $previous = null)
+    public function __construct($message, array $errors = [])
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, 422);
 
         $this->errors = $errors;
     }

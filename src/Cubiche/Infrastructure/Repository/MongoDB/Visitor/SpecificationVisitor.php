@@ -21,6 +21,7 @@ use Cubiche\Core\Selector\Key;
 use Cubiche\Core\Selector\Method;
 use Cubiche\Core\Selector\Property;
 use Cubiche\Core\Selector\SelectorInterface;
+use Cubiche\Core\Specification\Constraint\In;
 use Cubiche\Core\Selector\This;
 use Cubiche\Core\Selector\Value;
 use Cubiche\Core\Specification\AndSpecification;
@@ -202,6 +203,14 @@ class SpecificationVisitor extends Visitor
     public function visitLessThanEqual(LessThanEqual $specification)
     {
         $this->visitRelationalOperator($specification, Delegate::fromMethod($this->queryBuilder, 'lte'));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitIn(In $specification)
+    {
+        $this->visitRelationalOperator($specification, Delegate::fromMethod($this->queryBuilder, 'in'));
     }
 
     /**

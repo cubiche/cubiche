@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
+use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\Entity;
@@ -34,17 +35,60 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
     protected $recordedEvents = [];
 
     /**
+     * @var bool
+     */
+    private $isRunning;
+
+    /**
+     * @var Delegate[]
+     */
+    private $queue = [];
+
+    /**
      * @param DomainEventInterface $event
+     *
+     * @throws \Exception
      */
     protected function recordAndApplyEvent(DomainEventInterface $event)
     {
-        Validator::assert($event);
+        // The applyEvent method can trigger another event and all must be applied in the same order
+        // Using a queue, we avoid that the events are applied in a disorderly way
+        $this->queue[] = Delegate::fromClosure(function () use ($event) {
+            Validator::assert($event);
 
-        $this->version += 1;
-        $event->setVersion($this->version());
+            $this->version = $this->version + 1;
 
-        $this->recordEvent($event);
-        $this->applyEvent($event);
+            $event->setVersion($this->version());
+
+            $this->recordEvent($event);
+            $this->applyEvent($event);
+        });
+
+        if ($this->isRunning) {
+            return;
+        }
+
+        $this->isRunning = true;
+        try {
+            $this->runQueuedJobs();
+        } catch (\Exception $e) {
+            $this->isRunning = false;
+            $this->queue = [];
+
+            throw $e;
+        }
+
+        $this->isRunning = false;
+    }
+
+    /**
+     * Process any pending message in the queue.
+     */
+    private function runQueuedJobs()
+    {
+        while ($lastEvent = array_shift($this->queue)) {
+            $lastEvent->__invoke();
+        }
     }
 
     /**
@@ -62,6 +106,7 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
         }
 
         $this->$method($event);
+
         $this->setVersion($event->version());
     }
 
