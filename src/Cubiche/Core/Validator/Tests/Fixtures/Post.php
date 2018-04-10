@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Tests\Fixtures;
 
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -31,6 +32,11 @@ class Post
     protected $content;
 
     /**
+     * @var string[]
+     */
+    protected $comments;
+
+    /**
      * Post constructor.
      *
      * @param string $title
@@ -40,6 +46,7 @@ class Post
     {
         $this->title = $title;
         $this->content = $content;
+        $this->comments = array(null, null);
     }
 
     /**
@@ -59,6 +66,22 @@ class Post
     }
 
     /**
+     * @return string[]
+     */
+    public function comments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function addComment($comment)
+    {
+        $this->comments[] = $comment;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function equals($other)
@@ -74,10 +97,11 @@ class Post
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assert::stringType());
+        $classMetadata->addPropertyConstraint('title', Assertion::stringType()->notBlank());
+        $classMetadata->addMethodConstraint('title', Assertion::stringType()->notBlank());
+        $classMetadata->addPropertyConstraint('content', Assertion::stringType());
 
-        $classMetadata->addPropertyConstraint('title', Assert::intType()->notBlank(), 'foo');
-        $classMetadata->addPropertyConstraint('content', Assert::intType()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('title', Assertion::integerType()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('content', Assertion::integerType()->notBlank(), 'foo');
     }
 }

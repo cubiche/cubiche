@@ -8,13 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Exception;
+namespace Cubiche\Core\Validator\Rules\Object;
+
+use Cubiche\Core\Validator\Rules\RelationalRule;
 
 /**
- * ValidationException class.
+ * Property class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ValidationException extends InvalidArgumentsException
+class Property extends RelationalRule
 {
 }

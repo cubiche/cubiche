@@ -1,16 +1,18 @@
 <?php
 
 /**
- * This file is part of the Cubiche package.
+ * This file is part of the Cubiche/Validator component.
  *
  * Copyright (c) Cubiche
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Tests\Units;
 
 use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 
 /**
  * AssertTests class.
@@ -20,15 +22,40 @@ use Cubiche\Core\Validator\Assert;
 class AssertTests extends TestCase
 {
     /**
-     * Test create method.
+     * Test provider.
      */
-    public function testCreate()
+    public function getTests()
     {
-        $this
-            ->given($validator = Assert::create())
-            ->then()
-                ->object($validator)
-                    ->isInstanceOf(Assert::class)
-        ;
+        return array(
+            array('alwaysValid', array(false, null, null), true),
+            array('alwaysValid', array(0, null, null), true),
+            array('alwaysValid', array('', null, null), true),
+            array('alwaysInvalid', array(false, null, null), false),
+            array('alwaysInvalid', array(0, null, null), false),
+            array('alwaysInvalid', array('foo', null, null), false),
+            array('alwaysInvalid', array(345, null, null), false),
+            array('alpha', array('text', null, null), true),
+            array('alpha', array('some text 124', null, null), false),
+        );
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testValidator($method, $arguments, $success)
+    {
+        if ($success) {
+            $this
+                ->boolean(call_user_func_array(array(Assert::class, $method), $arguments))
+                    ->isTrue()
+            ;
+        } else {
+            $this
+                ->exception(function () use ($method, $arguments) {
+                    call_user_func_array(array(Assert::class, $method), $arguments);
+                })
+                ->isInstanceOf(InvalidArgumentException::class)
+            ;
+        }
     }
 }

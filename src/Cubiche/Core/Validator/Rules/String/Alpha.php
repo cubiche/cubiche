@@ -8,13 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Exception;
+namespace Cubiche\Core\Validator\Rules\String;
+
+use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * ValidationException class.
+ * Alpha class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ValidationException extends InvalidArgumentsException
+class Alpha extends Rule
 {
 }

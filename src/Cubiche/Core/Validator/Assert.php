@@ -10,63 +10,80 @@
 
 namespace Cubiche\Core\Validator;
 
-use Respect\Validation\Validator as Constraints;
+use Assert\Assertion as BaseAssert;
 
 /**
  * Assert class.
  *
- * @method static Assert uuid()
- * @method static Assert countryCode()
- * @method static Assert languageCode()
- * @method static Assert localeCode()
- *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Assert extends Constraints
+class Assert extends BaseAssert
 {
-    /**
-     * @var array
-     */
-    protected static $namespaces = array();
+    const INVALID_ALWAYS_INVALID = 230;
+    const INVALID_ALPHA = 231;
+    const INVALID_NONE_OF = 232;
 
     /**
      * @var string
      */
-    const DEFAULT_GROUP = 'Default';
+    protected static $exceptionClass = 'Cubiche\Core\Validator\Exception\InvalidArgumentException';
 
     /**
-     * Create a constraints instance.
+     * @param mixed $value
+     * @param null  $message
+     * @param null  $propertyPath
      *
-     * @return Constraints
+     * @return bool
      */
-    public static function create()
+    public function alwaysValid($value, $message = null, $propertyPath = null)
     {
-        return new static(func_get_args());
+        return true;
     }
 
     /**
-     * @param string $namespace
-     * @param bool   $prepend
+     * @param mixed $value
+     * @param null  $message
+     * @param null  $propertyPath
+     *
+     * @return bool
      */
-    public static function registerValidator($namespace, $prepend = false)
+    public function alwaysInvalid($value, $message = null, $propertyPath = null)
     {
-        if (!isset(static::$namespaces[$namespace])) {
-            static::$namespaces[$namespace] = $prepend;
-        }
+        $message = \sprintf(
+            static::generateMessage($message ?: 'Value "%s" is always invalid.'),
+            static::stringify($value)
+        );
+
+        throw static::createException($value, $message, static::INVALID_ALWAYS_INVALID, $propertyPath);
     }
 
     /**
-     * @param string $ruleName
-     * @param array  $arguments
+     * @param mixed $value
+     * @param null  $message
+     * @param null  $propertyPath
      *
-     * @return Validator
+     * @return bool
      */
-    public static function __callStatic($ruleName, $arguments)
+    public function alpha($value, $message = null, $propertyPath = null)
     {
-        foreach (static::$namespaces as $namespace => $prepend) {
-            static::with($namespace, $prepend);
+        if (!ctype_alpha($value)) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Value "%s" expected to be aplha, type %s given.'),
+                static::stringify($value),
+                \gettype($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_ALPHA, $propertyPath);
         }
 
-        return parent::__callStatic($ruleName, $arguments);
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function stringify($value)
+    {
+        return BaseAssert::stringify($value);
     }
 }

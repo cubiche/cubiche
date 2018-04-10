@@ -12,8 +12,8 @@
 namespace Cubiche\Core\Validator\Mapping\Driver;
 
 use Cubiche\Core\Metadata\Driver\StaticDriver;
-use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
+use Cubiche\Core\Validator\Validator;
 
 /**
  * StaticPHPDriver class.
@@ -30,13 +30,13 @@ class StaticPHPDriver extends StaticDriver
     /**
      * StaticPHPDriver constructor.
      *
-     * @param string $methodName
-     * @param string $defaultGroup
-     * @param array  $paths
+     * @param string       $methodName
+     * @param array|string $defaultGroup
+     * @param array        $paths
      */
     public function __construct(
         $methodName = 'loadValidatorMetadata',
-        $defaultGroup = Assert::DEFAULT_GROUP,
+        $defaultGroup = Validator::DEFAULT_GROUP,
         array $paths = array()
     ) {
         parent::__construct($methodName, $paths);

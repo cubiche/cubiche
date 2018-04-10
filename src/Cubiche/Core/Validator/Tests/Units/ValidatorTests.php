@@ -14,7 +14,10 @@ namespace Cubiche\Core\Validator\Tests\Units;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Core\Metadata\Driver\ChainDriver;
 use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Core\Validator\Exception\ValidationException;
+use Cubiche\Core\Validator\Mapping\ClassMetadata;
 use Cubiche\Core\Validator\Mapping\Driver\StaticPHPDriver;
 use Cubiche\Core\Validator\Tests\Fixtures\Blog;
 use Cubiche\Core\Validator\Tests\Fixtures\Post;
@@ -86,12 +89,12 @@ class ValidatorTests extends TestCase
         $this
             ->given($validator = $this->createValidator())
             ->then()
-                ->boolean($validator->assert('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
+                ->boolean($validator->assert('ivannis', Assertion::alnum()->length(1, 15)))
                     ->isTrue()
-                ->boolean($validator->assert('ivannis', Assert::alnum()->noWhitespace()->length(1, 15), 'foo'))
+                ->boolean($validator->assert('ivannis', Assertion::alnum()->length(1, 15), 'foo'))
                     ->isTrue()
                 ->exception(function () use ($validator) {
-                    $validator->assert('some tests', Assert::alnum()->noWhitespace()->length(1, 15));
+                    $validator->assert('invalid string', Assertion::alnum()->length(1, 15));
                 })->isInstanceOf(ValidationException::class)
                 ->exception(function () use ($validator) {
                     $validator->assert('value');
@@ -169,11 +172,11 @@ class ValidatorTests extends TestCase
         $this
             ->given($validator = $this->createValidator())
             ->then()
-                ->boolean($validator->validate('ivannis', Assert::alnum()->noWhitespace()->length(1, 15)))
+                ->boolean($validator->validate('ivannis', Assertion::alnum()->length(1, 15)))
                     ->isTrue()
-                ->boolean($validator->validate('ivannis', Assert::alnum()->noWhitespace()->length(1, 15), 'foo'))
+                ->boolean($validator->validate('ivannis', Assertion::alnum()->length(1, 15), 'foo'))
                     ->isTrue()
-                ->boolean($validator->validate('some tests', Assert::alnum()->noWhitespace()->length(1, 15)))
+                ->boolean($validator->validate('some tests', Assertion::alnum()->length(1, 15)))
                     ->isFalse()
                 ->exception(function () use ($validator) {
                     $validator->validate('value');
@@ -236,6 +239,31 @@ class ValidatorTests extends TestCase
                     ->isFalse()
                 ->boolean($validator->validate([$post2, $blog], null, 'foo'))
                     ->isTrue()
+        ;
+    }
+
+    /**
+     * Test getMetadataForClass method.
+     */
+    public function testGetMetadataForClass()
+    {
+        $this
+            ->given($validator = $this->createValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($blog = new Blog())
+            ->then()
+                ->object($classMetadata = $validator->getMetadataForClass(Post::class))
+                    ->isInstanceOf(ClassMetadata::class)
+                ->boolean($validator->validate($post))
+                    ->isTrue()
+                ->and()
+                ->when(Validator::registerValidator('uniqueName', function ($value, $message = null, $propertyPath = null) {
+                    throw new InvalidArgumentException('Title must be unique', 0, 'title', $value);
+                }))
+                ->and($classMetadata->addPropertyConstraint('title', Assertion::uniqueName()))
+                ->then()
+                    ->boolean($validator->validate($post))
+                        ->isFalse()
         ;
     }
 }

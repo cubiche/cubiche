@@ -8,13 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Exception;
+namespace Cubiche\Core\Validator\Rules\Generic;
+
+use Cubiche\Core\Validator\Rules\WrapperRule;
 
 /**
- * ValidationException class.
+ * Not class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ValidationException extends InvalidArgumentsException
+class Not extends WrapperRule
 {
 }
