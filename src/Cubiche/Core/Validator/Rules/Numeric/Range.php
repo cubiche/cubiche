@@ -8,38 +8,53 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Numeric;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * Range class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class Range extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $minValue;
 
     /**
-     * Length constructor.
-     *
-     * @param int $length
+     * @var int
      */
-    public function __construct($length)
+    protected $maxValue;
+
+    /**
+     * Range constructor.
+     *
+     * @param int $min
+     * @param int $max
+     */
+    public function __construct($min, $max)
     {
-        $this->length = $length;
+        $this->minValue = $min;
+        $this->maxValue = $max;
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function minValue()
     {
-        return $this->length;
+        return $this->minValue;
+    }
+
+    /**
+     * @return int
+     */
+    public function maxValue()
+    {
+        return $this->maxValue;
     }
 
     /**
@@ -48,9 +63,10 @@ class Length extends Rule
     protected function setId()
     {
         $this->id = sprintf(
-            '%s-%s',
+            '%s-%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->minValue,
+            $this->maxValue
         );
     }
 }

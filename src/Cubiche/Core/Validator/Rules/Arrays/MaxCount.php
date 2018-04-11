@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Arrays;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * MaxCount class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class MaxCount extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $maxValue;
 
     /**
-     * Length constructor.
+     * MaxCount constructor.
      *
-     * @param int $length
+     * @param int $maxValue
      */
-    public function __construct($length)
+    public function __construct($maxValue)
     {
-        $this->length = $length;
+        $this->maxValue = $maxValue;
+
+        parent::__construct();
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function maxValue()
     {
-        return $this->length;
+        return $this->maxValue;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->maxValue
         );
     }
 }

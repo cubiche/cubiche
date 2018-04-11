@@ -97,11 +97,11 @@ class Post
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assertion::stringType()->notBlank());
-        $classMetadata->addMethodConstraint('title', Assertion::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assertion::stringType());
+        $classMetadata->addPropertyConstraint('title', Assertion::string()->notBlank());
+        $classMetadata->addMethodConstraint('title', Assertion::string()->notBlank());
+        $classMetadata->addPropertyConstraint('content', Assertion::string());
 
-        $classMetadata->addPropertyConstraint('title', Assertion::integerType()->notBlank(), 'foo');
-        $classMetadata->addPropertyConstraint('content', Assertion::integerType()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('title', Assertion::integer()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('content', Assertion::integer()->notBlank(), 'foo');
     }
 }

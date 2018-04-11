@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Generic;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * StringType class.
+ * FileExists class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class StringType extends Rule
+class FileExists extends Rule
 {
 }

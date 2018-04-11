@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Common;
+namespace Cubiche\Core\Validator\Rules\Types;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * NotBlank class.
+ * StringType class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NotBlank extends Rule
+class StringType extends Rule
 {
 }

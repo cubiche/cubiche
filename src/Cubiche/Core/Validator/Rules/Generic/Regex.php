@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Generic;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * Regex class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class Regex extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $pattern;
 
     /**
-     * Length constructor.
+     * Contains constructor.
      *
-     * @param int $length
+     * @param string $pattern
      */
-    public function __construct($length)
+    public function __construct($pattern)
     {
-        $this->length = $length;
+        $this->pattern = $pattern;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function pattern()
     {
-        return $this->length;
+        return $this->pattern;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->pattern
         );
     }
 }

@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Arrays;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * Count class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class Count extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $value;
 
     /**
-     * Length constructor.
+     * Count constructor.
      *
-     * @param int $length
+     * @param int $value
      */
-    public function __construct($length)
+    public function __construct($value)
     {
-        $this->length = $length;
+        $this->value = $value;
+
+        parent::__construct();
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function value()
     {
-        return $this->length;
+        return $this->value;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->value
         );
     }
 }

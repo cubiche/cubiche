@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Arrays;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * MinCount class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class MinCount extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $minValue;
 
     /**
-     * Length constructor.
+     * MinCount constructor.
      *
-     * @param int $length
+     * @param int $minValue
      */
-    public function __construct($length)
+    public function __construct($minValue)
     {
-        $this->length = $length;
+        $this->minValue = $minValue;
+
+        parent::__construct();
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function minValue()
     {
-        return $this->length;
+        return $this->minValue;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->minValue
         );
     }
 }

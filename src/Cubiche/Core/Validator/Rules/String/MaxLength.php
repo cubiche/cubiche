@@ -13,33 +13,33 @@ namespace Cubiche\Core\Validator\Rules\String;
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * MaxLength class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class MaxLength extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $maxValue;
 
     /**
-     * Length constructor.
+     * MaxLength constructor.
      *
-     * @param int $length
+     * @param int $max
      */
-    public function __construct($length)
+    public function __construct($max)
     {
-        $this->length = $length;
+        $this->maxValue = $max;
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function maxValue()
     {
-        return $this->length;
+        return $this->maxValue;
     }
 
     /**
@@ -50,7 +50,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->maxValue
         );
     }
 }

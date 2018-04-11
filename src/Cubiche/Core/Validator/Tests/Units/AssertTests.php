@@ -11,6 +11,7 @@
 
 namespace Cubiche\Core\Validator\Tests\Units;
 
+use ArrayIterator;
 use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 
@@ -21,40 +22,134 @@ use Cubiche\Core\Validator\Exception\InvalidArgumentException;
  */
 class AssertTests extends TestCase
 {
-    /**
-     * Test provider.
-     */
-    public function getTests()
-    {
-        return array(
-            array('alwaysValid', array(false, null, null), true),
-            array('alwaysValid', array(0, null, null), true),
-            array('alwaysValid', array('', null, null), true),
-            array('alwaysInvalid', array(false, null, null), false),
-            array('alwaysInvalid', array(0, null, null), false),
-            array('alwaysInvalid', array('foo', null, null), false),
-            array('alwaysInvalid', array(345, null, null), false),
-            array('alpha', array('text', null, null), true),
-            array('alpha', array('some text 124', null, null), false),
-        );
-    }
+    use TestProviderTrait;
 
     /**
      * @dataProvider getTests
      */
-    public function testValidator($method, $arguments, $success)
+    public function testAssert($method, $arguments, $success, $multibyte = false, $minVersion = null)
     {
-        if ($success) {
-            $this
-                ->boolean(call_user_func_array(array(Assert::class, $method), $arguments))
-                    ->isTrue()
-            ;
-        } else {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        if (!$success) {
             $this
                 ->exception(function () use ($method, $arguments) {
                     call_user_func_array(array(Assert::class, $method), $arguments);
                 })
                 ->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array(Assert::class, $method), $arguments))
+                ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testNullOr($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        if (null === $arguments[0]) {
+            return;
+        }
+
+        if (!$success) {
+            $this
+                ->exception(function () use ($method, $arguments) {
+                    call_user_func_array(array(Assert::class, 'nullOr'.ucfirst($method)), $arguments);
+                })
+                ->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array(Assert::class, 'nullOr'.ucfirst($method)), $arguments))
+                ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testAllArray($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+        array_unshift($arguments, array($arg));
+
+        if (!$success) {
+            $this
+                ->exception(function () use ($method, $arguments) {
+                    call_user_func_array(array(Assert::class, 'all'.ucfirst($method)), $arguments);
+                })
+                ->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array(Assert::class, 'all'.ucfirst($method)), $arguments))
+                ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testAllTraversable($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+        array_unshift($arguments, new ArrayIterator(array($arg)));
+
+        if (!$success) {
+            $this
+                ->exception(function () use ($method, $arguments) {
+                    call_user_func_array(array(Assert::class, 'all'.ucfirst($method)), $arguments);
+                })
+                ->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array(Assert::class, 'all'.ucfirst($method)), $arguments))
+                ->isTrue()
             ;
         }
     }

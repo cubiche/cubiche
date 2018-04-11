@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Generic;
+namespace Cubiche\Core\Validator\Rules\Types;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * NullType class.
+ * FalseType class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NullType extends Rule
+class FalseType extends Rule
 {
 }

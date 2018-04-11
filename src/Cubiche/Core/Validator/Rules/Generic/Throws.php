@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Generic;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * Throws class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class Throws extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $type;
 
     /**
-     * Length constructor.
+     * IsResource constructor.
      *
-     * @param int $length
+     * @param string $type
      */
-    public function __construct($length)
+    public function __construct($type = 'Exception')
     {
-        $this->length = $length;
+        $this->type = $type;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function type()
     {
-        return $this->length;
+        return $this->type;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->type
         );
     }
 }

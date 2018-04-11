@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Numeric;
+namespace Cubiche\Core\Validator\Rules\Comparison;
 
-use Cubiche\Core\Validator\Rules\Rule;
+use Cubiche\Core\Validator\Rules\ComparableRule;
 
 /**
- * FloatType class.
+ * Same class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FloatType extends Rule
+class Same extends ComparableRule
 {
 }

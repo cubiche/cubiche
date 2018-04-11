@@ -13,33 +13,35 @@ namespace Cubiche\Core\Validator\Rules\String;
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * StartsWith class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class StartsWith extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $needle;
 
     /**
-     * Length constructor.
+     * Contains constructor.
      *
-     * @param int $length
+     * @param string $needle
      */
-    public function __construct($length)
+    public function __construct($needle)
     {
-        $this->length = $length;
+        $this->needle = $needle;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function needle()
     {
-        return $this->length;
+        return $this->needle;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->needle
         );
     }
 }

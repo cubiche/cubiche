@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Numeric;
+namespace Cubiche\Core\Validator\Rules\Types;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IntegerType class.
+ * NullType class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IntegerType extends Rule
+class NullType extends Rule
 {
 }

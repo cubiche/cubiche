@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Object;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * ImplementsInterface class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class ImplementsInterface extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $interfaceName;
 
     /**
-     * Length constructor.
+     * SubclassOf constructor.
      *
-     * @param int $length
+     * @param string $interfaceName
      */
-    public function __construct($length)
+    public function __construct($interfaceName)
     {
-        $this->length = $length;
+        $this->interfaceName = $interfaceName;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function interfaceName()
     {
-        return $this->length;
+        return $this->interfaceName;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->interfaceName
         );
     }
 }

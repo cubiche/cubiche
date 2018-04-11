@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Object;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * IsInstanceOf class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class IsInstanceOf extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $className;
 
     /**
-     * Length constructor.
+     * IsInstanceOf constructor.
      *
-     * @param int $length
+     * @param string $className
      */
-    public function __construct($length)
+    public function __construct($className)
     {
-        $this->length = $length;
+        $this->className = $className;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function className()
     {
-        return $this->length;
+        return $this->className;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->className
         );
     }
 }

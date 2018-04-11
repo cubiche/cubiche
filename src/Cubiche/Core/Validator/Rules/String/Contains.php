@@ -22,16 +22,16 @@ class Contains extends Rule
     /**
      * @var string
      */
-    protected $containsValue;
+    protected $needle;
 
     /**
      * Contains constructor.
      *
-     * @param string $containsValue
+     * @param string $needle
      */
-    public function __construct($containsValue)
+    public function __construct($needle)
     {
-        $this->containsValue = $containsValue;
+        $this->needle = $needle;
 
         parent::__construct();
     }
@@ -39,9 +39,9 @@ class Contains extends Rule
     /**
      * @return string
      */
-    public function containsValue()
+    public function needle()
     {
-        return $this->containsValue;
+        return $this->needle;
     }
 
     /**
@@ -52,7 +52,7 @@ class Contains extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->containsValue
+            $this->needle
         );
     }
 }

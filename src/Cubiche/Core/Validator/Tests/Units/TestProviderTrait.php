@@ -1,0 +1,365 @@
+<?php
+
+/**
+ * This file is part of the Cubiche/Validator component.
+ *
+ * Copyright (c) Cubiche
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Cubiche\Core\Validator\Tests\Units;
+
+use ArrayIterator;
+use ArrayObject;
+use Exception;
+use LogicException;
+use RuntimeException;
+use stdClass;
+
+/**
+ * TestProviderTrait class.
+ *
+ * @author Ivan Suárez Jerez <ivan@howaboutsales.com>
+ */
+trait TestProviderTrait
+{
+    /**
+     * @var resource
+     */
+    private $resource;
+
+    /**
+     * @return resource
+     */
+    public function getResource()
+    {
+        if (!$this->resource) {
+            $this->resource = fopen(__FILE__, 'r');
+        }
+
+        return $this->resource;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+        @fclose($this->resource);
+    }
+
+    /**
+     * Test provider.
+     */
+    public function getTests()
+    {
+        $resource = $this->getResource();
+
+        return array(
+            '1' => array('alwaysValid', array(false), true),
+            '2' => array('alwaysValid', array(0), true),
+            '3' => array('alwaysValid', array(''), true),
+            '4' => array('alwaysInvalid', array(false), false),
+            '5' => array('alwaysInvalid', array(0), false),
+            '6' => array('alwaysInvalid', array('foo'), false),
+            '7' => array('alwaysInvalid', array(345), false),
+            '8' => array('alpha', array('text'), true),
+            '9' => array('alpha', array('some text 124'), false),
+            '10' => array('string', array('value'), true),
+            '11' => array('string', array(''), true),
+            '12' => array('string', array(1234), false),
+            '13' => array('integer', array(123), true),
+            '14' => array('integer', array('123'), false),
+            '15' => array('integer', array(1.0), false),
+            '16' => array('integer', array(1.23), false),
+            '17' => array('integerish', array(1.0), true),
+            '18' => array('integerish', array(1.23), false),
+            '19' => array('integerish', array(123), true),
+            '20' => array('integerish', array('123'), true),
+            '21' => array('float', array(1.0), true),
+            '22' => array('float', array(1.23), true),
+            '23' => array('float', array(123), false),
+            '24' => array('float', array('123'), false),
+            '25' => array('numeric', array(1.0), true),
+            '26' => array('numeric', array(1.23), true),
+            '27' => array('numeric', array(123), true),
+            '28' => array('numeric', array('123'), true),
+            '29' => array('numeric', array('foo'), false),
+            '30' => array('natural', array(0), true),
+            '31' => array('natural', array(1), true),
+            '32' => array('natural', array(-1), false),
+            '33' => array('natural', array('1'), false),
+            '34' => array('natural', array(1.0), false),
+            '35' => array('natural', array(1.23), false),
+            '36' => array('boolean', array(true), true),
+            '37' => array('boolean', array(false), true),
+            '38' => array('boolean', array(1), false),
+            '39' => array('boolean', array('1'), false),
+            '40' => array('scalar', array('1'), true),
+            '41' => array('scalar', array(123), true),
+            '42' => array('scalar', array(true), true),
+            '43' => array('scalar', array(null), false),
+            '44' => array('scalar', array(array()), false),
+            '45' => array('scalar', array(new stdClass()), false),
+            '46' => array('isObject', array(new stdClass()), true),
+            '47' => array('isObject', array(new RuntimeException()), true),
+            '48' => array('isObject', array(null), false),
+            '49' => array('isObject', array(true), false),
+            '50' => array('isObject', array(1), false),
+            '51' => array('isObject', array(array()), false),
+            '52' => array('isResource', array($resource), true),
+            '53' => array('isResource', array($resource, 'stream'), true),
+            '54' => array('isResource', array($resource, 'other'), false),
+            '55' => array('isResource', array(1), false),
+            '56' => array('isCallable', array('strlen'), true),
+            '57' => array('isCallable', array(array($this, 'getTests')), true),
+            '58' => array('isCallable', array(function () {
+            }), true),
+            '59' => array('isCallable', array(1234), false),
+            '60' => array('isCallable', array('foobar'), false),
+            '61' => array('isArray', array(array()), true),
+            '62' => array('isArray', array(array(1, 2, 3)), true),
+            '63' => array('isArray', array(new ArrayIterator(array())), false),
+            '64' => array('isArray', array(123), false),
+            '65' => array('isArray', array(new stdClass()), false),
+            '66' => array('isTraversable', array(array()), true),
+            '67' => array('isTraversable', array(array(1, 2, 3)), true),
+            '68' => array('isTraversable', array(new ArrayIterator(array())), true),
+            '69' => array('isTraversable', array(123), false),
+            '70' => array('isTraversable', array(new stdClass()), false),
+            '71' => array('isArrayAccessible', array(array()), true),
+            '72' => array('isArrayAccessible', array(array(1, 2, 3)), true),
+            '73' => array('isArrayAccessible', array(new ArrayObject(array())), true),
+            '74' => array('isArrayAccessible', array(123), false),
+            '75' => array('isArrayAccessible', array(new stdClass()), false),
+            '76' => array('isCountable', array(array()), true),
+            '77' => array('isCountable', array(array(1, 2)), true),
+            '78' => array('isCountable', array(new ArrayIterator(array())), true),
+            '79' => array('isCountable', array(new stdClass()), false),
+            '80' => array('isCountable', array('abcd'), false),
+            '81' => array('isCountable', array(123), false),
+            '82' => array('isInstanceOf', array(new stdClass(), 'stdClass'), true),
+            '83' => array('isInstanceOf', array(new Exception(), 'stdClass'), false),
+            '84' => array('isInstanceOf', array(123, 'stdClass'), false),
+            '85' => array('isInstanceOf', array(array(), 'stdClass'), false),
+            '86' => array('notIsInstanceOf', array(new stdClass(), 'stdClass'), false),
+            '87' => array('notIsInstanceOf', array(new Exception(), 'stdClass'), true),
+            '88' => array('notIsInstanceOf', array(123, 'stdClass'), true),
+            '89' => array('notIsInstanceOf', array(array(), 'stdClass'), true),
+            '90' => array('isInstanceOfAny', array(new ArrayIterator(), array('Iterator', 'ArrayAccess')), true),
+            '91' => array('isInstanceOfAny', array(new Exception(), array('Exception', 'Countable')), true),
+            '92' => array('isInstanceOfAny', array(new Exception(), array('ArrayAccess', 'Countable')), false),
+            '93' => array('isInstanceOfAny', array(123, array('stdClass')), false),
+            '94' => array('isInstanceOfAny', array(array(), array('stdClass')), false),
+            '95' => array('true', array(true), true),
+            '96' => array('true', array(false), false),
+            '97' => array('true', array(1), false),
+            '98' => array('true', array(null), false),
+            '99' => array('false', array(false), true),
+            '100' => array('false', array(true), false),
+            '101' => array('false', array(1), false),
+            '102' => array('false', array(0), false),
+            '103' => array('false', array(null), false),
+            '104' => array('null', array(null), true),
+            '105' => array('null', array(false), false),
+            '106' => array('null', array(0), false),
+            '107' => array('notNull', array(false), true),
+            '108' => array('notNull', array(0), true),
+            '109' => array('notNull', array(null), false),
+            '110' => array('isEmpty', array(null), true),
+            '111' => array('isEmpty', array(false), true),
+            '112' => array('isEmpty', array(0), true),
+            '113' => array('isEmpty', array(''), true),
+            '114' => array('isEmpty', array(1), false),
+            '115' => array('isEmpty', array('a'), false),
+            '116' => array('notEmpty', array(1), true),
+            '117' => array('notEmpty', array('a'), true),
+            '118' => array('notEmpty', array(null), false),
+            '119' => array('notEmpty', array(false), false),
+            '120' => array('notEmpty', array(0), false),
+            '121' => array('notEmpty', array(''), false),
+            '122' => array('eq', array(1, 1), true),
+            '123' => array('eq', array(1, '1'), true),
+            '124' => array('eq', array(1, true), true),
+            '125' => array('eq', array(1, 0), false),
+            '126' => array('notEq', array(1, 0), true),
+            '127' => array('notEq', array(1, 1), false),
+            '128' => array('notEq', array(1, '1'), false),
+            '129' => array('notEq', array(1, true), false),
+            '130' => array('same', array(1, 1), true),
+            '131' => array('same', array(1, '1'), false),
+            '132' => array('same', array(1, true), false),
+            '133' => array('same', array(1, 0), false),
+            '134' => array('notSame', array(1, 0), true),
+            '135' => array('notSame', array(1, 1), false),
+            '136' => array('notSame', array(1, '1'), true),
+            '137' => array('notSame', array(1, true), true),
+            '138' => array('greaterThan', array(1, 0), true),
+            '139' => array('greaterThan', array(0, 0), false),
+            '140' => array('greaterOrEqualThan', array(2, 1), true),
+            '141' => array('greaterOrEqualThan', array(1, 1), true),
+            '142' => array('greaterOrEqualThan', array(0, 1), false),
+            '143' => array('lessThan', array(0, 1), true),
+            '144' => array('lessThan', array(1, 1), false),
+            '145' => array('lessOrEqualThan', array(0, 1), true),
+            '146' => array('lessOrEqualThan', array(1, 1), true),
+            '147' => array('lessOrEqualThan', array(2, 1), false),
+            '148' => array('range', array(1, 1, 2), true),
+            '149' => array('range', array(2, 1, 2), true),
+            '150' => array('range', array(0, 1, 2), false),
+            '151' => array('range', array(3, 1, 2), false),
+            '152' => array('contains', array('abcd', 'ab'), true),
+            '153' => array('contains', array('abcd', 'bc'), true),
+            '154' => array('contains', array('abcd', 'cd'), true),
+            '155' => array('contains', array('abcd', 'de'), false),
+            '156' => array('contains', array('', 'de'), false),
+            '157' => array('notContains', array('abcd', 'ab'), false),
+            '158' => array('notContains', array('abcd', 'bc'), false),
+            '159' => array('notContains', array('abcd', 'cd'), false),
+            '160' => array('notContains', array('abcd', 'de'), true),
+            '161' => array('notContains', array('', 'de'), true),
+            '162' => array('noWhitespace', array('abc'), true),
+            '163' => array('noWhitespace', array('123'), true),
+            '164' => array('noWhitespace', array(' abc '), true),
+            '165' => array('noWhitespace', array('a b c'), true),
+            '166' => array('noWhitespace', array(''), false),
+            '167' => array('noWhitespace', array(' '), false),
+            '168' => array('noWhitespace', array("\t"), false),
+            '169' => array('noWhitespace', array("\n"), false),
+            '170' => array('noWhitespace', array("\r"), false),
+            '171' => array('noWhitespace', array("\r\n\t "), false),
+            '172' => array('startsWith', array('abcd', 'ab'), true),
+            '173' => array('startsWith', array('abcd', 'bc'), false),
+            '174' => array('startsWith', array('', 'bc'), false),
+            '175' => array('endsWith', array('abcd', 'cd'), true),
+            '176' => array('endsWith', array('abcd', 'bc'), false),
+            '177' => array('endsWith', array('', 'bc'), false),
+            '178' => array('regex', array('abcd', '~^ab~'), true),
+            '179' => array('regex', array('abcd', '~^bc~'), false),
+            '180' => array('regex', array('', '~^bc~'), false),
+            '181' => array('alpha', array('abcd'), true),
+            '182' => array('alpha', array('ab1cd'), false),
+            '183' => array('alpha', array(''), false),
+            '184' => array('digit', array('1234'), true),
+            '185' => array('digit', array('12a34'), false),
+            '186' => array('digit', array(''), false),
+            '187' => array('alnum', array('ab12'), true),
+            '188' => array('alnum', array('ab12$'), false),
+            '189' => array('alnum', array(''), false),
+            '190' => array('lower', array('abcd'), true),
+            '191' => array('lower', array('abCd'), false),
+            '192' => array('lower', array('ab_d'), false),
+            '193' => array('lower', array(''), false),
+            '194' => array('upper', array('ABCD'), true),
+            '195' => array('upper', array('ABcD'), false),
+            '196' => array('upper', array('AB_D'), false),
+            '197' => array('upper', array(''), false),
+            '198' => array('length', array('abcd', 4), true),
+            '199' => array('length', array('abc', 4), false),
+            '200' => array('length', array('abcde', 4), false),
+            '201' => array('length', array('äbcd', 4), true, true),
+            '202' => array('length', array('äbc', 4), false, true),
+            '203' => array('length', array('äbcde', 4), false, true),
+            '204' => array('minLength', array('abcd', 4), true),
+            '205' => array('minLength', array('abcde', 4), true),
+            '206' => array('minLength', array('abc', 4), false),
+            '207' => array('minLength', array('äbcd', 4), true, true),
+            '208' => array('minLength', array('äbcde', 4), true, true),
+            '209' => array('minLength', array('äbc', 4), false, true),
+            '210' => array('maxLength', array('abcd', 4), true),
+            '211' => array('maxLength', array('abc', 4), true),
+            '212' => array('maxLength', array('abcde', 4), false),
+            '213' => array('maxLength', array('äbcd', 4), true, true),
+            '214' => array('maxLength', array('äbc', 4), true, true),
+            '215' => array('maxLength', array('äbcde', 4), false, true),
+            '216' => array('lengthBetween', array('abcd', 3, 5), true),
+            '217' => array('lengthBetween', array('abc', 3, 5), true),
+            '218' => array('lengthBetween', array('abcde', 3, 5), true),
+            '219' => array('lengthBetween', array('ab', 3, 5), false),
+            '220' => array('lengthBetween', array('abcdef', 3, 5), false),
+            '221' => array('lengthBetween', array('äbcd', 3, 5), true, true),
+            '222' => array('lengthBetween', array('äbc', 3, 5), true, true),
+            '223' => array('lengthBetween', array('äbcde', 3, 5), true, true),
+            '224' => array('lengthBetween', array('äb', 3, 5), false, true),
+            '225' => array('lengthBetween', array('äbcdef', 3, 5), false, true),
+            '226' => array('fileExists', array(__FILE__), true),
+            '227' => array('fileExists', array(__DIR__), true),
+            '228' => array('fileExists', array(__DIR__.'/foobar'), false),
+            '229' => array('file', array(__FILE__), true),
+            '230' => array('file', array(__DIR__), false),
+            '231' => array('file', array(__DIR__.'/foobar'), false),
+            '232' => array('directory', array(__DIR__), true),
+            '233' => array('directory', array(__FILE__), false),
+            '234' => array('directory', array(__DIR__.'/foobar'), false),
+            '235' => array('classExists', array(__CLASS__), true),
+            '236' => array('classExists', array(__NAMESPACE__.'\Foobar'), false),
+            '237' => array('subclassOf', array(__CLASS__, 'Cubiche\Tests\TestCase'), true),
+            '238' => array('subclassOf', array(__CLASS__, 'stdClass'), false),
+            '239' => array('implementsInterface', array('ArrayIterator', 'Traversable'), true),
+            '240' => array('implementsInterface', array(__CLASS__, 'Traversable'), false),
+            '241' => array('propertyExists', array((object) array('property' => 0), 'property'), true),
+            '242' => array('propertyExists', array((object) array('property' => null), 'property'), true),
+            '243' => array('propertyExists', array((object) array('property' => null), 'foo'), false),
+            '244' => array('propertyNotExists', array((object) array('property' => 0), 'property'), false),
+            '245' => array('propertyNotExists', array((object) array('property' => null), 'property'), false),
+            '246' => array('propertyNotExists', array((object) array('property' => null), 'foo'), true),
+            '247' => array('methodExists', array('RuntimeException', 'getMessage'), false),
+            '248' => array('methodExists', array(new RuntimeException(), 'getMessage'), true),
+            '249' => array('methodExists', array('stdClass', 'getMessage'), false),
+            '250' => array('methodExists', array(new stdClass(), 'getMessage'), false),
+            '251' => array('methodExists', array(null, 'getMessage'), false),
+            '252' => array('methodExists', array(true, 'getMessage'), false),
+            '253' => array('methodExists', array(1, 'getMessage'), false),
+            '254' => array('methodNotExists', array('RuntimeException', 'getMessage'), true),
+            '255' => array('methodNotExists', array(new RuntimeException(), 'getMessage'), false),
+            '256' => array('methodNotExists', array('stdClass', 'getMessage'), true),
+            '257' => array('methodNotExists', array(new stdClass(), 'getMessage'), true),
+            '258' => array('methodNotExists', array(null, 'getMessage'), true),
+            '259' => array('methodNotExists', array(true, 'getMessage'), true),
+            '260' => array('methodNotExists', array(1, 'getMessage'), true),
+            '261' => array('keyExists', array(array('key' => 0), 'key'), true),
+            '262' => array('keyExists', array(array('key' => null), 'key'), true),
+            '263' => array('keyExists', array(array('key' => null), 'foo'), false),
+            '264' => array('keyNotExists', array(array('key' => 0), 'key'), false),
+            '265' => array('keyNotExists', array(array('key' => null), 'key'), false),
+            '266' => array('keyNotExists', array(array('key' => null), 'foo'), true),
+            '267' => array('count', array(array(0, 1, 2), 3), true),
+            '268' => array('count', array(array(0, 1, 2), 2), false),
+            '269' => array('minCount', array(array(0), 2), false),
+            '270' => array('minCount', array(array(0, 1), 2), true),
+            '271' => array('minCount', array(array(0, 1, 2), 2), true),
+            '272' => array('maxCount', array(array(0, 1, 2), 2), false),
+            '273' => array('maxCount', array(array(0, 1), 2), true),
+            '274' => array('maxCount', array(array(0), 2), true),
+            '275' => array('countBetween', array(array(0, 1, 2), 4, 5), false),
+            '276' => array('countBetween', array(array(0, 1, 2), 1, 2), false),
+            '277' => array('countBetween', array(array(0, 1, 2), 2, 5), true),
+            '278' => array('uuid', array('00000000-0000-0000-0000-000000000000'), true),
+            '279' => array('uuid', array('ff6f8cb0-c57d-21e1-9b21-0800200c9a66'), true),
+            '280' => array('uuid', array('ff6f8cb0-c57d-11e1-9b21-0800200c9a66'), true),
+            '281' => array('uuid', array('ff6f8cb0-c57d-31e1-9b21-0800200c9a66'), true),
+            '282' => array('uuid', array('ff6f8cb0-c57d-41e1-9b21-0800200c9a66'), true),
+            '283' => array('uuid', array('ff6f8cb0-c57d-51e1-9b21-0800200c9a66'), true),
+            '284' => array('uuid', array('FF6F8CB0-C57D-11E1-9B21-0800200C9A66'), true),
+            '285' => array('uuid', array('zf6f8cb0-c57d-11e1-9b21-0800200c9a66'), false),
+            '286' => array('uuid', array('af6f8cb0c57d11e19b210800200c9a66'), false),
+            '287' => array('uuid', array('ff6f8cb0-c57da-51e1-9b21-0800200c9a66'), false),
+            '288' => array('uuid', array('af6f8cb-c57d-11e1-9b21-0800200c9a66'), false),
+            '289' => array('uuid', array('3f6f8cb0-c57d-11e1-9b21-0800200c9a6'), false),
+            '290' => array('throws', array(function () {
+                throw new LogicException('test');
+            }, 'LogicException'), true),
+            '291' => array('throws', array(function () {
+                throw new LogicException('test');
+            }, 'IllogicException'), false),
+            '292' => array('throws', array(function () {
+                throw new Exception('test');
+            }), true),
+            '293' => array('throws', array(function () {
+                throw new Error();
+            }, 'Throwable'), true, true, 70000),
+        );
+    }
+}

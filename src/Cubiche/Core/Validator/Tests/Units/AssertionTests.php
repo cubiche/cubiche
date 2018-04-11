@@ -11,13 +11,8 @@
 
 namespace Cubiche\Core\Validator\Tests\Units;
 
-use Cubiche\Core\Validator\Exception\InvalidArgumentException;
-use Cubiche\Core\Validator\Rules\Group\AllOf;
-use Cubiche\Core\Validator\Rules\Common\NotBlank;
-use Cubiche\Core\Validator\Visitor\Asserter;
 use Cubiche\Core\Validator\Assertion;
-use Cubiche\Core\Validator\Exception\InvalidArgumentsException;
-use Cubiche\Core\Validator\Rules\String\StringType;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Core\Validator\Tests\Fixtures\Post;
 
 /**
@@ -27,125 +22,272 @@ use Cubiche\Core\Validator\Tests\Fixtures\Post;
  */
 class AssertionTests extends TestCase
 {
+    use TestProviderTrait;
+
     /**
-     * Test validate method.
+     * Test provider.
      */
-    public function testValidate()
+    public function getTestsChain()
     {
-        $this
-            ->given($post = new Post('some title 12'))
-            ->and($titleValidator = Assertion::property('title', Assertion::stringType()->notBlank()))
-            ->and(
-                $complexValidator = Assertion::allOf(
-                    Assertion::property('content', Assertion::stringType()->notBlank()),
-                    Assertion::property('age', Assertion::integerType()->greaterThan(16)),
-                    Assertion::method('title', Assertion::alpha()),
-                    Assertion::method('title', Assertion::stringType()->contains('hello')),
-                    Assertion::method('foo', Assertion::floatType())
-                )
-            )
-            ->then()
-                ->boolean($titleValidator->validate($post))
-                    ->isTrue()
-                ->boolean($complexValidator->validate($post))
+        return array(
+            '1' => array(Assertion::boolean()->false(), array(false), true),
+            '2' => array(Assertion::numeric()->greaterThan(0), array(0), false),
+            '3' => array(Assertion::string()->isEmpty(), array(''), true),
+            '4' => array(Assertion::false()->alwaysInvalid(), array(false), false),
+            '5' => array(
+                Assertion::property('title', Assertion::string()->notBlank()),
+                array(new Post('The lord of the rings')),
+                true,
+            ),
+            '6' => array(
+                Assertion::allOf(
+                    Assertion::property('content', Assertion::string()->notBlank()),
+                    Assertion::property('age', Assertion::integer()->greaterThan(16)),
+                    Assertion::method('title', Assertion::string()->contains('hello')),
+                    Assertion::method('foo', Assertion::float())
+                ),
+                array(new Post('The walking dead')),
+                false,
+            ),
+            '7' => array(
+                Assertion::oneOf(
+                    Assertion::method('title', Assertion::string()->contains('walking')),
+                    Assertion::method('foo', Assertion::float()),
+                    Assertion::property('content', Assertion::string()->notBlank())
+                ),
+                array(new Post('The walking dead')),
+                true,
+            ),
+            '8' => array(
+                Assertion::noneOf(
+                    Assertion::method('title', Assertion::string()->contains('The')),
+                    Assertion::method('foo', Assertion::float()),
+                    Assertion::property('content', Assertion::string()->notBlank()),
+                    Assertion::property('content', Assertion::integer()->greaterThan(16))
+                ),
+                array(new Post('The walking dead')),
+                false,
+            ),
+            '9' => array(
+                Assertion::allOf(
+                    Assertion::property('title', Assertion::string()->notBlank()),
+                    Assertion::method('title', Assertion::string()->notBlank()),
+                    Assertion::property('content', Assertion::integer()->lessThan(20))
+                ),
+                array(new Post('The walking dead', 16)),
+                true,
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testValidate($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (!$success) {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, $method), $arguments))
+                ->then()
+                    ->boolean(call_user_func_array(array($assertion, 'validate'), array($arg)))
+                        ->isFalse()
+            ;
+        } else {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, $method), $arguments))
+                ->then()
+                    ->boolean(call_user_func_array(array($assertion, 'validate'), array($arg)))
+                        ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testAssert($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (!$success) {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, $method), $arguments))
+                ->then()
+                    ->exception(function () use ($assertion, $arg) {
+                        call_user_func_array(array($assertion, 'assert'), array($arg));
+                    })->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, $method), $arguments))
+                ->then()
+                    ->boolean(call_user_func_array(array($assertion, 'assert'), array($arg)))
+                        ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testNullOr($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (null === $arg) {
+            return;
+        }
+
+        if (!$success) {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments))
+                ->then()
+                ->exception(function () use ($assertion, $arg) {
+                    call_user_func_array(array($assertion, 'assert'), array($arg));
+                })->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments))
+                ->then()
+                    ->boolean(call_user_func_array(array($assertion, 'assert'), array($arg)))
+                        ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testAllArray($method, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (!$success) {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, 'all'.ucfirst($method)), $arguments))
+                ->then()
+                ->exception(function () use ($assertion, $arg) {
+                    call_user_func_array(array($assertion, 'assert'), array(array($arg)));
+                })->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->given($assertion = call_user_func_array(array(Assertion::class, 'all'.ucfirst($method)), $arguments))
+                ->then()
+                    ->boolean(call_user_func_array(array($assertion, 'assert'), array(array($arg))))
+                        ->isTrue()
+            ;
+        }
+    }
+
+    /**
+     * @dataProvider getTestsChain
+     */
+    public function testValidateChain($assertion, $arguments, $success, $multibyte = false, $minVersion = null)
+    {
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (!$success) {
+            $this
+                ->boolean(call_user_func_array(array($assertion, 'validate'), array($arg)))
                     ->isFalse()
-        ;
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array($assertion, 'validate'), array($arg)))
+                    ->isTrue()
+            ;
+        }
     }
 
     /**
-     * Test assert method.
+     * @dataProvider getTestsChain
      */
-    public function testAssert()
+    public function testAssertChain($assertion, $arguments, $success, $multibyte = false, $minVersion = null)
     {
-        $this
-            ->given($post = new Post('some title'))
-            ->and($simpleValidator = Assertion::property('title', Assertion::stringType()->notBlank()))
-            ->and(
-                $allOfValidator = Assertion::allOf(
-                    Assertion::property('content', Assertion::stringType()->notBlank()),
-                    Assertion::property('age', Assertion::integerType()->greaterThan(16)),
-                    Assertion::method('title', Assertion::stringType()->contains('hello')),
-                    Assertion::method('foo', Assertion::floatType())
-                )
-            )
-            ->and(
-                $oneOfValidator = Assertion::oneOf(
-                    Assertion::method('title', Assertion::stringType()->contains('hello')),
-                    Assertion::method('foo', Assertion::floatType()),
-                    Assertion::property('content', Assertion::stringType()->notBlank())
-                )
-            )
-            ->and(
-                $noneOfValidator = Assertion::noneOf(
-                    Assertion::method('title', Assertion::stringType()->contains('title')),
-                    Assertion::method('foo', Assertion::floatType()),
-                    Assertion::property('content', Assertion::stringType()->notBlank()),
-                    Assertion::property('content', Assertion::integerType()->greaterThan(16))
-                )
-            )
-            ->and(
-                $complexValidator = Assertion::oneOf(
-                    Assertion::method('title', Assertion::stringType()->contains('title')),
-                    Assertion::method('foo', Assertion::floatType()),
-                    Assertion::property('content', Assertion::integerType()->greaterThan(16))
-                ),
-                $complexValidator->addRules(
-                    Assertion::property('title', Assertion::stringType()->contains('some'))->rules()
-                ),
-                $complexValidator->addRules(
-                    Assertion::property('content', Assertion::nullOrStringType())->rules()
-                ),
-                $complexValidator->addRules(
-                    Assertion::property('comments', Assertion::allNullType())->rules()
-                )
-            )
-            ->then()
-                ->boolean($simpleValidator->assert($post))
+        if ($minVersion && PHP_VERSION_ID < $minVersion) {
+            $this->markTestSkipped(sprintf('This test requires php %s or upper.', $minVersion));
+
+            return;
+        }
+
+        if ($multibyte && !function_exists('mb_strlen')) {
+            $this->markTestSkipped('The function mb_strlen() is not available');
+        }
+
+        $arg = array_shift($arguments);
+
+        if (!$success) {
+            $this
+                ->exception(function () use ($assertion, $arg) {
+                    call_user_func_array(array($assertion, 'assert'), array($arg));
+                })->isInstanceOf(InvalidArgumentException::class)
+            ;
+        } else {
+            $this
+                ->boolean(call_user_func_array(array($assertion, 'assert'), array($arg)))
                     ->isTrue()
-                ->boolean($complexValidator->assert($post))
-                    ->isTrue()
-                ->exception(function () use ($allOfValidator, $post) {
-                    $allOfValidator->assert($post);
-                })->isInstanceOf(InvalidArgumentsException::class)
-                ->exception(function () use ($oneOfValidator, $post) {
-                    $oneOfValidator->assert($post);
-                })->isInstanceOf(InvalidArgumentsException::class)
-                ->exception(function () use ($noneOfValidator, $post) {
-                    $noneOfValidator->assert($post);
-                })->isInstanceOf(InvalidArgumentsException::class)
-        ;
+            ;
+        }
     }
 
     /**
-     * Test assert method.
+     * Test registerAssert method.
      */
-    public function testAsserter()
-    {
-        $this
-            ->given($rule = new AllOf(new StringType(), new NotBlank()))
-            ->and($assertionChain = Assertion::stringType()->notBlank())
-            ->and(
-                $assertionObject = Assertion::allOf(
-                    Assertion::property('title', Assertion::stringType()->notBlank()),
-                    Assertion::method('title', Assertion::stringType()->notBlank()),
-                    Assertion::property('content', Assertion::integerType()->lessThan(20))
-                )
-            )
-            ->and($asserter = new Asserter())
-            ->then()
-                ->boolean($rule->accept($asserter, 'some title'))
-                    ->isTrue()
-                ->boolean($assertionChain->assert('some title'))
-                    ->isTrue()
-                ->boolean($assertionObject->assert(new Post('test', 16)))
-                    ->isTrue()
-        ;
-    }
-
-    /**
-     * Test registerAsserter method.
-     */
-    public function testRegisterAsserter()
+    public function testRegisterAssert()
     {
         $this
             ->given(

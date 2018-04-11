@@ -13,7 +13,6 @@ namespace Cubiche\Core\Validator\Tests\Units;
 
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Core\Metadata\Driver\ChainDriver;
-use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Core\Validator\Exception\ValidationException;
@@ -89,12 +88,12 @@ class ValidatorTests extends TestCase
         $this
             ->given($validator = $this->createValidator())
             ->then()
-                ->boolean($validator->assert('ivannis', Assertion::alnum()->length(1, 15)))
+                ->boolean($validator->assert('ivannis', Assertion::alnum()->lengthBetween(1, 15)))
                     ->isTrue()
-                ->boolean($validator->assert('ivannis', Assertion::alnum()->length(1, 15), 'foo'))
+                ->boolean($validator->assert('ivannis', Assertion::alnum()->lengthBetween(1, 15), 'foo'))
                     ->isTrue()
                 ->exception(function () use ($validator) {
-                    $validator->assert('invalid string', Assertion::alnum()->length(1, 15));
+                    $validator->assert('invalid string', Assertion::alnum()->lengthBetween(1, 15));
                 })->isInstanceOf(ValidationException::class)
                 ->exception(function () use ($validator) {
                     $validator->assert('value');
@@ -172,11 +171,11 @@ class ValidatorTests extends TestCase
         $this
             ->given($validator = $this->createValidator())
             ->then()
-                ->boolean($validator->validate('ivannis', Assertion::alnum()->length(1, 15)))
+                ->boolean($validator->validate('ivannis', Assertion::alnum()->lengthBetween(1, 15)))
                     ->isTrue()
-                ->boolean($validator->validate('ivannis', Assertion::alnum()->length(1, 15), 'foo'))
+                ->boolean($validator->validate('ivannis', Assertion::alnum()->lengthBetween(1, 15), 'foo'))
                     ->isTrue()
-                ->boolean($validator->validate('some tests', Assertion::alnum()->length(1, 15)))
+                ->boolean($validator->validate('some tests', Assertion::alnum()->lengthBetween(1, 15)))
                     ->isFalse()
                 ->exception(function () use ($validator) {
                     $validator->validate('value');

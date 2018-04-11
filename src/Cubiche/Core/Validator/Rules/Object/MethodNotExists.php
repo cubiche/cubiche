@@ -8,38 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\String;
+namespace Cubiche\Core\Validator\Rules\Object;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * MethodNotExists class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class MethodNotExists extends Rule
 {
     /**
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected $methodName;
 
     /**
-     * Length constructor.
+     * MethodNotExists constructor.
      *
-     * @param int $length
+     * @param string $methodName
      */
-    public function __construct($length)
+    public function __construct($methodName)
     {
-        $this->length = $length;
+        $this->methodName = $methodName;
+
+        parent::__construct();
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function length()
+    public function methodName()
     {
-        return $this->length;
+        return $this->methodName;
     }
 
     /**
@@ -50,7 +52,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->methodName
         );
     }
 }

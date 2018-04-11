@@ -13,33 +13,33 @@ namespace Cubiche\Core\Validator\Rules\String;
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * Length class.
+ * MinLength class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Length extends Rule
+class MinLength extends Rule
 {
     /**
      * @var int
      */
-    protected $length;
+    protected $minValue;
 
     /**
-     * Length constructor.
+     * MinLength constructor.
      *
-     * @param int $length
+     * @param int $min
      */
-    public function __construct($length)
+    public function __construct($min)
     {
-        $this->length = $length;
+        $this->minValue = $min;
     }
 
     /**
      * @return int
      */
-    public function length()
+    public function minValue()
     {
-        return $this->length;
+        return $this->minValue;
     }
 
     /**
@@ -50,7 +50,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            $this->minValue
         );
     }
 }
