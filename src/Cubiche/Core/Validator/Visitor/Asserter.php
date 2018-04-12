@@ -15,27 +15,36 @@ use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Core\Validator\Exception\InvalidArgumentsException;
 use Cubiche\Core\Validator\Rules\Arrays\Count;
 use Cubiche\Core\Validator\Rules\Arrays\CountBetween;
+use Cubiche\Core\Validator\Rules\Arrays\Each;
+use Cubiche\Core\Validator\Rules\Arrays\InArray;
 use Cubiche\Core\Validator\Rules\Arrays\IsArray;
 use Cubiche\Core\Validator\Rules\Arrays\IsArrayAccessible;
 use Cubiche\Core\Validator\Rules\Arrays\KeyExists;
+use Cubiche\Core\Validator\Rules\Arrays\KeyIsset;
 use Cubiche\Core\Validator\Rules\Arrays\KeyNotExists;
 use Cubiche\Core\Validator\Rules\Arrays\MaxCount;
 use Cubiche\Core\Validator\Rules\Arrays\MinCount;
+use Cubiche\Core\Validator\Rules\Arrays\NotEmptyKey;
 use Cubiche\Core\Validator\Rules\Comparison\Eq;
 use Cubiche\Core\Validator\Rules\Comparison\GreaterOrEqualThan;
 use Cubiche\Core\Validator\Rules\Comparison\GreaterThan;
 use Cubiche\Core\Validator\Rules\Comparison\LessOrEqualThan;
 use Cubiche\Core\Validator\Rules\Comparison\LessThan;
 use Cubiche\Core\Validator\Rules\Comparison\Same;
+use Cubiche\Core\Validator\Rules\Date\Date;
 use Cubiche\Core\Validator\Rules\Generic\All;
 use Cubiche\Core\Validator\Rules\Generic\AlwaysInvalid;
 use Cubiche\Core\Validator\Rules\Generic\AlwaysValid;
+use Cubiche\Core\Validator\Rules\Generic\Between;
+use Cubiche\Core\Validator\Rules\Generic\BetweenExclusive;
 use Cubiche\Core\Validator\Rules\Generic\Callback;
 use Cubiche\Core\Validator\Rules\Generic\ClassExists;
+use Cubiche\Core\Validator\Rules\Generic\Defined;
 use Cubiche\Core\Validator\Rules\Generic\Directory;
 use Cubiche\Core\Validator\Rules\Generic\File;
 use Cubiche\Core\Validator\Rules\Generic\FileExists;
 use Cubiche\Core\Validator\Rules\Generic\IsCallable;
+use Cubiche\Core\Validator\Rules\Generic\IsCountable;
 use Cubiche\Core\Validator\Rules\Generic\IsResource;
 use Cubiche\Core\Validator\Rules\Generic\Not;
 use Cubiche\Core\Validator\Rules\Generic\NotBlank;
@@ -52,7 +61,6 @@ use Cubiche\Core\Validator\Rules\Numeric\Numeric;
 use Cubiche\Core\Validator\Rules\Numeric\Range;
 use Cubiche\Core\Validator\Rules\Numeric\Scalar;
 use Cubiche\Core\Validator\Rules\Object\ImplementsInterface;
-use Cubiche\Core\Validator\Rules\Object\IsCountable;
 use Cubiche\Core\Validator\Rules\Object\IsInstanceOf;
 use Cubiche\Core\Validator\Rules\Object\IsInstanceOfAny;
 use Cubiche\Core\Validator\Rules\Object\IsObject;
@@ -60,15 +68,20 @@ use Cubiche\Core\Validator\Rules\Object\IsTraversable;
 use Cubiche\Core\Validator\Rules\Object\Method;
 use Cubiche\Core\Validator\Rules\Object\MethodExists;
 use Cubiche\Core\Validator\Rules\Object\MethodNotExists;
+use Cubiche\Core\Validator\Rules\Object\ObjectOrClass;
+use Cubiche\Core\Validator\Rules\Object\PropertiesExist;
 use Cubiche\Core\Validator\Rules\Object\Property;
 use Cubiche\Core\Validator\Rules\Object\PropertyExists;
 use Cubiche\Core\Validator\Rules\Object\PropertyNotExists;
 use Cubiche\Core\Validator\Rules\Object\SubclassOf;
 use Cubiche\Core\Validator\Rules\String\Alnum;
 use Cubiche\Core\Validator\Rules\String\Alpha;
+use Cubiche\Core\Validator\Rules\String\Base64;
 use Cubiche\Core\Validator\Rules\String\Contains;
+use Cubiche\Core\Validator\Rules\String\E164;
 use Cubiche\Core\Validator\Rules\String\EndsWith;
 use Cubiche\Core\Validator\Rules\String\IsEmpty;
+use Cubiche\Core\Validator\Rules\String\IsJsonString;
 use Cubiche\Core\Validator\Rules\String\Length;
 use Cubiche\Core\Validator\Rules\String\LengthBetween;
 use Cubiche\Core\Validator\Rules\String\Lower;
@@ -76,9 +89,11 @@ use Cubiche\Core\Validator\Rules\String\MaxLength;
 use Cubiche\Core\Validator\Rules\String\MinLength;
 use Cubiche\Core\Validator\Rules\String\NotEmpty;
 use Cubiche\Core\Validator\Rules\String\NoWhitespace;
+use Cubiche\Core\Validator\Rules\String\Readable;
 use Cubiche\Core\Validator\Rules\String\StartsWith;
 use Cubiche\Core\Validator\Rules\String\Upper;
 use Cubiche\Core\Validator\Rules\String\Uuid;
+use Cubiche\Core\Validator\Rules\String\Writeable;
 use Cubiche\Core\Validator\Rules\Types\BooleanType;
 use Cubiche\Core\Validator\Rules\Types\FalseType;
 use Cubiche\Core\Validator\Rules\Types\FloatType;
@@ -86,6 +101,11 @@ use Cubiche\Core\Validator\Rules\Types\IntegerType;
 use Cubiche\Core\Validator\Rules\Types\NullType;
 use Cubiche\Core\Validator\Rules\Types\StringType;
 use Cubiche\Core\Validator\Rules\Types\TrueType;
+use Cubiche\Core\Validator\Rules\Web\Email;
+use Cubiche\Core\Validator\Rules\Web\Ip;
+use Cubiche\Core\Validator\Rules\Web\Ipv4;
+use Cubiche\Core\Validator\Rules\Web\Ipv6;
+use Cubiche\Core\Validator\Rules\Web\Url;
 use Cubiche\Core\Visitor\Visitee;
 use Cubiche\Core\Visitor\Visitor;
 use ReflectionMethod;
@@ -126,6 +146,65 @@ class Asserter extends Visitor
     public function visitCountBetween(CountBetween $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::countBetween($input, $rule->minValue(), $rule->maxValue(), $message, $propertyPath);
+    }
+
+    /**
+     * @param Each                 $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitEach(Each $rule, $input, $message = null, $propertyPath = null)
+    {
+        Assert::isArray($input, $message, $propertyPath);
+
+        $errors = array();
+        foreach ($input as $key => $value) {
+            if ($rule->keyRule() !== null) {
+                try {
+                    $this->visit($rule->keyRule(), $key, $message, $propertyPath);
+                } catch (InvalidArgumentsException $e) {
+                    $errors = static::getErrorExceptions($e, $errors);
+                } catch (InvalidArgumentException $e) {
+                    $errors[] = $e;
+                }
+            }
+
+            if ($rule->valueRule() !== null) {
+                try {
+                    $this->visit($rule->valueRule(), $value, $message, $propertyPath);
+                } catch (InvalidArgumentsException $e) {
+                    $errors = static::getErrorExceptions($e, $errors);
+                } catch (InvalidArgumentException $e) {
+                    $errors[] = $e;
+                }
+            }
+        }
+
+        if (!empty($errors)) {
+            throw InvalidArgumentsException::fromErrors($errors);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param InArray              $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitInArray(InArray $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::inArray($input, $rule->choices(), $message, $propertyPath);
     }
 
     /**
@@ -174,6 +253,21 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param KeyIsset             $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitKeyIsset(KeyIsset $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::keyIsset($input, $rule->key(), $message, $propertyPath);
+    }
+
+    /**
      * @param KeyNotExists         $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -216,6 +310,21 @@ class Asserter extends Visitor
     public function visitMinCount(MinCount $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::minCount($input, $rule->minValue(), $message, $propertyPath);
+    }
+
+    /**
+     * @param NotEmptyKey          $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitNotEmptyKey(NotEmptyKey $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::notEmptyKey($input, $rule->key(), $message, $propertyPath);
     }
 
     /**
@@ -309,6 +418,21 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param Date                 $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitDate(Date $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::date($input, $rule->format(), $message, $propertyPath);
+    }
+
+    /**
      * @param All                  $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -360,6 +484,36 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param Between              $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitBetween(Between $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::between($input, $rule->minValue(), $rule->maxValue(), $message, $propertyPath);
+    }
+
+    /**
+     * @param BetweenExclusive     $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitBetweenExclusive(BetweenExclusive $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::betweenExclusive($input, $rule->minValue(), $rule->maxValue(), $message, $propertyPath);
+    }
+
+    /**
      * @param Callback             $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -387,6 +541,21 @@ class Asserter extends Visitor
     public function visitClassExists(ClassExists $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::classExists($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param Defined              $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitDefined(Defined $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::defined($input, $message, $propertyPath);
     }
 
     /**
@@ -447,6 +616,21 @@ class Asserter extends Visitor
     public function visitIsCallable(IsCallable $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::isCallable($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param IsCountable          $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitIsCountable(IsCountable $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::isCountable($input, $message, $propertyPath);
     }
 
     /**
@@ -756,21 +940,6 @@ class Asserter extends Visitor
     }
 
     /**
-     * @param IsCountable          $rule
-     * @param mixed                $input
-     * @param string|callable|null $message
-     * @param string|null          $propertyPath
-     *
-     * @return bool
-     *
-     * @throws InvalidArgumentException
-     */
-    public function visitIsCountable(IsCountable $rule, $input, $message = null, $propertyPath = null)
-    {
-        return Assert::isCountable($input, $message, $propertyPath);
-    }
-
-    /**
      * @param IsInstanceOf         $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -865,6 +1034,36 @@ class Asserter extends Visitor
     public function visitMethodExists(MethodExists $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::methodExists($input, $rule->methodName(), $message, $propertyPath);
+    }
+
+    /**
+     * @param ObjectOrClass        $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitObjectOrClass(ObjectOrClass $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::objectOrClass($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param PropertiesExist      $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitPropertiesExist(PropertiesExist $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::propertiesExist($input, $rule->properties(), $message, $propertyPath);
     }
 
     /**
@@ -980,6 +1179,21 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param Base64               $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitBase64(Base64 $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::base64($input, $message, $propertyPath);
+    }
+
+    /**
      * @param Contains             $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -992,6 +1206,21 @@ class Asserter extends Visitor
     public function visitContains(Contains $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::contains($input, $rule->needle(), $message, $propertyPath);
+    }
+
+    /**
+     * @param E164                 $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitE164(E164 $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::e164($input, $message, $propertyPath);
     }
 
     /**
@@ -1022,6 +1251,21 @@ class Asserter extends Visitor
     public function visitIsEmpty(IsEmpty $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::isEmpty($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param IsJsonString         $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitIsJsonString(IsJsonString $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::isJsonString($input, $message, $propertyPath);
     }
 
     /**
@@ -1130,6 +1374,21 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param Readable             $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitReadable(Readable $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::readable($input, $message, $propertyPath);
+    }
+
+    /**
      * @param StartsWith           $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -1172,6 +1431,21 @@ class Asserter extends Visitor
     public function visitUuid(Uuid $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::uuid($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param Writeable            $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitWriteable(Writeable $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::writeable($input, $message, $propertyPath);
     }
 
     /**
@@ -1277,6 +1551,81 @@ class Asserter extends Visitor
     public function visitTrueType(TrueType $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::true($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param Email                $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitEmail(Email $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::email($input, $message, $propertyPath);
+    }
+
+    /**
+     * @param Ip                   $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitIp(Ip $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::ip($input, $rule->flag(), $message, $propertyPath);
+    }
+
+    /**
+     * @param Ipv4                 $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitIpv4(Ipv4 $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::ipv4($input, $rule->flag(), $message, $propertyPath);
+    }
+
+    /**
+     * @param Ipv6                 $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitIpv6(Ipv6 $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::ipv6($input, $rule->flag(), $message, $propertyPath);
+    }
+
+    /**
+     * @param Url                  $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitUrl(Url $rule, $input, $message = null, $propertyPath = null)
+    {
+        return Assert::url($input, $message, $propertyPath);
     }
 
     /**

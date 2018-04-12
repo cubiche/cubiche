@@ -41,12 +41,13 @@ class Post
      *
      * @param string $title
      * @param string $content
+     * @param array  $comments
      */
-    public function __construct($title = null, $content = null)
+    public function __construct($title = null, $content = null, $comments = array(null, null))
     {
         $this->title = $title;
         $this->content = $content;
-        $this->comments = array(null, null);
+        $this->comments = $comments;
     }
 
     /**
@@ -71,14 +72,6 @@ class Post
     public function comments()
     {
         return $this->comments;
-    }
-
-    /**
-     * @param string $comment
-     */
-    public function addComment($comment)
-    {
-        $this->comments[] = $comment;
     }
 
     /**

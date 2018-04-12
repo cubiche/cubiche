@@ -8,40 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Object;
+namespace Cubiche\Core\Validator\Rules\Arrays;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsInstanceOfAny class.
+ * NotEmptyKey class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsInstanceOfAny extends Rule
+class NotEmptyKey extends Rule
 {
     /**
-     * @var array
+     * @var string
      */
-    protected $classes;
+    protected $key;
 
     /**
-     * IsInstanceOfAny constructor.
+     * NotEmptyKey constructor.
      *
-     * @param array $classes
+     * @param string $key
      */
-    public function __construct(array $classes)
+    public function __construct($key)
     {
-        $this->classes = $classes;
+        $this->key = $key;
 
         parent::__construct();
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function classes()
+    public function key()
     {
-        return $this->classes;
+        return $this->key;
     }
 
     /**
@@ -49,12 +49,10 @@ class IsInstanceOfAny extends Rule
      */
     protected function setId()
     {
-        sort($this->classes);
-
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            $this->key
         );
     }
 }

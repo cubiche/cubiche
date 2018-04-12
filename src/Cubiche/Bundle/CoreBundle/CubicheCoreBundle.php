@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 /**
  * CubicheCoreBundle class.
  *
- * @author Ivan Suárez Jerez <ivan@howaboutsales.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class CubicheCoreBundle extends Bundle
 {

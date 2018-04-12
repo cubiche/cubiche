@@ -8,30 +8,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Object;
+namespace Cubiche\Core\Validator\Rules\Arrays;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsInstanceOfAny class.
+ * InArray class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsInstanceOfAny extends Rule
+class InArray extends Rule
 {
     /**
      * @var array
      */
-    protected $classes;
+    protected $choices;
 
     /**
-     * IsInstanceOfAny constructor.
+     * InArray constructor.
      *
-     * @param array $classes
+     * @param array $choices
      */
-    public function __construct(array $classes)
+    public function __construct(array $choices)
     {
-        $this->classes = $classes;
+        $this->choices = $choices;
 
         parent::__construct();
     }
@@ -39,9 +39,9 @@ class IsInstanceOfAny extends Rule
     /**
      * @return array
      */
-    public function classes()
+    public function choices()
     {
-        return $this->classes;
+        return $this->choices;
     }
 
     /**
@@ -49,12 +49,12 @@ class IsInstanceOfAny extends Rule
      */
     protected function setId()
     {
-        sort($this->classes);
+        sort($this->choices);
 
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            implode(',', $this->choices)
         );
     }
 }

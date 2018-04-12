@@ -13,25 +13,25 @@ namespace Cubiche\Core\Validator\Rules\Object;
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsInstanceOfAny class.
+ * PropertiesExist class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsInstanceOfAny extends Rule
+class PropertiesExist extends Rule
 {
     /**
      * @var array
      */
-    protected $classes;
+    protected $properties;
 
     /**
-     * IsInstanceOfAny constructor.
+     * PropertiesExist constructor.
      *
-     * @param array $classes
+     * @param array $properties
      */
-    public function __construct(array $classes)
+    public function __construct(array $properties)
     {
-        $this->classes = $classes;
+        $this->properties = $properties;
 
         parent::__construct();
     }
@@ -39,9 +39,9 @@ class IsInstanceOfAny extends Rule
     /**
      * @return array
      */
-    public function classes()
+    public function properties()
     {
-        return $this->classes;
+        return $this->properties;
     }
 
     /**
@@ -49,12 +49,12 @@ class IsInstanceOfAny extends Rule
      */
     protected function setId()
     {
-        sort($this->classes);
+        sort($this->properties);
 
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            implode(',', $this->properties)
         );
     }
 }

@@ -8,40 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Object;
+namespace Cubiche\Core\Validator\Rules\Date;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsInstanceOfAny class.
+ * Date class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsInstanceOfAny extends Rule
+class Date extends Rule
 {
     /**
-     * @var array
+     * @var string
      */
-    protected $classes;
+    protected $format;
 
     /**
-     * IsInstanceOfAny constructor.
+     * KeyIsset constructor.
      *
-     * @param array $classes
+     * @param string $format
      */
-    public function __construct(array $classes)
+    public function __construct($format)
     {
-        $this->classes = $classes;
+        $this->format = $format;
 
         parent::__construct();
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function classes()
+    public function format()
     {
-        return $this->classes;
+        return $this->format;
     }
 
     /**
@@ -49,12 +49,10 @@ class IsInstanceOfAny extends Rule
      */
     protected function setId()
     {
-        sort($this->classes);
-
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            $this->format
         );
     }
 }

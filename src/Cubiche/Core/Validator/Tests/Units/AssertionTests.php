@@ -72,9 +72,53 @@ class AssertionTests extends TestCase
                 Assertion::allOf(
                     Assertion::property('title', Assertion::string()->notBlank()),
                     Assertion::method('title', Assertion::string()->notBlank()),
-                    Assertion::property('content', Assertion::integer()->lessThan(20))
+                    Assertion::property('content', Assertion::integer()->lessThan(20)),
+                    Assertion::property('comments', Assertion::allNull())
                 ),
-                array(new Post('The walking dead', 16)),
+                array(new Post('Games of thrones', 16)),
+                true,
+            ),
+            '10' => array(
+                Assertion::allOf(
+                    Assertion::property('title', Assertion::string()->notBlank()),
+                    Assertion::method('content', Assertion::string()->notBlank()),
+                    Assertion::property(
+                        'comments',
+                        Assertion::isArray()->allEach(
+                            Assertion::string()->notBlank()->inArray(array('en_US', 'es_ES')),
+                            Assertion::string()->notBlank()
+                        )
+                    )
+                ),
+                array(
+                    new Post(
+                        'Games of thrones',
+                        'Game of Thrones is a television series created by David Benioff and D. B',
+                        array(
+                            array(
+                                'en_US' => 'A great American fantasy drama television serie',
+                                'es_ES' => 'Una gran serie de televisión de drama de fantasía estadounidense',
+                            ),
+                            array(
+                                'en_US' => 'I had very high expectations from this series',
+                                'es_ES' => 'Tenía muchas expectativas de esta serie',
+                            ),
+                        )
+                    ),
+                ),
+                true,
+            ),
+            '11' => array(
+                Assertion::allOf(
+                    Assertion::isArray()->keyIsset('en_US'),
+                    Assertion::isArray()->notEmptyKey('es_ES')
+                ),
+                array(
+                    array(
+                        'en_US' => 'I had very high expectations from this series',
+                        'es_ES' => 'Tenía muchas expectativas de esta serie',
+                    ),
+                ),
                 true,
             ),
         );

@@ -29,20 +29,19 @@ class Assert extends BaseAssert
     const INVALID_NATURAL = 232;
     const INVALID_IS_COUNTABLE = 233;
     const INVALID_IS_INSTANCE_OF_ANY = 234;
-    const INVALID_IS_EMPTY = 235;
-    const INVALID_STRING_NOT_CONTAINS = 236;
-    const INVALID_STRING_NO_WHITESPACE = 237;
-    const INVALID_STRING_LOWER = 238;
-    const INVALID_STRING_UPPER = 239;
-    const INVALID_FILE_EXISTS = 240;
-    const INVALID_PROPERTY_NOT_EXISTS = 241;
-    const INVALID_METHOD_NOT_EXISTS = 242;
-    const INVALID_MIN_COUNT = 243;
-    const INVALID_MAX_COUNT = 244;
-    const INVALID_COUNT_BETWEEN = 245;
-    const INVALID_THROWS = 246;
-    const INVALID_NOT_ASSERT = 247;
-    const INVALID_NONE_OF = 248;
+    const INVALID_STRING_NOT_CONTAINS = 235;
+    const INVALID_STRING_NO_WHITESPACE = 236;
+    const INVALID_STRING_LOWER = 237;
+    const INVALID_STRING_UPPER = 238;
+    const INVALID_FILE_EXISTS = 239;
+    const INVALID_PROPERTY_NOT_EXISTS = 240;
+    const INVALID_METHOD_NOT_EXISTS = 241;
+    const INVALID_MIN_COUNT = 242;
+    const INVALID_MAX_COUNT = 243;
+    const INVALID_COUNT_BETWEEN = 244;
+    const INVALID_THROWS = 245;
+    const INVALID_NOT_ASSERT = 246;
+    const INVALID_NONE_OF = 247;
 
     /**
      * @var string
@@ -168,62 +167,6 @@ class Assert extends BaseAssert
         return true;
     }
 
-//    /**
-//     * @param mixed                $value
-//     * @param string|callable|null $message
-//     * @param string|null          $propertyPath
-//     *
-//     * @return bool
-//     *
-//     * @throws InvalidArgumentException
-//     */
-//    public static function stringType($value, $message = null, $propertyPath = null)
-//    {
-//        return static::string($value, $message, $propertyPath);
-//    }
-
-//    /**
-//     * @param mixed                $value
-//     * @param string|callable|null $message
-//     * @param string|null          $propertyPath
-//     *
-//     * @return bool
-//     *
-//     * @throws InvalidArgumentException
-//     */
-//    public static function integerType($value, $message = null, $propertyPath = null)
-//    {
-//        return static::integer($value, $message, $propertyPath);
-//    }
-
-//    /**
-//     * @param mixed                $value
-//     * @param string|callable|null $message
-//     * @param string|null          $propertyPath
-//     *
-//     * @return bool
-//     *
-//     * @throws InvalidArgumentException
-//     */
-//    public static function booleanType($value, $message = null, $propertyPath = null)
-//    {
-//        return static::boolean($value, $message, $propertyPath);
-//    }
-
-//    /**
-//     * @param mixed                $value
-//     * @param string|callable|null $message
-//     * @param string|null          $propertyPath
-//     *
-//     * @return bool
-//     *
-//     * @throws InvalidArgumentException
-//     */
-//    public static function floatType($value, $message = null, $propertyPath = null)
-//    {
-//        return static::float($value, $message, $propertyPath);
-//    }
-
     /**
      * @param mixed                $value
      * @param string|callable|null $message
@@ -311,16 +254,7 @@ class Assert extends BaseAssert
      */
     public static function isEmpty($value, $message = null, $propertyPath = null)
     {
-        if (!empty($value)) {
-            $message = sprintf(
-                static::generateMessage($message ?: 'Value "%s" expected to be empty.'),
-                static::stringify($value)
-            );
-
-            throw static::createException($value, $message, static::INVALID_IS_EMPTY, $propertyPath);
-        }
-
-        return true;
+        return parent::noContent($value, $message, $propertyPath);
     }
 
     /**
@@ -390,7 +324,7 @@ class Assert extends BaseAssert
      */
     public static function noWhitespace($value, $message = null, $propertyPath = null)
     {
-        if (preg_match('/^\s*$/', $value)) {
+        if (preg_match('#\s#', $value)) {
             $message = sprintf(
                 static::generateMessage($message ?: 'Value "%s" was not expected to have whitespace.'),
                 static::stringify($value)
@@ -615,31 +549,4 @@ class Assert extends BaseAssert
     {
         return parent::stringify($value);
     }
-
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public static function __callStatic($method, $args)
-//    {
-////        if ('nullOr' === substr($method, 0, 6)) {
-//////            die(var_export($method));
-////            if (null !== $args[0]) {
-////                $method = lcfirst(substr($method, 6));
-////
-////                return call_user_func_array(array('static', $method), $args);
-////            }
-////            return true;
-////        }
-
-////        die(var_export($method));
-////        if (0 === strpos($method, 'not')) {
-////            $method = lcfirst(substr($method, 3));
-////            die(var_export($method));
-////            if (method_exists(get_called_class(), $method)) {
-////                return call_user_func_array(array(get_called_class(), $method), $args);
-////            }
-////        }
-
-//        return parent::__callStatic($method, $args);
-//    }
 }

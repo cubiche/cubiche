@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * DropSchemaCommand class.
  *
- * @author Ivan Suárez Jerez <ivan@howaboutsales.com>
+ * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
 class DropSchemaCommand extends ContainerAwareCommand
 {

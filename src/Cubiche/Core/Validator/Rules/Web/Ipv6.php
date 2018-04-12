@@ -8,40 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Object;
+namespace Cubiche\Core\Validator\Rules\Web;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsInstanceOfAny class.
+ * Ipv6 class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsInstanceOfAny extends Rule
+class Ipv6 extends Rule
 {
     /**
-     * @var array
+     * @var string|null
      */
-    protected $classes;
+    protected $flag;
 
     /**
-     * IsInstanceOfAny constructor.
+     * Ipv6 constructor.
      *
-     * @param array $classes
+     * @param string|null $flag
      */
-    public function __construct(array $classes)
+    public function __construct($flag = null)
     {
-        $this->classes = $classes;
+        $this->flag = $flag;
 
         parent::__construct();
     }
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function classes()
+    public function flag()
     {
-        return $this->classes;
+        return $this->flag;
     }
 
     /**
@@ -49,12 +49,10 @@ class IsInstanceOfAny extends Rule
      */
     protected function setId()
     {
-        sort($this->classes);
-
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            $this->flag
         );
     }
 }

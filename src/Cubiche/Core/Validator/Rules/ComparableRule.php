@@ -50,7 +50,7 @@ class ComparableRule extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->other
+            !is_object($this->other) ?: spl_object_hash($this->other)
         );
     }
 }

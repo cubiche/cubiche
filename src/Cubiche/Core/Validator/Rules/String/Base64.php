@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Cubiche\Core\Validator\Rules\Object;
+namespace Cubiche\Core\Validator\Rules\String;
 
 use Cubiche\Core\Validator\Rules\Rule;
 
 /**
- * IsCountable class.
+ * Base64 class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class IsCountable extends Rule
+class Base64 extends Rule
 {
 }
