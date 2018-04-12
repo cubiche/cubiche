@@ -13,6 +13,7 @@ namespace Cubiche\Core\Validator\Tests\Units;
 
 use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Tests\Fixtures\Assert;
 use Cubiche\Core\Validator\Tests\Fixtures\Post;
 
 /**
@@ -336,9 +337,9 @@ class AssertionTests extends TestCase
         $this
             ->given(
                 $assertion = Assertion::allOf(
-                    Assertion::property('title', Assertion::stringType()->notBlank()),
-                    Assertion::method('title', Assertion::stringType()->notBlank()),
-                    Assertion::property('content', Assertion::integerType()->lessThan(20))
+                    Assertion::property('title', Assertion::string()->notBlank()),
+                    Assertion::method('title', Assertion::string()->notBlank()),
+                    Assertion::property('content', Assertion::integer()->lessThan(20))
                 )
             )
             ->and($post = new Post('test', 16))
@@ -359,6 +360,45 @@ class AssertionTests extends TestCase
                     ->exception(function () use ($assertion) {
                         Assertion::getAssert('foo');
                     })->isInstanceOf(\LogicException::class)
+        ;
+    }
+
+    /**
+     * Test registerAssert method.
+     */
+    public function testRegisterAssertClass()
+    {
+        $this
+            ->given(
+                $assertion = Assertion::allOf(
+                    Assertion::property('title', Assertion::string()->notBlank()),
+                    Assertion::method('title', Assertion::string()->notBlank()),
+                    Assertion::property('content', Assertion::integer()->lessThan(20))
+                )
+            )
+            ->and($asserter = new Assert())
+            ->and($post = new Post('test', 16))
+            ->then()
+                ->boolean($assertion->validate($post))
+                    ->isTrue()
+                ->exception(function () use ($assertion) {
+                    $assertion->addRule(Assertion::property('content', Assertion::uniqueId()));
+                })->isInstanceOf(\LogicException::class)
+                ->and()
+                ->when(Assertion::registerAssert('uniqueId', array($asserter, 'uniqueId')))
+                ->and($assertion->addRule(Assertion::property('content', Assertion::uniqueId())))
+                ->then()
+                    ->boolean($assertion->validate($post))
+                        ->isFalse()
+                ->exception(function () use ($assertion) {
+                    $assertion->addRule(Assertion::property('content', Assertion::uniqueEmail()));
+                })->isInstanceOf(\LogicException::class)
+                ->and()
+                ->when(Assertion::registerAssert('uniqueEmail', array($asserter, 'uniqueEmail')))
+                ->and($assertion->addRule(Assertion::property('content', Assertion::uniqueEmail())))
+                ->then()
+                    ->boolean($assertion->validate($post))
+                        ->isFalse()
         ;
     }
 }

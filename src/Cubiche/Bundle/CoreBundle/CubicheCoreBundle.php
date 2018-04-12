@@ -47,8 +47,8 @@ class CubicheCoreBundle extends Bundle
         // force init critical services
         $this->container->get('cubiche.domain.event_publisher');
 
-        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
-        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
-        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
     }
 }

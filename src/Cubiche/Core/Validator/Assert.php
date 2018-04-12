@@ -21,6 +21,28 @@ use Throwable;
  * Assert class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
+ *
+ * @method static static nullOrAlpha(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains letters only or that the value is null
+ * @method static static nullOrAlwaysInvalid() Assert always invalid or that the value is null
+ * @method static static nullOrAlwaysValid() Assert always valid or that the value is null
+ * @method static static nullOrCountBetween(mixed $value, int $min, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array has a count in the given range or that the value is null
+ * @method static static nullOrFileExists(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an existing path or that the value is null
+ * @method static static nullOrIsCountable(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an array or a \Countable or that the value is null
+ * @method static static nullOrIsEmpty(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is empty or that the value is null
+ * @method static static nullOrIsInstanceOfAny(mixed $value, array $classes, string|callable $message = null, string $propertyPath = null) Assert that value is an instanceof a at least one class on the array of classes or that the value is null
+ * @method static static nullOrIsResource(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a resource or that the value is null
+ * @method static static nullOrLengthBetween(mixed $value, int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths or that the value is null
+ * @method static static nullOrLower(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only or that the value is null
+ * @method static static nullOrMaxCount(mixed $value, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements or that the value is null
+ * @method static static nullOrMethodExists(mixed $value, string $method, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object or that the value is null
+ * @method static static nullOrMethodNotExists(mixed $value, string $method, string | callable $message = null, string $propertyPath = null) Assert that a method does not exist in a class/object or that the value is null
+ * @method static static nullOrMinCount(mixed $value, int $min, string|callable $message = null, string $propertyPath = null) Assert that an array contains at least a certain number of elements or that the value is null
+ * @method static static nullOrNatural(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains a non-negative integer or that the value is null
+ * @method static static nullOrNotContains(mixed $value, string $needle, string | callable $message = null, string $propertyPath = null) Assert that value does not contains a substring or that the value is null
+ * @method static static nullOrNoWhitespace(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value does not contains whitespace or that the value is null
+ * @method static static nullOrPropertyNotExists(mixed $value, string $property, string|callable $message = null, string $propertyPath = null) Assert that a property does not exist in a class/object or that the value is null
+ * @method static static nullOrThrows(mixed $value, string $class, string|callable $message = null, string $propertyPath = null) Assert that a function throws a certain exception. Subclasses of the exception class will be accepted. or that the value is null
+ * @method static static nullOrUpper(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains uppercase characters only or that the value is null
  */
 class Assert extends BaseAssert
 {
@@ -42,6 +64,12 @@ class Assert extends BaseAssert
     const INVALID_THROWS = 245;
     const INVALID_NOT_ASSERT = 246;
     const INVALID_NONE_OF = 247;
+    const INVALID_LATITUDE = 248;
+    const INVALID_LONGITUDE = 249;
+    const INVALID_HOST_NAME = 250;
+    const INVALID_PATH = 251;
+    const INVALID_CALLBACK = 252;
+    const INVALID_CUSTOM_ASSERT = 280;
 
     /**
      * @var string
@@ -540,6 +568,162 @@ class Assert extends BaseAssert
         );
 
         throw static::createException($expression, $message, static::INVALID_THROWS, $propertyPath);
+    }
+
+    /**
+     * @param mixed                $value
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function latitude($value, $message = null, $propertyPath = null)
+    {
+        try {
+            static::regex($value, '/^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/', $message, $propertyPath);
+        } catch (AssertionFailedException $e) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Value "%s" expected to be a valid latitude.'),
+                static::stringify($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_LATITUDE, $propertyPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed                $value
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function longitude($value, $message = null, $propertyPath = null)
+    {
+        try {
+            static::regex($value, '/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/', $message, $propertyPath);
+        } catch (AssertionFailedException $e) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Value "%s" expected to be a valid longitude.'),
+                static::stringify($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_LONGITUDE, $propertyPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed                $value
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function hostName($value, $message = null, $propertyPath = null)
+    {
+        try {
+            //valid chars check
+            static::regex($value, "/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $message, $propertyPath);
+
+            //overall length check
+            static::regex($value, '/^.{1,253}$/', $message, $propertyPath);
+
+            //length of each label
+            static::regex($value, "/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $message, $propertyPath);
+        } catch (AssertionFailedException $e) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Value "%s" expected to be a valid "host name".'),
+                static::stringify($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_HOST_NAME, $propertyPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed                $value
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function path($value, $message = null, $propertyPath = null)
+    {
+        $filteredValue = parse_url($value, PHP_URL_PATH);
+        if ($filteredValue === null || strlen($filteredValue) != strlen($value)) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Value "%s" expected to be a valid path.'),
+                static::stringify($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_PATH, $propertyPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed                $value
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function port($value, $message = null, $propertyPath = null)
+    {
+        $message = \sprintf(
+            static::generateMessage($message ?: 'Value "%s" expected to be a valid port.'),
+            static::stringify($value)
+        );
+
+        static::integer($value, $message, $propertyPath);
+        static::range($value, 0, 65535, $message, $propertyPath);
+
+        return true;
+    }
+
+    /**
+     * @param mixed                $value
+     * @param callable             $callback
+     * @param array                $arguments
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function callback($value, $callback, array $arguments, $message = null, $propertyPath = null)
+    {
+        static::isCallable($callback);
+
+        array_unshift($arguments, $value);
+        if (false === \call_user_func_array($callback, $arguments)) {
+            $message = \sprintf(
+                static::generateMessage($message ?: 'Provided "%s" is invalid according to custom callback rule.'),
+                static::stringify($value)
+            );
+
+            throw static::createException($value, $message, static::INVALID_CALLBACK, $propertyPath);
+        }
+
+        return true;
     }
 
     /**

@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\System\DateTime;
 
 use Cubiche\Core\Validator\Assert;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 
 /**
@@ -53,9 +53,7 @@ class Year extends Integer
      */
     public function __construct($year)
     {
-        if (!Assert::min(0)->validate($year)) {
-            throw InvalidArgumentException::invalidYear($year);
-        }
+        Assert::min($year, 0, 'The year argument must be positive.');
 
         parent::__construct($year);
     }

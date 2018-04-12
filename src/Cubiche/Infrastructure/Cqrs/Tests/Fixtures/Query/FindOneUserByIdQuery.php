@@ -12,7 +12,7 @@
 namespace Cubiche\Infrastructure\Cqrs\Tests\Fixtures\Query;
 
 use Cubiche\Core\Cqrs\Query\Query;
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -50,6 +50,6 @@ class FindOneUserByIdQuery extends Query
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('userId', Assert::stringType()->notBlank());
+        $classMetadata->addPropertyConstraint('userId', Assertion::string()->notBlank());
     }
 }

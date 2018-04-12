@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Validator\Assertion;
+
 /**
  * Decimal Class.
  *
@@ -26,13 +28,11 @@ class Decimal extends Real
     /**
      * @param int $scale
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function setDefaultScale($scale)
     {
-        if (!is_int($scale) || $scale < 0) {
-            throw new \InvalidArgumentException('The scale must be a positive integer');
-        }
+        Assertion::integer()->greaterOrEqualThan(0)->assert($scale, 'The scale must be a positive integer');
 
         self::$defaultScale = $scale;
         \bcscale(self::$defaultScale);
@@ -67,9 +67,7 @@ class Decimal extends Real
      */
     protected function scale($scale)
     {
-        if ($scale !== null && (!is_int($scale) || $scale < 0)) {
-            throw new \InvalidArgumentException('The scale must be a positive integer');
-        }
+        Assertion::nullOrInteger()->greaterOrEqualThan(0)->assert($scale, 'The scale must be a positive integer');
 
         return $scale === null ? self::$defaultScale : $scale;
     }

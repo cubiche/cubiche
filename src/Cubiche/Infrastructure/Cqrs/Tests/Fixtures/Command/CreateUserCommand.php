@@ -12,7 +12,7 @@
 namespace Cubiche\Infrastructure\Cqrs\Tests\Fixtures\Command;
 
 use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -104,8 +104,8 @@ class CreateUserCommand extends Command
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('username', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('password', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('email', Assert::email()->notBlank());
+        $classMetadata->addPropertyConstraint('username', Assertion::string()->notBlank());
+        $classMetadata->addPropertyConstraint('password', Assertion::string()->notBlank());
+        $classMetadata->addPropertyConstraint('email', Assertion::email()->notBlank());
     }
 }

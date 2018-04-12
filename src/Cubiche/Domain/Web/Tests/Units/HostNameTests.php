@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Web\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Web\HostName;
 
 /**
@@ -48,20 +49,7 @@ class HostNameTests extends HostTestCase
                     ->isFalse()
                 ->exception(function () {
                     HostName::fromNative('');
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
             ;
-    }
-
-    /**
-     * Test IsValid method.
-     */
-    public function testIsValid()
-    {
-        $this
-            ->boolean(HostName::isValid($this->randomNativeValue()))
-                ->isTrue()
-            ->boolean(HostName::isValid($this->invalidNativeValue()))
-                ->isFalse()
-        ;
     }
 }

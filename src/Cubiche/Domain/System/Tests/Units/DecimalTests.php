@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Exception\NotImplementedException;
 use Cubiche\Domain\System\Decimal;
 use Cubiche\Domain\System\DecimalInfinite;
@@ -271,7 +273,7 @@ class DecimalTests extends RealTestCase
                     ->isEqualTo(\bcsqrt($native, 2))
                 ->exception(function () use ($a, $invalidScale) {
                     $a->sqrt($invalidScale);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
                 ->exception(function () use ($positiveInfinite) {
                     $positiveInfinite->sqrt();
                 })->isInstanceOf(NotImplementedException::class)
@@ -293,12 +295,12 @@ class DecimalTests extends RealTestCase
             ->then
                 ->exception(function () use ($invalidScale) {
                     Decimal::setDefaultScale($invalidScale);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
             ->if($negativeScale = -2)
             ->then
                 ->exception(function () use ($negativeScale) {
                     Decimal::setDefaultScale($negativeScale);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 
@@ -312,7 +314,7 @@ class DecimalTests extends RealTestCase
             ->then
                 ->exception(function () use ($number) {
                     DecimalInfinite::fromNative($number);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 }

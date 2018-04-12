@@ -525,7 +525,7 @@ class Asserter extends Visitor
      */
     public function visitCallback(Callback $rule, $input, $message = null, $propertyPath = null)
     {
-        return Assert::satisfy($input, $rule->callback(), $message, $propertyPath);
+        return Assert::callback($input, $rule->callback(), $rule->arguments(), $message, $propertyPath);
     }
 
     /**

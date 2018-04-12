@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\System\Tests\Units\DateTime;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\DateTime\Month;
 use Cubiche\Domain\System\Tests\Units\TestCase;
 
@@ -35,7 +36,7 @@ class MonthTests extends TestCase
             ->and()
             ->exception(function () {
                 Month::fromNative('enero');
-            })->isInstanceOf(\InvalidArgumentException::class)
+            })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 

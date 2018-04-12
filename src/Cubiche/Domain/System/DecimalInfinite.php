@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Exception\NotImplementedException;
 
 /**
@@ -78,10 +80,15 @@ class DecimalInfinite extends Decimal
         if (\is_infinite($value)) {
             $this->value = $value;
         } else {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "INF" or "-INF".',
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument "%s" is invalid. Allowed types for argument are "INF" or "-INF".',
+                    $value
+                ),
+                Assert::INVALID_CUSTOM_ASSERT,
+                'DecimalInfinite',
                 $value
-            ));
+            );
         }
     }
 

@@ -89,7 +89,7 @@ use ReflectionClass;
  * @method static static maxCount(int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements
  * @method static static maxLength(int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string value is not longer than $maxLength chars
  * @method static static method(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a method value
- * @method static static methodExists(mixed $object, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object
+ * @method static static methodExists(string $method, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object
  * @method static static methodNotExists(string $method, string|callable $message = null, string $propertyPath = null) Assert that a method does not exist in a class/object
  * @method static static min(mixed $minValue, string|callable $message = null, string $propertyPath = null) Assert that a value is at least as big as a given limit
  * @method static static minCount(int $min, string|callable $message = null, string $propertyPath = null) Assert that an array contains at least a certain number of elements
@@ -296,7 +296,7 @@ use ReflectionClass;
  * @method static static nullOrMaxCount(int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements or that the value is null
  * @method static static nullOrMaxLength(int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string value is not longer than $maxLength chars or that the value is null
  * @method static static nullOrMethod(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a method value or that the value is null
- * @method static static nullOrMethodExists(mixed $object, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object or that the value is null
+ * @method static static nullOrMethodExists(string $metho, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object or that the value is null
  * @method static static nullOrMethodNotExists(string $method, string|callable $message = null, string $propertyPath = null) Assert that a method does not exist in a class/object or that the value is null
  * @method static static nullOrMin(mixed $minValue, string|callable $message = null, string $propertyPath = null) Assert that a value is at least as big as a given limit or that the value is null
  * @method static static nullOrMinCount(int $min, string|callable $message = null, string $propertyPath = null) Assert that an array contains at least a certain number of elements or that the value is null
@@ -429,7 +429,10 @@ class Assertion extends AllOf
         }
 
         if (static::hasAssert($ruleName)) {
-            return static::getAssert($ruleName);
+            $callback = static::getAssert($ruleName);
+            $callback->setArguments($arguments);
+
+            return $callback;
         }
 
         if (0 === strpos(strtolower($ruleName), 'nullor')) {

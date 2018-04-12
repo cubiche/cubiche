@@ -25,6 +25,11 @@ class Callback extends Rule
     protected $callback;
 
     /**
+     * @var array
+     */
+    protected $arguments = array();
+
+    /**
      * Callback constructor.
      *
      * @param callable $callback
@@ -45,6 +50,22 @@ class Callback extends Rule
     }
 
     /**
+     * @return array
+     */
+    public function arguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param array $arguments
+     */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function setId()
@@ -52,7 +73,7 @@ class Callback extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            spl_object_hash($this->callback)
+            is_object($this->callback) ? spl_object_hash($this->callback) : $this->callback
         );
     }
 }

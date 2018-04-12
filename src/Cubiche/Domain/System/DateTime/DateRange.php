@@ -12,8 +12,8 @@
 namespace Cubiche\Domain\System\DateTime;
 
 use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Model\ValueObjectInterface;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
 
 /**
  * DateRange.
@@ -41,9 +41,15 @@ class DateRange implements ValueObjectInterface
     public function __construct(Date $from = null, Date $to = null)
     {
         if ($from !== null && $to !== null) {
-            if (!Assert::min($from->toNative())->validate($to->toNative())) {
-                throw InvalidArgumentException::invalidDateRange($from->__toString(), $to->__toString());
-            }
+            Assert::lessOrEqualThan(
+                $from->toNative(),
+                $to->toNative(),
+                sprintf(
+                    'Provided start date "%s" is not less or equal than end date "%s".',
+                    $from->__toString(),
+                    $to->__toString()
+                )
+            );
         }
 
         $this->from = $from;
@@ -79,7 +85,7 @@ class DateRange implements ValueObjectInterface
     }
 
     /**
-     * @param DateRange
+     * @param mixed $range
      *
      * @return bool
      */

@@ -11,8 +11,9 @@
 
 namespace Cubiche\Domain\System\DateTime;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
 
 /**
  * Date.
@@ -69,12 +70,8 @@ class Date implements NativeValueObjectInterface
     public function __construct(Year $year, Month $month, MonthDay $day)
     {
         $dateString = \sprintf('%d-%s-%d', $year->toNative(), $month->toNative(), $day->toNative());
-        \DateTime::createFromFormat('Y-F-j', $dateString);
 
-        $nativeDateErrors = \DateTime::getLastErrors();
-        if ($nativeDateErrors['warning_count'] > 0 || $nativeDateErrors['error_count'] > 0) {
-            throw InvalidArgumentException::invalidDate($year->toNative(), $month->toNative(), $day->toNative());
-        }
+        Assert::date($dateString, 'Y-F-j');
 
         $this->year = $year;
         $this->month = $month;

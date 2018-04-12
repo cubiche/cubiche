@@ -11,6 +11,9 @@
 
 namespace Cubiche\Domain\Web;
 
+use Cubiche\Core\Validator\Assertion;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
+
 /**
  * IPAddress class.
  *
@@ -21,17 +24,14 @@ class IPAddress extends Host
     /**
      * @param string $ip
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($ip)
     {
-        $filteredValue = filter_var($ip, FILTER_VALIDATE_IP);
-        if ($filteredValue === false) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "ip address".',
-                $ip
-            ));
-        }
+        Assertion::oneOf(Assertion::ip(), Assertion::ipv4(), Assertion::ipv6())->assert($ip, sprintf(
+            'Argument "%s" is invalid. Allowed types for argument are "ip address".',
+            $ip
+        ));
 
         parent::__construct((string) $ip);
     }

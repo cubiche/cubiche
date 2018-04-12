@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\System;
 
 use Cubiche\Core\Enum\Enum as BaseEnum;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
 
 /**
@@ -31,7 +32,7 @@ abstract class Enum extends BaseEnum implements NativeValueObjectInterface
         try {
             return new static($value);
         } catch (\UnexpectedValueException $e) {
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode());
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), 'Enum', $value);
         }
     }
 

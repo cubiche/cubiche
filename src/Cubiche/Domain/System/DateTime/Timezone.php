@@ -11,8 +11,9 @@
 
 namespace Cubiche\Domain\System\DateTime;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Model\NativeValueObjectInterface;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 
 /**
@@ -67,7 +68,12 @@ class Timezone implements NativeValueObjectInterface
             if ($offsetName == null ||
                 ($offsetName !== null && !in_array($offsetName->toNative(), timezone_identifiers_list()))
             ) {
-                throw InvalidArgumentException::invalidTimezone($name->toNative());
+                throw new InvalidArgumentException(
+                    sprintf('The timezone "%s" is invalid.', $name->toNative()),
+                    Assert::INVALID_CUSTOM_ASSERT,
+                    'timezone',
+                    $name->toNative()
+                );
             }
         }
 

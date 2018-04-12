@@ -12,6 +12,7 @@
 namespace Cubiche\Domain\System;
 
 use Cubiche\Core\Comparable\ComparableInterface;
+use Cubiche\Core\Validator\Assert;
 use Cubiche\Domain\Model\NativeValueObject;
 
 /**
@@ -297,13 +298,11 @@ abstract class Number extends NativeValueObject implements ComparableInterface
      */
     public function compareTo($other)
     {
-        if (!$other instanceof self) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "%s".',
-                $other,
-                self::class
-            ));
-        }
+        Assert::isInstanceOf(
+            $other,
+            self::class,
+            sprintf('Argument "%s" is invalid. Allowed types for argument are "%s".', $other, self::class)
+        );
 
         $value = $this->sub($other);
 

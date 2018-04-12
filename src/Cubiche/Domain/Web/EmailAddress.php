@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Web;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 
 /**
@@ -23,29 +25,13 @@ class EmailAddress extends StringLiteral
     /**
      * @param string $value
      *
-     * @return bool
-     */
-    public static function isValid($value)
-    {
-        return \filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($value)
     {
-        $filteredValue = \filter_var($value, FILTER_VALIDATE_EMAIL);
-        if ($filteredValue === false) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "email".',
-                $value
-            ));
-        }
+        Assert::email($value, sprintf('Argument "%s" is invalid. Allowed types for argument are "email".', $value));
 
-        parent::__construct($filteredValue);
+        parent::__construct($value);
     }
 
     /**
