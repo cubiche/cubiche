@@ -52,7 +52,7 @@ class Count extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->value
+            json_encode($this->value)
         );
     }
 }

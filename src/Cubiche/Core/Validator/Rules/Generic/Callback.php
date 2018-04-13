@@ -70,10 +70,22 @@ class Callback extends Rule
      */
     protected function setId()
     {
+        if (is_array($this->callback)) {
+            $ref = new \ReflectionMethod($this->callback[0], $this->callback[1]);
+        } else {
+            $ref = new \ReflectionFunction($this->callback);
+        }
+
+        $callbackAsString = str_replace(
+            array(' ', "\n"),
+            array('', ''),
+            $ref->__toString()
+        );
+
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            is_object($this->callback) ? spl_object_hash($this->callback) : $this->callback
+            $callbackAsString
         );
     }
 }

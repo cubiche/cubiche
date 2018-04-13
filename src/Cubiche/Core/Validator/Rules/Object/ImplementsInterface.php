@@ -52,7 +52,7 @@ class ImplementsInterface extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->interfaceName
+            json_encode($this->interfaceName)
         );
     }
 }

@@ -52,7 +52,7 @@ class PropertyExists extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->propertyName
+            json_encode($this->propertyName)
         );
     }
 }

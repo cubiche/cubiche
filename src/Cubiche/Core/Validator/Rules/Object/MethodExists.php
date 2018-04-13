@@ -52,7 +52,7 @@ class MethodExists extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->methodName
+            json_encode($this->methodName)
         );
     }
 }

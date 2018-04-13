@@ -65,8 +65,8 @@ class CountBetween extends Rule
         $this->id = sprintf(
             '%s-%s-%s',
             $this->shortClassName(),
-            $this->minValue,
-            $this->maxValue
+            json_encode($this->minValue),
+            json_encode($this->maxValue)
         );
     }
 }

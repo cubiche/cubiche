@@ -50,7 +50,7 @@ class MinLength extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->minValue
+            json_encode($this->minValue)
         );
     }
 }

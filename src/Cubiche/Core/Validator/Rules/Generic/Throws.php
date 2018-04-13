@@ -52,7 +52,7 @@ class Throws extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->type
+            json_encode($this->type)
         );
     }
 }

@@ -65,7 +65,7 @@ class RelationalRule extends Rule
         $this->id = sprintf(
             '%s-%s-%s',
             $this->shortClassName(),
-            $this->reference,
+            json_encode($this->reference),
             $this->validator->id()
         );
     }

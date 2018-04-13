@@ -22,16 +22,47 @@ use Throwable;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  *
+ * @method static static allAlpha(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains letters only for all values
+ * @method static static allAlwaysInvalid() Assert always invalid for all values
+ * @method static static allAlwaysValid() Assert always valid for all values
+ * @method static static allCallback(mixed $value, callable $callback, string|callable $message = null, string $propertyPath = null) Assert that the provided value is valid according to a callback for all values
+ * @method static static allCountBetween(mixed $value, int $min, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array has a count in the given range for all values
+ * @method static static allFileExists(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an existing path for all values
+ * @method static static allHostName(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is valid host name for all values
+ * @method static static allIsCountable(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an array or a \Countable for all values
+ * @method static static allIsEmpty(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is empty for all values
+ * @method static static allIsInstanceOfAny(mixed $value, array $classes, string|callable $message = null, string $propertyPath = null) Assert that value is an instanceof a at least one class on the array of classes for all values
+ * @method static static allIsResource(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a resource for all values
+ * @method static static allLatitude(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude for all values
+ * @method static static allLengthBetween(mixed $value, int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths for all values
+ * @method static static allLongitude(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid longitude for all values
+ * @method static static allLower(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only for all values
+ * @method static static allMaxCount(mixed $value, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements for all values
+ * @method static static allMethodExists(mixed $value, string $method, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object for all values
+ * @method static static allMethodNotExists(mixed $value, string $method, string | callable $message = null, string $propertyPath = null) Assert that a method does not exist in a class/object for all values
+ * @method static static allMinCount(mixed $value, int $min, string|callable $message = null, string $propertyPath = null) Assert that an array contains at least a certain number of elements for all values
+ * @method static static allNatural(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains a non-negative integer for all values
+ * @method static static allNotContains(mixed $value, string $needle, string | callable $message = null, string $propertyPath = null) Assert that value does not contains a substring for all values
+ * @method static static allNoWhitespace(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value does not contains whitespace for all values
+ * @method static static allPath(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid path for all values
+ * @method static static allPort(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid port for all values
+ * @method static static allPropertyNotExists(mixed $value, string $property, string|callable $message = null, string $propertyPath = null) Assert that a property does not exist in a class/object for all values
+ * @method static static allThrows(mixed $value, string $class, string|callable $message = null, string $propertyPath = null) Assert that a function throws a certain exception. Subclasses of the exception class will be accepted. for all values
+ * @method static static allUpper(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains uppercase characters only for all values
  * @method static static nullOrAlpha(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains letters only or that the value is null
  * @method static static nullOrAlwaysInvalid() Assert always invalid or that the value is null
  * @method static static nullOrAlwaysValid() Assert always valid or that the value is null
+ * @method static static nullOrCallback(mixed $value, callable $callback, string|callable $message = null, string $propertyPath = null) Assert that the provided value is valid according to a callback or that the value is null
  * @method static static nullOrCountBetween(mixed $value, int $min, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array has a count in the given range or that the value is null
  * @method static static nullOrFileExists(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an existing path or that the value is null
+ * @method static static nullOrHostName(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is valid host name or that the value is null
  * @method static static nullOrIsCountable(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is an array or a \Countable or that the value is null
  * @method static static nullOrIsEmpty(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is empty or that the value is null
  * @method static static nullOrIsInstanceOfAny(mixed $value, array $classes, string|callable $message = null, string $propertyPath = null) Assert that value is an instanceof a at least one class on the array of classes or that the value is null
  * @method static static nullOrIsResource(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a resource or that the value is null
+ * @method static static nullOrLatitude(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude or that the value is null
  * @method static static nullOrLengthBetween(mixed $value, int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths or that the value is null
+ * @method static static nullOrLongitude(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid longitude or that the value is null
  * @method static static nullOrLower(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only or that the value is null
  * @method static static nullOrMaxCount(mixed $value, int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements or that the value is null
  * @method static static nullOrMethodExists(mixed $value, string $method, string|callable $message = null, string $propertyPath = null) Determines that the named method is defined in the provided object or that the value is null
@@ -40,6 +71,8 @@ use Throwable;
  * @method static static nullOrNatural(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains a non-negative integer or that the value is null
  * @method static static nullOrNotContains(mixed $value, string $needle, string | callable $message = null, string $propertyPath = null) Assert that value does not contains a substring or that the value is null
  * @method static static nullOrNoWhitespace(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value does not contains whitespace or that the value is null
+ * @method static static nullOrPath(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid path or that the value is null
+ * @method static static nullOrPort(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value is a valid port or that the value is null
  * @method static static nullOrPropertyNotExists(mixed $value, string $property, string|callable $message = null, string $propertyPath = null) Assert that a property does not exist in a class/object or that the value is null
  * @method static static nullOrThrows(mixed $value, string $class, string|callable $message = null, string $propertyPath = null) Assert that a function throws a certain exception. Subclasses of the exception class will be accepted. or that the value is null
  * @method static static nullOrUpper(mixed $value, string|callable $message = null, string $propertyPath = null) Assert that value contains uppercase characters only or that the value is null

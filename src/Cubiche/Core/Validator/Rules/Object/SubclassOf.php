@@ -52,7 +52,7 @@ class SubclassOf extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->className
+            json_encode($this->className)
         );
     }
 }

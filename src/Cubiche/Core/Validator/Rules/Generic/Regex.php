@@ -52,7 +52,7 @@ class Regex extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->pattern
+            json_encode($this->pattern)
         );
     }
 }

@@ -35,6 +35,7 @@ use ReflectionClass;
  * @method static static between(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater or equal than a lower limit, and less than or equal to an upper limit
  * @method static static betweenExclusive(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater than a lower limit, and less than an upper limit
  * @method static static boolean(string|callable $message = null, string $propertyPath = null) Assert that value is php boolean
+ * @method static static callback(callable $callback, string|callable $message = null, string $propertyPath = null) Assert that the provided value is valid according to a callback
  * @method static static choice(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices
  * @method static static choicesNotEmpty(array $choices, string|callable $message = null, string $propertyPath = null) Determines if the values array has every choice as key and that this choice has content
  * @method static static classExists(string|callable $message = null, string $propertyPath = null) Assert that the class exists
@@ -58,6 +59,7 @@ use ReflectionClass;
  * @method static static float(string|callable $message = null, string $propertyPath = null) Assert that value is a php float
  * @method static static greaterOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater or equal than given limit
  * @method static static greaterThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater than given limit
+ * @method static static hostName(string|callable $message = null, string $propertyPath = null) Assert that value is valid host name
  * @method static static implementsInterface(string $interfaceName, string|callable $message = null, string $propertyPath = null) Assert that the class implements the interface
  * @method static static inArray(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices. This is an alias of Assertion::choice()
  * @method static static integer(string|callable $message = null, string $propertyPath = null) Assert that value is a php integer
@@ -80,10 +82,12 @@ use ReflectionClass;
  * @method static static keyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array
  * @method static static keyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset()
  * @method static static keyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array
+ * @method static static latitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude
  * @method static static length(int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length
  * @method static static lengthBetween(int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths
  * @method static static lessOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit
  * @method static static lessThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit
+ * @method static static longitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid longitude
  * @method static static lower(string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only
  * @method static static max(mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit
  * @method static static maxCount(int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements
@@ -111,7 +115,9 @@ use ReflectionClass;
  * @method static static numeric(string|callable $message = null, string $propertyPath = null) Assert that value is numeric
  * @method static static objectOrClass(string|callable $message = null, string $propertyPath = null) Assert that the value is an object, or a class that exists
  * @method static static oneOf(Assertion ...$assertions) Assert one of the assertions
+ * @method static static path(string|callable $message = null, string $propertyPath = null) Assert that value is a valid path
  * @method static static phpVersion(mixed $version, string|callable $message = null, string $propertyPath = null) Assert on PHP version
+ * @method static static port(string|callable $message = null, string $propertyPath = null) Assert that value is a valid port
  * @method static static propertiesExist(array $properties, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the properties all exist
  * @method static static property(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a property value
  * @method static static propertyExists(string $property, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the property exists
@@ -140,6 +146,7 @@ use ReflectionClass;
  * @method static static allBetween(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater or equal than a lower limit, and less than or equal to an upper limit for all values
  * @method static static allBetweenExclusive(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater than a lower limit, and less than an upper limit for all values
  * @method static static allBoolean(string|callable $message = null, string $propertyPath = null) Assert that value is php boolean for all values
+ * @method static static allCallback(callable $callback, string|callable $message = null, string $propertyPath = null) Assert that the provided value is valid according to a callback for all values
  * @method static static allChoice(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices for all values
  * @method static static allChoicesNotEmpty(array $choices, string|callable $message = null, string $propertyPath = null) Determines if the values array has every choice as key and that this choice has content for all values
  * @method static static allClassExists(string|callable $message = null, string $propertyPath = null) Assert that the class exists for all values
@@ -163,6 +170,7 @@ use ReflectionClass;
  * @method static static allFloat(string|callable $message = null, string $propertyPath = null) Assert that value is a php float for all values
  * @method static static allGreaterOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater or equal than given limit for all values
  * @method static static allGreaterThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater than given limit for all values
+ * @method static static allHostName(string|callable $message = null, string $propertyPath = null) Assert that value is valid host name for all values
  * @method static static allImplementsInterface(string $interfaceName, string|callable $message = null, string $propertyPath = null) Assert that the class implements the interface for all values
  * @method static static allInArray(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices. This is an alias of Assertion::choice() for all values
  * @method static static allInteger(string|callable $message = null, string $propertyPath = null) Assert that value is a php integer for all values
@@ -185,10 +193,12 @@ use ReflectionClass;
  * @method static static allKeyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array for all values
  * @method static static allKeyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() for all values
  * @method static static allKeyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array for all values
+ * @method static static allLatitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude for all values
  * @method static static allLength(int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length for all values
  * @method static static allLengthBetween(int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths for all values
  * @method static static allLessOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit for all values
  * @method static static allLessThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit for all values
+ * @method static static allLongitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid longitude for all values
  * @method static static allLower(string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only for all values
  * @method static static allMax(mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit for all values
  * @method static static allMaxCount(int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements for all values
@@ -214,7 +224,9 @@ use ReflectionClass;
  * @method static static allNull(string|callable $message = null, string $propertyPath = null) Assert that value is null for all values
  * @method static static allNumeric(string|callable $message = null, string $propertyPath = null) Assert that value is numeric for all values
  * @method static static allObjectOrClass(string|callable $message = null, string $propertyPath = null) Assert that the value is an object, or a class that exists for all values
+ * @method static static allPath(string|callable $message = null, string $propertyPath = null) Assert that value is a valid path for all values
  * @method static static allPhpVersion(mixed $version, string|callable $message = null, string $propertyPath = null) Assert on PHP version for all values
+ * @method static static allPort(string|callable $message = null, string $propertyPath = null) Assert that value is a valid port for all values
  * @method static static allPropertiesExist(array $properties, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the properties all exist for all values
  * @method static static allProperty(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a property value for all values
  * @method static static allPropertyExists(string $property, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the property exists for all values
@@ -243,6 +255,7 @@ use ReflectionClass;
  * @method static static nullOrBetween(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater or equal than a lower limit, and less than or equal to an upper limit or that the value is null
  * @method static static nullOrBetweenExclusive(mixed $lowerLimit, mixed $upperLimit, string $message = null, string $propertyPath = null) Assert that a value is greater than a lower limit, and less than an upper limit or that the value is null
  * @method static static nullOrBoolean(string|callable $message = null, string $propertyPath = null) Assert that value is php boolean or that the value is null
+ * @method static static nullOrCallback(callable $callback, string|callable $message = null, string $propertyPath = null) Assert that the provided value is valid according to a callback or that the value is null
  * @method static static nullOrChoice(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices or that the value is null
  * @method static static nullOrChoicesNotEmpty(array $choices, string|callable $message = null, string $propertyPath = null) Determines if the values array has every choice as key and that this choice has content or that the value is null
  * @method static static nullOrClassExists(string|callable $message = null, string $propertyPath = null) Assert that the class exists or that the value is null
@@ -265,6 +278,7 @@ use ReflectionClass;
  * @method static static nullOrFloat(string|callable $message = null, string $propertyPath = null) Assert that value is a php float or that the value is null
  * @method static static nullOrGreaterOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater or equal than given limit or that the value is null
  * @method static static nullOrGreaterThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is greater than given limit or that the value is null
+ * @method static static nullOrHostName(string|callable $message = null, string $propertyPath = null) Assert that value is valid host name or that the value is null
  * @method static static nullOrImplementsInterface(string $interfaceName, string|callable $message = null, string $propertyPath = null) Assert that the class implements the interface or that the value is null
  * @method static static nullOrInArray(array $choices, string|callable $message = null, string $propertyPath = null) Assert that value is in array of choices. This is an alias of Assertion::choice() or that the value is null
  * @method static static nullOrInteger(string|callable $message = null, string $propertyPath = null) Assert that value is a php integer or that the value is null
@@ -287,10 +301,12 @@ use ReflectionClass;
  * @method static static nullOrKeyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array or that the value is null
  * @method static static nullOrKeyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() or that the value is null
  * @method static static nullOrKeyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array or that the value is null
+ * @method static static nullOrLatitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude or that the value is null
  * @method static static nullOrLength(int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length or that the value is null
  * @method static static nullOrLengthBetween(int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths or that the value is null
  * @method static static nullOrLessOrEqualThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less or equal than given limit or that the value is null
  * @method static static nullOrLessThan(mixed $limit, string|callable $message = null, string $propertyPath = null) Determines if the value is less than given limit or that the value is null
+ * @method static static nullOrLongitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid longitude or that the value is null
  * @method static static nullOrLower(string|callable $message = null, string $propertyPath = null) Assert that value contains lowercase characters only or that the value is null
  * @method static static nullOrMax(mixed $maxValue, string|callable $message = null, string $propertyPath = null) Assert that a number is smaller as a given limit or that the value is null
  * @method static static nullOrMaxCount(int $max, string|callable $message = null, string $propertyPath = null) Assert that an array contains at most a certain number of elements or that the value is null
@@ -316,7 +332,9 @@ use ReflectionClass;
  * @method static static nullOrNull(string|callable $message = null, string $propertyPath = null) Assert that value is null or that the value is null
  * @method static static nullOrNumeric(string|callable $message = null, string $propertyPath = null) Assert that value is numeric or that the value is null
  * @method static static nullOrObjectOrClass(string|callable $message = null, string $propertyPath = null) Assert that the value is an object, or a class that exists or that the value is null
+ * @method static static nullOrPath(string|callable $message = null, string $propertyPath = null) Assert that value is a valid path or that the value is null
  * @method static static nullOrPhpVersion(mixed $version, string|callable $message = null, string $propertyPath = null) Assert on PHP version or that the value is null
+ * @method static static nullOrPort(string|callable $message = null, string $propertyPath = null) Assert that value is a valid port or that the value is null
  * @method static static nullOrPropertiesExist(array $properties, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the properties all exist or that the value is null
  * @method static static nullOrProperty(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a property value or that the value is null
  * @method static static nullOrPropertyExists(string $property, string|callable $message = null, string $propertyPath = null) Assert that the value is an object or class, and that the property exists or that the value is null

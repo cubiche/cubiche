@@ -50,7 +50,7 @@ class Length extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->length
+            json_encode($this->length)
         );
     }
 }

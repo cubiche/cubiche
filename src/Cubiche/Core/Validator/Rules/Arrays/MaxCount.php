@@ -52,7 +52,7 @@ class MaxCount extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->maxValue
+            json_encode($this->maxValue)
         );
     }
 }

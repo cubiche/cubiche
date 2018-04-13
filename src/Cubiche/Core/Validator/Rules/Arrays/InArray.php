@@ -54,7 +54,7 @@ class InArray extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->choices)
+            json_encode($this->choices)
         );
     }
 }

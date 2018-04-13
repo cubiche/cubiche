@@ -80,6 +80,6 @@ class CompositeRule extends Rule
         }
         sort($ids);
 
-        $this->id = sprintf('%s-%s', $this->shortClassName(), implode('-', $ids));
+        $this->id = sprintf('%s-%s', $this->shortClassName(), json_encode($ids));
     }
 }

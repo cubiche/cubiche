@@ -52,7 +52,7 @@ class KeyIsset extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->key
+            json_encode($this->key)
         );
     }
 }

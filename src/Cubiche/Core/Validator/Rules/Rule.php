@@ -37,9 +37,13 @@ abstract class Rule extends Visitee
      */
     public function id()
     {
-        return $this->id;
-
-        return md5($this->id);
+        return md5(
+            str_replace(
+                array('"', '\\', '[', ']', ','),
+                array('', '', '', '', ''),
+                $this->id
+            )
+        );
     }
 
     /**

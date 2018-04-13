@@ -52,7 +52,7 @@ class Ipv4 extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->flag
+            json_encode($this->flag)
         );
     }
 }

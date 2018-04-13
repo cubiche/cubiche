@@ -249,20 +249,105 @@ class ValidatorTests extends TestCase
         $this
             ->given($validator = $this->createValidator())
             ->and($post = new Post('title', 'some content'))
-            ->and($blog = new Blog())
             ->then()
                 ->object($classMetadata = $validator->getMetadataForClass(Post::class))
                     ->isInstanceOf(ClassMetadata::class)
                 ->boolean($validator->validate($post))
                     ->isTrue()
+        ;
+    }
+
+    /**
+     * Test registerValidator method.
+     */
+    public function testRegisterValidator()
+    {
+        $this
+            ->given($validator = $this->createValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($classMetadata = $validator->getMetadataForClass(Post::class))
+            ->then()
+                ->boolean($validator->validate($post))
+                    ->isTrue()
                 ->and()
-                ->when(Validator::registerValidator('uniqueName', function ($value, $message = null, $propertyPath = null) {
-                    throw new InvalidArgumentException('Title must be unique', 0, 'title', $value);
-                }))
+                ->when(
+                    Validator::registerValidator(
+                        'uniqueName',
+                        function ($value, $message = null, $propertyPath = null) {
+                            throw new InvalidArgumentException('Title must be unique', 0, 'title', $value);
+                        }
+                    )
+                )
                 ->and($classMetadata->addPropertyConstraint('title', Assertion::uniqueName()))
                 ->then()
                     ->boolean($validator->validate($post))
                         ->isFalse()
+        ;
+    }
+
+    /**
+     * Test that a property assertion is added just once.
+     */
+    public function testAddPropertyAssertJustOnce()
+    {
+        $this
+            ->given($validator = $this->createValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($classMetadata = $validator->getMetadataForClass(Post::class))
+            ->and($calls = 0)
+            ->then()
+                ->boolean($validator->validate($post))
+                    ->isTrue()
+                ->and()
+                ->when(
+                    Validator::registerValidator(
+                        'uniqueName',
+                        function ($value, $message = null, $propertyPath = null) use (&$calls) {
+                            ++$calls;
+                        }
+                    )
+                )
+                ->and($classMetadata->addPropertyConstraint('title', Assertion::uniqueName()))
+                ->and($classMetadata->addPropertyConstraint('title', Assertion::uniqueName()))
+                ->and($classMetadata->addPropertyConstraint('title', Assertion::uniqueName()))
+                ->then()
+                    ->boolean($validator->validate($post))
+                        ->isTrue()
+                    ->integer($calls)
+                        ->isEqualTo(1)
+        ;
+    }
+
+    /**
+     * Test that a method assertion is added just once.
+     */
+    public function testAddMethodAssertJustOnce()
+    {
+        $this
+            ->given($validator = $this->createValidator())
+            ->and($post = new Post('title', 'some content'))
+            ->and($classMetadata = $validator->getMetadataForClass(Post::class))
+            ->and($calls = 0)
+            ->then()
+                ->boolean($validator->validate($post))
+                    ->isTrue()
+                ->and()
+                ->when(
+                    Validator::registerValidator(
+                        'uniqueName',
+                        function ($value, $message = null, $propertyPath = null) use (&$calls) {
+                            ++$calls;
+                        }
+                    )
+                )
+                ->and($classMetadata->addMethodConstraint('title', Assertion::uniqueName()))
+                ->and($classMetadata->addMethodConstraint('title', Assertion::uniqueName()))
+                ->and($classMetadata->addMethodConstraint('title', Assertion::uniqueName()->notEmpty()))
+                ->then()
+                    ->boolean($validator->validate($post))
+                        ->isTrue()
+                    ->integer($calls)
+                        ->isEqualTo(2)
         ;
     }
 }

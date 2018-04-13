@@ -61,7 +61,9 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->constraintsByGroup[$group] = array();
         }
 
-        $this->constraintsByGroup[$group][] = $constraint;
+        if (!isset($this->constraintsByGroup[$group][$constraint->id()])) {
+            $this->constraintsByGroup[$group][$constraint->id()] = $constraint;
+        }
     }
 
     /**

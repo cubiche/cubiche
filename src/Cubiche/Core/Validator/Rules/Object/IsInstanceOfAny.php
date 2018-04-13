@@ -54,7 +54,7 @@ class IsInstanceOfAny extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            implode(',', $this->classes)
+            json_encode($this->classes)
         );
     }
 }

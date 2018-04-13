@@ -52,7 +52,7 @@ class Contains extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->needle
+            json_encode($this->needle)
         );
     }
 }

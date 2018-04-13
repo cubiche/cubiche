@@ -52,7 +52,7 @@ class Date extends Rule
         $this->id = sprintf(
             '%s-%s',
             $this->shortClassName(),
-            $this->format
+            json_encode($this->format)
         );
     }
 }
