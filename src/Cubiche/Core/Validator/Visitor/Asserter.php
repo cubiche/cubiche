@@ -666,13 +666,13 @@ class Asserter extends Visitor
             return true;
         }
 
-        $message = sprintf(
-            $message ?: 'Value "%s" expected to not match with the %s assert.',
+        $message = \sprintf(
+            Assert::generateMessage( $message ?: 'Value "%s" expected to not match with the %s assert.'),
             Assert::stringify($input),
             Assert::stringify($rule->rule())
         );
 
-        throw new InvalidArgumentException($message, Assert::INVALID_NOT_ASSERT, $propertyPath, $input);
+        throw Assert::createException($input, $message, static::INVALID_NOT_ASSERT, $propertyPath);
     }
 
     /**

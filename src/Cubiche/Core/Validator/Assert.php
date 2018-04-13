@@ -102,6 +102,7 @@ class Assert extends BaseAssert
     const INVALID_HOST_NAME = 250;
     const INVALID_PATH = 251;
     const INVALID_CALLBACK = 252;
+    const INVALID_UNIQUE_VALUE = 260;
     const INVALID_CUSTOM_ASSERT = 280;
 
     /**
@@ -762,8 +763,24 @@ class Assert extends BaseAssert
     /**
      * {@inheritdoc}
      */
+    public static function generateMessage($message = null)
+    {
+        return parent::generateMessage($message);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function stringify($value)
     {
         return parent::stringify($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function createException($value, $message, $code, $propertyPath = null, array $constraints = array())
+    {
+        return parent::createException($value, $message, $code, $propertyPath, $constraints);
     }
 }

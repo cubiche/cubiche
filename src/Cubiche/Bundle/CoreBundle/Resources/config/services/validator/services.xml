@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!--  validator  -->
+        <service id="cubiche.validator" class="Cubiche\Core\Validator\Validator">
+            <factory class="Cubiche\Core\Validator\Validator" method="create" />
+        </service>
+
+        <!--  asserters  -->
+        <service id="cubiche.validator.geolocation_asserter" class="Cubiche\Domain\Geolocation\Validator\Asserter">
+            <tag name="cubiche.validator.asserter" assert="distanceUnit" />
+        </service>
+
+        <service id="cubiche.validator.locale_asserter" class="Cubiche\Domain\Locale\Validator\Asserter">
+            <tag name="cubiche.validator.asserter" assert="countryCode" />
+            <tag name="cubiche.validator.asserter" assert="languageCode" />
+            <tag name="cubiche.validator.asserter" assert="localeCode" />
+        </service>
+    </services>
+</container>

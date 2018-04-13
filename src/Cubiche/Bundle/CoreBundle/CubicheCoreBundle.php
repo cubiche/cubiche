@@ -15,6 +15,7 @@ use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusHandlerPas
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterBusMiddlewarePass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterEventListenerPass;
 use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterSerializerHandlerPass;
+use Cubiche\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterValidatorAsserterPass;
 use Cubiche\Core\Validator\Validator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -37,6 +38,7 @@ class CubicheCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterBusMiddlewarePass());
         $container->addCompilerPass(new RegisterEventListenerPass());
         $container->addCompilerPass(new RegisterSerializerHandlerPass());
+        $container->addCompilerPass(new RegisterValidatorAsserterPass());
     }
 
     /**
@@ -46,9 +48,5 @@ class CubicheCoreBundle extends Bundle
     {
         // force init critical services
         $this->container->get('cubiche.domain.event_publisher');
-
-//        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
-//        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
-//        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
     }
 }
