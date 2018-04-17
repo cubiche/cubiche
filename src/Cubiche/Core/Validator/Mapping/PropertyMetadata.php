@@ -12,8 +12,8 @@
 namespace Cubiche\Core\Validator\Mapping;
 
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Validator\Assert;
 use Cubiche\Core\Metadata\PropertyMetadata as BasePropertyMetadata;
+use Cubiche\Core\Validator\Assertion;
 
 /**
  * PropertyMetadata class.
@@ -51,17 +51,19 @@ class PropertyMetadata extends BasePropertyMetadata
     }
 
     /**
-     * @param Assert $constraint
-     * @param string $group
+     * @param Assertion $constraint
+     * @param string    $group
      */
-    public function addConstraint(Assert $constraint, $group = null)
+    public function addConstraint(Assertion $constraint, $group = null)
     {
         $group = $this->group($group);
         if (!isset($this->constraintsByGroup[$group])) {
             $this->constraintsByGroup[$group] = array();
         }
 
-        $this->constraintsByGroup[$group][] = $constraint;
+        if (!isset($this->constraintsByGroup[$group][$constraint->id()])) {
+            $this->constraintsByGroup[$group][$constraint->id()] = $constraint;
+        }
     }
 
     /**

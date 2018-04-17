@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Validator\Assert;
 use Cubiche\Domain\Model\NativeValueObject;
 
 /**
@@ -38,16 +39,11 @@ class StringLiteral extends NativeValueObject
     /**
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($value)
     {
-        if (\is_string($value) === false) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "string".',
-                $value
-            ));
-        }
+        Assert::string($value, sprintf('Argument "%s" is invalid. Allowed types for argument are "string".', $value));
 
         $this->value = $value;
     }

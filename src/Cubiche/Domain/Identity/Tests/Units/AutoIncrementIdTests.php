@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\Identity\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Identity\AutoIncrementId;
 use Cubiche\Domain\Identity\Id;
 use Cubiche\Domain\Model\IdInterface;
@@ -47,7 +49,7 @@ class AutoIncrementIdTests extends TestCase
                     function () {
                         AutoIncrementId::fromNative('some-string');
                     }
-                )->isInstanceOf(\InvalidArgumentException::class)
+                )->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 }

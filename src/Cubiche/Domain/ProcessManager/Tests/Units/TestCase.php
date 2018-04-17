@@ -87,9 +87,9 @@ abstract class TestCase extends BaseTestCase
         $this->getAssertionManager()->setAlias('hashmap', 'HashMapAsserter');
         $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
 
-        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
-        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
-        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
+//        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
     }
 
     /**

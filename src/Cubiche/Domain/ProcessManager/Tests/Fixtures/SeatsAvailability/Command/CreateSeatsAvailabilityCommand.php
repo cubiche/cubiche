@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\ProcessManager\Tests\Fixtures\SeatsAvailability\Command;
 
 use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -67,7 +67,7 @@ class CreateSeatsAvailabilityCommand extends Command
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('conferenceId', Assert::uuid()->notBlank());
-        $classMetadata->addPropertyConstraint('numberOfSeats', Assert::intType()->notBlank());
+        $classMetadata->addPropertyConstraint('conferenceId', Assertion::uuid()->notBlank());
+        $classMetadata->addPropertyConstraint('numberOfSeats', Assertion::integer()->notBlank());
     }
 }

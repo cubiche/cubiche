@@ -22,7 +22,8 @@
         
         "cubiche/enum":         "dev-master",
         "cubiche/model":        "dev-master",
-        "cubiche/comparable":   "dev-master"
+        "cubiche/comparable":   "dev-master",
+        "cubiche/validator":    "dev-master"
     },
     "require-dev": {
         "cubiche/tests":            "dev-master"

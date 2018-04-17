@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Web;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 
 /**
@@ -23,18 +25,12 @@ class Path extends StringLiteral
     /**
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($value)
     {
-        $filteredValue = parse_url($value, PHP_URL_PATH);
-        if ($filteredValue === null || strlen($filteredValue) != strlen($value)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "url path".',
-                $value
-            ));
-        }
+        Assert::path($value);
 
-        parent::__construct($filteredValue);
+        parent::__construct($value);
     }
 }

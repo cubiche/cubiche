@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Web\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Web\IPAddress;
 
 /**
@@ -64,7 +65,7 @@ class IPAddressTests extends HostTestCase
                     ->isFalse()
                 ->exception(function () {
                     IPAddress::fromNative('');
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Validator\Assert;
+
 /**
  * Integer Class.
  *
@@ -31,19 +33,13 @@ class Integer extends Number
     /**
      * @param int $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function __construct($value)
     {
-        $filteredValue = \filter_var($value, FILTER_VALIDATE_INT);
-        if ($filteredValue === false) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "int".',
-                $value
-            ));
-        }
+        Assert::integerish($value, sprintf('Argument "%s" is invalid. Allowed types for argument are "int".', $value));
 
-        $this->value = $value;
+        $this->value = (int) $value;
     }
 
     /**

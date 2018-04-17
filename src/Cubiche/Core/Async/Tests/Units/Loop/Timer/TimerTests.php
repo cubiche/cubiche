@@ -12,6 +12,7 @@
 namespace Cubiche\Core\Async\Tests\Units\Loop\Timer;
 
 use Cubiche\Core\Async\Tests\Units\Promise\PromiseInterfaceTestCase;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use React\EventLoop\Factory;
 
 /**
@@ -55,7 +56,7 @@ class TimerTests extends PromiseInterfaceTestCase
                     true,
                     'foo'
                 );
-            })->isInstanceOf(\InvalidArgumentException::class);
+            })->isInstanceOf(InvalidArgumentException::class);
     }
 
     /**

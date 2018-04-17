@@ -8,8 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 use Cubiche\Domain\System\Real;
 
@@ -83,7 +85,7 @@ class IntegerTests extends NumberTestCase
                     ->isEqualTo(\bcsqrt($native, 2))
                 ->exception(function () use ($a, $invalidScale) {
                     $a->sqrt($invalidScale);
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 

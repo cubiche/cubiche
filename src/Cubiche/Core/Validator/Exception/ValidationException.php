@@ -15,29 +15,6 @@ namespace Cubiche\Core\Validator\Exception;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class ValidationException extends \InvalidArgumentException
+class ValidationException extends InvalidArgumentsException
 {
-    /**
-     * @var string[]
-     */
-    protected $errors;
-
-    /**
-     * @param string   $message
-     * @param string[] $errors
-     */
-    public function __construct($message, array $errors = [])
-    {
-        parent::__construct($message, 422);
-
-        $this->errors = $errors;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
 }

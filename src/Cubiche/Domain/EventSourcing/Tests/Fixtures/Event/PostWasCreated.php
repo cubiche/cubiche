@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Event;
 
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 use Cubiche\Domain\EventSourcing\DomainEvent;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
@@ -69,7 +69,7 @@ class PostWasCreated extends DomainEvent
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assert::stringType());
+        $classMetadata->addPropertyConstraint('title', Assertion::string()->notBlank());
+        $classMetadata->addPropertyConstraint('content', Assertion::string());
     }
 }

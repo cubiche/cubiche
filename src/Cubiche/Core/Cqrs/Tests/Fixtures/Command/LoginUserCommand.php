@@ -12,7 +12,7 @@
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Command;
 
 use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -104,12 +104,12 @@ class LoginUserCommand extends Command
     {
         $classMetadata->addPropertyConstraint(
             'email',
-            Assert::email()
+            Assertion::email()
         );
 
         $classMetadata->addPropertyConstraint(
             'password',
-            Assert::stringType()->notBlank()
+            Assertion::string()->notBlank()
         );
     }
 }

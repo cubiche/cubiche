@@ -14,6 +14,7 @@ namespace Cubiche\Core\Async\Loop\Timer;
 use Cubiche\Core\Async\Promise\Deferred;
 use Cubiche\Core\Async\Promise\DeferredInterface;
 use Cubiche\Core\Delegate\Delegate;
+use Cubiche\Core\Validator\Assert;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\TimerInterface as BaseTimerInterface;
 
@@ -66,9 +67,7 @@ class Timer implements TimerInterface
     public function __construct(LoopInterface $loop, callable $task, $interval, $periodic = false, $count = null)
     {
         $this->maxIterations = $count !== null ? (int) $count : ($periodic ? null : 1);
-        if ($this->maxIterations !== null && $this->maxIterations <= 0) {
-            throw new \InvalidArgumentException('The count argument must be a positive integer value');
-        }
+        Assert::nullOrGreaterThan($this->maxIterations, 0, 'The count argument must be a positive integer value');
 
         $this->task = new Delegate($task);
         $this->iterations = 0;
@@ -175,8 +174,6 @@ class Timer implements TimerInterface
         return $this->deferred;
     }
 
-    /**
-     */
     private function onTick()
     {
         try {

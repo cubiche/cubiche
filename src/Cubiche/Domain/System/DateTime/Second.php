@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\System\DateTime;
 
 use Cubiche\Core\Validator\Assert;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 
 /**
@@ -56,9 +56,17 @@ class Second extends Integer
      */
     public function __construct($second)
     {
-        if (!Assert::between(self::MIN_SECOND, self::MAX_SECOND)->validate($second)) {
-            throw InvalidArgumentException::invalidSecond($second, self::MIN_SECOND, self::MAX_SECOND);
-        }
+        Assert::between(
+            $second,
+            self::MIN_SECOND,
+            self::MAX_SECOND,
+            sprintf(
+                'Provided second "%s" must be in range %d - %d',
+                $second,
+                self::MIN_SECOND,
+                self::MAX_SECOND
+            )
+        );
 
         parent::__construct($second);
     }

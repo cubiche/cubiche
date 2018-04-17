@@ -11,7 +11,7 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Exception\ValidationException;
 use Cubiche\Core\Validator\Validator;
 
@@ -29,7 +29,7 @@ class UserMessageValidator
      */
     public function loginUserValidator(LoginUserMessage $event)
     {
-        Validator::assert($event->email(), Assert::email()->contains('gmail.com'));
+        Validator::assert($event->email(), Assertion::email()->contains('gmail.com'));
     }
 
     /**

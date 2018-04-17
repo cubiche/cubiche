@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Web\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\System\Tests\Units\StringLiteralTests;
 use Cubiche\Domain\Web\EmailAddress;
@@ -66,20 +67,7 @@ class EmailAddressTests extends StringLiteralTests
                     ->isFalse()
             ->exception(function () {
                 EmailAddress::fromNative('');
-            })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-    }
-
-    /**
-     * Test IsValid method.
-     */
-    public function testIsValid()
-    {
-        $this
-            ->boolean(EmailAddress::isValid($this->randomNativeValue()))
-                ->isTrue()
-            ->boolean(EmailAddress::isValid($this->invalidNativeValue()))
-                ->isFalse()
+            })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 

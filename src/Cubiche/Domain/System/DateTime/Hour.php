@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\System\DateTime;
 
 use Cubiche\Core\Validator\Assert;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 
 /**
@@ -56,9 +56,17 @@ class Hour extends Integer
      */
     public function __construct($hour)
     {
-        if (!Assert::between(self::MIN_HOUR, self::MAX_HOUR)->validate($hour)) {
-            throw InvalidArgumentException::invalidHour($hour, self::MIN_HOUR, self::MAX_HOUR);
-        }
+        Assert::between(
+            $hour,
+            self::MIN_HOUR,
+            self::MAX_HOUR,
+            sprintf(
+                'Provided hour "%s" must be in range %d - %d',
+                $hour,
+                self::MIN_HOUR,
+                self::MAX_HOUR
+            )
+        );
 
         parent::__construct($hour);
     }

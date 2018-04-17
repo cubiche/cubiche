@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\System\DateTime;
 
 use Cubiche\Core\Validator\Assert;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 
 /**
@@ -56,9 +56,17 @@ class MonthDay extends Integer
      */
     public function __construct($day)
     {
-        if (!Assert::between(self::MIN_MONTH_DAY, self::MAX_MONTH_DAY)->validate($day)) {
-            throw InvalidArgumentException::invalidMonthDay($day, self::MIN_MONTH_DAY, self::MAX_MONTH_DAY);
-        }
+        Assert::between(
+            $day,
+            self::MIN_MONTH_DAY,
+            self::MAX_MONTH_DAY,
+            sprintf(
+                'Provided day "%s" must be in range %d - %d',
+                $day,
+                self::MIN_MONTH_DAY,
+                self::MAX_MONTH_DAY
+            )
+        );
 
         parent::__construct($day);
     }

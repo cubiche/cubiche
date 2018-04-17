@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Web;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\Integer;
 
 /**
@@ -23,24 +25,11 @@ class Port extends Integer
     /**
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($value)
     {
-        $options = array(
-            'options' => array(
-                'min_range' => 0,
-                'max_range' => 65535,
-            ),
-        );
-
-        $value = filter_var($value, FILTER_VALIDATE_INT, $options);
-        if ($value === false) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "int".',
-                $value
-            ));
-        }
+        Assert::port($value);
 
         parent::__construct($value);
     }

@@ -13,12 +13,14 @@ namespace Cubiche\Core\Validator;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Core\Metadata\ClassMetadataFactoryInterface;
 use Cubiche\Core\Metadata\Driver\ChainDriver;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentsException;
 use Cubiche\Core\Validator\Exception\ValidationException;
-use Cubiche\Core\Validator\Mapping\ClassMetadata;
 use Cubiche\Core\Validator\Mapping\Driver\StaticPHPDriver;
 use Cubiche\Core\Validator\Mapping\MethodMetadata;
 use Cubiche\Core\Validator\Mapping\PropertyMetadata;
-use Respect\Validation\Exceptions\NestedValidationException;
+use Cubiche\Core\Validator\Rules\Rule;
+use Cubiche\Core\Validator\Visitor\Asserter;
 
 /**
  * Validator class.
@@ -27,6 +29,11 @@ use Respect\Validation\Exceptions\NestedValidationException;
  */
 class Validator implements ValidatorInterface
 {
+    /**
+     * @var string
+     */
+    const DEFAULT_GROUP = 'Default';
+
     /**
      * @var array
      */
@@ -53,7 +60,7 @@ class Validator implements ValidatorInterface
      * @param ClassMetadataFactoryInterface $metadataFactory
      * @param string                        $defaultGroup
      */
-    private function __construct(ClassMetadataFactoryInterface $metadataFactory, $defaultGroup = Assert::DEFAULT_GROUP)
+    private function __construct(ClassMetadataFactoryInterface $metadataFactory, $defaultGroup = self::DEFAULT_GROUP)
     {
         $this->metadataFactory = $metadataFactory;
         $this->defaultGroup = $defaultGroup;
@@ -90,50 +97,15 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param Assert $assert
-     * @param string $className
-     * @param string $group
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    protected function addConstraint(Assert $assert, $className = null, $group = null)
+    public static function validate($value, $constraints = null, $group = null)
     {
-        $className = $this->normalizeClassName($className);
-        $group = $this->normalizeGroup($group);
-
-        if (!isset($this->constraints[$className])) {
-            $this->constraints[$className] = array();
+        try {
+            return static::create()->assertConstraints($value, $constraints, $group);
+        } catch (ValidationException $e) {
+            return false;
         }
-
-        if (!isset($this->constraints[$className][$group])) {
-            $this->constraints[$className][$group] = Assert::create();
-        }
-
-        $this->constraints[$className][$group]->addRules($assert->getRules());
-
-        return $this;
-    }
-
-    /**
-     * @param string $className
-     * @param string $group
-     *
-     * @return Assert
-     */
-    protected function getConstraintsByGroup($className = null, $group = null)
-    {
-        $className = $this->normalizeClassName($className);
-        $group = $this->normalizeGroup($group);
-
-        if (!isset($this->constraints[$className])) {
-            return Assert::create()->alwaysValid();
-        }
-
-        if (!isset($this->constraints[$className][$group])) {
-            return Assert::create()->alwaysValid();
-        }
-
-        return $this->constraints[$className][$group];
     }
 
     /**
@@ -145,10 +117,58 @@ class Validator implements ValidatorInterface
     }
 
     /**
+     * @param Rule   $assert
+     * @param string $className
+     * @param string $group
+     *
+     * @return $this
+     */
+    protected function addConstraint(Rule $assert, $className = null, $group = null)
+    {
+        $className = $this->normalizeClassName($className);
+        $group = $this->normalizeGroup($group);
+
+        if (!isset($this->constraints[$className])) {
+            $this->constraints[$className] = array();
+        }
+
+        if (!isset($this->constraints[$className][$group])) {
+            $this->constraints[$className][$group] = new Assertion();
+        }
+
+        $this->constraints[$className][$group]->addRule($assert);
+
+        return $this;
+    }
+
+    /**
+     * @param string $className
+     * @param string $group
+     *
+     * @return Assertion
+     */
+    protected function getConstraintsByGroup($className = null, $group = null)
+    {
+        $className = $this->normalizeClassName($className);
+        $group = $this->normalizeGroup($group);
+
+        if (!isset($this->constraints[$className])) {
+            return Assertion::alwaysValid();
+        }
+
+        if (!isset($this->constraints[$className][$group])) {
+            return Assertion::alwaysValid();
+        }
+
+        return $this->constraints[$className][$group];
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function assertConstraints($value, $constraints = null, $group = null)
     {
+        $this->constraints = array();
         $group = $this->normalizeGroup($group);
 
         // If explicit constraints are passed, validate the value against
@@ -165,17 +185,12 @@ class Validator implements ValidatorInterface
             $constraints = $this->getConstraintsByGroup(null, $group);
 
             try {
-                $returnValue = $constraints->assert($value);
-            } catch (NestedValidationException $e) {
-                throw new ValidationException(
-                    $e->getMessage(),
-                    $this->messagesIndexedByName($e),
-                    $e->getCode(),
-                    $e->getPrevious()
-                );
+                return $constraints->assert($value);
+            } catch (InvalidArgumentsException $e) {
+                throw ValidationException::fromErrors($e->getErrorExceptions());
+            } catch (InvalidArgumentException $e) {
+                throw ValidationException::fromErrors(array($e));
             }
-
-            return $returnValue;
         }
 
         // If an object is passed without explicit constraints, validate that
@@ -186,17 +201,12 @@ class Validator implements ValidatorInterface
             $constraints = $this->getConstraintsByGroup(get_class($value), $group);
 
             try {
-                $returnValue = $constraints->assert($value);
-            } catch (NestedValidationException $e) {
-                throw new ValidationException(
-                    $e->getMessage(),
-                    $this->messagesIndexedByName($e),
-                    $e->getCode(),
-                    $e->getPrevious()
-                );
+                return $constraints->assert($value);
+            } catch (InvalidArgumentsException $e) {
+                throw ValidationException::fromErrors($e->getErrorExceptions());
+            } catch (InvalidArgumentException $e) {
+                throw ValidationException::fromErrors(array($e));
             }
-
-            return $returnValue;
         }
 
         // If an array is passed without explicit constraints, validate each
@@ -205,77 +215,21 @@ class Validator implements ValidatorInterface
             $this->addArrayConstraints($value);
 
             $returnValue = true;
+            $errors = array();
             foreach ($value as $item) {
                 $constraints = $this->getConstraintsByGroup(is_object($item) ? get_class($item) : null, $group);
 
                 try {
                     $returnValue = $returnValue && $constraints->assert($item);
-                } catch (NestedValidationException $e) {
-                    throw new ValidationException(
-                        $e->getMessage(),
-                        $this->messagesIndexedByName($e),
-                        $e->getCode(),
-                        $e->getPrevious()
-                    );
+                } catch (InvalidArgumentsException $e) {
+                    $errors = Asserter::getErrorExceptions($e, $errors);
+                } catch (InvalidArgumentException $e) {
+                    $errors[] = $e;
                 }
             }
 
-            return $returnValue;
-        }
-
-        throw new \RuntimeException(sprintf(
-            'Cannot validate values of type "%s" automatically. Please '.
-            'provide a constraint.',
-            gettype($value)
-        ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function validate($value, $constraints = null, $group = null)
-    {
-        return static::create()->validateConstraints($value, $constraints, $group);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function validateConstraints($value, $constraints = null, $group = null)
-    {
-        $group = $this->normalizeGroup($group);
-
-        // If explicit constraints are passed, validate the value against
-        // those constraints
-        if (null !== $constraints) {
-            if (!is_array($constraints)) {
-                $constraints = array($constraints);
-            }
-
-            foreach ($constraints as $constraint) {
-                $this->addConstraint($constraint, null, $group);
-            }
-
-            return $this->getConstraintsByGroup(null, $group)->validate($value);
-        }
-
-        // If an object is passed without explicit constraints, validate that
-        // object against the constraints defined for the object's class
-        if (is_object($value)) {
-            $this->addObjectConstraints($value);
-
-            return $this->getConstraintsByGroup(get_class($value), $group)->validate($value);
-        }
-
-        // If an array is passed without explicit constraints, validate each
-        // object in the array
-        if (is_array($value)) {
-            $this->addArrayConstraints($value);
-
-            $returnValue = true;
-            foreach ($value as $item) {
-                $constraints = $this->getConstraintsByGroup(is_object($item) ? get_class($item) : null, $group);
-                $returnValue = $returnValue && $constraints->validate($item);
+            if (!empty($errors)) {
+                throw ValidationException::fromErrors($errors);
             }
 
             return $returnValue;
@@ -298,13 +252,13 @@ class Validator implements ValidatorInterface
             /** @var PropertyMetadata $propertyMetadata */
             foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
                 foreach ($propertyMetadata->constraints() as $group => $constraints) {
-                    $allOf = Assert::create();
+                    $allOf = new Assertion();
                     foreach ($constraints as $constraint) {
-                        $allOf->addRules($constraint->getRules());
+                        $allOf->addRule($constraint);
                     }
 
                     $this->addConstraint(
-                        Assert::create()->attribute($propertyMetadata->propertyName(), $allOf),
+                        Assertion::property($propertyMetadata->propertyName(), $allOf),
                         get_class($object),
                         $group
                     );
@@ -314,13 +268,13 @@ class Validator implements ValidatorInterface
             /** @var MethodMetadata $methodMetadata */
             foreach ($classMetadata->methodsMetadata() as $methodMetadata) {
                 foreach ($methodMetadata->constraints() as $group => $constraints) {
-                    $allOf = Assert::create();
+                    $allOf = new Assertion();
                     foreach ($constraints as $constraint) {
-                        $allOf->addRules($constraint->getRules());
+                        $allOf->addRule($constraint);
                     }
 
                     $this->addConstraint(
-                        Assert::create()->call([$object, $methodMetadata->methodName()], $allOf),
+                        Assertion::method($methodMetadata->methodName(), $allOf),
                         get_class($object),
                         $group
                     );
@@ -330,9 +284,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param string $className
-     *
-     * @return ClassMetadata|null
+     * {@inheritdoc}
      */
     public static function getMetadataForClass($className)
     {
@@ -340,12 +292,11 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param string $namespace
-     * @param bool   $prepend
+     * {@inheritdoc}
      */
-    public static function registerValidator($namespace, $prepend = false)
+    public static function registerValidator($ruleName, callable $validator)
     {
-        Assert::registerValidator($namespace, $prepend);
+        Assertion::registerAssert($ruleName, $validator);
     }
 
     /**
@@ -395,30 +346,5 @@ class Validator implements ValidatorInterface
     protected function normalizeClassName($className = null)
     {
         return $className !== null ? $className : self::class;
-    }
-
-    /**
-     * @param NestedValidationException $nestedException
-     *
-     * @return array
-     */
-    public function messagesIndexedByName(NestedValidationException $nestedException)
-    {
-        $errors = array();
-        $exceptions = $nestedException->getIterator();
-
-        foreach ($exceptions as $exception) {
-            if ($exceptions[$exception]['depth'] > 1) {
-                if (isset($errors[$exception->getName()]) && !is_array($errors[$exception->getName()])) {
-                    $errors[$exception->getName()] = array();
-                }
-
-                $errors[$exception->getName()][] = $exception->getMessage();
-            } else {
-                $errors[$exception->getName()] = $exception->getMessage();
-            }
-        }
-
-        return $errors;
     }
 }

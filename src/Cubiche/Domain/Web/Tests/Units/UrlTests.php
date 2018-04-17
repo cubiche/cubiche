@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\Web\Tests\Units;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 use Cubiche\Domain\System\Tests\Units\StringLiteralTests;
 use Cubiche\Domain\Web\HostName;
@@ -69,7 +70,7 @@ class UrlTests extends StringLiteralTests
                     ->isFalse()
                 ->exception(function () {
                     Url::fromNative('');
-                })->isInstanceOf(\InvalidArgumentException::class)
+                })->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 

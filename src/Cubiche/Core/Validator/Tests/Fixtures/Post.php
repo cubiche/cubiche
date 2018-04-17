@@ -8,9 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator\Tests\Fixtures;
 
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -31,15 +32,22 @@ class Post
     protected $content;
 
     /**
+     * @var string[]
+     */
+    protected $comments;
+
+    /**
      * Post constructor.
      *
      * @param string $title
      * @param string $content
+     * @param array  $comments
      */
-    public function __construct($title = null, $content = null)
+    public function __construct($title = null, $content = null, $comments = array(null, null))
     {
         $this->title = $title;
         $this->content = $content;
+        $this->comments = $comments;
     }
 
     /**
@@ -59,6 +67,14 @@ class Post
     }
 
     /**
+     * @return string[]
+     */
+    public function comments()
+    {
+        return $this->comments;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function equals($other)
@@ -74,10 +90,11 @@ class Post
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('title', Assert::stringType()->notBlank());
-        $classMetadata->addPropertyConstraint('content', Assert::stringType());
+        $classMetadata->addPropertyConstraint('title', Assertion::string()->notBlank());
+        $classMetadata->addMethodConstraint('title', Assertion::string()->notBlank());
+        $classMetadata->addPropertyConstraint('content', Assertion::string());
 
-        $classMetadata->addPropertyConstraint('title', Assert::intType()->notBlank(), 'foo');
-        $classMetadata->addPropertyConstraint('content', Assert::intType()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('title', Assertion::integer()->notBlank(), 'foo');
+        $classMetadata->addPropertyConstraint('content', Assertion::integer()->notBlank(), 'foo');
     }
 }

@@ -11,6 +11,9 @@
 
 namespace Cubiche\Domain\System;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
+
 /**
  * Real Class.
  *
@@ -31,7 +34,7 @@ class Real extends Number
     /**
      * @param float $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function __construct($value)
     {
@@ -41,10 +44,15 @@ class Real extends Number
         } elseif (\is_infinite($value)) {
             $this->value = $value;
         } else {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "float".',
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument "%s" is invalid. Allowed types for argument are "float".',
+                    $value
+                ),
+                Assert::INVALID_FLOAT,
+                'Real',
                 $value
-            ));
+            );
         }
     }
 

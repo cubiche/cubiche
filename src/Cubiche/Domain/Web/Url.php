@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\Web;
 
+use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\StringLiteral;
 
 /**
@@ -63,7 +65,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct($url)
     {
@@ -112,7 +114,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
@@ -120,10 +122,15 @@ class Url extends StringLiteral
     {
         $scheme = \parse_url($url, PHP_URL_SCHEME);
         if (\preg_match('/^[a-z]([a-z0-9\+\.-]+)?$/i', $scheme) === 0) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "schema".',
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument "%s" is invalid. Allowed types for argument are "schema".',
+                    $url
+                ),
+                Assert::INVALID_CUSTOM_ASSERT,
+                'parseSchema',
                 $url
-            ));
+            );
         }
 
         return new StringLiteral($scheme);
@@ -132,7 +139,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return Host
      */
@@ -146,7 +153,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return Path | null
      */
@@ -155,10 +162,15 @@ class Url extends StringLiteral
         $path = \parse_url($url, PHP_URL_PATH);
         $filteredValue = parse_url($path, PHP_URL_PATH);
         if ($filteredValue === null || strlen($filteredValue) != strlen($path)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Argument "%s" is invalid. Allowed types for argument are "url".',
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Argument "%s" is invalid. Allowed types for argument are "url".',
+                    $url
+                ),
+                Assert::INVALID_CUSTOM_ASSERT,
+                'parsePath',
                 $url
-            ));
+            );
         }
 
         return new Path($filteredValue);
@@ -182,7 +194,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
@@ -201,7 +213,7 @@ class Url extends StringLiteral
     /**
      * @param string $url
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
@@ -211,10 +223,15 @@ class Url extends StringLiteral
         if ($fragmentId) {
             $fragment = \sprintf('#%s', $fragmentId);
             if (\preg_match('/^#[?%!$&\'()*+,;=a-zA-Z0-9-._~:@\/]*$/', $fragment) === 0) {
-                throw new \InvalidArgumentException(sprintf(
-                    'Argument "%s" is invalid. Allowed types for argument are "fragment identifier".',
-                    $fragment
-                ));
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Argument "%s" is invalid. Allowed types for argument are "fragment identifier".',
+                        $fragment
+                    ),
+                    Assert::INVALID_CUSTOM_ASSERT,
+                    'parseFragmentIdentifier',
+                    $url
+                );
             }
 
             return new StringLiteral($fragment);

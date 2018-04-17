@@ -12,7 +12,7 @@
 namespace Cubiche\Domain\ProcessManager\Tests\Fixtures\Order\Command;
 
 use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -83,8 +83,8 @@ class CreateOrderCommand extends Command
      */
     public static function loadValidatorMetadata(ClassMetadata $classMetadata)
     {
-        $classMetadata->addPropertyConstraint('orderId', Assert::uuid()->notBlank());
-        $classMetadata->addPropertyConstraint('conferenceId', Assert::uuid()->notBlank());
-        $classMetadata->addPropertyConstraint('numberOfTickets', Assert::intType()->notBlank());
+        $classMetadata->addPropertyConstraint('orderId', Assertion::uuid()->notBlank());
+        $classMetadata->addPropertyConstraint('conferenceId', Assertion::uuid()->notBlank());
+        $classMetadata->addPropertyConstraint('numberOfTickets', Assertion::integer()->notBlank());
     }
 }

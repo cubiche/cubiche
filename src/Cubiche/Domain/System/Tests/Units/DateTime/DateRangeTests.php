@@ -11,9 +11,9 @@
 
 namespace Cubiche\Domain\System\Tests\Units\DateTime;
 
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\DateTime\Date;
 use Cubiche\Domain\System\DateTime\DateRange;
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\DateTime\Month;
 use Cubiche\Domain\System\DateTime\MonthDay;
 use Cubiche\Domain\System\DateTime\Year;

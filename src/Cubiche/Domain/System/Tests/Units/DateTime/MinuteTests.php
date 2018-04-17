@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\System\Tests\Units\DateTime;
 
-use Cubiche\Domain\System\DateTime\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\System\DateTime\Minute;
 use Cubiche\Domain\System\Tests\Units\TestCase;
 

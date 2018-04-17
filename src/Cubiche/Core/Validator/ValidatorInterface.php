@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Core\Validator;
 
 use Cubiche\Core\Validator\Exception\ValidationException;
+use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
  * Validator interface.
@@ -42,4 +44,17 @@ interface ValidatorInterface
      * @throws ValidationException
      */
     public static function assert($value, $constraints = null, $group = null);
+
+    /**
+     * @param string $className
+     *
+     * @return ClassMetadata|null
+     */
+    public static function getMetadataForClass($className);
+
+    /**
+     * @param string   $ruleName
+     * @param callable $validator
+     */
+    public static function registerValidator($ruleName, callable $validator);
 }

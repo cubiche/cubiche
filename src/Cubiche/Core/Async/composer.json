@@ -24,6 +24,7 @@
         "php":                  "^7.0|^7.1",
         "cubiche/delegate":     "dev-master",
         "cubiche/enum":         "dev-master",
+        "cubiche/validator":    "dev-master",
         "react/event-loop":     "^0.4.2"
     },
     "require-dev": {

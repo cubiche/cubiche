@@ -8,9 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Cubiche\Domain\System\Tests\Units;
 
 use Closure;
+use Cubiche\Core\Validator\Exception\InvalidArgumentException;
 use Cubiche\Domain\Model\Tests\Units\NativeValueObjectTestCase;
 use Cubiche\Domain\System\Decimal;
 use Cubiche\Domain\System\Integer;
@@ -834,7 +836,7 @@ abstract class NumberTestCase extends NativeValueObjectTestCase
             ->exception(function () use ($number) {
                 $number->toInteger()->compareTo(StringLiteral::fromNative('foo'));
             })
-            ->isInstanceOf(\InvalidArgumentException::class)
+            ->isInstanceOf(InvalidArgumentException::class)
         ;
     }
 }
