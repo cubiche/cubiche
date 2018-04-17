@@ -672,7 +672,7 @@ class Asserter extends Visitor
             Assert::stringify($rule->rule())
         );
 
-        throw Assert::createException($input, $message, static::INVALID_NOT_ASSERT, $propertyPath);
+        throw Assert::createException($input, $message, Assert::INVALID_NOT_ASSERT, $propertyPath);
     }
 
     /**
