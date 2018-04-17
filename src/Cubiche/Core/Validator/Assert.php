@@ -748,6 +748,8 @@ class Assert extends BaseAssert
         static::isCallable($callback);
 
         array_unshift($arguments, $value);
+        array_push($arguments, $message, $propertyPath);
+
         if (false === \call_user_func_array($callback, $arguments)) {
             $message = \sprintf(
                 static::generateMessage($message ?: 'Provided "%s" is invalid according to custom callback rule.'),

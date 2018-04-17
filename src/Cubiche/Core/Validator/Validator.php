@@ -168,6 +168,7 @@ class Validator implements ValidatorInterface
      */
     protected function assertConstraints($value, $constraints = null, $group = null)
     {
+        $this->constraints = array();
         $group = $this->normalizeGroup($group);
 
         // If explicit constraints are passed, validate the value against
