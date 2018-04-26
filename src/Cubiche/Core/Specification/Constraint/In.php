@@ -23,8 +23,10 @@ class In extends RelationalOperator
      */
     public function evaluate($value)
     {
-        foreach ($value as $item) {
-            if ($this->comparison($item) === 0) {
+        $values = $this->right()->apply($value);
+        foreach ($values as $item) {
+            $comparison = self::comparator()->compare($this->left()->apply($value), $item);
+            if ($comparison === 0) {
                 return true;
             }
         }
