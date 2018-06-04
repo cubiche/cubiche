@@ -11,6 +11,7 @@
 namespace Cubiche\Core\Validator;
 
 use Cubiche\Core\Validator\Exception\InvalidArgumentException;
+use Cubiche\Core\Validator\Rules\Arrays\Key;
 use Cubiche\Core\Validator\Rules\Generic\All;
 use Cubiche\Core\Validator\Rules\Generic\Callback;
 use Cubiche\Core\Validator\Rules\Generic\Not;
@@ -79,9 +80,11 @@ use ReflectionClass;
  * @method static static isObject(string|callable $message = null, string $propertyPath = null) Determines that the provided value is an object
  * @method static static isResource(string|callable $message = null, string $propertyPath = null) Assert that value is a resource
  * @method static static isTraversable(string|callable $message = null, string $propertyPath = null) Assert that value is an array or a traversable object
+ * @method static static key(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a key value
  * @method static static keyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array
  * @method static static keyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset()
  * @method static static keyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array
+ * @method static static keySet(Assertion ...$assertions) Assert all the key assertions
  * @method static static latitude(string|callable $message = null, string $propertyPath = null) Assert that value is a valid latitude
  * @method static static length(int $length, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string has a given length
  * @method static static lengthBetween(int $minLength, int $maxLength, string|callable $message = null, string $propertyPath = null, string $encoding = 'utf8') Assert that string length is between min,max lengths
@@ -190,6 +193,7 @@ use ReflectionClass;
  * @method static static allIsObject(string|callable $message = null, string $propertyPath = null) Determines that the provided value is an object for all values
  * @method static static allIsResource(string|callable $message = null, string $propertyPath = null) Assert that value is a resource for all values
  * @method static static allIsTraversable(string|callable $message = null, string $propertyPath = null) Assert that value is an array or a traversable object for all values
+ * @method static static allKey(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a key value for all values
  * @method static static allKeyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array for all values
  * @method static static allKeyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() for all values
  * @method static static allKeyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array for all values
@@ -298,6 +302,7 @@ use ReflectionClass;
  * @method static static nullOrIsObject(string|callable $message = null, string $propertyPath = null) Determines that the provided value is an object or that the value is null
  * @method static static nullOrIsResource(string|callable $message = null, string $propertyPath = null) Assert that value is a resource or that the value is null
  * @method static static nullOrIsTraversable(string|callable $message = null, string $propertyPath = null) Assert that value is an array or a traversable object or that the value is null
+ * @method static static nullOrKey(string $name, Assertion $assert, string|callable $message = null, string $propertyPath = null) Assert a key value or that the value is null
  * @method static static nullOrKeyExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array or that the value is null
  * @method static static nullOrKeyIsset(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key exists in an array/array-accessible object using isset() or that the value is null
  * @method static static nullOrKeyNotExists(string|int $key, string|callable $message = null, string $propertyPath = null) Assert that key does not exist in an array or that the value is null

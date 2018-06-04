@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cubiche/cqt.git",
-                "reference": "14e077a402bc6d21a3e4c0c9a2fc8cb950440b55"
+                "reference": "5cae76821df0b3ad442f629c62d39fe8e455c8c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cubiche/cqt/zipball/14e077a402bc6d21a3e4c0c9a2fc8cb950440b55",
-                "reference": "14e077a402bc6d21a3e4c0c9a2fc8cb950440b55",
+                "url": "https://api.github.com/repos/cubiche/cqt/zipball/5cae76821df0b3ad442f629c62d39fe8e455c8c7",
+                "reference": "5cae76821df0b3ad442f629c62d39fe8e455c8c7",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,8 @@
                 "fabpot/php-cs-fixer": "~1.11",
                 "php": ">=5.5.0",
                 "phpmd/phpmd": "@stable",
-                "squizlabs/php_codesniffer": "@stable"
+                "squizlabs/php_codesniffer": "@stable",
+                "symfony/yaml": "^3.4"
             },
             "bin": [
                 "pre-commit",
@@ -199,7 +200,7 @@
                 "phpunit",
                 "quality"
             ],
-            "time": "2017-09-08T12:33:56+00:00"
+            "time": "2018-06-04T12:43:01+00:00"
         },
         {
             "name": "fabpot/php-cs-fixer",
@@ -2307,6 +2308,64 @@
             "time": "2018-01-03T07:37:34+00:00"
         },
         {
+            "name": "symfony/yaml",
+            "version": "3.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "25c192f25721a74084272671f658797d9e0e0146"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/25c192f25721a74084272671f658797d9e0e0146",
+                "reference": "25c192f25721a74084272671f658797d9e0e0146",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "conflict": {
+                "symfony/console": "<3.4"
+            },
+            "require-dev": {
+                "symfony/console": "~3.4|~4.0"
+            },
+            "suggest": {
+                "symfony/console": "For validating YAML files using the lint command"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-01-03T07:37:34+00:00"
+        },
+        {
             "name": "winzou/state-machine",
             "version": "dev-master",
             "source": {
@@ -2969,64 +3028,6 @@
                 "fixtures"
             ],
             "time": "2018-01-16T09:36:14+00:00"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "3.4.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "25c192f25721a74084272671f658797d9e0e0146"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/25c192f25721a74084272671f658797d9e0e0146",
-                "reference": "25c192f25721a74084272671f658797d9e0e0146",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8"
-            },
-            "conflict": {
-                "symfony/console": "<3.4"
-            },
-            "require-dev": {
-                "symfony/console": "~3.4|~4.0"
-            },
-            "suggest": {
-                "symfony/console": "For validating YAML files using the lint command"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Yaml\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Yaml Component",
-            "homepage": "https://symfony.com",
-            "time": "2018-01-03T07:37:34+00:00"
         }
     ],
     "aliases": [],

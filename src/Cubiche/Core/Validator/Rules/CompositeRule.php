@@ -34,7 +34,7 @@ class CompositeRule extends Rule
     }
 
     /**
-     * @return ArrayList
+     * @return array
      */
     public function rules()
     {

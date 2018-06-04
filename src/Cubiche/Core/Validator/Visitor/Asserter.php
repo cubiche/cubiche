@@ -19,9 +19,11 @@ use Cubiche\Core\Validator\Rules\Arrays\Each;
 use Cubiche\Core\Validator\Rules\Arrays\InArray;
 use Cubiche\Core\Validator\Rules\Arrays\IsArray;
 use Cubiche\Core\Validator\Rules\Arrays\IsArrayAccessible;
+use Cubiche\Core\Validator\Rules\Arrays\Key;
 use Cubiche\Core\Validator\Rules\Arrays\KeyExists;
 use Cubiche\Core\Validator\Rules\Arrays\KeyIsset;
 use Cubiche\Core\Validator\Rules\Arrays\KeyNotExists;
+use Cubiche\Core\Validator\Rules\Arrays\KeySet;
 use Cubiche\Core\Validator\Rules\Arrays\MaxCount;
 use Cubiche\Core\Validator\Rules\Arrays\MinCount;
 use Cubiche\Core\Validator\Rules\Arrays\NotEmptyKey;
@@ -238,6 +240,28 @@ class Asserter extends Visitor
     }
 
     /**
+     * @param Key                  $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitKey(Key $rule, $input, $message = null, $propertyPath = null)
+    {
+        Assert::keyExists($input, $rule->reference(), $propertyPath, $rule->reference());
+
+        return $rule->validator()->accept(
+            $this,
+            $input[$rule->reference()],
+            $message,
+            $rule->reference()
+        );
+    }
+
+    /**
      * @param KeyExists            $rule
      * @param mixed                $input
      * @param string|callable|null $message
@@ -280,6 +304,26 @@ class Asserter extends Visitor
     public function visitKeyNotExists(KeyNotExists $rule, $input, $message = null, $propertyPath = null)
     {
         return Assert::keyNotExists($input, $rule->key(), $message, $propertyPath);
+    }
+
+    /**
+     * @param KeySet               $rule
+     * @param mixed                $input
+     * @param string|callable|null $message
+     * @param string|null          $propertyPath
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
+    public function visitKeySet(KeySet $rule, $input, $message = null, $propertyPath = null)
+    {
+        Assert::isArray($input, $message, $propertyPath);
+
+        $allOf = new AllOf();
+        $allOf->addRules($rule->rules());
+
+        return $this->visitAllOf($allOf, $input, $message, $propertyPath);
     }
 
     /**
@@ -667,7 +711,7 @@ class Asserter extends Visitor
         }
 
         $message = \sprintf(
-            Assert::generateMessage( $message ?: 'Value "%s" expected to not match with the %s assert.'),
+            Assert::generateMessage($message ?: 'Value "%s" expected to not match with the %s assert.'),
             Assert::stringify($input),
             Assert::stringify($rule->rule())
         );

@@ -122,6 +122,32 @@ class AssertionTests extends TestCase
                 ),
                 true,
             ),
+            '12' => array(
+                Assertion::allOf(
+                    Assertion::key('foo', Assertion::integer()),
+                    Assertion::key('bar', Assertion::string())
+                ),
+                array(
+                    array(
+                        'foo' => 42,
+                        'bar' => 'String',
+                    ),
+                ),
+                true,
+            ),
+            '13' => array(
+                Assertion::keySet(
+                    Assertion::key('foo', Assertion::integer()),
+                    Assertion::key('bar', Assertion::string())
+                ),
+                array(
+                    array(
+                        'foo' => 42,
+                        'bar' => 'String',
+                    ),
+                ),
+                true,
+            ),
         );
     }
 
@@ -217,7 +243,9 @@ class AssertionTests extends TestCase
 
         if (!$success) {
             $this
-                ->given($assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments))
+                ->given(
+                    $assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments)
+                )
                 ->then()
                 ->exception(function () use ($assertion, $arg) {
                     call_user_func_array(array($assertion, 'assert'), array($arg));
@@ -225,7 +253,9 @@ class AssertionTests extends TestCase
             ;
         } else {
             $this
-                ->given($assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments))
+                ->given(
+                    $assertion = call_user_func_array(array(Assertion::class, 'nullOr'.ucfirst($method)), $arguments)
+                )
                 ->then()
                     ->boolean(call_user_func_array(array($assertion, 'assert'), array($arg)))
                         ->isTrue()
@@ -350,9 +380,11 @@ class AssertionTests extends TestCase
                     $assertion->addRule(Assertion::property('content', Assertion::uniqueName()));
                 })->isInstanceOf(\LogicException::class)
                 ->and()
-                ->when(Assertion::registerAssert('uniqueName', function ($value, $message = null, $propertyPath = null) {
-                    throw new InvalidArgumentException('Title must be unique', 0, 'title', $value);
-                }))
+                ->when(
+                    Assertion::registerAssert('uniqueName', function ($value, $message = null, $propertyPath = null) {
+                        throw new InvalidArgumentException('Title must be unique', 0, 'title', $value);
+                    })
+                )
                 ->and($assertion->addRule(Assertion::property('content', Assertion::uniqueName())))
                 ->then()
                     ->boolean($assertion->validate($post))
