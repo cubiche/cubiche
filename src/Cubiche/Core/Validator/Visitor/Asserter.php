@@ -1474,6 +1474,8 @@ class Asserter extends Visitor
      */
     public function visitUuid(Uuid $rule, $input, $message = null, $propertyPath = null)
     {
+        Assert::string($input, $message, $propertyPath);
+
         return Assert::uuid($input, $message, $propertyPath);
     }
 

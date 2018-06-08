@@ -127,7 +127,7 @@ class DocumentManager
     protected function addBulkUpdate(LoggableBulkWrite $bulk, IdentifiableInterface $element)
     {
         $bulk->update(
-            array('_id' => $element->id()->toNative()),
+            array('_id' => $this->serializer->serialize($element->id())),
             array('$set' => $this->serializer->serialize($element)),
             array('upsert' => true)
         );
