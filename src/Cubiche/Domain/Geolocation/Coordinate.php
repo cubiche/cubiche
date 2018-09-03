@@ -70,16 +70,19 @@ class Coordinate implements ValueObjectInterface
     }
 
     /**
-     * @param Coordinate   $coordinate
-     * @param DistanceUnit $unit
+     * @param Coordinate        $coordinate
+     * @param DistanceUnit|null $unit
+     *
+     * @return Distance
      */
     public function distance(Coordinate $coordinate, DistanceUnit $unit = null)
     {
-        $latA = \deg2rad($this->latitude());
-        $lngA = \deg2rad($this->longitude());
-        $latB = \deg2rad($coordinate->latitude());
-        $lngB = \deg2rad($coordinate->longitude());
+        $latA = \deg2rad($this->latitude()->toNative());
+        $lngA = \deg2rad($this->longitude()->toNative());
+        $latB = \deg2rad($coordinate->latitude()->toNative());
+        $lngB = \deg2rad($coordinate->longitude()->toNative());
         $degrees = \acos(\sin($latA) * \sin($latB) + \cos($latA) * \cos($latB) * \cos($lngB - $lngA));
+
         $unit = $unit === null ? DistanceUnit::METER() : $unit;
 
         return (new Distance(Real::fromNative($degrees * self::EARTH_RADIUS), DistanceUnit::METER()))->in($unit);
