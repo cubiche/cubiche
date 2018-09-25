@@ -24,28 +24,15 @@ use Cubiche\Core\EventDispatcher\EventDispatcherInterface;
 class EventBusFactory
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
-     * EventBusFactory constructor.
-     *
      * @param EventDispatcherInterface $dispatcher
-     */
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    /**
+     *
      * @return EventBus
      */
-    public function create()
+    public static function create(EventDispatcherInterface $dispatcher)
     {
         return new EventBus([
             250 => new LockingMiddleware(),
-            100 => new EventDispatcherMiddleware($this->dispatcher),
+            100 => new EventDispatcherMiddleware($dispatcher),
         ]);
     }
 }

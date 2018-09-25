@@ -11,17 +11,23 @@
 
 namespace Cubiche\Infrastructure\Repository\MongoDB\Tests\Units;
 
+use Closure;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Metadata\Cache\FileCache;
 use Cubiche\Core\Metadata\ClassMetadataFactory;
 use Cubiche\Core\Metadata\Locator\DefaultFileLocator;
 use Cubiche\Core\Metadata\Tests\Fixtures\Driver\XmlDriver;
-use Cubiche\Core\Serializer\Encoder\ArrayEncoder;
-use Cubiche\Core\Serializer\Encoder\DateTimeEncoder;
-use Cubiche\Core\Serializer\Encoder\MetadataObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\NativeEncoder;
-use Cubiche\Core\Serializer\Encoder\ObjectEncoder;
-use Cubiche\Core\Serializer\Encoder\ValueObjectEncoder;
+use Cubiche\Core\Serializer\Handler\CollectionHandler;
+use Cubiche\Core\Serializer\Handler\CoordinateHandler;
+use Cubiche\Core\Serializer\Handler\DateRangeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeHandler;
+use Cubiche\Core\Serializer\Handler\DateTimeValueObjectHandler;
+use Cubiche\Core\Serializer\Handler\HandlerManager;
+use Cubiche\Core\Serializer\Handler\LocalizableValueHandler;
 use Cubiche\Core\Serializer\Serializer;
+use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
+use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
+use Cubiche\Core\Serializer\Visitor\VisitorNavigator;
 use Cubiche\Infrastructure\MongoDB\Common\Connection;
 use Cubiche\Infrastructure\MongoDB\DocumentManager;
 use Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentDataSourceFactory;
@@ -29,6 +35,11 @@ use Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentQueryRepositoryFac
 use Cubiche\Infrastructure\Repository\MongoDB\Factory\DocumentRepositoryFactory;
 use Cubiche\Infrastructure\Repository\MongoDB\Visitor\ComparatorVisitorFactory;
 use Cubiche\Infrastructure\Repository\MongoDB\Visitor\SpecificationVisitorFactory;
+use mageekguy\atoum\adapter as Adapter;
+use mageekguy\atoum\annotations\extractor as Extractor;
+use mageekguy\atoum\asserter\generator as Generator;
+use mageekguy\atoum\test\assertion\manager as Manager;
+use mageekguy\atoum\tools\variable\analyzer as Analyzer;
 use MongoDB\Database;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\DropCollection;
@@ -52,6 +63,46 @@ trait DocumentManagerTestCaseTrait
     protected $cacheDirectory = __DIR__.'/Cache';
 
     /**
+     * @param Adapter   $adapter
+     * @param Extractor $annotationExtractor
+     * @param Generator $asserterGenerator
+     * @param Manager   $assertionManager
+     * @param Closure   $reflectionClassFactory
+     * @param Closure   $phpExtensionFactory
+     * @param Analyzer  $analyzer
+     */
+    public function __construct(
+        Adapter $adapter = null,
+        Extractor $annotationExtractor = null,
+        Generator $asserterGenerator = null,
+        Manager $assertionManager = null,
+        Closure $reflectionClassFactory = null,
+        Closure $phpExtensionFactory = null,
+        Analyzer $analyzer = null
+    ) {
+        parent::__construct(
+            $adapter,
+            $annotationExtractor,
+            $asserterGenerator,
+            $assertionManager,
+            $reflectionClassFactory,
+            $phpExtensionFactory,
+            $analyzer
+        );
+
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Core\Equatable\Tests\Asserters');
+        $this->getAsserterGenerator()->addNamespace('Cubiche\Core\Collections\Tests\Asserters');
+
+        $this->getAssertionManager()->setAlias('variable', 'VariableAsserter');
+        $this->getAssertionManager()->setAlias('object', 'ObjectAsserter');
+        $this->getAssertionManager()->setAlias('collection', 'CollectionAsserter');
+        $this->getAssertionManager()->setAlias('list', 'ListAsserter');
+        $this->getAssertionManager()->setAlias('set', 'SetAsserter');
+        $this->getAssertionManager()->setAlias('hashmap', 'HashMapAsserter');
+        $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
+    }
+
+    /**
      * Create the cache directory.
      */
     public function setUp()
@@ -67,7 +118,6 @@ trait DocumentManagerTestCaseTrait
     public function tearDown()
     {
         $this->rmdir($this->cacheDirectory);
-//        $this->database()->drop();
     }
 
     /**
@@ -133,17 +183,7 @@ trait DocumentManagerTestCaseTrait
     {
         $connection = $this->getConnection();
         $metadataFactory = $this->createMetadataFactory();
-
-        $encoders = array(
-            new ValueObjectEncoder(),
-            new DateTimeEncoder(),
-            new MetadataObjectEncoder($metadataFactory),
-            new ArrayEncoder(),
-            new ObjectEncoder(),
-            new NativeEncoder(),
-        );
-
-        $serializer = new Serializer($encoders);
+        $serializer = $this->createSerializer();
         $logger = new Logger('inline_logger');
 
         return new DocumentManager($connection, $metadataFactory, $serializer, $logger);
@@ -224,6 +264,38 @@ trait DocumentManagerTestCaseTrait
     private function createComparatorVisitorFactory()
     {
         return new ComparatorVisitorFactory();
+    }
+
+    /**
+     * @return Serializer
+     */
+    protected function createSerializer()
+    {
+        $metadataFactory = $this->createMetadataFactory();
+
+        $handlerManager = new HandlerManager();
+        $eventBus = EventBus::create();
+
+        // handlers
+        $collectionHandler = new CollectionHandler();
+        $dateHandler = new DateTimeHandler();
+        $coordinateHandler = new CoordinateHandler();
+        $localizableValueHandler = new LocalizableValueHandler();
+        $dateTimeValueObjectHandler = new DateTimeValueObjectHandler();
+        $dateRangeHandler = new DateRangeHandler();
+
+        $handlerManager->registerSubscriberHandler($collectionHandler);
+        $handlerManager->registerSubscriberHandler($dateHandler);
+        $handlerManager->registerSubscriberHandler($coordinateHandler);
+        $handlerManager->registerSubscriberHandler($localizableValueHandler);
+        $handlerManager->registerSubscriberHandler($dateTimeValueObjectHandler);
+        $handlerManager->registerSubscriberHandler($dateRangeHandler);
+
+        $navigator = new VisitorNavigator($metadataFactory, $handlerManager, $eventBus);
+        $serializationVisitor = new SerializationVisitor($navigator);
+        $deserializationVisitor = new DeserializationVisitor($navigator);
+
+        return new Serializer($navigator, $serializationVisitor, $deserializationVisitor);
     }
 
     /**

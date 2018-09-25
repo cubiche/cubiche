@@ -13,7 +13,7 @@ namespace Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator;
 
 use Cubiche\Core\Bus\Exception\NotFoundException;
 use Cubiche\Core\Bus\Middlewares\Handler\Locator\LocatorInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * ContainerLocator class.

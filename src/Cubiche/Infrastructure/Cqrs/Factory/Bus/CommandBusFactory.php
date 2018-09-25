@@ -30,11 +30,11 @@ class CommandBusFactory
      *
      * @return CommandBus
      */
-    public function create(
+    public static function create(
         HandlerClassResolver $commandHandlerResolver,
         HandlerClassResolver $validatorHandlerResolver
     ) {
-        $commandBus = $this->createNonLocking($commandHandlerResolver, $validatorHandlerResolver);
+        $commandBus = self::createNonLocking($commandHandlerResolver, $validatorHandlerResolver);
         $commandBus->addMiddleware(new LockingMiddleware(), 500);
 
         return $commandBus;
@@ -46,7 +46,7 @@ class CommandBusFactory
      *
      * @return CommandBus
      */
-    public function createNonLocking(
+    public static function createNonLocking(
         HandlerClassResolver $commandHandlerResolver,
         HandlerClassResolver $validatorHandlerResolver
     ) {

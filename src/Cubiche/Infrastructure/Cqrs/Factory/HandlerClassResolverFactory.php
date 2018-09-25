@@ -61,6 +61,16 @@ class HandlerClassResolverFactory
      *
      * @return HandlerClassResolver
      */
+    public function createForEvent(LocatorInterface $locator)
+    {
+        return $this->createFor($locator, 'Event');
+    }
+
+    /**
+     * @param LocatorInterface $locator
+     *
+     * @return HandlerClassResolver
+     */
     public function createForQueryValidator(LocatorInterface $locator)
     {
         return $this->createForValidator($locator, 'Query');

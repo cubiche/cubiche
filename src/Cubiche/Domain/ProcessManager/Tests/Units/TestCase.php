@@ -12,7 +12,6 @@
 namespace Cubiche\Domain\ProcessManager\Tests\Units;
 
 use Closure;
-use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventPublisher\DomainEventPublisher;
 use Cubiche\Domain\ProcessManager\Tests\Fixtures\Conference\Command\CreateConferenceCommand;
 use Cubiche\Domain\ProcessManager\Tests\Fixtures\Conference\Conference;
@@ -86,10 +85,6 @@ abstract class TestCase extends BaseTestCase
         $this->getAssertionManager()->setAlias('set', 'SetAsserter');
         $this->getAssertionManager()->setAlias('hashmap', 'HashMapAsserter');
         $this->getAssertionManager()->setAlias('datasource', 'DataSourceAsserter');
-
-//        Validator::registerValidator('Cubiche\\Domain\\Geolocation\\Validation\\Rules', true);
-//        Validator::registerValidator('Cubiche\\Domain\\Identity\\Validation\\Rules', true);
-//        Validator::registerValidator('Cubiche\\Domain\\Locale\\Validation\\Rules', true);
     }
 
     /**
@@ -144,6 +139,7 @@ abstract class TestCase extends BaseTestCase
     {
         $orderProcessManager = new OrderProcessManager(
             $this->commandBus(),
+            $this->eventBus(),
             $this->queryRepository(OrderProcessState::class)
         );
 

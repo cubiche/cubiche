@@ -185,7 +185,9 @@ class ProcessManagerTests extends TestCase
     public function testSimpleProcessManager()
     {
         $this
-            ->given($processManager = new SimpleProcessManager($this->commandBus()))
+            ->given(
+                $processManager = new SimpleProcessManager($this->commandBus(), $this->eventBus())
+            )
             ->then()
                 ->exception(function () use ($processManager) {
                     $processManager->load(ConferenceId::next());
@@ -196,6 +198,7 @@ class ProcessManagerTests extends TestCase
             ->given(
                 $processManager = new SimpleProcessManager(
                     $this->commandBus(),
+                    $this->eventBus(),
                     $this->queryRepository(OrderProcessState::class)
                 )
             )

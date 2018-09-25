@@ -16,7 +16,7 @@ use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessageListener;
 use Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Locator\LocatorTestCase;
 use Cubiche\Infrastructure\Bus\Middlewares\Handler\Locator\ContainerLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use DI\ContainerBuilder;
 
 /**
  * ContainerLocatorTests class.
@@ -30,19 +30,9 @@ class ContainerLocatorTests extends LocatorTestCase
      */
     protected function createLocator()
     {
-        $container = new ContainerBuilder();
+        $builder = new ContainerBuilder();
 
-        return new ContainerLocator($container);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function createNonEmptyLocator()
-    {
-        $container = new ContainerBuilder();
-
-        return new ContainerLocator($container);
+        return new ContainerLocator($builder->build());
     }
 
     /**
@@ -78,13 +68,19 @@ class ContainerLocatorTests extends LocatorTestCase
         ;
 
         $this
-            ->given($container = new ContainerBuilder())
-            ->and($container->register('app.login.handler', LoginUserMessageListener::class))
-            ->and($locator = new ContainerLocator($container))
+            ->given($builder = new ContainerBuilder())
+            ->and(
+                $builder->addDefinitions([
+                    'app.login.handler' => function () {
+                        return new LoginUserMessageListener();
+                    },
+                ])
+            )
+            ->and($locator = new ContainerLocator($builder->build()))
             ->when($locator->addHandler(LoginUserMessage::class, 'app.login.handler'))
             ->then()
                 ->object($locator->locate(LoginUserMessage::class))
-                ->isInstanceOf(LoginUserMessageListener::class)
+                    ->isInstanceOf(LoginUserMessageListener::class)
                 ->and()
                 ->exception(function () use ($locator) {
                     $locator->locate('Foo');

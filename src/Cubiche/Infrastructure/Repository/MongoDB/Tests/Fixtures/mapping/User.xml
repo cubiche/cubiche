@@ -2,15 +2,15 @@
     <aggregate-root name="Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\User" collection="user">
         <field fieldName="id" id="true" type="Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\UserId" />
         <field fieldName="name" type="string" />
-        <field fieldName="fullName" type="StringLiteral" />
+        <field fieldName="fullName" type="Cubiche\Domain\System\StringLiteral" />
         <field fieldName="age" type="integer" />
-        <field fieldName="email" type="EmailAddress" />
+        <field fieldName="email" type="Cubiche\Domain\Web\EmailAddress" />
         <field fieldName="fax" type="Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Phonenumber" />
         <field fieldName="mainRole" type="Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Role" />
         <field fieldName="phonenumbers" type="array[Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Phonenumber]" />
-        <field fieldName="roles" type="ArraySet[Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Role]" />
-        <field fieldName="languagesLevel" type="ArrayHashMap[integer]" />
-        <field fieldName="addresses" type="ArrayList[Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Address]" />
+        <field fieldName="roles" type="Cubiche\Core\Collections\ArrayCollection\ArraySet[Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Role]" />
+        <field fieldName="languagesLevel" type="Cubiche\Core\Collections\ArrayCollection\ArrayHashMap[string,integer]" />
+        <field fieldName="addresses" type="Cubiche\Core\Collections\ArrayCollection\ArrayList[Cubiche\Infrastructure\Repository\MongoDB\Tests\Fixtures\Address]" />
     </aggregate-root>
     
 </cubiche-mapping>

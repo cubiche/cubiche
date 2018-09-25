@@ -11,6 +11,7 @@
 
 namespace Cubiche\Infrastructure\Repository\MongoDB\Factory;
 
+use Cubiche\Domain\Repository\Factory\QueryRepositoryFactoryInterface;
 use Cubiche\Infrastructure\MongoDB\DocumentManager;
 use Cubiche\Infrastructure\MongoDB\Repository;
 use Cubiche\Infrastructure\Repository\MongoDB\DocumentQueryRepository;
@@ -20,7 +21,7 @@ use Cubiche\Infrastructure\Repository\MongoDB\DocumentQueryRepository;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DocumentQueryRepositoryFactory implements DocumentQueryRepositoryFactoryInterface
+class DocumentQueryRepositoryFactory implements QueryRepositoryFactoryInterface
 {
     /**
      * @var DocumentManager

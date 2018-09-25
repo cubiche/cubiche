@@ -13,6 +13,8 @@ namespace Cubiche\Domain\ProcessManager;
 
 use Cubiche\Core\Cqrs\Command\Command;
 use Cubiche\Core\Cqrs\Command\CommandBus;
+use Cubiche\Core\EventBus\Event\Event;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\Model\IdInterface;
 use Cubiche\Domain\Repository\QueryRepositoryInterface;
 use SM\StateMachine\StateMachine;
@@ -30,6 +32,11 @@ abstract class ProcessManager
     private $commandBus;
 
     /**
+     * @var EventBus
+     */
+    private $eventBus;
+
+    /**
      * @var QueryRepositoryInterface
      */
     private $repository;
@@ -42,14 +49,17 @@ abstract class ProcessManager
     /**
      * ProcessManager constructor.
      *
-     * @param CommandBus               $commandBus
-     * @param QueryRepositoryInterface $repository
+     * @param CommandBus                    $commandBus
+     * @param EventBus                      $eventBus
+     * @param QueryRepositoryInterface|null $repository
      */
     public function __construct(
         CommandBus $commandBus,
+        EventBus $eventBus,
         QueryRepositoryInterface $repository = null
     ) {
         $this->commandBus = $commandBus;
+        $this->eventBus = $eventBus;
         $this->repository = $repository;
 
         $this->config = new ProcessManagerConfig();
@@ -107,6 +117,14 @@ abstract class ProcessManager
     public function dispatch(Command $command)
     {
         $this->commandBus->dispatch($command);
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function trigger(Event $event)
+    {
+        $this->eventBus->dispatch($event);
     }
 
     /**

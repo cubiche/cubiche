@@ -24,11 +24,11 @@ use Cubiche\Infrastructure\EventBus\Tests\Units\TestCase;
 class EventBusFactoryTests extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @return EventBus
      */
-    protected function createFactory()
+    protected function createEventBus()
     {
-        return new EventBusFactory(new EventDispatcher());
+        return EventBusFactory::create(new EventDispatcher());
     }
 
     /**
@@ -37,8 +37,7 @@ class EventBusFactoryTests extends TestCase
     public function testCreate()
     {
         $this
-            ->given($factory = $this->createFactory())
-            ->and($bus = $factory->create())
+            ->given($bus = $this->createEventBus())
             ->then()
                 ->object($bus)
                     ->isInstanceOf(EventBus::class)

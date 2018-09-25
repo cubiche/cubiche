@@ -29,8 +29,10 @@ class QueryBusFactory
      *
      * @return QueryBus
      */
-    public function create(HandlerClassResolver $queryHandlerResolver, HandlerClassResolver $validatorHandlerResolver)
-    {
+    public static function create(
+        HandlerClassResolver $queryHandlerResolver,
+        HandlerClassResolver $validatorHandlerResolver
+    ) {
         return new QueryBus([
             250 => new ValidatorMiddleware($validatorHandlerResolver),
             100 => new QueryHandlerMiddleware($queryHandlerResolver),

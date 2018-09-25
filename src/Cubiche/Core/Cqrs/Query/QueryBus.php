@@ -46,7 +46,7 @@ class QueryBus extends Bus
                     new FromMessageNamedResolver(),
                     new FromClassNameResolver(),
                 ]),
-                new MethodWithShortObjectNameAndSuffixResolver('Command', 'Validator'),
+                new MethodWithShortObjectNameAndSuffixResolver('Query', 'Validator'),
                 new InMemoryLocator()
             )),
             250 => new QueryHandlerMiddleware(new HandlerClassResolver(

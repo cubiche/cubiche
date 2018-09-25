@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\ProcessManager\Tests\Fixtures\Conference;
 
+use Cubiche\Core\EventDispatcher\PostDispatchEvent;
 use Cubiche\Domain\ProcessManager\Tests\Fixtures\Conference\Command\CreateConferenceCommand;
 use Cubiche\Domain\Repository\RepositoryInterface;
 use Cubiche\Domain\System\Integer;

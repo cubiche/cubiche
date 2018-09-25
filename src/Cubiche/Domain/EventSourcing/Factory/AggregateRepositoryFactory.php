@@ -13,13 +13,14 @@ namespace Cubiche\Domain\EventSourcing\Factory;
 
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
+use Cubiche\Domain\Repository\Factory\RepositoryFactoryInterface;
 
 /**
  * AggregateRepositoryFactory class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class AggregateRepositoryFactory
+class AggregateRepositoryFactory implements RepositoryFactoryInterface
 {
     /**
      * @var EventStoreInterface

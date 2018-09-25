@@ -34,9 +34,7 @@ trait SettingEventBusTrait
     public function eventBus()
     {
         if ($this->eventBus === null) {
-            $factory = new EventBusFactory($this->eventDispatcher());
-
-            $this->eventBus = $factory->create();
+            $this->eventBus = EventBusFactory::create($this->eventDispatcher());
         }
 
         return $this->eventBus;
