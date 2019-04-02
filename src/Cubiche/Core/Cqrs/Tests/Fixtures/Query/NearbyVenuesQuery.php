@@ -12,14 +12,14 @@
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Query;
 
 use Cubiche\Core\Cqrs\Query\Query;
-use Cubiche\Core\Cqrs\Query\QueryNamedInterface;
+use Cubiche\Core\Cqrs\Query\QueryInterface;
 
 /**
  * NearbyVenuesQuery class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class NearbyVenuesQuery extends Query implements QueryNamedInterface
+class NearbyVenuesQuery extends Query implements QueryInterface
 {
     /**
      * @var float
@@ -78,7 +78,7 @@ class NearbyVenuesQuery extends Query implements QueryNamedInterface
     /**
      * {@inheritdoc}
      */
-    public function named()
+    public function messageName(): string
     {
         return 'aroundVenues';
     }

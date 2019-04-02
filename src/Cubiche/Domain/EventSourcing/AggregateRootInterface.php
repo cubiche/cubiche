@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
+use Cubiche\Core\Bus\Recorder\MessageRecorderInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\EntityInterface;
 
@@ -19,18 +20,8 @@ use Cubiche\Domain\Model\EntityInterface;
  *
  * @author Karel Osorio Ramírez <osorioramirez@gmail.com>
  */
-interface AggregateRootInterface extends EntityInterface
+interface AggregateRootInterface extends EntityInterface, MessageRecorderInterface
 {
-    /**
-     * @return DomainEventInterface[]
-     */
-    public function recordedEvents();
-
-    /**
-     * Clear recorded events.
-     */
-    public function clearEvents();
-
     /**
      * @param EventStream $history
      *

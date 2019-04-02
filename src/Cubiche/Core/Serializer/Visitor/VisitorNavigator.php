@@ -10,6 +10,7 @@
 
 namespace Cubiche\Core\Serializer\Visitor;
 
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Core\Serializer\Context\ContextInterface;
 use Cubiche\Core\Serializer\Context\DeserializationContext;
 use Cubiche\Core\Serializer\Context\SerializationContext;
@@ -19,11 +20,6 @@ use Cubiche\Core\Serializer\Event\PreDeserializeEvent;
 use Cubiche\Core\Serializer\Event\PreSerializeEvent;
 use Cubiche\Core\Serializer\Exception\SerializationException;
 use Cubiche\Core\Serializer\Handler\HandlerManagerInterface;
-use Cubiche\Core\Serializer\SerializableInterface;
-use Cubiche\Core\EventBus\Event\EventBus;
-use Cubiche\Core\Metadata\ClassMetadata;
-use Cubiche\Core\Metadata\ClassMetadataFactoryInterface;
-use Cubiche\Domain\Model\NativeValueObjectInterface;
 use RuntimeException;
 
 /**
@@ -33,11 +29,6 @@ use RuntimeException;
  */
 class VisitorNavigator implements VisitorNavigatorInterface
 {
-    /**
-     * @var ClassMetadataFactoryInterface
-     */
-    protected $metadataFactory;
-
     /**
      * @var HandlerManagerInterface
      */
@@ -51,16 +42,11 @@ class VisitorNavigator implements VisitorNavigatorInterface
     /**
      * VisitorNavigator constructor.
      *
-     * @param ClassMetadataFactoryInterface $metadataFactory
-     * @param HandlerManagerInterface       $handlerManager
-     * @param EventBus                      $eventBus
+     * @param HandlerManagerInterface $handlerManager
+     * @param EventBus                $eventBus
      */
-    public function __construct(
-        ClassMetadataFactoryInterface $metadataFactory,
-        HandlerManagerInterface $handlerManager,
-        EventBus $eventBus
-    ) {
-        $this->metadataFactory = $metadataFactory;
+    public function __construct(HandlerManagerInterface $handlerManager, EventBus $eventBus)
+    {
         $this->handlerManager = $handlerManager;
         $this->eventBus = $eventBus;
     }
@@ -125,66 +111,22 @@ class VisitorNavigator implements VisitorNavigatorInterface
                 // dispatching pre serialize/deserialize event
                 $this->dispatchPreEvent($data, $type, $context);
 
-                // First, try whether a custom handler exists for the given type. This is done
-                // before loading metadata because the type name might not be a class, but
-                // could also simply be an artifical type.
-                if ($this->handlerManager->hasHandler($type['name'], $context)) {
-                    $handler = $this->handlerManager->handler($type['name'], $context);
-
-                    return $handler($visitor, $data, $type, $context);
-                }
-
-                // check if the object is a native value object or serializable
-                try {
-                    $reflection = new \ReflectionClass($type['name']);
-
-                    if ($reflection->implementsInterface(NativeValueObjectInterface::class)) {
-                        return $visitor->visitNativeValueObject($data, $type, $context);
-                    } elseif ($reflection->implementsInterface(SerializableInterface::class)) {
-                        return $visitor->visitSerializable($data, $type, $context);
-                    }
-                } catch (\ReflectionException $exception) {
-                }
-
-                // get the class metadata
-                $classMetadata = $this->getClassMetadata($type['name']);
-                if ($classMetadata === null) {
-                    throw SerializationException::invalidMapping($type['name']);
-                }
-
-                $object = $data;
-                if ($context instanceof DeserializationContext) {
-                    $object = $classMetadata->reflection()->newInstanceWithoutConstructor();
-                }
-
-                $visitor->startVisitingObject($classMetadata, $object, $type, $context);
-                foreach ($classMetadata->propertiesMetadata() as $propertyMetadata) {
-                    $visitor->visitProperty($propertyMetadata, $data, $context);
+                $handler = $this->handlerManager->handler($type['name'], $context);
+                if ($handler === null) {
+                    throw SerializationException::notHandler($type['name']);
                 }
 
                 if ($context instanceof SerializationContext) {
-                    $this->dispatchPostEvent($classMetadata, $data, $type, $context);
-
-                    return $visitor->endVisitingObject($classMetadata, $data, $type, $context);
+                    $result = $handler->serialize($visitor, $data, $type, $context);
+                } else {
+                    $result = $handler->deserialize($visitor, $data, $type, $context);
                 }
 
-                $result = $visitor->endVisitingObject($classMetadata, $data, $type, $context);
-                $this->dispatchPostEvent($classMetadata, $result, $type, $context);
+                // dispatching post serialize/deserialize event
+                $this->dispatchPostEvent($result, $type, $context);
 
                 return $result;
         }
-    }
-
-    /**
-     * Returns the metadata for a class.
-     *
-     * @param string $className
-     *
-     * @return ClassMetadata
-     */
-    protected function getClassMetadata($className)
-    {
-        return $this->metadataFactory->getMetadataFor(ltrim($className, '\\'));
     }
 
     /**
@@ -204,12 +146,11 @@ class VisitorNavigator implements VisitorNavigatorInterface
     }
 
     /**
-     * @param ClassMetadata    $metadata
      * @param                  $object
      * @param array            $type
      * @param ContextInterface $context
      */
-    protected function dispatchPostEvent(ClassMetadata $metadata, $object, array $type, ContextInterface $context)
+    protected function dispatchPostEvent($object, array $type, ContextInterface $context)
     {
         if ($context instanceof SerializationContext) {
             $event = new PostSerializeEvent($context, $object, $type);

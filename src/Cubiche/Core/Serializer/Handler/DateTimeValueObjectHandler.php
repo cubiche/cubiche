@@ -22,7 +22,7 @@ use Cubiche\Domain\System\DateTime\DateTime;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DateTimeValueObjectHandler implements HandlerSubscriberInterface
+class DateTimeValueObjectHandler implements HandlerInterface
 {
     /**
      * @param SerializationVisitor       $visitor
@@ -32,12 +32,8 @@ class DateTimeValueObjectHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        NativeValueObjectInterface $date,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $date, array $type, ContextInterface $context)
+    {
         $newType = array('name' => \DateTime::class, 'params' => array());
 
         return $context->navigator()->accept($date->toNative(), $newType, $context);
@@ -45,13 +41,13 @@ class DateTimeValueObjectHandler implements HandlerSubscriberInterface
 
     /**
      * @param DeserializationVisitor $visitor
-     * @param array                  $data
+     * @param \DateTime              $data
      * @param array                  $type
      * @param ContextInterface       $context
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         $newType = array('name' => \DateTime::class, 'params' => array());
 
@@ -61,17 +57,16 @@ class DateTimeValueObjectHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                DateTime::class => 'serialize',
-                Date::class => 'serialize',
-            ),
-            'deserializers' => array(
-                DateTime::class => 'deserialize',
-                Date::class => 'deserialize',
-            ),
-        );
+        return \is_a($typeName, DateTime::class, true) || \is_a($typeName, Date::class, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 250;
     }
 }

@@ -104,6 +104,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
     public function setMetadataFor($className, ClassMetadataInterface $metadata)
     {
         $this->loadedMetadata[$className] = $metadata;
+        $this->cache->save($this->loadedMetadata[$className]);
     }
 
     /**

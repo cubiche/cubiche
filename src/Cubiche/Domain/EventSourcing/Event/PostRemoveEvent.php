@@ -11,38 +11,20 @@
 
 namespace Cubiche\Domain\EventSourcing\Event;
 
-use Cubiche\Domain\EventPublisher\DomainEvent;
-use Cubiche\Domain\EventSourcing\AggregateRootInterface;
-
 /**
  * PostRemoveEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostRemoveEvent extends DomainEvent
+class PostRemoveEvent extends LifecycleEvent
 {
-    /**
-     * @var AggregateRootInterface
-     */
-    protected $aggregate;
+    const eventName = 'aggregate.post_remove';
 
     /**
-     * PrePersistEvent constructor.
-     *
-     * @param AggregateRootInterface $aggregate
+     * {@inheritdoc}
      */
-    public function __construct(AggregateRootInterface $aggregate)
+    public function messageName(): string
     {
-        parent::__construct();
-
-        $this->aggregate = $aggregate;
-    }
-
-    /**
-     * @return AggregateRootInterface
-     */
-    public function aggregate()
-    {
-        return $this->aggregate;
+        return self::eventName;
     }
 }

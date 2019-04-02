@@ -77,24 +77,6 @@ interface VisitorInterface extends BaseVisitorInterface
     public function visitArray($data, array $type, ContextInterface $context);
 
     /**
-     * @param mixed            $data
-     * @param array            $type
-     * @param ContextInterface $context
-     *
-     * @return mixed
-     */
-    public function visitSerializable($data, array $type, ContextInterface $context);
-
-    /**
-     * @param mixed            $data
-     * @param array            $type
-     * @param ContextInterface $context
-     *
-     * @return mixed
-     */
-    public function visitNativeValueObject($data, array $type, ContextInterface $context);
-
-    /**
      * @param ClassMetadata    $classMetadata
      * @param mixed            $data
      * @param array            $type

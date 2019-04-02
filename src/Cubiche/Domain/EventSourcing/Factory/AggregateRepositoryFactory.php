@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Factory;
 
+use Cubiche\Core\Bus\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\Repository\Factory\RepositoryFactoryInterface;
@@ -28,13 +29,20 @@ class AggregateRepositoryFactory implements RepositoryFactoryInterface
     protected $eventStore;
 
     /**
+     * @var MessagePublisherInterface
+     */
+    protected $publisher;
+
+    /**
      * AggregateRepositoryFactory constructor.
      *
-     * @param EventStoreInterface $eventStore
+     * @param EventStoreInterface       $eventStore
+     * @param MessagePublisherInterface $publisher
      */
-    public function __construct(EventStoreInterface $eventStore)
+    public function __construct(EventStoreInterface $eventStore, MessagePublisherInterface $publisher)
     {
         $this->eventStore = $eventStore;
+        $this->publisher = $publisher;
     }
 
     /**
@@ -44,6 +52,6 @@ class AggregateRepositoryFactory implements RepositoryFactoryInterface
      */
     public function create($aggregateClassName)
     {
-        return new AggregateRepository($this->eventStore, $aggregateClassName);
+        return new AggregateRepository($this->eventStore, $this->publisher, $aggregateClassName);
     }
 }

@@ -13,8 +13,6 @@ namespace Cubiche\Core\Serializer\Handler;
 use Cubiche\Core\Serializer\Context\ContextInterface;
 use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
 use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
-use Cubiche\Domain\Localizable\LocalizableString;
-use Cubiche\Domain\Localizable\LocalizableUrl;
 use Cubiche\Domain\Localizable\LocalizableValueInterface;
 
 /**
@@ -22,7 +20,7 @@ use Cubiche\Domain\Localizable\LocalizableValueInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LocalizableValueHandler implements HandlerSubscriberInterface
+class LocalizableValueHandler implements HandlerInterface
 {
     /**
      * @param SerializationVisitor      $visitor
@@ -32,24 +30,20 @@ class LocalizableValueHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        LocalizableValueInterface $localizable,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $localizable, array $type, ContextInterface $context)
+    {
         return $visitor->visitArray($localizable->toArray(), $type, $context);
     }
 
     /**
      * @param DeserializationVisitor $visitor
-     * @param array                  $data
+     * @param string                 $data
      * @param array                  $type
      * @param ContextInterface       $context
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         return $type['name']::fromArray($data);
     }
@@ -57,17 +51,16 @@ class LocalizableValueHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                LocalizableString::class => 'serialize',
-                LocalizableUrl::class => 'serialize',
-            ),
-            'deserializers' => array(
-                LocalizableString::class => 'deserialize',
-                LocalizableUrl::class => 'deserialize',
-            ),
-        );
+        return \is_subclass_of($typeName, LocalizableValueInterface::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 200;
     }
 }

@@ -39,7 +39,7 @@ abstract class EventStoreTestCase extends TestCase
     {
         $this
             ->given($store = $this->createStore())
-            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
             ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
@@ -54,7 +54,7 @@ abstract class EventStoreTestCase extends TestCase
 
         $this
             ->given($store = $this->createStore())
-            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
             ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
@@ -79,8 +79,8 @@ abstract class EventStoreTestCase extends TestCase
     {
         $this
             ->given($store = $this->createStore())
-            ->and($postId = PostId::fromNative(md5(rand())))
-            ->and($postId1 = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
+            ->and($postId1 = PostId::next())
             ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and($streamName1 = new StreamName($postId1, StringLiteral::fromNative('post')))
             ->and(
@@ -97,7 +97,7 @@ abstract class EventStoreTestCase extends TestCase
             ->then()
                 ->variable($store->load($streamName))
                     ->isNull()
-//                ->variable($store->load(PostId::fromNative(md5(rand()))))
+//                ->variable($store->load(PostId::next()))
 //                    ->isNull()
                 ->and()
                 ->when($store->persist($eventStream1))
@@ -109,7 +109,7 @@ abstract class EventStoreTestCase extends TestCase
 
         $this
             ->given($store = $this->createStore())
-            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
             ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
@@ -144,9 +144,9 @@ abstract class EventStoreTestCase extends TestCase
     {
         $this
             ->given($store = $this->createStore())
-            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
             ->and($streamName = new StreamName($postId, StringLiteral::fromNative('post')))
-            ->and($streamName1 = new StreamName(PostId::fromNative(md5(rand())), StringLiteral::fromNative('post')))
+            ->and($streamName1 = new StreamName(PostId::next(), StringLiteral::fromNative('post')))
             ->and(
                 $postWasCreated = new PostWasCreated($postId, 'foo', 'bar'),
                 $postWasCreated->setVersion(1)

@@ -20,27 +20,19 @@ use Cubiche\Core\Serializer\Context\ContextInterface;
 interface HandlerManagerInterface
 {
     /**
-     * @param HandlerSubscriberInterface $subscriberHandler
-     */
-    public function registerSubscriberHandler(HandlerSubscriberInterface $subscriberHandler);
-
-    /**
      * Gets the handler of a specific type.
      *
      * @param string           $typeName
      * @param ContextInterface $context
      *
-     * @return callable|null
+     * @return HandlerInterface|null
      */
     public function handler($typeName, ContextInterface $context);
 
     /**
-     * Checks whether a type has any registered handler.
+     * Add a new handler
      *
-     * @param string           $typeName
-     * @param ContextInterface $context
-     *
-     * @return bool
+     * @param HandlerInterface $handler
      */
-    public function hasHandler($typeName, ContextInterface $context);
+    public function addHandler(HandlerInterface $handler);
 }

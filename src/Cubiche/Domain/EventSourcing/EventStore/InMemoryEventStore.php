@@ -15,7 +15,6 @@ use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Specification\Criteria;
 use Cubiche\Domain\EventSourcing\DomainEventInterface;
-use Cubiche\Domain\EventSourcing\Versioning\Version;
 
 /**
  * InMemoryEventStore class.

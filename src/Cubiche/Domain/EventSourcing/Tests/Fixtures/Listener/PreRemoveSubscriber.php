@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener;
 
-use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
+use Cubiche\Domain\EventSourcing\DomainEventSubscriberInterface;
 use Cubiche\Domain\EventSourcing\Event\PreRemoveEvent;
 
 /**
@@ -26,7 +26,7 @@ class PreRemoveSubscriber extends PreRemoveListener implements DomainEventSubscr
     public static function getSubscribedEvents()
     {
         return array(
-            PreRemoveEvent::class => 'onPreRemove',
+            PreRemoveEvent::eventName => 'onPreRemove',
         );
     }
 }

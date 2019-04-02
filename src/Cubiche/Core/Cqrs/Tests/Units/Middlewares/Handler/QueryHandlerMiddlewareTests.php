@@ -42,7 +42,7 @@ class QueryHandlerMiddlewareTests extends TestCase
             ->and($middleware = new QueryHandlerMiddleware($resolver))
             ->and($query = new NearbyVenuesQuery($this->faker->latitude(), $this->faker->longitude()))
             ->and($queryHandler = new VenuesQueryHandler())
-            ->and($resolver->addHandler($query->named(), $queryHandler))
+            ->and($resolver->addHandler($query->messageName(), $queryHandler))
             ->and($callable = function (array $result) {
                 return json_encode($result);
             })

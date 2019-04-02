@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
+use Cubiche\Core\Bus\Recorder\MessageRecorder;
 use Cubiche\Core\Delegate\Delegate;
 use Cubiche\Core\Validator\Validator;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
@@ -24,15 +25,12 @@ use Cubiche\Domain\Model\Entity;
  */
 abstract class AggregateRoot extends Entity implements AggregateRootInterface
 {
+    use MessageRecorder;
+
     /**
      * @var int
      */
     protected $version = 0;
-
-    /**
-     * @var DomainEventInterface[]
-     */
-    protected $recordedEvents = [];
 
     /**
      * @var bool
@@ -60,7 +58,7 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
 
             $event->setVersion($this->version());
 
-            $this->recordEvent($event);
+            $this->recordMessage($event);
             $this->applyEvent($event);
         });
 
@@ -108,30 +106,6 @@ abstract class AggregateRoot extends Entity implements AggregateRootInterface
         $this->$method($event);
 
         $this->setVersion($event->version());
-    }
-
-    /**
-     * @param DomainEventInterface $event
-     */
-    protected function recordEvent(DomainEventInterface $event)
-    {
-        $this->recordedEvents[] = $event;
-    }
-
-    /**
-     * @return DomainEventInterface[]
-     */
-    public function recordedEvents()
-    {
-        return $this->recordedEvents;
-    }
-
-    /**
-     * Clear recorded events.
-     */
-    public function clearEvents()
-    {
-        $this->recordedEvents = [];
     }
 
     /**

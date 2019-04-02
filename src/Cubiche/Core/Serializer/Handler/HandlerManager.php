@@ -10,11 +10,10 @@
 
 namespace Cubiche\Core\Serializer\Handler;
 
-use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Delegate\Delegate;
+use Cubiche\Core\Collections\ArrayCollection\SortedArraySet;
+use Cubiche\Core\Comparable\Direction;
+use Cubiche\Core\Comparable\SelectorComparator;
 use Cubiche\Core\Serializer\Context\ContextInterface;
-use Cubiche\Core\Serializer\Context\SerializationContext;
-use RuntimeException;
 
 /**
  * HandlerManager class.
@@ -24,7 +23,7 @@ use RuntimeException;
 class HandlerManager implements HandlerManagerInterface
 {
     /**
-     * @var ArrayHashMap
+     * @var SortedArraySet|HandlerInterface[]
      */
     protected $handlers;
 
@@ -33,38 +32,12 @@ class HandlerManager implements HandlerManagerInterface
      */
     public function __construct()
     {
-        $this->handlers = new ArrayHashMap();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function registerSubscriberHandler(HandlerSubscriberInterface $subscriberHandler)
-    {
-        $subscriberHandlers = $subscriberHandler->getSubscribedHandlers();
-        if (!isset($subscriberHandlers['serializers']) || !isset($subscriberHandlers['deserializers'])) {
-            throw new RuntimeException('There is not serializers or deserializers handlers definitions.');
-        }
-
-        if (isset($subscriberHandlers['serializers'])) {
-            foreach ($subscriberHandlers['serializers'] as $typeName => $methodName) {
-                if (!is_string($methodName)) {
-                    throw new RuntimeException('Invalid method name definition.');
-                }
-
-                $this->addHandler('serializer.'.$typeName, array($subscriberHandler, $methodName));
-            }
-        }
-
-        if (isset($subscriberHandlers['deserializers'])) {
-            foreach ($subscriberHandlers['deserializers'] as $typeName => $methodName) {
-                if (!is_string($methodName)) {
-                    throw new RuntimeException('Invalid method name definition.');
-                }
-
-                $this->addHandler('deserializer.'.$typeName, array($subscriberHandler, $methodName));
-            }
-        }
+        $this->handlers = new SortedArraySet([], new SelectorComparator(
+            function (HandlerInterface $handler) {
+                return $handler->order();
+            },
+            Direction::ASC()
+        ));
     }
 
     /**
@@ -72,33 +45,20 @@ class HandlerManager implements HandlerManagerInterface
      */
     public function handler($typeName, ContextInterface $context)
     {
-        if ($context instanceof SerializationContext) {
-            return $this->handlers->get('serializer.'.$typeName);
+        foreach ($this->handlers as $handler) {
+            if ($handler->supports($typeName, $context)) {
+                return $handler;
+            }
         }
 
-        return $this->handlers->get('deserializer.'.$typeName);
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasHandler($typeName, ContextInterface $context)
+    public function addHandler(HandlerInterface $handler)
     {
-        if ($context instanceof SerializationContext) {
-            return $this->handlers->containsKey('serializer.'.$typeName);
-        }
-
-        return $this->handlers->containsKey('deserializer.'.$typeName);
-    }
-
-    /**
-     * Adds an type handler.
-     *
-     * @param string   $typeName
-     * @param callable $handler
-     */
-    protected function addHandler($typeName, callable $handler)
-    {
-        $this->handlers->set($typeName, new Delegate($handler));
+        $this->handlers->add($handler);
     }
 }

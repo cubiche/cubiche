@@ -22,8 +22,6 @@ interface EventInterface extends MessageInterface
 {
     /**
      * Stop event propagation.
-     *
-     * @return $this
      */
     public function stopPropagation();
 
@@ -32,12 +30,5 @@ interface EventInterface extends MessageInterface
      *
      * @return bool
      */
-    public function isPropagationStopped();
-
-    /**
-     * Get the event name.
-     *
-     * @return string
-     */
-    public function eventName();
+    public function isPropagationStopped(): bool;
 }

@@ -12,7 +12,7 @@
 namespace Cubiche\Core\Bus;
 
 /**
- * Message interface.
+ * Message class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
@@ -24,22 +24,51 @@ class Message implements MessageInterface
     protected $messageId;
 
     /**
-     * Message constructor.
+     * @var string
      */
-    public function __construct()
+    protected $messageName;
+
+    /**
+     * Message constructor.
+     *
+     * @param string|null $messageId
+     * @param string|null $messageName
+     */
+    public function __construct(string $messageId = null, string $messageName = null)
     {
-        $this->messageId = MessageId::next();
+        $this->setMessageId($messageId ? MessageId::fromNative($messageId) : MessageId::next());
+        $this->setMessageName($messageName);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function messageId()
+    public function messageId(): MessageId
     {
-        if ($this->messageId === null) {
-            $this->messageId = MessageId::next();
-        }
-
         return $this->messageId;
+    }
+
+    /**
+     * @param MessageId|null $messageId
+     */
+    protected function setMessageId(MessageId $messageId = null)
+    {
+        $this->messageId = $messageId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function messageName(): string
+    {
+        return $this->messageName ? $this->messageName : get_class($this);
+    }
+
+    /**
+     * @param string|null $messageName
+     */
+    protected function setMessageName(string $messageName = null)
+    {
+        $this->messageName = $messageName;
     }
 }

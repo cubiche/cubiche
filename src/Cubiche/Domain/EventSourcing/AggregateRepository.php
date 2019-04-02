@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Core\Bus\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
@@ -36,6 +36,11 @@ class AggregateRepository implements RepositoryInterface
     protected $eventStore;
 
     /**
+     * @var MessagePublisherInterface
+     */
+    protected $publisher;
+
+    /**
      * @var string
      */
     protected $aggregateClassName;
@@ -43,12 +48,17 @@ class AggregateRepository implements RepositoryInterface
     /**
      * AggregateRepository constructor.
      *
-     * @param EventStoreInterface $eventStore
-     * @param string              $aggregateClassName
+     * @param EventStoreInterface       $eventStore
+     * @param MessagePublisherInterface $publisher
+     * @param string                    $aggregateClassName
      */
-    public function __construct(EventStoreInterface $eventStore, $aggregateClassName)
-    {
+    public function __construct(
+        EventStoreInterface $eventStore,
+        MessagePublisherInterface $publisher,
+        $aggregateClassName
+    ) {
         $this->eventStore = $eventStore;
+        $this->publisher = $publisher;
         $this->aggregateClassName = $aggregateClassName;
     }
 
@@ -92,12 +102,12 @@ class AggregateRepository implements RepositoryInterface
      */
     public function remove(AggregateRootInterface $element)
     {
-        DomainEventPublisher::publish(new PreRemoveEvent($element));
+        $this->publisher->publishMessage(new PreRemoveEvent($element));
 
         // remove the event stream
         $this->eventStore->remove($this->streamName($element->id()));
 
-        DomainEventPublisher::publish(new PostRemoveEvent($element));
+        $this->publisher->publishMessage(new PostRemoveEvent($element));
     }
 
     /**
@@ -119,13 +129,13 @@ class AggregateRepository implements RepositoryInterface
      */
     protected function saveHistory(AggregateRootInterface $aggregateRoot)
     {
-        $recordedEvents = $aggregateRoot->recordedEvents();
+        $recordedEvents = $aggregateRoot->recordedMessages();
         if (count($recordedEvents) > 0) {
             // trigger pre-persist event
-            DomainEventPublisher::publish(new PrePersistEvent($aggregateRoot));
+            $this->publisher->publishMessage(new PrePersistEvent($aggregateRoot));
 
             // clear events
-            $aggregateRoot->clearEvents();
+            $aggregateRoot->clearMessages();
 
             // create the eventStream and persist it
             $eventStream = new EventStream(
@@ -135,13 +145,13 @@ class AggregateRepository implements RepositoryInterface
 
             $this->eventStore->persist($eventStream);
 
-            // publish all the recorded events
+            // record all the recorded events to publish it's later
             foreach ($recordedEvents as $recordedEvent) {
-                DomainEventPublisher::publish($recordedEvent);
+                $this->publisher->recordMessage($recordedEvent);
             }
 
             // trigger post-persist event
-            DomainEventPublisher::publish(new PostPersistEvent($aggregateRoot, $eventStream));
+            $this->publisher->publishMessage(new PostPersistEvent($aggregateRoot, $eventStream));
         }
     }
 

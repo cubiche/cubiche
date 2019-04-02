@@ -52,7 +52,7 @@ class EventBusTests extends BusTests
         $this
             ->given($eventBus = EventBus::create())
             ->and($event = new LoginUserEvent('info@cubiche.org'))
-            ->and($eventBus->addListener($event->eventName(), function (LoginUserEvent $event) {
+            ->and($eventBus->addListener($event->messageName(), function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())
                     ->isEqualTo('info@cubiche.org')
@@ -132,7 +132,7 @@ class EventBusTests extends BusTests
             ->given($eventBus = EventBus::create())
             ->and($listener1 = array(new LoginUserEventListener(), 'loginUser'))
             ->and($listener2 = function (Event $event) {
-                return $event->eventName();
+                return $event->messageName();
             })
             ->and($listener3 = function (Event $event) {
 

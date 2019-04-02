@@ -10,8 +10,6 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures;
 
-use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostId;
-
 /**
  * PostEventSourcedFactory class.
  *
@@ -28,7 +26,7 @@ class PostEventSourcedFactory
     public static function create($title, $content)
     {
         return new PostEventSourced(
-            PostId::fromNative(md5(rand())),
+            PostId::next(),
             $title,
             $content
         );

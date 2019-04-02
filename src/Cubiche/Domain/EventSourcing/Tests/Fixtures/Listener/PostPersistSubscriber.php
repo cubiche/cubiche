@@ -9,7 +9,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener;
 
-use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
+use Cubiche\Domain\EventSourcing\DomainEventSubscriberInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 
 /**
@@ -25,7 +25,7 @@ class PostPersistSubscriber extends PostPersistListener implements DomainEventSu
     public static function getSubscribedEvents()
     {
         return array(
-            PostPersistEvent::class => 'onPostPersist',
+            PostPersistEvent::eventName => 'onPostPersist',
         );
     }
 }

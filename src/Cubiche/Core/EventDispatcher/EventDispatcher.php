@@ -45,20 +45,20 @@ class EventDispatcher implements EventDispatcherInterface
 
         // pre dispatch event
         $preDispatchEvent = new PreDispatchEvent($event);
-        $eventName = $preDispatchEvent->eventName();
+        $eventName = $preDispatchEvent->messageName();
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $preDispatchEvent);
         }
 
         // dispatch event
-        $eventName = $event->eventName();
+        $eventName = $event->messageName();
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $event);
         }
 
         // post dispatch event
         $postDispatchEvent = new PostDispatchEvent($event);
-        $eventName = $postDispatchEvent->eventName();
+        $eventName = $postDispatchEvent->messageName();
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $postDispatchEvent);
         }
@@ -78,7 +78,7 @@ class EventDispatcher implements EventDispatcherInterface
     public function ensureEvent($event)
     {
         if (is_string($event)) {
-            return Event::named($event);
+            return new Event($event);
         }
 
         if (!$event instanceof EventInterface) {

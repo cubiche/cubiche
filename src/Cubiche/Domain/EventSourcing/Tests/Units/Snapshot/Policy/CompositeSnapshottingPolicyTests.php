@@ -57,7 +57,7 @@ class CompositeSnapshottingPolicyTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($post->clearEvents())
+            ->and($post->clearMessages())
             ->then()
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isFalse()

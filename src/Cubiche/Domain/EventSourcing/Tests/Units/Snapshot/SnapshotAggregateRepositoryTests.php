@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Snapshot;
 
+use Cubiche\Core\Bus\Publisher\MessagePublisher;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Snapshot\InMemorySnapshotStore;
 use Cubiche\Domain\EventSourcing\Snapshot\Policy\EventsBasedSnapshottingPolicy;
@@ -42,6 +43,7 @@ class SnapshotAggregateRepositoryTests extends AggregateRepositoryTests
     ) {
         return new SnapshotAggregateRepository(
             new InMemoryEventStore(),
+            new MessagePublisher($this->eventBus()),
             $snapshotStore ? $snapshotStore : new InMemorySnapshotStore(),
             $snapshottingPolicy ? $snapshottingPolicy : new NoSnapshottingPolicy(),
             PostEventSourced::class

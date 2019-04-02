@@ -10,54 +10,20 @@
 
 namespace Cubiche\Domain\EventSourcing\Event;
 
-use Cubiche\Domain\EventPublisher\DomainEvent;
-use Cubiche\Domain\EventSourcing\AggregateRootInterface;
-use Cubiche\Domain\EventSourcing\EventStore\EventStreamInterface;
-
 /**
  * PostPersistEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostPersistEvent extends DomainEvent
+class PostPersistEvent extends LifecycleEvent
 {
-    /**
-     * @var AggregateRootInterface
-     */
-    protected $aggregate;
+    const eventName = 'aggregate.post_persist';
 
     /**
-     * @var EventStream
+     * {@inheritdoc}
      */
-    protected $eventStream;
-
-    /**
-     * PostPersistEvent constructor.
-     *
-     * @param AggregateRootInterface $aggregate
-     * @param EventStreamInterface   $eventStream
-     */
-    public function __construct(AggregateRootInterface $aggregate, EventStreamInterface $eventStream)
+    public function messageName(): string
     {
-        parent::__construct();
-
-        $this->aggregate = $aggregate;
-        $this->eventStream = $eventStream;
-    }
-
-    /**
-     * @return AggregateRootInterface
-     */
-    public function aggregate()
-    {
-        return $this->aggregate;
-    }
-
-    /**
-     * @return EventStreamInterface
-     */
-    public function eventStream()
-    {
-        return $this->eventStream;
+        return self::eventName;
     }
 }

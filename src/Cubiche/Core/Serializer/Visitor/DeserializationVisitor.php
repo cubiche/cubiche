@@ -111,28 +111,6 @@ class DeserializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    public function visitSerializable($data, array $type, ContextInterface $context)
-    {
-        return $type['name']::deserialize($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function visitNativeValueObject($data, array $type, ContextInterface $context)
-    {
-        //        if (is_array($data) && isset($data['datetime']) && isset($data['timezone'])) {
-//            $newType = array('name' => \DateTime::class, 'params' => array());
-
-//            return $type['name']::fromNative($context->navigator()->accept($data, $newType, $context));
-//        }
-
-        return $type['name']::fromNative($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function startVisitingObject(ClassMetadata $classMetadata, $data, array $type, ContextInterface $context)
     {
         $this->currentObject = $data;

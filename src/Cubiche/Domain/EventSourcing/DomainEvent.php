@@ -11,51 +11,53 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventPublisher\DomainEvent as BaseDomainEvent;
+use Cubiche\Core\EventBus\Event\Event;
 use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\System\DateTime\DateTime;
 
 /**
  * DomainEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DomainEvent extends BaseDomainEvent implements DomainEventInterface
+class DomainEvent extends Event implements DomainEventInterface
 {
-    /**
-     * @var IdInterface
-     */
-    protected $aggregateId;
-
     /**
      * @var int
      */
     protected $version;
 
     /**
+     * @var DateTime
+     */
+    protected $occurredOn;
+
+    /**
      * DomainEvent constructor.
      *
      * @param IdInterface $aggregateId
+     * @param string|null $messageName
      */
-    public function __construct(IdInterface $aggregateId)
+    public function __construct(IdInterface $aggregateId, string $messageName = null)
     {
-        parent::__construct();
+        parent::__construct($aggregateId->toNative(), $messageName);
 
-        $this->aggregateId = $aggregateId;
         $this->version = 0;
+        $this->occurredOn = DateTime::now();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function aggregateId()
+    public function aggregateId(): IdInterface
     {
-        return $this->aggregateId;
+        return $this->messageId();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function version()
+    public function version(): int
     {
         return $this->version;
     }
@@ -63,8 +65,24 @@ class DomainEvent extends BaseDomainEvent implements DomainEventInterface
     /**
      * {@inheritdoc}
      */
-    public function setVersion($version)
+    public function setVersion(int $version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function occurredOn(): DateTime
+    {
+        return $this->occurredOn;
+    }
+
+    /**
+     * @param DateTime $occurredOn
+     */
+    public function setOccurredOn(DateTime $occurredOn)
+    {
+        $this->occurredOn = $occurredOn;
     }
 }

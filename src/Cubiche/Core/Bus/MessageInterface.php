@@ -21,5 +21,12 @@ interface MessageInterface
     /**
      * @return MessageId
      */
-    public function messageId();
+    public function messageId(): MessageId;
+
+    /**
+     * The name of the message.
+     *
+     * @return string
+     */
+    public function messageName(): string;
 }

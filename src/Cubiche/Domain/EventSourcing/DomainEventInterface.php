@@ -11,28 +11,34 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Domain\EventPublisher\DomainEventInterface as BaseDomainEventInterface;
+use Cubiche\Core\EventBus\Event\EventInterface;
 use Cubiche\Domain\Model\IdInterface;
+use Cubiche\Domain\System\DateTime\DateTime;
 
 /**
  * DomainEvent interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface DomainEventInterface extends BaseDomainEventInterface
+interface DomainEventInterface extends EventInterface
 {
     /**
      * @return IdInterface
      */
-    public function aggregateId();
+    public function aggregateId(): IdInterface;
 
     /**
      * @return int
      */
-    public function version();
+    public function version(): int;
 
     /**
      * @param int $version
      */
-    public function setVersion($version);
+    public function setVersion(int $version);
+
+    /**
+     * @return DateTime
+     */
+    public function occurredOn(): DateTime;
 }

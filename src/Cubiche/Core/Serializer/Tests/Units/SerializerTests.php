@@ -18,6 +18,9 @@ use Cubiche\Core\Serializer\Handler\DateTimeHandler;
 use Cubiche\Core\Serializer\Handler\DateTimeValueObjectHandler;
 use Cubiche\Core\Serializer\Handler\HandlerManager;
 use Cubiche\Core\Serializer\Handler\LocalizableValueHandler;
+use Cubiche\Core\Serializer\Handler\NativeValueObjectHandler;
+use Cubiche\Core\Serializer\Handler\ObjectMetadataHandler;
+use Cubiche\Core\Serializer\Handler\SerializableHandler;
 use Cubiche\Core\Serializer\Serializer;
 use Cubiche\Core\Serializer\Tests\Fixtures\Address;
 use Cubiche\Core\Serializer\Tests\Fixtures\AddressId;
@@ -55,15 +58,21 @@ class SerializerTests extends ClassMetadataFactoryTests
         $localizableValueHandler = new LocalizableValueHandler();
         $dateTimeValueObjectHandler = new DateTimeValueObjectHandler();
         $dateRangeHandler = new DateRangeHandler();
+        $nativeValueObjectHandler = new NativeValueObjectHandler();
+        $serializableHandler = new SerializableHandler();
+        $objectMetadataHandler = new ObjectMetadataHandler($metadataFactory);
 
-        $handlerManager->registerSubscriberHandler($collectionHandler);
-        $handlerManager->registerSubscriberHandler($dateHandler);
-        $handlerManager->registerSubscriberHandler($coordinateHandler);
-        $handlerManager->registerSubscriberHandler($localizableValueHandler);
-        $handlerManager->registerSubscriberHandler($dateTimeValueObjectHandler);
-        $handlerManager->registerSubscriberHandler($dateRangeHandler);
+        $handlerManager->addHandler($collectionHandler);
+        $handlerManager->addHandler($dateHandler);
+        $handlerManager->addHandler($coordinateHandler);
+        $handlerManager->addHandler($localizableValueHandler);
+        $handlerManager->addHandler($dateTimeValueObjectHandler);
+        $handlerManager->addHandler($dateRangeHandler);
+        $handlerManager->addHandler($nativeValueObjectHandler);
+        $handlerManager->addHandler($serializableHandler);
+        $handlerManager->addHandler($objectMetadataHandler);
 
-        $navigator = new VisitorNavigator($metadataFactory, $handlerManager, $eventBus);
+        $navigator = new VisitorNavigator($handlerManager, $eventBus);
         $serializationVisitor = new SerializationVisitor($navigator);
         $deserializationVisitor = new DeserializationVisitor($navigator);
 

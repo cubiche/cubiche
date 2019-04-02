@@ -33,7 +33,7 @@ class EventStreamTests extends TestCase
     public function testStreamName()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->and($eventStream = new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), []))
             ->then()
                 ->object($eventStream->streamName()->id())
@@ -51,7 +51,7 @@ class EventStreamTests extends TestCase
     public function testIterator()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->and(
                 $event1 = new PostWasCreated($postId, 'foo', 'bar'),
                 $event2 = new PostTitleWasChanged($postId, 'title-1'),
@@ -97,7 +97,7 @@ class EventStreamTests extends TestCase
     public function testEvents()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->and($eventStream = new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), []))
             ->then()
                 ->array(iterator_to_array($eventStream->events()))
@@ -105,7 +105,7 @@ class EventStreamTests extends TestCase
         ;
 
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->and(
                 $eventStream = new EventStream(
                     new StreamName(
@@ -121,7 +121,7 @@ class EventStreamTests extends TestCase
         ;
 
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->then()
                 ->exception(function () use ($postId) {
                     new EventStream(new StreamName($postId, StringLiteral::fromNative('post')), ['bar']);

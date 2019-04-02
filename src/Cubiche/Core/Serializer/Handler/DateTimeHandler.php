@@ -24,7 +24,7 @@ use RuntimeException;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DateTimeHandler implements HandlerSubscriberInterface
+class DateTimeHandler implements HandlerInterface
 {
     /**
      * @var string
@@ -49,12 +49,8 @@ class DateTimeHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        DateTimeInterface $date,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $date, array $type, ContextInterface $context)
+    {
         $format = $this->getFormat($type);
         if ('U' === $format) {
             return $visitor->visitInteger($date->format($format), $type, $context);
@@ -74,7 +70,7 @@ class DateTimeHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         return $this->parseDateTime($data, $type, $type['name'] == 'DateTimeImmutable');
     }
@@ -141,17 +137,16 @@ class DateTimeHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                DateTime::class => 'serialize',
-                DateTimeImmutable::class => 'serialize',
-            ),
-            'deserializers' => array(
-                DateTime::class => 'deserialize',
-                DateTimeImmutable::class => 'deserialize',
-            ),
-        );
+        return \is_subclass_of($typeName, DateTimeInterface::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 100;
     }
 }

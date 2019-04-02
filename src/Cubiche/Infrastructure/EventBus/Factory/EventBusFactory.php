@@ -33,6 +33,19 @@ class EventBusFactory
         return new EventBus([
             250 => new LockingMiddleware(),
             100 => new EventDispatcherMiddleware($dispatcher),
+//            100 => new EventRoutingMiddleware($dispatcher),
         ]);
     }
+//    /**
+//     * @param EventDispatcherInterface $dispatcher
+//     *
+//     * @return EventBus
+//     */
+//    public static function createAsync(EventDispatcherInterface $dispatcher)
+//    {
+//        return new EventBus([
+//            250 => new LockingMiddleware(),
+//            100 => new EventDispatcherMiddleware($dispatcher),
+//        ]);
+//    }
 }

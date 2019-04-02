@@ -33,4 +33,18 @@ class SerializationException extends RuntimeException
             $className
         ), 0, $cause);
     }
+
+    /**
+     * @param string         $className
+     * @param Exception|null $cause
+     *
+     * @return SerializationException
+     */
+    public static function notHandler($className, Exception $cause = null)
+    {
+        return new static(sprintf(
+            'There is not serializer/deserializer handler for class %s.',
+            $className
+        ), 0, $cause);
+    }
 }

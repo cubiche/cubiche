@@ -33,9 +33,10 @@ class LockingMiddleware implements MiddlewareInterface
     /**
      * Execute the given message... after other running messages are complete.
      *
-     * @param mixed    $message
+     * @param mixed $message
      * @param callable $next
      *
+     * @return mixed|void
      * @throws \Exception
      */
     public function handle($message, callable $next)

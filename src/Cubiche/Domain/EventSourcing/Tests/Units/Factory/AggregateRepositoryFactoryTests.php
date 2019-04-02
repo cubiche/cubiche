@@ -11,6 +11,8 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Factory;
 
+use Cubiche\Core\Bus\Publisher\MessagePublisher;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Factory\AggregateRepositoryFactory;
@@ -30,7 +32,10 @@ class AggregateRepositoryFactoryTests extends TestCase
      */
     protected function createFactory()
     {
-        return new AggregateRepositoryFactory(new InMemoryEventStore());
+        return new AggregateRepositoryFactory(
+            new InMemoryEventStore(),
+            new MessagePublisher(EventBus::create())
+        );
     }
 
     /**
@@ -40,7 +45,7 @@ class AggregateRepositoryFactoryTests extends TestCase
     {
         $this
             ->given($factory = $this->createFactory())
-            ->and($postId = PostId::fromNative(md5(rand())))
+            ->and($postId = PostId::next())
             ->and($repository = $factory->create(PostEventSourced::class))
             ->then()
                 ->object($repository)

@@ -11,38 +11,20 @@
 
 namespace Cubiche\Domain\EventSourcing\Event;
 
-use Cubiche\Domain\EventPublisher\DomainEvent;
-use Cubiche\Domain\EventSourcing\AggregateRootInterface;
-
 /**
  * PreRemoveEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PreRemoveEvent extends DomainEvent
+class PreRemoveEvent extends LifecycleEvent
 {
-    /**
-     * @var AggregateRootInterface
-     */
-    protected $aggregate;
+    const eventName = 'aggregate.pre_remove';
 
     /**
-     * PreRemoveEvent constructor.
-     *
-     * @param AggregateRootInterface $aggregate
+     * {@inheritdoc}
      */
-    public function __construct(AggregateRootInterface $aggregate)
+    public function messageName(): string
     {
-        parent::__construct();
-
-        $this->aggregate = $aggregate;
-    }
-
-    /**
-     * @return AggregateRootInterface
-     */
-    public function aggregate()
-    {
-        return $this->aggregate;
+        return self::eventName;
     }
 }

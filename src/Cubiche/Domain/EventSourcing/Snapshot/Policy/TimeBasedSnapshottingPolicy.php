@@ -57,7 +57,7 @@ class TimeBasedSnapshottingPolicy implements SnapshottingPolicyInterface
      */
     public function shouldCreateSnapshot(AggregateRootInterface $aggregateRoot)
     {
-        $recordedEvents = $aggregateRoot->recordedEvents();
+        $recordedEvents = $aggregateRoot->recordedMessages();
 
         if (count($recordedEvents) > 0) {
             $lastSnapshot = $this->loadSnapshot($aggregateRoot->id());

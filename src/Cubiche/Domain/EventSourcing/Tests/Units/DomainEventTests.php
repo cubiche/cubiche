@@ -28,7 +28,7 @@ class DomainEventTests extends TestCase
     public function testId()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->when(
                 $event = new PostWasCreated(
                     $postId,
@@ -48,7 +48,7 @@ class DomainEventTests extends TestCase
     public function testAggregateId()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->when(
                 $event = new PostWasCreated(
                     $postId,
@@ -57,8 +57,8 @@ class DomainEventTests extends TestCase
                 )
             )
             ->then()
-                ->object($event->aggregateId())
-                    ->isEqualTo($postId)
+                ->string($event->aggregateId()->toNative())
+                    ->isEqualTo($postId->toNative())
         ;
     }
 
@@ -68,7 +68,7 @@ class DomainEventTests extends TestCase
     public function testVersion()
     {
         $this
-            ->given($postId = PostId::fromNative(md5(rand())))
+            ->given($postId = PostId::next())
             ->when(
                 $event = new PostWasCreated(
                     $postId,

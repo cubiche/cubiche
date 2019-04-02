@@ -46,7 +46,7 @@ class TimeBasedSnapshottingPolicyTests extends TestCase
                 ->boolean($policy->shouldCreateSnapshot($post))
                     ->isTrue()
                 ->and()
-                ->when($post->clearEvents())
+                ->when($post->clearMessages())
                 ->then()
                     ->boolean($policy->shouldCreateSnapshot($post))
                         ->isFalse()

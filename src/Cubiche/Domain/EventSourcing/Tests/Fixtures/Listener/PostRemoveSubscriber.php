@@ -10,7 +10,7 @@
  */
 namespace Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener;
 
-use Cubiche\Domain\EventPublisher\DomainEventSubscriberInterface;
+use Cubiche\Domain\EventSourcing\DomainEventSubscriberInterface;
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 
 /**
@@ -26,7 +26,7 @@ class PostRemoveSubscriber extends PostRemoveListener implements DomainEventSubs
     public static function getSubscribedEvents()
     {
         return array(
-            PostRemoveEvent::class => 'onPostRemove',
+            PostRemoveEvent::eventName => 'onPostRemove',
         );
     }
 }

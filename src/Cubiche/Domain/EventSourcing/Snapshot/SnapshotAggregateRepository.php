@@ -11,6 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Snapshot;
 
+use Cubiche\Core\Bus\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
@@ -38,17 +39,19 @@ class SnapshotAggregateRepository extends AggregateRepository
      * AggregateRepository constructor.
      *
      * @param EventStoreInterface         $eventStore
+     * @param MessagePublisherInterface   $publisher
      * @param SnapshotStoreInterface      $snapshotStore
      * @param SnapshottingPolicyInterface $snapshottingPolicy
      * @param string                      $aggregateClassName
      */
     public function __construct(
         EventStoreInterface $eventStore,
+        MessagePublisherInterface $publisher,
         SnapshotStoreInterface $snapshotStore,
         SnapshottingPolicyInterface $snapshottingPolicy,
         $aggregateClassName
     ) {
-        parent::__construct($eventStore, $aggregateClassName);
+        parent::__construct($eventStore, $publisher, $aggregateClassName);
 
         $this->snapshotStore = $snapshotStore;
         $this->snapshottingPolicy = $snapshottingPolicy;

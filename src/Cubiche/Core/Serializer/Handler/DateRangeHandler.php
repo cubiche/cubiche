@@ -21,7 +21,7 @@ use Cubiche\Domain\System\DateTime\DateRange;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class DateRangeHandler implements HandlerSubscriberInterface
+class DateRangeHandler implements HandlerInterface
 {
     /**
      * @param SerializationVisitor $visitor
@@ -31,12 +31,8 @@ class DateRangeHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        DateRange $range,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $range, array $type, ContextInterface $context)
+    {
         $newType = array('name' => Date::class, 'params' => array());
 
         return array(
@@ -53,7 +49,7 @@ class DateRangeHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         $newType = array('name' => Date::class, 'params' => array());
         $from = $context->navigator()->accept($data['from'], $newType, $context);
@@ -65,15 +61,16 @@ class DateRangeHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                DateRange::class => 'serialize',
-            ),
-            'deserializers' => array(
-                DateRange::class => 'deserialize',
-            ),
-        );
+        return \is_a($typeName, DateRange::class, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 300;
     }
 }

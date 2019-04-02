@@ -20,7 +20,7 @@ use Cubiche\Domain\Geolocation\Coordinate;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CoordinateHandler implements HandlerSubscriberInterface
+class CoordinateHandler implements HandlerInterface
 {
     /**
      * @param SerializationVisitor $visitor
@@ -30,12 +30,8 @@ class CoordinateHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        Coordinate $coordinate,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $coordinate, array $type, ContextInterface $context)
+    {
         $newType = array('name' => 'float', 'params' => array());
 
         return array(
@@ -52,7 +48,7 @@ class CoordinateHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         $newType = array('name' => 'float', 'params' => array());
 
@@ -65,15 +61,16 @@ class CoordinateHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                Coordinate::class => 'serialize',
-            ),
-            'deserializers' => array(
-                Coordinate::class => 'deserialize',
-            ),
-        );
+        return \is_a($typeName, Coordinate::class, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 150;
     }
 }

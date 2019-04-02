@@ -40,7 +40,7 @@ class AggregateRootTests extends TestCase
                 )
             )
             ->then()
-                ->array($post->recordedEvents())
+                ->array($post->recordedMessages())
                     ->hasSize(1)
         ;
     }
@@ -77,12 +77,12 @@ class AggregateRootTests extends TestCase
                 )
             )
             ->then()
-                ->array($post->recordedEvents())
+                ->array($post->recordedMessages())
                     ->hasSize(1)
             ->and()
-            ->when($post->clearEvents())
+            ->when($post->clearMessages())
             ->then()
-                ->array($post->recordedEvents())
+                ->array($post->recordedMessages())
                     ->isEmpty()
         ;
     }
@@ -157,7 +157,7 @@ class AggregateRootTests extends TestCase
             )
             ->when($post->changeTitle($this->faker->sentence()))
             ->then()
-                ->array($post->recordedEvents())
+                ->array($post->recordedMessages())
                     ->hasSize(2)
             ->and()
             ->exception(function () use ($post) {

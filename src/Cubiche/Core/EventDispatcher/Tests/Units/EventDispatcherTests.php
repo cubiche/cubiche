@@ -52,7 +52,7 @@ class EventDispatcherTests extends TestCase
         // dispatch event named
         $this
             ->given($dispatcher = $this->createEventDispatcher())
-            ->when($event = $dispatcher->dispatch(Event::named('foo.event')))
+            ->when($event = $dispatcher->dispatch(new Event('foo.event')))
             ->then()
                 ->object($event)
                     ->isInstanceOf(Event::class)
@@ -143,8 +143,8 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
-            ->and($dispatcher->addListener($event->eventName(), function (LoginUserEvent $event) {
+            ->and($dispatcher->addListener($event->messageName(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener($event->messageName(), function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())
                         ->isEqualTo('info@cubiche.org')
@@ -185,7 +185,7 @@ class EventDispatcherTests extends TestCase
                 )
             )
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->eventName(), array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener($event->messageName(), array(new LoginUserEventListener(), 'onLogin')))
             ->and($dispatcher->addListener('event.foo', function (Event $event) {
 
             }))
@@ -195,7 +195,7 @@ class EventDispatcherTests extends TestCase
             ->when($listeners = $dispatcher->listeners())
                 ->then()
                     ->array($listeners->toArray())
-                        ->hasKey($event->eventName())
+                        ->hasKey($event->messageName())
                         ->hasKey('event.foo')
                         ->hasKey('event.bar')
                     ->array($listeners->toArray())
@@ -219,7 +219,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->eventName();
+                return $event->messageName();
             })
             ->and($listener3 = function (Event $event) {
 
@@ -248,7 +248,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->eventName();
+                return $event->messageName();
             })
             ->and($listener3 = function (Event $event) {
 
@@ -275,7 +275,7 @@ class EventDispatcherTests extends TestCase
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($listener1 = array(new LoginUserEventListener(), 'onLogin'))
             ->and($listener2 = function (Event $event) {
-                return $event->eventName();
+                return $event->messageName();
             })
             ->and($listener3 = function (Event $event) {
 

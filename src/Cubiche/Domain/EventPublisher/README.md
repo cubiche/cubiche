@@ -1,2 +1,0 @@
-# Cubiche - EventPublisher
-[![Build Status](https://travis-ci.org/cubiche/event-publisher.svg?branch=master)](https://travis-ci.org/cubiche/event-publisher) [![Coverage Status](https://coveralls.io/repos/github/cubiche/event-publisher/badge.svg?branch=master)](https://coveralls.io/github/cubiche/event-publisher?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cubiche/event-publisher/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cubiche/event-publisher/?branch=master) 

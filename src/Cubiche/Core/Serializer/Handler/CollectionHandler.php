@@ -10,12 +10,6 @@
 
 namespace Cubiche\Core\Serializer\Handler;
 
-use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
-use Cubiche\Core\Collections\ArrayCollection\ArrayList;
-use Cubiche\Core\Collections\ArrayCollection\ArraySet;
-use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
-use Cubiche\Core\Collections\ArrayCollection\SortedArrayList;
-use Cubiche\Core\Collections\ArrayCollection\SortedArraySet;
 use Cubiche\Core\Collections\CollectionInterface;
 use Cubiche\Core\Serializer\Context\ContextInterface;
 use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
@@ -26,7 +20,7 @@ use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class CollectionHandler implements HandlerSubscriberInterface
+class CollectionHandler implements HandlerInterface
 {
     /**
      * @param SerializationVisitor $visitor
@@ -36,12 +30,8 @@ class CollectionHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function serialize(
-        SerializationVisitor $visitor,
-        CollectionInterface $collection,
-        array $type,
-        ContextInterface $context
-    ) {
+    public function serialize(SerializationVisitor $visitor, $collection, array $type, ContextInterface $context)
+    {
         return $visitor->visitArray($collection->toArray(), $type, $context);
     }
 
@@ -53,7 +43,7 @@ class CollectionHandler implements HandlerSubscriberInterface
      *
      * @return mixed
      */
-    public function deserialize(DeserializationVisitor $visitor, array $data, array $type, ContextInterface $context)
+    public function deserialize(DeserializationVisitor $visitor, $data, array $type, ContextInterface $context)
     {
         return new $type['name']($visitor->visitArray($data, $type, $context));
     }
@@ -61,25 +51,16 @@ class CollectionHandler implements HandlerSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedHandlers()
+    public function supports($typeName, ContextInterface $context)
     {
-        return array(
-            'serializers' => array(
-                ArraySet::class => 'serialize',
-                ArrayList::class => 'serialize',
-                ArrayHashMap::class => 'serialize',
-                SortedArraySet::class => 'serialize',
-                SortedArrayList::class => 'serialize',
-                SortedArrayHashMap::class => 'serialize',
-            ),
-            'deserializers' => array(
-                ArraySet::class => 'deserialize',
-                ArrayList::class => 'deserialize',
-                ArrayHashMap::class => 'deserialize',
-                SortedArraySet::class => 'deserialize',
-                SortedArrayList::class => 'deserialize',
-                SortedArrayHashMap::class => 'deserialize',
-            ),
-        );
+        return \is_subclass_of($typeName, CollectionInterface::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function order()
+    {
+        return 50;
     }
 }

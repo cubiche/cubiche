@@ -89,22 +89,6 @@ class SerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
-    public function visitSerializable($data, array $type, ContextInterface $context)
-    {
-        return $data->serialize();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function visitNativeValueObject($data, array $type, ContextInterface $context)
-    {
-        return $context->navigator()->accept($data->toNative(), null, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function startVisitingObject(ClassMetadata $classMetadata, $data, array $type, ContextInterface $context)
     {
         $this->data = array();

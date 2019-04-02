@@ -63,7 +63,7 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotNameFake = PostId::fromNative(md5(rand())))
+            ->and($snapshotNameFake = PostId::next())
             ->and($snapshot = new Snapshot($post->id(), $post))
             ->when($store->persist($snapshot))
             ->then()
@@ -89,7 +89,7 @@ abstract class SnapshotStoreTestCase extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($snapshotNameFake = PostId::fromNative(md5(rand())))
+            ->and($snapshotNameFake = PostId::next())
             ->and($snapshot = new Snapshot($post->id(), $post))
             ->and($store->persist($snapshot))
             ->when($store->remove($snapshotNameFake))

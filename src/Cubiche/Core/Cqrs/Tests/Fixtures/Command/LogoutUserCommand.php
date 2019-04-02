@@ -12,7 +12,7 @@
 namespace Cubiche\Core\Cqrs\Tests\Fixtures\Command;
 
 use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Cqrs\Command\CommandNamedInterface;
+use Cubiche\Core\Cqrs\Command\CommandInterface;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
 /**
@@ -20,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LogoutUserCommand extends Command implements CommandNamedInterface
+class LogoutUserCommand extends Command implements CommandInterface
 {
     /**
      * @var string
@@ -64,7 +64,7 @@ class LogoutUserCommand extends Command implements CommandNamedInterface
     /**
      * {@inheritdoc}
      */
-    public function named()
+    public function messageName(): string
     {
         return 'logout_user';
     }

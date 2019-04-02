@@ -12,7 +12,6 @@
 namespace Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\MessageInterface;
-use Cubiche\Core\Bus\MessageNamedInterface;
 
 /**
  * FromMessageNamedResolver class.
@@ -26,14 +25,6 @@ class FromMessageNamedResolver implements ResolverInterface
      */
     public function resolve(MessageInterface $message)
     {
-        if ($message instanceof MessageNamedInterface) {
-            return $message->named();
-        }
-
-        throw new \InvalidArgumentException(sprintf(
-            'The object of type %s should implement the %s interface',
-            get_class($message),
-            MessageNamedInterface::class
-        ));
+        return $message->messageName();
     }
 }

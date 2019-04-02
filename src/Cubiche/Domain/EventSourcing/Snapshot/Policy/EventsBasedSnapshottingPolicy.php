@@ -24,7 +24,7 @@ class EventsBasedSnapshottingPolicy implements SnapshottingPolicyInterface
      */
     public function shouldCreateSnapshot(AggregateRootInterface $aggregateRoot)
     {
-        $recordedEvents = $aggregateRoot->recordedEvents();
+        $recordedEvents = $aggregateRoot->recordedMessages();
 
         return count($recordedEvents) > 0;
     }

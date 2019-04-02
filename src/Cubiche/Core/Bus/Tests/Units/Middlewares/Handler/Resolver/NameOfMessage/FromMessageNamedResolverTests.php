@@ -11,7 +11,6 @@
 namespace Cubiche\Core\Bus\Tests\Units\Middlewares\Handler\Resolver\NameOfMessage;
 
 use Cubiche\Core\Bus\Middlewares\Handler\Resolver\NameOfMessage\FromMessageNamedResolver;
-use Cubiche\Core\Bus\Tests\Fixtures\Message\LoginUserMessage;
 use Cubiche\Core\Bus\Tests\Fixtures\Message\LogoutUserMessage;
 use Cubiche\Core\Bus\Tests\Units\TestCase;
 
@@ -33,15 +32,6 @@ class FromMessageNamedResolverTests extends TestCase
             ->then()
                 ->string($result)
                     ->isEqualTo('logout_user')
-        ;
-
-        $this
-            ->given($resolver = new FromMessageNamedResolver())
-            ->then()
-                ->exception(function () use ($resolver) {
-                    $resolver->resolve(new LoginUserMessage('ivan@cubiche.com', 'plainpassword'));
-                })
-                ->isInstanceOf(\InvalidArgumentException::class)
         ;
     }
 }

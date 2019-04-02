@@ -11,7 +11,8 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Units;
 
-use Cubiche\Domain\EventPublisher\DomainEventPublisher;
+use Cubiche\Core\Bus\Publisher\MessagePublisher;
+use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;
 use Cubiche\Domain\EventSourcing\Tests\Fixtures\Listener\PostPersistSubscriber;
@@ -29,11 +30,32 @@ use Cubiche\Domain\EventSourcing\Tests\Fixtures\PostEventSourcedFactory;
 class AggregateRepositoryTests extends TestCase
 {
     /**
+     * @var EventBus
+     */
+    protected $eventBus;
+
+    /**
      * @return AggregateRepository
      */
     protected function createRepository()
     {
-        return new AggregateRepository(new InMemoryEventStore(), PostEventSourced::class);
+        return new AggregateRepository(
+            new InMemoryEventStore(),
+            new MessagePublisher($this->eventBus()),
+            PostEventSourced::class
+        );
+    }
+
+    /**
+     * @return EventBus
+     */
+    protected function eventBus()
+    {
+        if ($this->eventBus === null) {
+            $this->eventBus = EventBus::create();
+        }
+
+        return $this->eventBus;
     }
 
     /**
@@ -43,6 +65,7 @@ class AggregateRepositoryTests extends TestCase
     {
         $this
             ->given($repository = $this->createRepository())
+            ->and($eventBus = $this->eventBus())
             ->and(
                 $post = PostEventSourcedFactory::create(
                     $this->faker->sentence,
@@ -64,7 +87,7 @@ class AggregateRepositoryTests extends TestCase
                     $this->faker->paragraph
                 )
             )
-            ->and($post->clearEvents())
+            ->and($post->clearMessages())
             ->when($repository->persist($post))
             ->then()
                 ->variable($repository->get($post->id()))
@@ -82,8 +105,8 @@ class AggregateRepositoryTests extends TestCase
             ->and($post->changeTitle($this->faker->sentence))
             ->and($prePersistSubscriber = new PrePersistSubscriber(42))
             ->and($postPersistSubscriber = new PostPersistSubscriber())
-            ->and(DomainEventPublisher::subscribe($prePersistSubscriber))
-            ->and(DomainEventPublisher::subscribe($postPersistSubscriber))
+            ->and($eventBus->addSubscriber($prePersistSubscriber))
+            ->and($eventBus->addSubscriber($postPersistSubscriber))
             ->when($repository->persist($post))
             ->then()
                 ->integer($post->version())
@@ -129,6 +152,7 @@ class AggregateRepositoryTests extends TestCase
     {
         $this
             ->given($repository = $this->createRepository())
+            ->and($eventBus = $this->eventBus())
             ->and(
                 $post = PostEventSourcedFactory::create(
                     $this->faker->sentence,
@@ -158,8 +182,8 @@ class AggregateRepositoryTests extends TestCase
             ->and($repository->persist($post))
             ->and($preRemoveSubscriber = new PreRemoveSubscriber(42))
             ->and($postRemoveSubscriber = new PostRemoveSubscriber())
-            ->and(DomainEventPublisher::subscribe($preRemoveSubscriber))
-            ->and(DomainEventPublisher::subscribe($postRemoveSubscriber))
+            ->and($eventBus->addSubscriber($preRemoveSubscriber))
+            ->and($eventBus->addSubscriber($postRemoveSubscriber))
             ->when($repository->remove($post))
             ->then()
                 ->integer($post->version())
