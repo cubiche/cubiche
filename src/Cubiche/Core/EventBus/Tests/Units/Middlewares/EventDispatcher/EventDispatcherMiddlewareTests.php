@@ -11,9 +11,10 @@
 
 namespace Cubiche\Core\EventBus\Tests\Units\Middlewares\EventDispatcher;
 
+use Cubiche\Core\Bus\Message\Resolver\ClassBasedNameResolver;
 use Cubiche\Core\EventBus\Middlewares\EventDispatcher\EventDispatcherMiddleware;
 use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEvent;
-use Cubiche\Core\EventBus\Tests\Fixtures\Event\LoginUserEventListener;
+use Cubiche\Core\EventBus\Tests\Fixtures\Event\UserEventSubscriber;
 use Cubiche\Core\EventBus\Tests\Units\TestCase;
 use Cubiche\Core\EventDispatcher\EventDispatcher;
 
@@ -30,18 +31,14 @@ class EventDispatcherMiddlewareTests extends TestCase
     public function testHandle()
     {
         $this
-            ->given($dispatcher = new EventDispatcher())
+            ->given(
+                $dispatcher = new EventDispatcher(
+                    new ClassBasedNameResolver(),
+                    new UserEventSubscriber()
+                )
+            )
             ->and($middleware = new EventDispatcherMiddleware($dispatcher))
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->messageName(), array(new LoginUserEventListener(), 'loginUser')))
-            ->and($dispatcher->addListener($event->messageName(), function (LoginUserEvent $event) {
-                $this
-                    ->string($event->email())
-                    ->isEqualTo('info@cubiche.org')
-                ;
-
-                $event->setEmail('fake@email.com');
-            }))
             ->and($callable = function (LoginUserEvent $event) {
                 $event->setEmail('callback@email.com');
             })
@@ -49,24 +46,6 @@ class EventDispatcherMiddlewareTests extends TestCase
             ->then()
                 ->string($event->email())
                     ->isEqualTo('callback@email.com')
-                ->exception(function () use ($middleware, $callable) {
-                    $middleware->handle(new \StdClass(), $callable);
-                })->isInstanceOf(\InvalidArgumentException::class)
-        ;
-    }
-
-    /**
-     * Test dispatcher method.
-     */
-    public function testDispatcher()
-    {
-        $this
-            ->given($dispatcher = new EventDispatcher())
-            ->and($middleware = new EventDispatcherMiddleware($dispatcher))
-            ->when($result = $middleware->dispatcher())
-            ->then()
-                ->object($result)
-                    ->isEqualTo($dispatcher)
         ;
     }
 }

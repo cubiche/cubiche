@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Tests\Units\Factory;
 
-use Cubiche\Core\Bus\Publisher\MessagePublisher;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisher;
 use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\InMemoryEventStore;

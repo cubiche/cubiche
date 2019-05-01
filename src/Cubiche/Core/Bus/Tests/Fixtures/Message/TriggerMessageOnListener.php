@@ -10,7 +10,7 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
-use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Core\Bus\Middlewares\LockingMiddleware;
 
 /**
  * TriggerMessageOnListener class.

@@ -10,13 +10,17 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
+use Cubiche\Core\Bus\NamedMessageInterface;
+
 /**
  * PostDispatchEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PostDispatchEvent extends Event
+class PostDispatchEvent extends Event implements NamedMessageInterface
 {
+    const eventName = 'event_dispatcher.post_dispatch';
+
     /**
      * @var EventInterface
      */
@@ -38,5 +42,13 @@ class PostDispatchEvent extends Event
     public function event()
     {
         return $this->event;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function messageName(): string
+    {
+        return self::eventName;
     }
 }

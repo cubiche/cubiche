@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Core\Bus\Recorder\MessageRecorderInterface;
+use Cubiche\Core\Bus\Message\Recorder\MessageRecorderInterface;
 use Cubiche\Domain\EventSourcing\EventStore\EventStream;
 use Cubiche\Domain\Model\EntityInterface;
 

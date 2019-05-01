@@ -12,7 +12,7 @@ namespace Cubiche\Core\Bus\Tests\Units;
 
 use Cubiche\Core\Bus\Bus;
 use Cubiche\Core\Bus\Exception\InvalidMiddlewareException;
-use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Core\Bus\Middlewares\LockingMiddleware;
 use Cubiche\Core\Bus\Tests\Fixtures\FooMessage;
 
 /**

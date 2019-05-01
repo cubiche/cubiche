@@ -13,7 +13,7 @@ namespace Cubiche\MicroService\Application\Tests\Units\Controllers;
 
 use Cubiche\MicroService\Application\Controllers\CommandController;
 use Cubiche\MicroService\Application\Tests\Units\TestCase;
-use Cubiche\Core\Cqrs\Command\CommandBus;
+use Cubiche\Core\Bus\Command\CommandBus;
 
 /**
  * CommandControllerTestCase class.

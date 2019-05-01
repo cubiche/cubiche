@@ -11,7 +11,7 @@
 
 namespace Cubiche\MicroService\Application\Tests\Units\Commands;
 
-use Cubiche\Core\Cqrs\Command\CommandInterface;
+use Cubiche\Core\Bus\Command\CommandInterface;
 use Cubiche\Core\Validator\Validator;
 
 /**

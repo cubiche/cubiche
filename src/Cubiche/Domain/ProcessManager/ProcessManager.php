@@ -11,8 +11,8 @@
 
 namespace Cubiche\Domain\ProcessManager;
 
-use Cubiche\Core\Cqrs\Command\Command;
-use Cubiche\Core\Cqrs\Command\CommandBus;
+use Cubiche\Core\Bus\Command\Command;
+use Cubiche\Core\Bus\Command\CommandBus;
 use Cubiche\Core\EventBus\Event\Event;
 use Cubiche\Core\EventBus\Event\EventBus;
 use Cubiche\Domain\Model\IdInterface;

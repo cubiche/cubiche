@@ -17,4 +17,13 @@ namespace Cubiche\Core\Serializer\Event;
  */
 class PreSerializeEvent extends Event
 {
+    const eventName = 'serializer.pre_serialize';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function messageName(): string
+    {
+        return self::eventName;
+    }
 }

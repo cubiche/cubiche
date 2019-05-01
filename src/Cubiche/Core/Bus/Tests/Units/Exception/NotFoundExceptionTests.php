@@ -50,21 +50,6 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test handlerMethodNameForObject method.
-     */
-    public function testMethodNameForObject()
-    {
-        $this
-            ->given($exception = NotFoundException::handlerMethodNameForObject('bar'))
-            ->then()
-                ->variable($exception->getPrevious())
-                    ->isNull()
-                ->integer($exception->getCode())
-                    ->isEqualTo(3)
-        ;
-    }
-
-    /**
      * Test handlerFor method.
      */
     public function testHandlerFor()
@@ -95,12 +80,12 @@ class NotFoundExceptionTests extends TestCase
     }
 
     /**
-     * Test methodForObject method.
+     * Test cannotHandleMessage method.
      */
-    public function testMethodForObject()
+    public function testCannotHandleMessage()
     {
         $this
-            ->given($exception = NotFoundException::methodForObject('foo', 'bar'))
+            ->given($exception = NotFoundException::cannotHandleMessage('foo', 'bar'))
             ->then()
                 ->variable($exception->getPrevious())
                     ->isNull()

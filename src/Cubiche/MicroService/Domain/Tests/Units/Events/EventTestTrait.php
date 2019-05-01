@@ -72,10 +72,10 @@ trait EventTestTrait
 
         if ($reflection->hasMethod('id')) {
             $this
-                ->given($id = $event->aggregateId())
+                ->given($id = $event->aggregateId()->toNative())
                 ->then()
-                ->variable($event->id())
-                ->isEqualTo($id)
+                    ->variable($event->id()->toNative())
+                        ->isEqualTo($id)
             ;
         }
 
@@ -88,16 +88,23 @@ trait EventTestTrait
                 $proterty = $reflection->getProperty($parameter->getName());
                 $proterty->setAccessible(true);
                 $protertyValue = $proterty->getValue($event);
-            } else {
-                $protertyValue = $event->aggregateId();
-            }
 
-            $this
-                ->given($value = $event->{$methodName}())
-                ->then()
-                    ->variable($value)
-                        ->isEqualTo($protertyValue)
-            ;
+                $this
+                    ->given($value = $event->{$methodName}())
+                    ->then()
+                        ->variable($value)
+                            ->isEqualTo($protertyValue)
+                ;
+            } else {
+                $protertyValue = $event->aggregateId()->toNative();
+
+                $this
+                    ->given($value = $event->{$methodName}()->toNative())
+                    ->then()
+                        ->variable($value)
+                            ->isEqualTo($protertyValue)
+                ;
+            }
         }
     }
 

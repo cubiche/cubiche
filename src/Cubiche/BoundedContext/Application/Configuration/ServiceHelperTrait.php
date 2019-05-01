@@ -316,14 +316,6 @@ trait ServiceHelperTrait
     }
 
     /**
-     * @return string
-     */
-    protected function commandValidatorHandlersAlias()
-    {
-        return 'app.command_bus.validator_handlers';
-    }
-
-    /**
      * @param string $name
      *
      * @return string
@@ -349,14 +341,6 @@ trait ServiceHelperTrait
     protected function eventHandlerAlias($name)
     {
         return $this->getServiceAlias('event_handler', $name);
-    }
-
-    /**
-     * @return string
-     */
-    protected function eventHandlersAlias()
-    {
-        return 'app.event_bus.handlers';
     }
 
     /**

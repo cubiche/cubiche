@@ -33,17 +33,20 @@ class DomainEvent extends Event implements DomainEventInterface
     protected $occurredOn;
 
     /**
+     * @var IdInterface
+     */
+    protected $aggregateId;
+
+    /**
      * DomainEvent constructor.
      *
      * @param IdInterface $aggregateId
-     * @param string|null $messageName
      */
-    public function __construct(IdInterface $aggregateId, string $messageName = null)
+    public function __construct(IdInterface $aggregateId)
     {
-        parent::__construct($aggregateId->toNative(), $messageName);
-
         $this->version = 0;
         $this->occurredOn = DateTime::now();
+        $this->aggregateId = $aggregateId;
     }
 
     /**
@@ -51,7 +54,7 @@ class DomainEvent extends Event implements DomainEventInterface
      */
     public function aggregateId(): IdInterface
     {
-        return $this->messageId();
+        return $this->aggregateId;
     }
 
     /**

@@ -14,7 +14,7 @@ namespace Cubiche\Core\Bus\Async\Publisher;
 use Cubiche\Core\Bus\MessageInterface;
 
 /**
- * MessagePublisherMiddleware class.
+ * MessagePublisher interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */

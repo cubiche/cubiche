@@ -11,7 +11,7 @@
 
 namespace Cubiche\MicroService\Application\Controllers;
 
-use Cubiche\Core\Cqrs\Query\QueryBus;
+use Cubiche\Core\Bus\Query\QueryBus;
 
 /**
  * QueryController class.

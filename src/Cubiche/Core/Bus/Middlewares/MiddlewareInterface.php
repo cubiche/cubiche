@@ -11,6 +11,8 @@
 
 namespace Cubiche\Core\Bus\Middlewares;
 
+use Cubiche\Core\Bus\MessageInterface;
+
 /**
  * Middleware interface.
  *

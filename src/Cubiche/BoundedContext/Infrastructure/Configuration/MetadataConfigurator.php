@@ -13,6 +13,9 @@ namespace Cubiche\BoundedContext\Infrastructure\Configuration;
 
 use Cubiche\BoundedContext\Application\Configuration\ConfiguratorInterface;
 use Cubiche\Core\Metadata\Cache\FileCache;
+use Cubiche\Core\Metadata\ClassMetadataFactory;
+use Cubiche\Core\Metadata\Driver\ChainDriver;
+use Cubiche\Core\Metadata\Driver\StaticDriver;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -48,7 +51,46 @@ class MetadataConfigurator implements ConfiguratorInterface
                 return new FileCache(
                     sprintf("%s/metadata", $container->get('app.metadata.parameter.cache_directory'))
                 );
-            }
+            },
+            'app.metadata.factory' => function(ContainerInterface $container) {
+                return new ClassMetadataFactory(
+                    $container->get('app.metadata.driver'),
+                    $container->get('app.metadata.cache')
+                );
+            },
+            'app.metadata.driver' => function(ContainerInterface $container) {
+                return new ChainDriver($this->createDrivers($container));
+            },
         ];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     *
+     * @return array
+     */
+    private function createDrivers(ContainerInterface $container)
+    {
+        return [
+            $this->createStaticDriver(
+                $this->config['static']['paths']['included'],
+                $this->config['static']['paths']['excluded']
+            )
+        ];
+    }
+
+    /**
+     * @param array $included
+     * @param array $excluded
+     *
+     * @return StaticDriver
+     */
+    private function createStaticDriver(array $included, array $excluded)
+    {
+        $driver = new StaticDriver('loadMetadata', $included);
+        $driver->addExcludePaths($excluded);
+        $driver->setFileExtension('.php');
+
+        return $driver;
     }
 }

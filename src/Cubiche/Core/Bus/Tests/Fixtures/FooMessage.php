@@ -10,13 +10,13 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures;
 
-use Cubiche\Core\Bus\Message;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * FooMessage class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class FooMessage extends Message
+class FooMessage implements MessageInterface
 {
 }

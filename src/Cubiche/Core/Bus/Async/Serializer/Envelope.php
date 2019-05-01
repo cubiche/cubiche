@@ -11,7 +11,12 @@
 
 namespace Cubiche\Core\Bus\Async\Serializer;
 
-use Cubiche\Core\Validator\Assert;
+use Cubiche\Core\Bus\Command\CommandInterface;
+use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\Query\QueryInterface;
+use Cubiche\Core\EventBus\Event\EventInterface;
+use Cubiche\Domain\System\DateTime\DateTime;
+use Cubiche\Domain\System\StringLiteral;
 
 /**
  * Envelope class.
@@ -21,107 +26,116 @@ use Cubiche\Core\Validator\Assert;
 class Envelope implements EnvelopeInterface
 {
     /**
-     * @var string
+     * @var EnvelopeId
+     */
+    private $id;
+
+    /**
+     * @var StringLiteral
      */
     private $messageName;
 
     /**
-     * @var string
-     */
-    private $messageType;
-
-    /**
      * @var array
      */
-    private $serializedMessage;
+    private $metadata = [];
+
+    /**
+     * @var MessageInterface
+     */
+    private $payload;
 
     /**
      * Envelope constructor.
      *
-     * @param string $messageName
-     * @param string $messageType
-     * @param array  $serializedMessage
+     * @param MessageInterface $message
      */
-    public function __construct(string $messageName, string $messageType, array $serializedMessage)
+    public function __construct(MessageInterface $message)
     {
-        $this->setMessageName($messageName);
-        $this->setMessageType($messageType);
-        $this->setSerializedMessage($serializedMessage);
+        $this->id = EnvelopeId::next();
+
+        $this->payload = $message;
+        $this->setMetadataValue('messageClassName', get_class($message));
+        $this->setMetadataValue('envelopeType', $this->messageType($message));
+        $this->setMetadataValue('occurredOn', DateTime::now());
     }
 
-    /**
-     * @return string
-     */
-    public function messageName(): string
+    public function id(): EnvelopeId
     {
-        return $this->messageName;
+        return $this->id;
     }
 
-    /**
-     * @param string $messageName
-     */
-    private function setMessageName(string $messageName)
+    public function metadata(): array
+    {
+        return $this->metadata;
+    }
+
+    public function payload(): MessageInterface
+    {
+        return $this->payload;
+    }
+
+    public function setMessageName(string $messageName): void
     {
         $this->messageName = $messageName;
     }
 
-    /**
-     * @return string
-     */
-    public function messageType(): string
+    public function messageName(): string
     {
-        return $this->messageType;
+        if ($this->messageName !== null) {
+            return $this->messageName;
+        }
+
+        return get_class($this->payload);
+    }
+
+    public function setMetadataValue(string $key, $value): void
+    {
+        $this->metadata[$key] = $value;
     }
 
     /**
-     * @param string $messageType
+     * @param string $key
+     * @return mixed
      */
-    private function setMessageType(string $messageType)
+    public function getMetadataValue(string $key)
     {
-        $this->messageType = $messageType;
+        if (isset($this->metadata[$key])) {
+            return $this->metadata[$key];
+        }
+
+        return null;
     }
 
-    /**
-     * @return array
-     */
-    public function serializedMessage(): array
+    public function envelopeType(): EnvelopeType
     {
-        return $this->serializedMessage;
+        return $this->getMetadataValue('envelopeType');
     }
 
-    /**
-     * @param array $serializedMessage
-     */
-    private function setSerializedMessage(array $serializedMessage)
+    public function messageClassName(): string
     {
-        $this->serializedMessage = $serializedMessage;
+        return $this->getMetadataValue('messageClassName');
     }
 
-    /**
-     * @return array
-     */
-    public function toArray(): array
+    public function occurredOn(): DateTime
     {
-        return [
-          'messageName' => $this->messageName,
-          'messageType' => $this->messageType,
-          'serializedMessage' => $this->serializedMessage,
-        ];
+        return $this->getMetadataValue('occurredOn');
     }
 
-    /**
-     * @param array $data
-     *
-     * @return EnvelopeInterface
-     */
-    public static function fromArray(array $data): EnvelopeInterface
+    private function messageType(MessageInterface $message): EnvelopeType
     {
-        $className = get_called_class();
+        if ($message instanceof CommandInterface) {
+            return EnvelopeType::COMMAND();
+        }
 
-        Assert::keyExists($data, 'messageName', sprintf('%s must contain a key messageName', $className));
-        Assert::keyExists($data, 'messageType', sprintf('%s must contain a key messageType', $className));
-        Assert::keyExists($data, 'serializedMessage', sprintf('%s must contain a key serializedMessage', $className));
+        if ($message instanceof QueryInterface) {
+            return EnvelopeType::QUERY();
+        }
 
-        return new static($data['messageName'], $data['messageType'], $data['serializedMessage']);
+        if ($message instanceof EventInterface) {
+            return EnvelopeType::EVENT();
+        }
+
+        return EnvelopeType::MESSAGE();
     }
 }

@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\Repository\InMemory;
 
-use Cubiche\Core\Bus\Recorder\MessagePublisherInterface;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;

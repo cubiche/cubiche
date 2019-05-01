@@ -10,15 +10,16 @@
 
 namespace Cubiche\Core\Serializer\Event;
 
-use Cubiche\Core\Serializer\Context\ContextInterface;
+use Cubiche\Core\Bus\NamedMessageInterface;
 use Cubiche\Core\EventBus\Event\Event as BaseEvent;
+use Cubiche\Core\Serializer\Context\ContextInterface;
 
 /**
  * Event class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Event extends BaseEvent
+abstract class Event extends BaseEvent implements NamedMessageInterface
 {
     /**
      * @var ContextInterface

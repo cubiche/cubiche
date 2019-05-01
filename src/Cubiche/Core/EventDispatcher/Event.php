@@ -18,7 +18,7 @@ use Cubiche\Core\Bus\Message;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class Event extends Message implements EventInterface
+class Event implements EventInterface
 {
     /**
      * Has propagation stopped?

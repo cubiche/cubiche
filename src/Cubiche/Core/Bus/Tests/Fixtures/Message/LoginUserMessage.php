@@ -11,7 +11,7 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures\Message;
 
-use Cubiche\Core\Bus\Message;
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 
@@ -20,7 +20,7 @@ use Cubiche\Core\Validator\Mapping\ClassMetadata;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class LoginUserMessage extends Message
+class LoginUserMessage implements MessageInterface
 {
     /**
      * @var string

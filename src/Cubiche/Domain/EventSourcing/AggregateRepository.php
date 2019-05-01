@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing;
 
-use Cubiche\Core\Bus\Publisher\MessagePublisherInterface;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
 use Cubiche\Domain\EventSourcing\Event\PostRemoveEvent;
 use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;

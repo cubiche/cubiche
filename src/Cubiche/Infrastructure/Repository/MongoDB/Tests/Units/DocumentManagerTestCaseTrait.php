@@ -284,12 +284,12 @@ trait DocumentManagerTestCaseTrait
         $dateTimeValueObjectHandler = new DateTimeValueObjectHandler();
         $dateRangeHandler = new DateRangeHandler();
 
-        $handlerManager->registerSubscriberHandler($collectionHandler);
-        $handlerManager->registerSubscriberHandler($dateHandler);
-        $handlerManager->registerSubscriberHandler($coordinateHandler);
-        $handlerManager->registerSubscriberHandler($localizableValueHandler);
-        $handlerManager->registerSubscriberHandler($dateTimeValueObjectHandler);
-        $handlerManager->registerSubscriberHandler($dateRangeHandler);
+        $handlerManager->addHandler($collectionHandler);
+        $handlerManager->addHandler($dateHandler);
+        $handlerManager->addHandler($coordinateHandler);
+        $handlerManager->addHandler($localizableValueHandler);
+        $handlerManager->addHandler($dateTimeValueObjectHandler);
+        $handlerManager->addHandler($dateRangeHandler);
 
         $navigator = new VisitorNavigator($metadataFactory, $handlerManager, $eventBus);
         $serializationVisitor = new SerializationVisitor($navigator);

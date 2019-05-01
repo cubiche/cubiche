@@ -13,8 +13,21 @@ namespace Cubiche\BoundedContext\Infrastructure\Configuration;
 
 use Cubiche\BoundedContext\Application\Configuration\ChainConfigurator;
 use Cubiche\BoundedContext\Application\Configuration\ConfiguratorInterface;
+use Cubiche\Core\Bus\Async\Middlewares\MessagePublisherMiddleware;
+use Cubiche\Core\Bus\Async\Publisher\Policy\AllwaysPublishMessagesExceptPolicy;
+use Cubiche\Core\Bus\Async\Publisher\Policy\AllwaysPublishMessagesPolicy;
+use Cubiche\Core\Serializer\Event\PostDeserializeEvent;
+use Cubiche\Core\Serializer\Event\PostSerializeEvent;
+use Cubiche\Core\Serializer\Event\PreDeserializeEvent;
+use Cubiche\Core\Serializer\Event\PreSerializeEvent;
+use Cubiche\Domain\EventSourcing\Event\PostPersistEvent;
+use Cubiche\Domain\EventSourcing\Event\PrePersistEvent;
+use Cubiche\Infrastructure\Bus\Async\Publisher\RabbitMQMessagePublisher;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Definition\Processor;
+use function DI\create;
 use function DI\get;
+use function DI\add;
 
 /**
  * CoreConfigurator class.
@@ -71,6 +84,16 @@ class CoreConfigurator implements ConfiguratorInterface
                 'app.repository.factory.aggregate' => get('app.mongodb.repository.factory.aggregate'),
                 'app.repository.factory.model' => get('app.mongodb.repository.factory.document_query'),
                 'app.event_store' => get('app.mongodb.event_store'),
+                'app.bus.async_message_publisher.policy' => new AllwaysPublishMessagesPolicy(),
+                'app.bus.async_message_publisher' => function (ContainerInterface $container) {
+                    return new RabbitMQMessagePublisher($container->get('app.serializer'));
+                },
+                'app.event_bus.middlewares' => add([
+                    300 => create(MessagePublisherMiddleware::class)->constructor(
+                        get('app.bus.async_message_publisher'),
+                        get('app.bus.async_message_publisher.policy')
+                    )
+                ]),
             ]
         );
     }

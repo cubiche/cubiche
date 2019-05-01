@@ -11,9 +11,10 @@
 
 namespace Cubiche\Core\Serializer\Visitor;
 
-use Cubiche\Core\Serializer\Context\ContextInterface;
 use Cubiche\Core\Metadata\ClassMetadata;
 use Cubiche\Core\Metadata\PropertyMetadata;
+use Cubiche\Core\Serializer\Context\ContextInterface;
+use Cubiche\Core\Serializer\Exception\SerializationException;
 
 /**
  * SerializationVisitor class.
@@ -25,7 +26,7 @@ class SerializationVisitor extends AbstractVisitor
     /**
      * @var array
      */
-    protected $data;
+    public $data;
 
     /**
      * {@inheritdoc}
@@ -89,6 +90,22 @@ class SerializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
+    public function visitHashmap($data, array $type, ContextInterface $context)
+    {
+        $result = array();
+        foreach ($data as $key => $value) {
+            if (isset($type['params'][$key])) {
+                $value = $this->navigator->accept($value, $type['params'][$key], $context);
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function startVisitingObject(ClassMetadata $classMetadata, $data, array $type, ContextInterface $context)
     {
         $this->data = array();
@@ -109,7 +126,11 @@ class SerializationVisitor extends AbstractVisitor
     {
         $value = $propertyMetadata->getValue($data);
         $type = array('name' => $propertyMetadata->getMetadata('type'), 'params' => array());
+
+        // We have to persist the data we have so far to prevent a recursive call from overwriting it
+        $dataSoFar = $this->data;
         $value = $this->navigator->accept($value, $type, $context);
+        $this->data = $dataSoFar;
 
         $propertyName = $propertyMetadata->propertyName();
         if ($propertyMetadata->getMetadata('name') !== null) {

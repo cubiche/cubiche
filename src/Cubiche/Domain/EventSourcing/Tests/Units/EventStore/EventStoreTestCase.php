@@ -97,8 +97,6 @@ abstract class EventStoreTestCase extends TestCase
             ->then()
                 ->variable($store->load($streamName))
                     ->isNull()
-//                ->variable($store->load(PostId::next()))
-//                    ->isNull()
                 ->and()
                 ->when($store->persist($eventStream1))
                 ->and($result = $store->load($streamName1))

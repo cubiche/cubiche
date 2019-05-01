@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\ProcessManager\Tests\Fixtures\Conference\Command;
 
-use Cubiche\Core\Cqrs\Command\Command;
+use Cubiche\Core\Bus\Command\Command;
 use Cubiche\Core\Validator\Assertion;
 use Cubiche\Core\Validator\Mapping\ClassMetadata;
 

@@ -20,28 +20,6 @@ use Cubiche\Core\EventDispatcher\Event;
 class EventTests extends TestCase
 {
     /**
-     * Test Name method.
-     */
-    public function testName()
-    {
-        $this
-            ->given($event = new Event())
-            ->when($name = $event->messageName())
-            ->then()
-                ->string($name)
-                    ->isEqualTo(Event::class)
-        ;
-
-        $this
-            ->given($event = new Event('foo.event'))
-            ->when($name = $event->messageName())
-            ->then()
-                ->string($name)
-                    ->isEqualTo('foo.event')
-        ;
-    }
-
-    /**
      * Test StopPropagation method.
      */
     public function testStopPropagation()

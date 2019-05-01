@@ -40,9 +40,7 @@ class RegisterSerializerHandlerPass implements CompilerPassInterface
             $serializerHandlerManager = $container->getDefinition('cubiche.serializer.handler_manager');
 
             foreach ($taggedServices as $id => $tags) {
-                $serializerHandlerManager->addMethodCall('registerSubscriberHandler', array(new Reference($id)));
-//                foreach ($tags as $attributes) {
-//                }
+                $serializerHandlerManager->addMethodCall('addHandler', array(new Reference($id)));
             }
         }
     }

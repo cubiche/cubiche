@@ -10,13 +10,17 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
+use Cubiche\Core\Bus\NamedMessageInterface;
+
 /**
  * PreDispatchEvent class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class PreDispatchEvent extends Event
+class PreDispatchEvent extends Event implements NamedMessageInterface
 {
+    const eventName = 'event_dispatcher.pre_dispatch';
+
     /**
      * @var EventInterface
      */
@@ -38,5 +42,13 @@ class PreDispatchEvent extends Event
     public function event()
     {
         return $this->event;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function messageName(): string
+    {
+        return self::eventName;
     }
 }

@@ -10,6 +10,7 @@
  */
 namespace Cubiche\Core\EventDispatcher;
 
+use Cubiche\Core\Bus\Message\Resolver\MessageNameResolverInterface;
 use Cubiche\Core\Collections\ArrayCollection\ArrayHashMap;
 use Cubiche\Core\Collections\ArrayCollection\ArrayList;
 use Cubiche\Core\Collections\ArrayCollection\SortedArrayHashMap;
@@ -24,6 +25,11 @@ use Cubiche\Core\Comparable\ReverseComparator;
 class EventDispatcher implements EventDispatcherInterface
 {
     /**
+     * @var MessageNameResolverInterface
+     */
+    protected $messageNameResolver;
+
+    /**
      * @var ArrayHashMap
      */
     protected $listeners;
@@ -31,96 +37,63 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * EventDispatcher constructor.
      */
-    public function __construct()
-    {
+    public function __construct(
+        MessageNameResolverInterface $messageNameResolver,
+        EventSubscriberInterface ...$eventSubscribers
+    ) {
+        $this->messageNameResolver = $messageNameResolver;
         $this->listeners = new ArrayHashMap();
+
+        foreach ($eventSubscribers as $eventSubscriber) {
+            $this->addSubscriber($eventSubscriber);
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dispatch($event)
+    public function dispatch(EventInterface $event)
     {
-        $event = $this->ensureEvent($event);
-
         // pre dispatch event
         $preDispatchEvent = new PreDispatchEvent($event);
-        $eventName = $preDispatchEvent->messageName();
+        $eventName = $this->messageNameResolver->resolve($preDispatchEvent);
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $preDispatchEvent);
         }
 
         // dispatch event
-        $eventName = $event->messageName();
+        $eventName = $this->messageNameResolver->resolve($event);
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $event);
         }
 
         // post dispatch event
         $postDispatchEvent = new PostDispatchEvent($event);
-        $eventName = $postDispatchEvent->messageName();
+        $eventName = $this->messageNameResolver->resolve($postDispatchEvent);
         if ($listeners = $this->eventListeners($eventName)) {
             $this->doDispatch($listeners, $postDispatchEvent);
         }
-
-        return $event;
-    }
-
-    /**
-     * Ensure event input is of type EventInterface or convert it.
-     *
-     * @param string|EventInterface $event
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return EventInterface
-     */
-    public function ensureEvent($event)
-    {
-        if (is_string($event)) {
-            return new Event($event);
-        }
-
-        if (!$event instanceof EventInterface) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Events should be provides as %s instances or string, received type: %s',
-                    EventInterface::class,
-                    gettype($event)
-                )
-            );
-        }
-
-        return $event;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function eventListeners($eventName)
+    public function eventListeners(string $eventName): array
     {
         if (!$this->listeners->containsKey($eventName)) {
             return array();
         }
 
-        return $this->listeners->get($eventName);
+        return $this->listeners->get($eventName)->toArray();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function listeners()
-    {
-        return $this->listeners;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function listenerPriority($eventName, callable $listener)
+    public function listenerPriority(string $eventName, callable $listener): ?int
     {
         if (!$this->listeners->containsKey($eventName)) {
-            return;
+            return null;
         }
 
         /** @var SortedArrayHashMap $sortedListeners */
@@ -135,12 +108,14 @@ class EventDispatcher implements EventDispatcherInterface
                 }
             }
         }
+
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasEventListeners($eventName)
+    public function hasEventListeners(string $eventName): bool
     {
         return $this->listeners->containsKey($eventName);
     }
@@ -148,7 +123,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function hasListeners()
+    public function hasListeners(): bool
     {
         return $this->listeners->count() > 0;
     }
@@ -156,7 +131,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function addListener($eventName, callable $listener, $priority = 0)
+    public function addListener(string $eventName, callable $listener, int $priority = 0)
     {
         if (!$this->listeners->containsKey($eventName)) {
             $this->listeners->set($eventName, new SortedArrayHashMap([], new ReverseComparator(new Comparator())));
@@ -174,7 +149,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function removeListener($eventName, callable $listener)
+    public function removeListener(string $eventName, callable $listener)
     {
         if (!$this->listeners->containsKey($eventName)) {
             return;
@@ -243,10 +218,10 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * Triggers the listeners of an event.
      *
-     * @param SortedArrayHashMap $sortedListeners
+     * @param array $sortedListeners
      * @param EventInterface     $event
      */
-    protected function doDispatch(SortedArrayHashMap $sortedListeners, EventInterface $event)
+    protected function doDispatch(array $sortedListeners, EventInterface $event)
     {
         foreach ($sortedListeners as $priority => $listeners) {
             foreach ($listeners as $listener) {

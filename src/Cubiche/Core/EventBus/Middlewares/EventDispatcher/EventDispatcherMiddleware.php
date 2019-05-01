@@ -11,9 +11,10 @@
 
 namespace Cubiche\Core\EventBus\Middlewares\EventDispatcher;
 
-use Cubiche\Core\EventDispatcher\EventDispatcherInterface;
-use Cubiche\Core\EventBus\Event\EventInterface;
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
+use Cubiche\Core\EventBus\Event\EventInterface;
+use Cubiche\Core\EventDispatcher\EventDispatcherInterface;
 
 /**
  * EventDispatcherMiddleware class.
@@ -55,13 +56,5 @@ class EventDispatcherMiddleware implements MiddlewareInterface
         $this->dispatcher->dispatch($event);
 
         $next($event);
-    }
-
-    /**
-     * @return EventDispatcherInterface
-     */
-    public function dispatcher()
-    {
-        return $this->dispatcher;
     }
 }

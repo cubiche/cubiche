@@ -82,10 +82,14 @@ class VisitorNavigator implements VisitorNavigatorInterface
         // collection types
         if (preg_match('/(.+)\\[(.+)\\]/', $type['name'], $output) === 1) {
             $type['name'] = $output[1];
-
             $types = explode(',', $output[2]);
-            foreach ($types as $typeName) {
-                $type['params'][] = array('name' => $typeName, 'params' => array());
+
+            if ($type['name'] === 'hashmap') {
+                $type['params'] = $this->getHashmapTypes($types);
+            } else {
+                foreach ($types as $typeName) {
+                    $type['params'][] = array('name' => $typeName, 'params' => array());
+                }
             }
         }
 
@@ -105,6 +109,8 @@ class VisitorNavigator implements VisitorNavigatorInterface
                 return $visitor->visitDouble($data, $type, $context);
             case 'array':
                 return $visitor->visitArray($data, $type, $context);
+            case 'hashmap':
+                return $visitor->visitHashmap($data, $type, $context);
             case 'resource':
                 throw new RuntimeException('Resources are not supported in serialized data.');
             default:
@@ -159,5 +165,22 @@ class VisitorNavigator implements VisitorNavigatorInterface
         }
 
         $this->eventBus->dispatch($event);
+    }
+
+    private function getHashmapTypes(array $types): array
+    {
+        $result = [];
+        foreach ($types as $typeName) {
+            $pieces = explode(':', $typeName);
+            if (count($pieces) !== 2) {
+                throw new \LogicException(
+                    'The mapping hashmap type it must has only two types. hashmap[foo:integer,bar:bool]'
+                );
+            }
+
+            $result[$pieces[0]] = array('name' => $pieces[1], 'params' => array());
+        }
+
+        return $result;
     }
 }

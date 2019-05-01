@@ -13,7 +13,7 @@ namespace Cubiche\MicroService\Application\Tests\Units\Controllers;
 
 use Cubiche\MicroService\Application\Controllers\QueryController;
 use Cubiche\MicroService\Application\Tests\Units\TestCase;
-use Cubiche\Core\Cqrs\Query\QueryBus;
+use Cubiche\Core\Bus\Query\QueryBus;
 
 /**
  * QueryControllerTestCase class.

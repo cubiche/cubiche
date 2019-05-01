@@ -35,6 +35,22 @@ class SerializationException extends RuntimeException
     }
 
     /**
+     * @param string         $fieldName
+     * @param string         $className
+     * @param Exception|null $cause
+     *
+     * @return SerializationException
+     */
+    public static function invalidHashmapType($fieldName, $className, Exception $cause = null)
+    {
+        return new static(sprintf(
+            'The mapping hashmap type for the field %s in the class %s is not valid.',
+            $fieldName,
+            $className
+        ), 0, $cause);
+    }
+
+    /**
      * @param string         $className
      * @param Exception|null $cause
      *

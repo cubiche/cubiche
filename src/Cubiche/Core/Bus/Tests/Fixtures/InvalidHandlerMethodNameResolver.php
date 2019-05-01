@@ -10,19 +10,20 @@
 
 namespace Cubiche\Core\Bus\Tests\Fixtures;
 
-use Cubiche\Core\Bus\Middlewares\Handler\Resolver\HandlerMethodName\ResolverInterface;
+use Cubiche\Core\Bus\Handler\MethodName\HandlerMethodNameResolverInterface;
+use Cubiche\Core\Bus\MessageInterface;
 
 /**
  * InvalidHandlerMethodNameResolver class.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-class InvalidHandlerMethodNameResolver implements ResolverInterface
+class InvalidHandlerMethodNameResolver implements HandlerMethodNameResolverInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function resolve($message)
+    public function resolve(MessageInterface $message): string
     {
         throw new \Exception('Method name not found');
     }

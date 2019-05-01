@@ -10,6 +10,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Event;
 
+use Cubiche\Core\Bus\NamedMessageInterface;
 use Cubiche\Core\EventBus\Event\Event;
 use Cubiche\Domain\EventSourcing\AggregateRootInterface;
 
@@ -18,7 +19,7 @@ use Cubiche\Domain\EventSourcing\AggregateRootInterface;
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-abstract class LifecycleEvent extends Event
+abstract class LifecycleEvent extends Event implements NamedMessageInterface
 {
     /**
      * @var AggregateRootInterface
@@ -32,8 +33,6 @@ abstract class LifecycleEvent extends Event
      */
     public function __construct(AggregateRootInterface $aggregate)
     {
-        parent::__construct();
-
         $this->aggregate = $aggregate;
     }
 

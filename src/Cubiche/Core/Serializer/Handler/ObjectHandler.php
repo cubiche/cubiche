@@ -84,7 +84,6 @@ class ObjectHandler extends ObjectMetadataHandler
             // create the class metadata on the fly
             $classMetadata = $this->createClassMetadata($className);
             $this->extractPropertiesMetadata($classMetadata, $object, $context);
-
             // persist it
             $this->metadataFactory->setMetadataFor($className, $classMetadata);
         }
@@ -116,6 +115,28 @@ class ObjectHandler extends ObjectMetadataHandler
             } else {
                 // from class getter method definition
                 $propertyType = $this->getPropertyType($classMetadata, $propertyName);
+            }
+
+            switch ($propertyType) {
+                case 'array':
+                    // is associative array?
+                    if ($this->isArrayAllKeyString($propertyValue)) {
+                        $type = $this->differentValueTypes($propertyValue);
+                        $propertyType = 'hashmap['.$type.']';
+                    } else {
+                        $type = $this->sameValueTypes($propertyValue);
+                        $propertyType = 'array['.$type.']';
+                    }
+                    break;
+                case 'Cubiche\\Core\\Collections\\ArrayCollection\\ArrayHashMap':
+                    $type = $this->sameFirstValueType($propertyValue->toArray());
+                    $propertyType = $propertyType.'['.$type.']';
+                    break;
+                case 'Cubiche\\Core\\Collections\\ArrayCollection\\ArraySet':
+                case 'Cubiche\\Core\\Collections\\ArrayCollection\\ArrayList':
+                    $type = $this->sameValueTypes($propertyValue->toArray());
+                    $propertyType = $propertyType.'['.$type.']';
+                    break;
             }
 
             $propertyMetadata->addMetadata('type', $propertyType);
@@ -181,6 +202,54 @@ class ObjectHandler extends ObjectMetadataHandler
     private function canBeCallable(ReflectionMethod $method): bool
     {
         return !$method->isStatic() &&  0 === $method->getNumberOfRequiredParameters();
+    }
+
+    private function isArrayAllKeyString(array $inputArray): bool
+    {
+        if (count($inputArray) <= 0) {
+            return true;
+        }
+
+        return array_unique(array_map("is_string", array_keys($inputArray))) === array(true);
+    }
+
+    private function sameValueTypes(array $inputArray): string
+    {
+        if (count($inputArray) <= 0) {
+            return 'null';
+        }
+
+        foreach ($inputArray as $key => $value) {
+            return is_object($value) ? get_class($value) : gettype($value);
+        }
+    }
+
+    private function sameFirstValueType(array $inputArray): string
+    {
+        if (count($inputArray) <= 0) {
+            return '0,null';
+        }
+
+        foreach ($inputArray as $key => $value) {
+            $keyType = is_object($key) ? get_class($key) : gettype($key);
+            $valueType = is_object($value) ? get_class($value) : gettype($value);
+
+            return $keyType.','.$valueType;
+        }
+    }
+
+    private function differentValueTypes(array $inputArray): string
+    {
+        if (count($inputArray) <= 0) {
+            return '0:null';
+        }
+
+        $result = [];
+        foreach ($inputArray as $key => $value) {
+            $result[] = $key.':'.(is_object($value) ? get_class($value) : gettype($value));
+        }
+
+        return implode(',', $result);
     }
 
     /**

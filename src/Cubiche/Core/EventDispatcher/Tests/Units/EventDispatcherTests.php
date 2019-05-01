@@ -10,12 +10,9 @@
  */
 namespace Cubiche\Core\EventDispatcher\Tests\Units;
 
-use Cubiche\Core\EventDispatcher\EventDispatcher;
+use Cubiche\Core\Bus\Message\Resolver\ClassBasedNameResolver;
 use Cubiche\Core\EventDispatcher\Event;
-use Cubiche\Core\EventDispatcher\EventInterface;
-use Cubiche\Core\EventDispatcher\PostDispatchEvent;
-use Cubiche\Core\EventDispatcher\PreDispatchEvent;
-use Cubiche\Core\EventDispatcher\Tests\Fixtures\InvalidEvent;
+use Cubiche\Core\EventDispatcher\EventDispatcher;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\LoginUserEvent;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\LoginUserEventListener;
 use Cubiche\Core\EventDispatcher\Tests\Fixtures\UserEventSubscriber;
@@ -32,7 +29,7 @@ class EventDispatcherTests extends TestCase
      */
     public function createEventDispatcher()
     {
-        return new EventDispatcher();
+        return new EventDispatcher(new ClassBasedNameResolver());
     }
 
     /**
@@ -40,51 +37,14 @@ class EventDispatcherTests extends TestCase
      */
     public function testDispatch()
     {
-        // dispatch event name
-        $this
-            ->given($dispatcher = $this->createEventDispatcher())
-            ->when($event = $dispatcher->dispatch('foo.event'))
-            ->then()
-                ->object($event)
-                    ->isInstanceOf(Event::class)
-        ;
-
-        // dispatch event named
-        $this
-            ->given($dispatcher = $this->createEventDispatcher())
-            ->when($event = $dispatcher->dispatch(new Event('foo.event')))
-            ->then()
-                ->object($event)
-                    ->isInstanceOf(Event::class)
-        ;
-
-        // dispatch event class
-        $this
-            ->given($dispatcher = $this->createEventDispatcher())
-            ->when($event = $dispatcher->dispatch(new LoginUserEvent('ivan@cubiche.com')))
-            ->then()
-                ->object($event)
-                    ->isInstanceOf(EventInterface::class)
-        ;
-
-        // dispatch invalid event
-        $this
-            ->given($dispatcher = $this->createEventDispatcher())
-            ->then()
-                ->exception(function () use ($dispatcher) {
-                    $dispatcher->dispatch(new InvalidEvent());
-                })
-                ->isInstanceOf(\InvalidArgumentException::class)
-        ;
-
         // dispatch with one callable listener
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($counter = 0)
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 ++$counter;
             }))
-            ->when($dispatcher->dispatch('foo.event'))
+            ->when($dispatcher->dispatch(new LoginUserEvent('ivan@cubiche.com')))
             ->then()
                 ->integer($counter)
                     ->isEqualTo(1)
@@ -94,13 +54,13 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($counter = 0)
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 ++$counter;
             }))
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 ++$counter;
             }))
-            ->when($dispatcher->dispatch('foo.event'))
+            ->when($dispatcher->dispatch(new LoginUserEvent('ivan@cubiche.com')))
             ->then()
                 ->integer($counter)
                     ->isEqualTo(2)
@@ -110,14 +70,14 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($counter = 0)
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 ++$counter;
                 $event->stopPropagation();
             }))
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 ++$counter;
             }))
-            ->when($dispatcher->dispatch('foo.event'))
+            ->when($dispatcher->dispatch(new LoginUserEvent('ivan@cubiche.com')))
             ->then()
                 ->integer($counter)
                     ->isEqualTo(1)
@@ -127,13 +87,13 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($counter = 3)
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 $counter = $counter * 5;
             }, 50))
-            ->and($dispatcher->addListener('foo.event', function (Event $event) use (&$counter) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (Event $event) use (&$counter) {
                 $counter = $counter + 2;
             }, 100))
-            ->when($dispatcher->dispatch('foo.event'))
+            ->when($dispatcher->dispatch(new LoginUserEvent('ivan@cubiche.com')))
             ->then()
                 ->integer($counter)
                     ->isEqualTo(25)
@@ -143,8 +103,8 @@ class EventDispatcherTests extends TestCase
         $this
             ->given($dispatcher = $this->createEventDispatcher())
             ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->messageName(), array(new LoginUserEventListener(), 'onLogin')))
-            ->and($dispatcher->addListener($event->messageName(), function (LoginUserEvent $event) {
+            ->and($dispatcher->addListener(LoginUserEvent::class, array(new LoginUserEventListener(), 'onLogin')))
+            ->and($dispatcher->addListener(LoginUserEvent::class, function (LoginUserEvent $event) {
                 $this
                     ->string($event->email())
                         ->isEqualTo('info@cubiche.org')
@@ -156,57 +116,6 @@ class EventDispatcherTests extends TestCase
             ->then()
                 ->string($event->email())
                     ->isEqualTo('fake@email.com')
-        ;
-    }
-
-    /**
-     * Test listeners method.
-     */
-    public function testListeners()
-    {
-        $this
-            ->given($dispatcher = $this->createEventDispatcher())
-            ->and($predispatch = 0)
-            ->and($postdispatch = 0)
-            ->and(
-                $dispatcher->addListener(
-                    PreDispatchEvent::class,
-                    function (PreDispatchEvent $event) use (&$predispatch) {
-                        ++$predispatch;
-                    }
-                )
-            )
-            ->and(
-                $dispatcher->addListener(
-                    PostDispatchEvent::class,
-                    function (PostDispatchEvent $event) use (&$postdispatch) {
-                        ++$postdispatch;
-                    }
-                )
-            )
-            ->and($event = new LoginUserEvent('ivan@cubiche.com'))
-            ->and($dispatcher->addListener($event->messageName(), array(new LoginUserEventListener(), 'onLogin')))
-            ->and($dispatcher->addListener('event.foo', function (Event $event) {
-
-            }))
-            ->and($dispatcher->addListener('event.bar', function (Event $event) {
-
-            }))
-            ->when($listeners = $dispatcher->listeners())
-                ->then()
-                    ->array($listeners->toArray())
-                        ->hasKey($event->messageName())
-                        ->hasKey('event.foo')
-                        ->hasKey('event.bar')
-                    ->array($listeners->toArray())
-                        ->hasSize(5)
-            ->and()
-            ->when($dispatcher->dispatch('event.foo'))
-            ->and($dispatcher->dispatch('event.bar'))
-            ->then()
-                ->integer($predispatch)
-                    ->isEqualTo($postdispatch)
-                    ->isEqualTo(2)
         ;
     }
 
@@ -224,17 +133,17 @@ class EventDispatcherTests extends TestCase
             ->and($listener3 = function (Event $event) {
 
             })
-            ->and($dispatcher->addListener('event.foo', $listener1, 100))
-            ->and($dispatcher->addListener('event.foo', $listener2, 50))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener1, 100))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener2, 50))
             ->and($dispatcher->addListener('event.bar', $listener3))
             ->then()
                 ->variable($dispatcher->listenerPriority('event.unknow', $listener1))
                     ->isNull()
-                ->variable($dispatcher->listenerPriority('event.foo', $listener3))
+                ->variable($dispatcher->listenerPriority(LoginUserEvent::class, $listener3))
                     ->isNull()
-                ->integer($dispatcher->listenerPriority('event.foo', $listener1))
+                ->integer($dispatcher->listenerPriority(LoginUserEvent::class, $listener1))
                     ->isEqualTo(100)
-                ->integer($dispatcher->listenerPriority('event.foo', $listener2))
+                ->integer($dispatcher->listenerPriority(LoginUserEvent::class, $listener2))
                     ->isEqualTo(50)
         ;
     }
@@ -253,13 +162,13 @@ class EventDispatcherTests extends TestCase
             ->and($listener3 = function (Event $event) {
 
             })
-            ->and($dispatcher->addListener('event.foo', $listener1, 100))
-            ->and($dispatcher->addListener('event.foo', $listener2, 50))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener1, 100))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener2, 50))
             ->and($dispatcher->addListener('event.bar', $listener3))
             ->then()
                 ->boolean($dispatcher->hasEventListeners('event.unknow'))
                     ->isFalse()
-                ->boolean($dispatcher->hasEventListeners('event.foo'))
+                ->boolean($dispatcher->hasEventListeners(LoginUserEvent::class))
                     ->isTrue()
                 ->boolean($dispatcher->hasListeners())
                     ->isTrue()
@@ -280,22 +189,22 @@ class EventDispatcherTests extends TestCase
             ->and($listener3 = function (Event $event) {
 
             })
-            ->and($dispatcher->addListener('event.foo', $listener1, 100))
-            ->and($dispatcher->addListener('event.foo', $listener2, 50))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener1, 100))
+            ->and($dispatcher->addListener(LoginUserEvent::class, $listener2, 50))
             ->and($dispatcher->addListener('event.bar', $listener3))
             ->then()
-                ->boolean($dispatcher->hasListeners('event.foo'))
+                ->boolean($dispatcher->hasListeners(LoginUserEvent::class))
                     ->isTrue()
                 ->and()
-                ->when($dispatcher->removeListener('event.foo', $listener1))
+                ->when($dispatcher->removeListener(LoginUserEvent::class, $listener1))
                 ->then()
-                    ->boolean($dispatcher->hasListeners('event.foo'))
+                    ->boolean($dispatcher->hasListeners(LoginUserEvent::class))
                         ->isTrue()
                 ->and()
                 ->when($dispatcher->removeListener('event.unknow', $listener2))
-                ->when($dispatcher->removeListener('event.foo', $listener2))
+                ->when($dispatcher->removeListener(LoginUserEvent::class, $listener2))
                 ->then()
-                    ->boolean($dispatcher->hasEventListeners('event.foo'))
+                    ->boolean($dispatcher->hasEventListeners(LoginUserEvent::class))
                         ->isFalse()
         ;
     }

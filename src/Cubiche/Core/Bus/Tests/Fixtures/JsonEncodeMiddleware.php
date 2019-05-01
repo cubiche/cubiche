@@ -9,6 +9,7 @@
  */
 namespace Cubiche\Core\Bus\Tests\Fixtures;
 
+use Cubiche\Core\Bus\MessageInterface;
 use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 
 /**
@@ -19,10 +20,7 @@ use Cubiche\Core\Bus\Middlewares\MiddlewareInterface;
 class JsonEncodeMiddleware implements MiddlewareInterface
 {
     /**
-     * @param mixed    $message
-     * @param callable $next
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function handle($message, callable $next)
     {

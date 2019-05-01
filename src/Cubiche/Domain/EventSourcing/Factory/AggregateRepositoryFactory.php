@@ -11,7 +11,7 @@
 
 namespace Cubiche\Domain\EventSourcing\Factory;
 
-use Cubiche\Core\Bus\Publisher\MessagePublisherInterface;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisherInterface;
 use Cubiche\Domain\EventSourcing\AggregateRepository;
 use Cubiche\Domain\EventSourcing\EventStore\EventStoreInterface;
 use Cubiche\Domain\Repository\Factory\RepositoryFactoryInterface;

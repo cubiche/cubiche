@@ -51,17 +51,6 @@ class NotFoundException extends RuntimeException
     }
 
     /**
-     * @param mixed          $object
-     * @param Exception|null $cause
-     *
-     * @return NotFoundException
-     */
-    public static function handlerMethodNameForObject($object, Exception $cause = null)
-    {
-        return self::notFound('handler method name', $object, 3, $cause);
-    }
-
-    /**
      * @param string         $messageName
      * @param Exception|null $cause
      *
@@ -92,14 +81,17 @@ class NotFoundException extends RuntimeException
     }
 
     /**
-     * @param mixed          $object
-     * @param string         $method
+     * @param string         $messageName
      * @param Exception|null $cause
      *
      * @return NotFoundException
      */
-    public static function methodForObject($object, $method, Exception $cause = null)
+    public static function cannotHandleMessage($handler, $message, Exception $cause = null)
     {
-        return self::notFound('method with name `'.$method.'`', $object, 7, $cause);
+        return new static(sprintf(
+            'The "%s" handler can not handle "%s" message.',
+            $handler,
+            $message
+        ), 7, $cause);
     }
 }

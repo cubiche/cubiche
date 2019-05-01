@@ -11,8 +11,8 @@
 
 namespace Cubiche\Domain\ProcessManager\Tests\Units;
 
-use Cubiche\Core\Bus\Middlewares\Validator\ValidatorMiddleware;
-use Cubiche\Core\Cqrs\Command\CommandBus;
+use Cubiche\Core\Bus\Middlewares\ValidatorMiddleware;
+use Cubiche\Core\Bus\Command\CommandBus;
 
 /**
  * SettingCommandBus trait.

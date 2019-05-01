@@ -74,6 +74,9 @@ class UserEventSubscriber implements EventSubscriberInterface
             self::USER_LOGIN => array(
                 array('onLogin', 100), array('onLoginSuccess', 50),
             ),
+            LoginUserEvent::class => array(
+                array('onLogin', 100), array('onLoginSuccess', 50),
+            ),
         );
     }
 }

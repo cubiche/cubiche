@@ -11,7 +11,7 @@
 
 namespace Cubiche\Infrastructure\Repository\MongoDB\Factory;
 
-use Cubiche\Core\Bus\Recorder\MessagePublisherInterface;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisherInterface;
 use Cubiche\Infrastructure\Repository\MongoDB\AggregateRepository;
 use Cubiche\Infrastructure\MongoDB\DocumentManager;
 use Cubiche\Infrastructure\MongoDB\Repository;

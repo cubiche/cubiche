@@ -111,6 +111,25 @@ class DeserializationVisitor extends AbstractVisitor
     /**
      * {@inheritdoc}
      */
+    public function visitHashmap($data, array $type, ContextInterface $context)
+    {
+        if (!\is_array($data)) {
+            throw new RuntimeException(sprintf('Expected array, but got %s: %s', \gettype($data), json_encode($data)));
+        }
+
+        $result = array();
+        foreach ($data as $key => $value) {
+            if (isset($type['params'][$key])) {
+                $result[$key] = $this->navigator->accept($value, $type['params'][$key], $context);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function startVisitingObject(ClassMetadata $classMetadata, $data, array $type, ContextInterface $context)
     {
         $this->currentObject = $data;
@@ -166,7 +185,10 @@ class DeserializationVisitor extends AbstractVisitor
         $value = null;
         if ($data[$propertyName] !== null) {
             $type = array('name' => $propertyMetadata->getMetadata('type'), 'params' => array());
+            // We have to persist the current object we have so far to prevent a recursive call from overwriting it
+            $objectSoFar = $this->currentObject;
             $value = $this->navigator->accept($data[$propertyName], $type, $context);
+            $this->currentObject = $objectSoFar;
         }
 
         $propertyMetadata->setValue($this->currentObject, $value);

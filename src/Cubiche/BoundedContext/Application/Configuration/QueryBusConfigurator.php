@@ -11,9 +11,11 @@
 
 namespace Cubiche\BoundedContext\Application\Configuration;
 
-use Cubiche\Core\Bus\Middlewares\Handler\Locator\InMemoryLocator;
-use Cubiche\Infrastructure\Cqrs\Factory\Bus\QueryBusFactory;
-use Cubiche\Infrastructure\Cqrs\Factory\HandlerClassResolverFactory;
+use Cubiche\Core\Bus\Handler\Locator\InMemoryLocator;
+use Cubiche\Core\Bus\Handler\Resolver\MessageHandlerResolver;
+use Cubiche\Core\Bus\Middlewares\ValidatorMiddleware;
+use Cubiche\Core\Bus\Middlewares\QueryHandlerMiddleware;
+use Cubiche\Core\Bus\Query\QueryBus;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -30,26 +32,29 @@ class QueryBusConfigurator implements ConfiguratorInterface
     {
         return [
             'app.query_bus.handlers' => [],
-            'app.query_bus.validator_handlers' => [],
+            'app.query_bus.handlers_locator' => function (ContainerInterface $container) {
+                return new InMemoryLocator($container->get('app.query_bus.handlers'));
+            },
+            'app.query_bus.middlewares' => function (ContainerInterface $container) {
+                $queryHandlerResolver = new MessageHandlerResolver(
+                    $container->get('app.bus.message_name_resolver'),
+                    $container->get('app.bus.handler_method_name_resolver'),
+                    $container->get('app.query_bus.handlers_locator')
+                );
+
+                $queryHandlerValidatorResolver = new MessageHandlerResolver(
+                    $container->get('app.bus.message_name_resolver'),
+                    $container->get('app.bus.handler_validator_method_name_resolver'),
+                    $container->get('app.query_bus.handlers_locator')
+                );
+
+                return [
+                    350 => new ValidatorMiddleware($queryHandlerValidatorResolver),
+                    300 => new QueryHandlerMiddleware($queryHandlerResolver),
+                ];
+            },
             'app.query_bus' => function (ContainerInterface $container) {
-                /** @var HandlerClassResolverFactory $handlerClassResolverFactory */
-                $handlerClassResolverFactory = $container->get('app.bus.factory.handler_class_resolver');
-
-                $queryHandlerResolver = $handlerClassResolverFactory->createForQuery(
-                    new InMemoryLocator()
-                );
-
-                $validatorHandlerResolver = $handlerClassResolverFactory->createForQueryValidator(
-                    new InMemoryLocator()
-                );
-
-                // configure handlers
-                $handlers = $container->get('app.query_bus.handlers');
-                foreach ($handlers as $queryName => $queryHandler) {
-                    $queryHandlerResolver->addHandler($queryName, $queryHandler);
-                }
-
-                return QueryBusFactory::create($queryHandlerResolver, $validatorHandlerResolver);
+                return new QueryBus($container->get('app.query_bus.middlewares'));
             }
         ];
     }

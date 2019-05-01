@@ -11,7 +11,7 @@
 
 namespace Cubiche\MicroService\Application\Tests\Units\Queries;
 
-use Cubiche\Core\Cqrs\Query\QueryInterface;
+use Cubiche\Core\Bus\Query\QueryInterface;
 use Cubiche\Core\Validator\Validator;
 
 /**

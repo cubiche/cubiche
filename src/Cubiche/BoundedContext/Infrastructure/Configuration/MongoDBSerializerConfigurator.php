@@ -12,6 +12,8 @@
 namespace Cubiche\BoundedContext\Infrastructure\Configuration;
 
 use Cubiche\BoundedContext\Application\Configuration\ConfiguratorInterface;
+use Cubiche\Core\Serializer\Handler\HandlerManager;
+use Cubiche\Core\Serializer\Handler\ObjectMetadataHandler;
 use Cubiche\Core\Serializer\Serializer;
 use Cubiche\Core\Serializer\Visitor\DeserializationVisitor;
 use Cubiche\Core\Serializer\Visitor\SerializationVisitor;
@@ -33,31 +35,41 @@ class MongoDBSerializerConfigurator implements ConfiguratorInterface
     public function configuration(): array
     {
         return [
+            'app.mongodb.serializer.handlers' => function (ContainerInterface $container) {
+                return [
+                    new ObjectMetadataHandler($container->get('app.mongodb.metadata.factory'))
+                ];
+            },
+            'app.mongodb.serializer.handler_manager' => function (ContainerInterface $container) {
+                $handlerManager = new HandlerManager();
+
+                // configure default handlers
+                $handlers = $container->get('app.serializer.handlers');
+                foreach ($handlers as $handler) {
+                    $handlerManager->addHandler($handler);
+                }
+
+                // configure mongodb handlers
+                $handlers = $container->get('app.mongodb.serializer.handlers');
+                foreach ($handlers as $handler) {
+                    $handlerManager->addHandler($handler);
+                }
+
+                return $handlerManager;
+            },
             'app.mongodb.serializer' => function(ContainerInterface $container) {
                 return new Serializer(
                     $container->get('app.mongodb.serializer.visitor_navigator'),
-                    $container->get('app.mongodb.serializer.visitor_serialization'),
-                    $container->get('app.mongodb.serializer.visitor_deserialization')
+                    $container->get('app.serializer.visitor_serialization'),
+                    $container->get('app.serializer.visitor_deserialization')
                 );
             },
             'app.mongodb.serializer.visitor_navigator' => create(VisitorNavigator::class)
                 // to avoid the circular reference with the event bus
                 ->constructor(
-                    get('app.mongodb.metadata.factory'),
-                    get('app.serializer.handler_manager'),
+                    get('app.mongodb.serializer.handler_manager'),
                     get('app.event_bus')
                 )->lazy()
-            ,
-            'app.mongodb.serializer.visitor_serialization' => function(ContainerInterface $container) {
-                return new SerializationVisitor(
-                    $container->get('app.mongodb.serializer.visitor_navigator')
-                );
-            },
-            'app.mongodb.serializer.visitor_deserialization' => function(ContainerInterface $container) {
-                return new DeserializationVisitor(
-                    $container->get('app.mongodb.serializer.visitor_navigator')
-                );
-            }
         ];
     }
 }

@@ -11,9 +11,12 @@
 
 namespace Cubiche\BoundedContext\Application\Configuration;
 
-use Cubiche\Core\Bus\Publisher\MessagePublisher;
+use Cubiche\Core\Bus\Handler\MethodName\ShortNameFromClassResolver;
+use Cubiche\Core\Bus\Handler\MethodName\ShortNameFromClassWithSuffixResolver;
+use Cubiche\Core\Bus\Message\Publisher\MessagePublisher;
+use Cubiche\Core\Bus\Message\Resolver\ClassBasedNameResolver;
 use Cubiche\Domain\EventSourcing\Factory\AggregateRepositoryFactory;
-use Cubiche\Infrastructure\Cqrs\Factory\HandlerClassResolverFactory;
+use Cubiche\Infrastructure\Bus\Factory\MessageHandlerResolverFactory;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -29,9 +32,6 @@ class CoreConfigurator implements ConfiguratorInterface
     public function configuration(): array
     {
         return [
-            'app.bus.factory.handler_class_resolver' => function () {
-                return new HandlerClassResolverFactory();
-            },
             'app.repository.factory.event_sourced_aggregate' => function (ContainerInterface $container) {
                 return new AggregateRepositoryFactory(
                     $container->get('app.event_store'),
@@ -40,6 +40,11 @@ class CoreConfigurator implements ConfiguratorInterface
             },
             'app.bus.message_publisher' => function (ContainerInterface $container) {
                 return new MessagePublisher($container->get('app.event_bus'));
+            },
+            'app.bus.message_name_resolver' => new ClassBasedNameResolver(),
+            'app.bus.handler_method_name_resolver' => new ShortNameFromClassResolver(),
+            'app.bus.handler_validator_method_name_resolver' => function (ContainerInterface $container) {
+                return new ShortNameFromClassWithSuffixResolver('Validator');
             },
         ];
     }

@@ -11,7 +11,7 @@
 
 namespace Cubiche\MicroService\Application\Controllers;
 
-use Cubiche\Core\Cqrs\Command\CommandBus;
+use Cubiche\Core\Bus\Command\CommandBus;
 
 /**
  * CommandController class.

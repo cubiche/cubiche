@@ -50,4 +50,12 @@ class LoginUserEvent extends Event
     {
         $this->email = $email;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function messageName(): string
+    {
+        return 'user.login';
+    }
 }

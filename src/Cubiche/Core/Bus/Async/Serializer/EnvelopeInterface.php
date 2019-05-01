@@ -11,37 +11,35 @@
 
 namespace Cubiche\Core\Bus\Async\Serializer;
 
+use Cubiche\Core\Bus\MessageInterface;
+use Cubiche\Core\Bus\NamedMessageInterface;
+use Cubiche\Domain\System\DateTime\DateTime;
+use Cubiche\Domain\System\StringLiteral;
+
 /**
  * Envelope interface.
  *
  * @author Ivannis Suárez Jerez <ivannis.suarez@gmail.com>
  */
-interface EnvelopeInterface
+interface EnvelopeInterface extends NamedMessageInterface
 {
-    /**
-     * @return string
-     */
-    public function messageName(): string;
+    public function id(): EnvelopeId;
+    public function metadata(): array;
+    public function payload(): MessageInterface;
+    public function setMessageName(string $messageName): void;
+    public function messageName(): string ;
 
     /**
-     * @return string
+     * @param string $key
+     * @param mixed  $value
      */
-    public function messageType(): string;
+    public function setMetadataValue(string $key, $value): void;
 
     /**
-     * @return array
+     * @return mixed
      */
-    public function serializedMessage(): array;
-
-    /**
-     * @return array
-     */
-    public function toArray(): array;
-
-    /**
-     * @param array $data
-     *
-     * @return EnvelopeInterface
-     */
-    public static function fromArray(array $data): EnvelopeInterface;
+    public function getMetadataValue(string $key);
+    public function envelopeType(): EnvelopeType;
+    public function messageClassName(): string;
+    public function occurredOn(): DateTime;
 }

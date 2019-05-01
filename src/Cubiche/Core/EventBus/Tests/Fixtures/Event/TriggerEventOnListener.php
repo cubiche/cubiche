@@ -10,7 +10,7 @@
 
 namespace Cubiche\Core\EventBus\Tests\Fixtures\Event;
 
-use Cubiche\Core\Bus\Middlewares\Locking\LockingMiddleware;
+use Cubiche\Core\Bus\Middlewares\LockingMiddleware;
 
 /**
  * TriggerEventOnListener class.
